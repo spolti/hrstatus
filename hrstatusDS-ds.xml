@@ -1,0 +1,27 @@
+<datasources>
+   <local-tx-datasource>
+
+      <jndi-name>hrStatusDS</jndi-name>
+
+      <connection-url>jdbc:mysql://10.11.152.88:3306/hrstatus</connection-url>
+      <connection-property name="autoReconnect">true</connection-property>
+
+      <driver-class>com.mysql.jdbc.Driver</driver-class>
+
+      <!--security-domain>logreaderDomain</security-domain-->
+        <user-name>root</user-name>
+        <password>ppppppppppppp</password>
+
+      <min-pool-size>5</min-pool-size>
+      <max-pool-size>20</max-pool-size>
+
+      <idle-timeout-minutes>0</idle-timeout-minutes>
+
+      <metadata>
+         <type-mapping>mySQL</type-mapping>
+      </metadata>
+
+     
+   </local-tx-datasource>
+
+</datasources>
