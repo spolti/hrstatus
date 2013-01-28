@@ -18,6 +18,10 @@
  */
 package br.com.ohsnap.hrstatus.utils;
 
+/*
+ * @author spolti
+ */
+
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;

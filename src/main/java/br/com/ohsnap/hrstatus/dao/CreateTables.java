@@ -19,6 +19,10 @@
 
 package br.com.ohsnap.hrstatus.dao;
 
+/*
+ * @author spolti
+ */
+
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 

@@ -19,6 +19,10 @@
 
 package br.com.ohsnap.hrstatus.dao;
 
+/*
+ * @author spolti
+ */
+
 import br.com.ohsnap.hrstatus.model.Configurations;
 
 public interface Configuration {

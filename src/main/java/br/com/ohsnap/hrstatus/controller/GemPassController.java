@@ -19,6 +19,10 @@
 
 package br.com.ohsnap.hrstatus.controller;
 
+/*
+ * @author spolti
+ */
+
 import java.util.Calendar;
 import java.util.Date;
 

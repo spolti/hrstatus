@@ -19,6 +19,10 @@
 
 package br.com.ohsnap.hrstatus.controller;
 
+/*
+ * @author spolti
+ */
+
 import org.apache.log4j.Logger;
 
 import br.com.caelum.vraptor.Delete;

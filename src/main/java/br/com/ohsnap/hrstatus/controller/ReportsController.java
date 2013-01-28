@@ -19,6 +19,10 @@
 
 package br.com.ohsnap.hrstatus.controller;
 
+/*
+ * @author spolti
+ */
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;

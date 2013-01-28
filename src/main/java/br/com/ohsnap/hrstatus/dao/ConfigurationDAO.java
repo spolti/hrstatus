@@ -19,6 +19,10 @@
 
 package br.com.ohsnap.hrstatus.dao;
 
+/*
+ * @author spolti
+ */
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 

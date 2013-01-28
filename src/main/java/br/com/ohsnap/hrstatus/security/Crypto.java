@@ -19,6 +19,10 @@
 
 package br.com.ohsnap.hrstatus.security;
 
+/*
+ * @author spolti
+ */
+
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;

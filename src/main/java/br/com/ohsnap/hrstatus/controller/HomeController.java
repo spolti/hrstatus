@@ -19,6 +19,10 @@
 
 package br.com.ohsnap.hrstatus.controller;
 
+/*
+ * @author spolti
+ */
+
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;

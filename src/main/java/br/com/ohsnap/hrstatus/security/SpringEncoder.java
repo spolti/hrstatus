@@ -19,6 +19,10 @@
 
 package br.com.ohsnap.hrstatus.security;
 
+/*
+ * @author spolti
+ */
+
 import org.springframework.util.DigestUtils;
 
 public class SpringEncoder {

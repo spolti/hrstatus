@@ -19,6 +19,10 @@
 
 package br.com.ohsnap.hrstatus.utils;
 
+/*
+ * @author spolti
+ */
+
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;

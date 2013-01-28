@@ -19,6 +19,10 @@
 
 package br.com.ohsnap.hrstatus.utils;
 
+/*
+ * @author spolti
+ */
+
 public class PassGenerator {
 
 	private String passGenerator; 

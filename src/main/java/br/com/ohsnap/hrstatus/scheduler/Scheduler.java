@@ -19,6 +19,10 @@
 
 package br.com.ohsnap.hrstatus.scheduler;
 
+/*
+ * @author spolti
+ */
+
 import java.util.Date;
 
 import org.apache.log4j.Logger;

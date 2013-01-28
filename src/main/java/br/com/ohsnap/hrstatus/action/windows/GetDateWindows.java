@@ -19,6 +19,10 @@
 
 package br.com.ohsnap.hrstatus.action.windows;
 
+/*
+ * @author spolti
+ */
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

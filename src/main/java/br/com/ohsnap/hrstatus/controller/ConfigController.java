@@ -19,6 +19,10 @@
 
 package br.com.ohsnap.hrstatus.controller;
 
+/*
+ * @author spolti
+ */
+
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -19,6 +19,10 @@
 
 package br.com.ohsnap.hrstatus.action.other;
 
+/*
+ * @author spolti
+ */
+
 import java.io.IOException;
 import java.io.InputStream;
 
