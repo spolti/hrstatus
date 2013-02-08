@@ -136,5 +136,14 @@ body {
 			</div>
 		</div>
 	</form>
+	
+	<div id="footer">
+		<div class="container">
+			<p align="center" class="muted credit">
+				Versão: ${version }
+			</p>
+		</div>
+	</div>
+
 </body>
 </html>

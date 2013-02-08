@@ -85,7 +85,11 @@ public class Users{
 	}
 
 	public void setAuthority(String authority) {
-		this.authority = authority;
+		if (authority == null){
+			authority = "ROLE_USER";
+		}else {
+			this.authority = authority;
+		}
 	}
 
 	public String getUsername() {

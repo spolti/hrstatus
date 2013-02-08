@@ -23,6 +23,8 @@
 			<intercept-url pattern="/configServer" access="ROLE_USER,ROLE_ADMIN" />
 			<intercept-url pattern="/home/showByStatus/**" access="ROLE_USER,ROLE_ADMIN" />
 			<intercept-url pattern="/home/startVerification/**" access="ROLE_USER,ROLE_ADMIN" />
+			<intercept-url pattern="/findForUpdateUser/**" access="ROLE_USER,ROLE_ADMIN" />
+			<intercept-url pattern="/updateUser" access="ROLE_USER,ROLE_ADMIN" />
 
 			<!-- Reports -->
 			<intercept-url pattern="/reports/reportFull" access="ROLE_USER,ROLE_ADMIN" />
@@ -35,11 +37,9 @@
 
 			<!-- Admin Pages -->
 			<intercept-url pattern="/updateServer" access="ROLE_ADMIN" />
-			<intercept-url pattern="/updateUser" access="ROLE_ADMIN" />
 			<intercept-url pattern="/deleteServerByID" access="ROLE_ADMIN" />
 			<intercept-url pattern="/deleteUserByID" access="ROLE_ADMIN" />
 			<intercept-url pattern="/findForUpdateServer/**" access="ROLE_ADMIN" />
-			<intercept-url pattern="/findForUpdateUser/**" access="ROLE_ADMIN" />
 			<intercept-url pattern="/configClients" access="ROLE_ADMIN" />
 			<intercept-url pattern="/configUser" access="ROLE_ADMIN" />
 			<intercept-url pattern="/updateConfig" access="ROLE_ADMIN" />

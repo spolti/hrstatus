@@ -23,6 +23,8 @@ package br.com.ohsnap.hrstatus.scheduler;
  * @author spolti
  */
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +32,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import com.jcraft.jsch.JSchException;
 
 import br.com.ohsnap.hrstatus.dao.UsersInterface;
 import br.com.ohsnap.hrstatus.model.PassExpire;
@@ -46,17 +50,17 @@ public class PassExpireScheduler {
 	}
 
 	@Scheduled(cron = "0 0/5 * * * *" ) //de 5 em 5 minutos
-	public void passExpire() {
+	public void passExpire() throws ParseException, JSchException, IOException {
 		Logger.getLogger(getClass()).info("Invoking passExpire at " + new Date());
 		
 		List<PassExpire> list = this.userDAO.getExpireTime();
 		
 		DateUtils time = new DateUtils();
-		Date timeNow = time.dateConverter(time.getTime("LINUX"), "LINUX");
+		Date timeNow = time.dateConverter(time.getTime("LINUX"), "LINUX",null);
 		
 		
 		for (PassExpire passExpire : list){
-			if (timeNow.compareTo(time.dateConverter(passExpire.getExpireTime(),"LINUX" )) > 0){
+			if (timeNow.compareTo(time.dateConverter(passExpire.getExpireTime(),"LINUX",null)) > 0){
 				Logger.getLogger(getClass()).info("Password gerado para o usuário " + passExpire.getUsername() + "expirou, aplicando senha antiga novamente.");
 				Users user = this.userDAO.getUserByID(passExpire.getUsername());
 				

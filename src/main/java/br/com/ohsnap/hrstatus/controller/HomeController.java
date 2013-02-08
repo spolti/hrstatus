@@ -27,9 +27,11 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+
 import org.apache.log4j.Logger;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,16 +40,18 @@ import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
+import br.com.caelum.vraptor.validator.ValidationMessage;
 import br.com.ohsnap.hrstatus.action.linux.GetDateLinux;
 import br.com.ohsnap.hrstatus.action.other.GetDateOther;
 import br.com.ohsnap.hrstatus.action.unix.GetDateUnix;
 import br.com.ohsnap.hrstatus.action.windows.GetDateWindows;
 import br.com.ohsnap.hrstatus.dao.Configuration;
 import br.com.ohsnap.hrstatus.dao.Iteracoes;
+import br.com.ohsnap.hrstatus.dao.LockIntrface;
+import br.com.ohsnap.hrstatus.model.Lock;
 import br.com.ohsnap.hrstatus.model.Servidores;
 import br.com.ohsnap.hrstatus.security.Crypto;
 import br.com.ohsnap.hrstatus.utils.DateUtils;
-import br.com.ohsnap.hrstatus.utils.MailSender;
 
 import com.jcraft.jsch.JSchException;
 
@@ -58,13 +62,15 @@ public class HomeController {
 	private Iteracoes iteracoesDAO;
 	private Configuration configurationDAO;
 	private Validator validator;
+	private LockIntrface lockDAO;
 
 	public HomeController(Result result, Iteracoes iteracoesDAO,
-			Configuration configurationDAO, Validator validator) {
+			Configuration configurationDAO, Validator validator,LockIntrface lockDAO) {
 		this.result = result;
 		this.iteracoesDAO = iteracoesDAO;
 		this.configurationDAO = configurationDAO;
 		this.validator = validator;
+		this.lockDAO = lockDAO;
 	}
 
 	@Get("/home")
@@ -193,17 +199,38 @@ public class HomeController {
 	}
 
 	@Get("/home/startVerification/{value}")
-	public void startVerification(String value) {
+	public void startVerification(String value) throws InterruptedException, JSchException {
 		//inserindo html title no result
 		result.include("title","Hr Status Home");
+		
+		Object  LoggedObjectUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
+		
 		Logger.getLogger(getClass()).info(
 				"URI called: /home/startVerification/" + value);
+		
+		Lock lockedResource = new Lock();
+		lockedResource.setRecurso("verificationFull");
+		lockedResource.setUsername(LoggedUsername);
+		List<Lock> lockList = this.lockDAO.listLockedServices("verificationFull");
+		if (lockList.size() != 0){
+			for (Lock lock : lockList){
+				Logger.getLogger(getClass()).info("O recurso verificationFull está locado pelo usuário " + lock.getUsername() + ", aguarde o término da mesma");
+				validator.add(new ValidationMessage("O recurso verificationFull está locado pelo usuário " + lock.getUsername() + ", aguarde o término da mesma", "Erro"));
+				validator.onErrorUsePageOf(HomeController.class).home();
+			}
+		}else {
+			Logger.getLogger(getClass()).info("O recurso verificationFull não está locado, locando e proseguindo");
+			//locar recurso.
+			lockDAO.insertLock(lockedResource);
+		}
+		//Verifica se já tem alguma verificação ocorrendo...
+	
 		Logger.getLogger(getClass()).info(
 				"Initializing a " + value + " verification.");
 
 		DateUtils dt = new DateUtils();
 
-		String dateSTR = null;
 		Crypto encodePass = new Crypto();
 
 		if (value.equals("full")) {
@@ -230,13 +257,13 @@ public class HomeController {
 					}
 
 					try {
-						dateSTR = GetDateLinux.exec(servidores.getUser(),
+						String dateSTR = GetDateLinux.exec(servidores.getUser(),
 								servidores.getIp(), servidores.getPass(),
 								servidores.getPort());
 						servidores.setClientTime(dateSTR);
 						// Calculating time difference
 						servidores.setDifference(dt.diffrenceTime(
-								servidores.getServerTime(), dateSTR, "LINUX"));
+								servidores.getServerTime(), dateSTR, "LINUX",servidores));
 						if (servidores.getDifference() <= this.configurationDAO
 								.getDiffirenceSecs()) {
 							servidores.setTrClass("success");
@@ -303,13 +330,13 @@ public class HomeController {
 						e.printStackTrace();
 					}
 					try {
-						dateSTR = GetDateUnix.exec(servidores.getUser(),
+						String dateSTR = GetDateUnix.exec(servidores.getUser(),
 								servidores.getIp(), servidores.getPass(),
 								servidores.getPort());
 						servidores.setClientTime(dateSTR);
 						// Calculating time difference
 						servidores.setDifference(dt.diffrenceTime(
-								servidores.getServerTime(), dateSTR, "UNIX"));
+								servidores.getServerTime(), dateSTR, "UNIX", servidores));
 						if (servidores.getDifference() <= this.configurationDAO
 								.getDiffirenceSecs()) {
 							servidores.setTrClass("success");
@@ -363,13 +390,13 @@ public class HomeController {
 					servidores.setServerTime(dt.getTime("WINDOWS"));
 					servidores.setLastCheck(dt.getTime("lastCheck"));
 					try {
-						dateSTR = GetDateWindows.Exec(servidores.getIp());
+						String dateSTR = GetDateWindows.Exec(servidores.getIp());
 						servidores.setClientTime(dateSTR);
 						// Calculating time difference
 						servidores
 								.setDifference(dt.diffrenceTime(
 										servidores.getServerTime(), dateSTR,
-										"WINDOWS"));
+										"WINDOWS",servidores));
 						if (servidores.getDifference() <= this.configurationDAO
 								.getDiffirenceSecs()) {
 							servidores.setTrClass("success");
@@ -407,13 +434,13 @@ public class HomeController {
 						e.printStackTrace();
 					}
 					try {
-						dateSTR = GetDateOther.exec(servidores.getUser(),
+						String dateSTR = GetDateOther.exec(servidores.getUser(),
 								servidores.getIp(), servidores.getPass(),
 								servidores.getPort());
 						servidores.setClientTime(dateSTR);
 						// Calculating time difference
 						servidores.setDifference(dt.diffrenceTime(
-								servidores.getServerTime(), dateSTR, "OUTRO"));
+								servidores.getServerTime(), dateSTR, "OUTRO",servidores));
 						if (servidores.getDifference() <= this.configurationDAO
 								.getDiffirenceSecs()) {
 							servidores.setTrClass("success");
@@ -497,13 +524,13 @@ public class HomeController {
 					}
 
 					try {
-						dateSTR = GetDateLinux.exec(servidores.getUser(),
+						String dateSTR = GetDateLinux.exec(servidores.getUser(),
 								servidores.getIp(), servidores.getPass(),
 								servidores.getPort());
 						servidores.setClientTime(dateSTR);
 						// Calculating time difference
 						servidores.setDifference(dt.diffrenceTime(
-								servidores.getServerTime(), dateSTR, "LINUX"));
+								servidores.getServerTime(), dateSTR, "LINUX",servidores));
 						if (servidores.getDifference() <= this.configurationDAO
 								.getDiffirenceSecs()) {
 							servidores.setTrClass("success");
@@ -572,13 +599,13 @@ public class HomeController {
 						e.printStackTrace();
 					}
 					try {
-						dateSTR = GetDateUnix.exec(servidores.getUser(),
+						String dateSTR = GetDateUnix.exec(servidores.getUser(),
 								servidores.getIp(), servidores.getPass(),
 								servidores.getPort());
 						servidores.setClientTime(dateSTR);
 						// Calculating time difference
 						servidores.setDifference(dt.diffrenceTime(
-								servidores.getServerTime(), dateSTR, "UNIX"));
+								servidores.getServerTime(), dateSTR, "UNIX",servidores));
 						if (servidores.getDifference() <= this.configurationDAO
 								.getDiffirenceSecs()) {
 							servidores.setTrClass("success");
@@ -632,13 +659,13 @@ public class HomeController {
 					servidores.setServerTime(dt.getTime("WINDOWS"));
 					servidores.setLastCheck(dt.getTime("lastCheck"));
 					try {
-						dateSTR = GetDateWindows.Exec(servidores.getIp());
+						String dateSTR = GetDateWindows.Exec(servidores.getIp());
 						servidores.setClientTime(dateSTR);
 						// Calculating time difference
 						servidores
 								.setDifference(dt.diffrenceTime(
 										servidores.getServerTime(), dateSTR,
-										"WINDOWS"));
+										"WINDOWS",servidores));
 						if (servidores.getDifference() <= this.configurationDAO
 								.getDiffirenceSecs()) {
 							servidores.setTrClass("success");
@@ -677,13 +704,13 @@ public class HomeController {
 						e.printStackTrace();
 					}
 					try {
-						dateSTR = GetDateOther.exec(servidores.getUser(),
+						String dateSTR = GetDateOther.exec(servidores.getUser(),
 								servidores.getIp(), servidores.getPass(),
 								servidores.getPort());
 						servidores.setClientTime(dateSTR);
 						// Calculating time difference
 						servidores.setDifference(dt.diffrenceTime(
-								servidores.getServerTime(), dateSTR, "OUTRO"));
+								servidores.getServerTime(), dateSTR, "OUTRO",servidores));
 						if (servidores.getDifference() <= this.configurationDAO
 								.getDiffirenceSecs()) {
 							servidores.setTrClass("success");
@@ -731,10 +758,13 @@ public class HomeController {
 					}
 
 				}
-			}
+			}			
 			result.include("server", list).forwardTo(HomeController.class)
 					.home("");
 		}
+		//desloca a tabela quando a verficação terminar.
+		Logger.getLogger(getClass()).info("Verificação finalizada, liberando recurso " + lockedResource.getRecurso()); 
+		lockDAO.removeLock(lockedResource);
 
 	}
 }

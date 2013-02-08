@@ -49,7 +49,7 @@ public class GetDateLinux {
 		Session session = jsch.getSession(user, host, port);
 		session.setConfig(config);
 		session.setPassword(password);
-		session.connect(1000);
+		session.connect(10000);
 
 		// Exectando o comando
 		Channel channel = session.openChannel("exec");
@@ -80,12 +80,12 @@ public class GetDateLinux {
 		channel.disconnect();
 		session.disconnect();
 
-		if (s.endsWith(" ")) {
-			return s.substring(0, -1);
-		} else {
-			return s;
-		}
-
+//		if (s.endsWith(" ")) {
+//			return s.substring(0, -1);
+//		} else {
+//			return s;
+//		}
+		return s;
 	}
 
 //	public static void main(String args[]) throws IOException, JSchException {

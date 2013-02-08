@@ -54,7 +54,7 @@ public class MailSender{
 			
 			message.setContent ("<h1>Olá, alguns servidores ainda estão com a data/hora desatualizados.  " +
 					"\nAcesse o link abaixo para maiores detalhes:</h1> " +
-					"<a href=\"http://localhost:8080/hrstatus/reports/full\">Relatório</a>", "text/html");
+					"<a href=\"http://localhost:8080/hrstatus/reports/reportServersNOK\">Relatório</a>", "text/html");
 
 			Transport.send(message);
 			

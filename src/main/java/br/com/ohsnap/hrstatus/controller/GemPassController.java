@@ -73,7 +73,7 @@ public class GemPassController {
 			result.use(Results.http()).sendError(403);
 		} else {
 			Logger.getLogger(getClass()).info("validação de usuário OK");
-			result.redirectTo(UpdateController.class).findForUpdateUser(null, LoggedUsername);
+			result.redirectTo(UpdateController.class).findForUpdateUser(null, LoggedUsername,"changePass");
 		}
 
 	}
@@ -98,7 +98,6 @@ public class GemPassController {
 				MailSender send = new MailSender();
 				password = gemPass.gemPass();
 				
-
 				// Definindo a expiração da nova senha e armazenando a senha
 				// antiga na base temporária
 				// Setando senha antiga e usuário
@@ -110,7 +109,7 @@ public class GemPassController {
 				// Obtendo a hora e calculando a tempo de expiração
 				DateUtils dateUtils = new DateUtils();
 				Date changeTime = dateUtils.dateConverter(
-						dateUtils.getTime("LINUX"), "LINUX"); // hora completa
+						dateUtils.getTime("LINUX"), "LINUX",null); // hora completa
 																// atual
 				passExpire.setChangeTime(changeTime.toString());
 
@@ -126,7 +125,6 @@ public class GemPassController {
 				// Salvando nova senha no banco
 				String newPwd = encode.encodePassUser(password);
 				user.setPassword(newPwd);
-
 
 				passExpire.setNewPwd(newPwd);
 
@@ -147,7 +145,6 @@ public class GemPassController {
 				result.redirectTo(LoginController.class)
 				.login("Se o usuário for válido uma nova senha será enviada para seu e-mail.");
 			}
-
 
 		} catch (Exception e) {
 			Logger.getLogger(getClass()).error(e);

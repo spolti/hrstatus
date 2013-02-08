@@ -114,6 +114,12 @@
 		<location>/WEB-INF/jsp/error/exception.jsp</location>
 	</error-page>
 
+	<servlet>
+		<servlet-name>VersionServlet</servlet-name>
+		<servlet-class>br.com.ohsnap.hrstatus.utils.VersionServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
 	<!-- Welcome page -->
 	<welcome-file-list>
 		<welcome-file>login.html</welcome-file>

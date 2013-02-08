@@ -35,8 +35,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 import org.apache.log4j.Logger;
 import org.springframework.util.ResourceUtils;
@@ -44,7 +46,6 @@ import org.springframework.util.ResourceUtils;
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
-import br.com.caelum.vraptor.Result;
 import br.com.ohsnap.hrstatus.dao.Iteracoes;
 import br.com.ohsnap.hrstatus.model.Servidores;
 
@@ -54,20 +55,22 @@ public class ReportsController {
 	private Iteracoes iteracoesDAO;
 	private HttpServletResponse response;
 
-	public ReportsController(Iteracoes iteracoesDAO,HttpServletResponse response) {
+	public ReportsController(Iteracoes iteracoesDAO,
+			HttpServletResponse response) {
 		this.iteracoesDAO = iteracoesDAO;
 		this.response = response;
 	}
 
 	@Get
 	@Path("/reports/reportFull")
-	public InputStream fullReport() throws FileNotFoundException {
+	public InputStream fullReport() throws FileNotFoundException, JRException {
 		Logger.getLogger(getClass()).info("URI Called: /reports/reportFull");
 
-		File jasperFile = ResourceUtils
-				.getFile("/dados/JAVA/WorkSpacePrincipal/hrstatus-0.0.1-SNAPSHOT/src/main/webapp/WEB-INF/jasper/reportFull.jasper");
+		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
+				.getResourceAsStream("/jasper/reportFull.jasper"));
+
 		List<Servidores> listServers = iteracoesDAO.listServers();
-		InputStream jasperStream = new FileInputStream(jasperFile);
+		JasperReport jasperStream = jasperFile;
 		JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(
 				listServers, false);
 		Map parametros = new HashMap();
@@ -75,8 +78,9 @@ public class ReportsController {
 		try {
 			byte[] bytes = JasperRunManager.runReportToPdf(jasperStream,
 					parametros, ds);
-		    response.setContentType("application/pdf");    
-		    response.setHeader("Content-disposition", "attachment; filename=reportFull.pdf");  
+			response.setContentType("application/pdf");
+			response.setHeader("Content-disposition",
+					"attachment; filename=reportFull.pdf");
 			return new ByteArrayInputStream(bytes);
 		} catch (JRException e) {
 			Logger.getLogger(getClass()).error(e.getMessage());
@@ -84,49 +88,52 @@ public class ReportsController {
 		return null;
 
 	}
-	
+
 	@Get
 	@Path("/reports/reportServersOK")
-	public InputStream serversOK() throws FileNotFoundException {
+	public InputStream serversOK() throws FileNotFoundException, JRException {
 		Logger.getLogger(getClass()).info("URI Called: /reports/serversOK");
-		
-		File jasperFile = ResourceUtils
-				.getFile("/dados/JAVA/WorkSpacePrincipal/hrstatus-0.0.1-SNAPSHOT/src/main/webapp/WEB-INF/jasper/reportServersOK.jasper");
+
+		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
+				.getResourceAsStream("/jasper/reportServersOK.jasper"));
 		List<Servidores> listServers = iteracoesDAO.getServersOK();
-		InputStream jasperStream = new FileInputStream(jasperFile);
+		JasperReport jasperStream = jasperFile;
 		JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(
 				listServers, false);
 		Map parametros = new HashMap();
 		try {
 			byte[] bytes = JasperRunManager.runReportToPdf(jasperStream,
 					parametros, ds);
-		    response.setContentType("application/pdf");    
-		    response.setHeader("Content-disposition", "attachment; filename=reportServersOK.pdf");
+			response.setContentType("application/pdf");
+			response.setHeader("Content-disposition",
+					"attachment; filename=reportServersOK.pdf");
 			return new ByteArrayInputStream(bytes);
 
 		} catch (JRException e) {
 			Logger.getLogger(getClass()).error(e.getMessage());
 		}
-		
+
 		return null;
 	}
-	
+
 	@Get
 	@Path("/reports/reportServersNOK")
-	public InputStream reportServersNOK() throws FileNotFoundException {
-		Logger.getLogger(getClass()).info("URI Called: /reports/reportServersNOK");
-		File jasperFile = ResourceUtils
-				.getFile("/dados/JAVA/WorkSpacePrincipal/hrstatus-0.0.1-SNAPSHOT/src/main/webapp/WEB-INF/jasper/reportServersNOK.jasper");
+	public InputStream reportServersNOK() throws FileNotFoundException, JRException {
+		Logger.getLogger(getClass()).info(
+				"URI Called: /reports/reportServersNOK");
+		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
+				.getResourceAsStream("/jasper/reportServersNOK.jasper"));
 		List<Servidores> listServers = iteracoesDAO.getServersNOK();
-		InputStream jasperStream = new FileInputStream(jasperFile);
+		JasperReport jasperStream = jasperFile;
 		JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(
 				listServers, false);
 		Map parametros = new HashMap();
 		try {
 			byte[] bytes = JasperRunManager.runReportToPdf(jasperStream,
 					parametros, ds);
-		    response.setContentType("application/pdf");    
-		    response.setHeader("Content-disposition", "attachment; filename=reportServersNOK.pdf");
+			response.setContentType("application/pdf");
+			response.setHeader("Content-disposition",
+					"attachment; filename=reportServersNOK.pdf");
 			return new ByteArrayInputStream(bytes);
 
 		} catch (JRException e) {
@@ -134,23 +141,24 @@ public class ReportsController {
 		}
 		return null;
 	}
-	
+
 	@Get
 	@Path("/reports/reportSOLinux")
-	public InputStream soLinux() throws FileNotFoundException {
+	public InputStream soLinux() throws FileNotFoundException, JRException {
 		Logger.getLogger(getClass()).info("URI Called: /reports/reportSOLinux");
-		File jasperFile = ResourceUtils
-				.getFile("/dados/JAVA/WorkSpacePrincipal/hrstatus-0.0.1-SNAPSHOT/src/main/webapp/WEB-INF/jasper/reportSOLinux.jasper");
+		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
+				.getResourceAsStream("/jasper/reportSOLinux.jasper"));
 		List<Servidores> listServers = iteracoesDAO.getSOLinux();
-		InputStream jasperStream = new FileInputStream(jasperFile);
+		JasperReport jasperStream = jasperFile;
 		JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(
 				listServers, false);
 		Map parametros = new HashMap();
 		try {
 			byte[] bytes = JasperRunManager.runReportToPdf(jasperStream,
 					parametros, ds);
-		    response.setContentType("application/pdf");    
-		    response.setHeader("Content-disposition", "attachment; filename=reportSOLinux.pdf");
+			response.setContentType("application/pdf");
+			response.setHeader("Content-disposition",
+					"attachment; filename=reportSOLinux.pdf");
 			return new ByteArrayInputStream(bytes);
 
 		} catch (JRException e) {
@@ -158,23 +166,25 @@ public class ReportsController {
 		}
 		return null;
 	}
-	
+
 	@Get
 	@Path("/reports/reportSOWindows")
-	public InputStream reportSOWindows() throws FileNotFoundException {
-		Logger.getLogger(getClass()).info("URI Called: /reports/reportSOWindows");
-		File jasperFile = ResourceUtils
-				.getFile("/dados/JAVA/WorkSpacePrincipal/hrstatus-0.0.1-SNAPSHOT/src/main/webapp/WEB-INF/jasper/reportSOWindows.jasper");
+	public InputStream reportSOWindows() throws FileNotFoundException, JRException {
+		Logger.getLogger(getClass()).info(
+				"URI Called: /reports/reportSOWindows");
+		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
+				.getResourceAsStream("/jasper/reportSOWindows.jasper"));
 		List<Servidores> listServers = iteracoesDAO.getSOWindows();
-		InputStream jasperStream = new FileInputStream(jasperFile);
+		JasperReport jasperStream = jasperFile;
 		JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(
 				listServers, false);
 		Map parametros = new HashMap();
 		try {
 			byte[] bytes = JasperRunManager.runReportToPdf(jasperStream,
 					parametros, ds);
-		    response.setContentType("application/pdf");    
-		    response.setHeader("Content-disposition", "attachment; filename=reportSOWindows.pdf");
+			response.setContentType("application/pdf");
+			response.setHeader("Content-disposition",
+					"attachment; filename=reportSOWindows.pdf");
 			return new ByteArrayInputStream(bytes);
 
 		} catch (JRException e) {
@@ -182,23 +192,24 @@ public class ReportsController {
 		}
 		return null;
 	}
-	
+
 	@Get
 	@Path("/reports/reportSOUnix")
-	public InputStream reportSOUnix() throws FileNotFoundException {
+	public InputStream reportSOUnix() throws FileNotFoundException, JRException {
 		Logger.getLogger(getClass()).info("URI Called: /reports/reportSOUnix");
-		File jasperFile = ResourceUtils
-				.getFile("/dados/JAVA/WorkSpacePrincipal/hrstatus-0.0.1-SNAPSHOT/src/main/webapp/WEB-INF/jasper/reportSOUnix.jasper");
+		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
+				.getResourceAsStream("/jasper/reportSOUnix.jasper"));
 		List<Servidores> listServers = iteracoesDAO.getSOUnix();
-		InputStream jasperStream = new FileInputStream(jasperFile);
+		JasperReport jasperStream = jasperFile;
 		JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(
 				listServers, false);
 		Map parametros = new HashMap();
 		try {
 			byte[] bytes = JasperRunManager.runReportToPdf(jasperStream,
 					parametros, ds);
-		    response.setContentType("application/pdf");    
-		    response.setHeader("Content-disposition", "attachment; filename=reportSOUnix.pdf");
+			response.setContentType("application/pdf");
+			response.setHeader("Content-disposition",
+					"attachment; filename=reportSOUnix.pdf");
 			return new ByteArrayInputStream(bytes);
 
 		} catch (JRException e) {
@@ -206,24 +217,26 @@ public class ReportsController {
 		}
 		return null;
 	}
-	
+
 	@Get
 	@Path("/reports/reportSOOthers")
-	public InputStream reportSOOthers() throws FileNotFoundException {
-		Logger.getLogger(getClass()).info("URI Called: /reports/reportSOOthers");
-		File jasperFile = ResourceUtils
-				.getFile("/dados/JAVA/WorkSpacePrincipal/hrstatus-0.0.1-SNAPSHOT/src/main/webapp/WEB-INF/jasper/reportSOOthers.jasper");
-		
+	public InputStream reportSOOthers() throws FileNotFoundException, JRException {
+		Logger.getLogger(getClass())
+				.info("URI Called: /reports/reportSOOthers");
+		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
+				.getResourceAsStream("/jasper/reportSOOthers.jasper"));
+
 		List<Servidores> listServers = iteracoesDAO.getSOOthers();
-		InputStream jasperStream = new FileInputStream(jasperFile);
+		JasperReport jasperStream = jasperFile;
 		JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(
 				listServers, false);
 		Map parametros = new HashMap();
 		try {
 			byte[] bytes = JasperRunManager.runReportToPdf(jasperStream,
 					parametros, ds);
-		    response.setContentType("application/pdf");    
-		    response.setHeader("Content-disposition", "attachment; filename=reportSOOthers.pdf");
+			response.setContentType("application/pdf");
+			response.setHeader("Content-disposition",
+					"attachment; filename=reportSOOthers.pdf");
 			return new ByteArrayInputStream(bytes);
 
 		} catch (JRException e) {

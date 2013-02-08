@@ -54,4 +54,7 @@ public interface UsersInterface {
 	
 	public void delUserExpireTime(PassExpire passExpire);
 	
+	public void delUserHasChangedPass(String username);
+
+	
 }

@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,17 +49,20 @@ import br.com.ohsnap.hrstatus.security.SpringEncoder;
 
 @Resource
 public class UpdateController {
+	
 	private Result result;
 	private Iteracoes iteracoesDAO;
 	private Validator validator;
 	private UsersInterface usersDAO;
+	private HttpServletRequest request;
 
 	public UpdateController(Result result, Iteracoes iteracoesDAO,
-			Validator validator, UsersInterface usersDAO) {
+			Validator validator, UsersInterface usersDAO,HttpServletRequest request) {
 		this.result = result;
 		this.iteracoesDAO = iteracoesDAO;
 		this.validator = validator;
 		this.usersDAO = usersDAO;
+		this.request = request;
 	}
 
 	@Get("/findForUpdateServer/{serverID}")
@@ -191,9 +196,9 @@ public class UpdateController {
 		result.redirectTo(ConfigController.class).configClients();
 	}
 
-	@Get("/findForUpdateUser/{username}")
-	public void findForUpdateUser(Users u, String username) {
-		Logger.getLogger(getClass()).info("URI Called: /findForUpdateUser");
+	@Get("/findForUpdateUser/{username}/{action}")
+	public void findForUpdateUser(Users u, String username, String action) {
+		//Logger.getLogger(getClass()).info("URI Called: /findForUpdateUser");
 		//inserindo html title no result
 		result.include("title","Atualizar Usuário");
 		
@@ -201,25 +206,51 @@ public class UpdateController {
 		Object LoggedObjectUser = SecurityContextHolder.getContext()
 				.getAuthentication().getPrincipal();
 		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
-
-		if (!username.equals(LoggedUsername.toString())) {
+		
+		//obtendo roles do usuário:
+		boolean isAdmin = request.isUserInRole("ROLE_ADMIN");
+		boolean isUser = request.isUserInRole("ROLE_USER");
+		
+		if (!username.equals(LoggedUsername.toString()) && !(isAdmin || isUser)) {
 			result.use(Results.http()).sendError(403);
-		} else {
+		} else if (action.equals("changePass")) {
 			Logger.getLogger(getClass()).info("validação de usuário OK");
 			result.include("loggedUser", LoggedUsername);
 
-			Logger.getLogger(getClass()).info("URI Called: /findForUpdateUser");
+			Logger.getLogger(getClass()).info("URI Called: /changePass");
 
 			Users user = this.usersDAO.getUserByID(username);
 			// setando username
 			user.setUsername(username);
-
+			
+			result.include("isDisabled","disabled");
+				
 			result.include("user", user);
 
 			if (user != null) {
 				Logger.getLogger(getClass())
 						.info("Objeto do tipo Users não está vazio, atribuindo valores.");
 				u = user;
+			}
+		}else {
+			if (isAdmin){
+				result.include("loggedUser", LoggedUsername);
+	
+				Logger.getLogger(getClass()).info("URI Called: /findForUpdateUser");
+	
+				Users user = this.usersDAO.getUserByID(username);
+				// setando username
+				user.setUsername(username);
+					
+				result.include("user", user);
+	
+				if (user != null) {
+					Logger.getLogger(getClass())
+							.info("Objeto do tipo Users não está vazio, atribuindo valores.");
+					u = user;
+				}
+			}else {
+				result.use(Results.http()).sendError(403);
 			}
 		}
 
@@ -233,7 +264,12 @@ public class UpdateController {
 		Object LoggedObjectUser = SecurityContextHolder.getContext()
 				.getAuthentication().getPrincipal();
 		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
-		if (!user.getUsername().equals(LoggedUsername.toString())) {
+		
+		//obtendo roles do usuário:
+		boolean isAdmin = request.isUserInRole("ROLE_ADMIN");
+		boolean isUser = request.isUserInRole("ROLE_USER");
+		
+		if (!user.getUsername().equals(LoggedUsername.toString()) && !(isAdmin || isUser)) {
 			result.use(Results.http()).sendError(403);
 		} else {
 			result.include("loggedUser", LoggedUsername);
@@ -256,9 +292,10 @@ public class UpdateController {
 			} else if (user.getMail().isEmpty()) {
 				validator.add(new ValidationMessage(
 						"O campo E-mail deve ser informado", "Erro"));
-			} else if (user.getAuthority().isEmpty()) {
-				validator.add(new ValidationMessage(
-						"O campo Perfil deve ser informado", "Erro"));
+			}
+			
+			if (user.getAuthority() == null) {
+				user.setAuthority("ROLE_USER");
 			}
 
 			if (user.getPassword().isEmpty()) {
@@ -268,11 +305,19 @@ public class UpdateController {
 				user.setPassword(encode.encodePassUser(user.getPassword()));
 			}
 			validator.onErrorUsePageOf(UpdateController.class)
-					.findForUpdateUser(user, "");
+					.findForUpdateUser(user, "","");
+		
+			if (!user.getUsername().equals(LoggedUsername.toString()) && !(isAdmin || isUser)) {
+				result.use(Results.http()).sendError(403);
+			} else {
+				this.usersDAO.updateUser(user);
+				if (this.usersDAO.searchUserChangePass(LoggedUsername) == 1){
+					Logger.getLogger(getClass()).info("Usuário " + LoggedUsername + " solicitou recuperação de sennha a pouco tempo, apagando registro da tabela temporária");
+					this.usersDAO.delUserHasChangedPass(LoggedUsername);
+				}
+			}
 
-			this.usersDAO.updateUser(user);
-
-			result.redirectTo(ConfigController.class).configUser();
+			result.redirectTo(HomeController.class).home("");
 		}
 	}
 }

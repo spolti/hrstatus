@@ -105,8 +105,7 @@ html,body {
 	<div id="footer">
 		<div class="container">
 			<p class="muted credit">
-				<a href="http://www.ohsnap.com.br/hrstatus">Hrstatus</a> - 2012, All
-				Rigths Reserverd.
+				<a href="http://www.ohsnap.com.br/hrstatus">Hrstatus</a> - 2012, Todos os Direitos Reservados.
 			</p>
 		</div>
 	</div>

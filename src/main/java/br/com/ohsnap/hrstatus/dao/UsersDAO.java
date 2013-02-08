@@ -138,6 +138,22 @@ public class UsersDAO implements UsersInterface {
 		return count;
 	}
 	
+	public Object getUniqUser(String username){
+		Logger.getLogger(getClass()).debug("getUniqUser() -> populando objeto para deleção do usuário " + username);
+		Criteria criteria = session().createCriteria(PassExpire.class);
+		criteria.add(Restrictions.eq("username", username));
+		return criteria.uniqueResult();
+	}
+	
+	public void delUserHasChangedPass(String username){
+		Logger.getLogger(getClass()).debug("delUserHasChangedPass() -> deletando usuário "+username+" da tabela temporária de usuários.");
+		PassExpire passExpire = (PassExpire) session().load(PassExpire.class, username);
+		
+		session().refresh(passExpire);
+		session().delete(passExpire);
+		
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<PassExpire> getExpireTime(){
 		Logger.getLogger(getClass()).debug("getExpireTime() -> Buscando valores da tabela de novas senhas.");

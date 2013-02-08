@@ -23,6 +23,9 @@ package br.com.ohsnap.hrstatus.utils;
  * @author spolti
  */
 
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -31,10 +34,20 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 import org.apache.log4j.Logger;
 
-public class DateUtils {
+import br.com.ohsnap.hrstatus.action.linux.GetDateLinux;
+import br.com.ohsnap.hrstatus.model.Servidores;
+import br.com.ohsnap.hrstatus.security.Crypto;
 
+import com.jcraft.jsch.JSchException;
+
+public class DateUtils {
+	
 	public String getTime(String SO) {
 
 		Calendar cal = Calendar.getInstance();
@@ -85,15 +98,15 @@ public class DateUtils {
 
 	}
 
-	public long diffrenceTime(String serverTime, String clientTime, String SO) {
+	public long diffrenceTime(String serverTime, String clientTime, String SO, Servidores servidores) throws JSchException, IOException {
 
 		DateUtils date = new DateUtils();
 		long diff = 0;
 
 		// Converting String dates to java.util.Date
 
-		Date stime = date.dateConverter(serverTime, SO);
-		Date ctime = date.dateConverter(clientTime, SO);
+		Date stime = date.dateConverter(serverTime, SO, servidores);
+		Date ctime = date.dateConverter(clientTime, SO, servidores);
 
 		diff = stime.getTime() - ctime.getTime();
 
@@ -103,20 +116,42 @@ public class DateUtils {
 
 		return result;
 	}
-
-	public Date dateConverter(String data, String SO) {
+	
+	public Date dateConverter(String data, String SO, Servidores server) throws JSchException, IOException {
 		Date date = null;
 		SimpleDateFormat formatador;
 
 		if (SO.equals("LINUX")) {
-			if (data.startsWith("Dom") || data.startsWith("Seg") || data.startsWith("Ter") || data.startsWith("Qua") || data.startsWith("Qui") || data.startsWith("Sex") || data.startsWith("Sab")) {
+			if (data.startsWith("Dom") || data.startsWith("Seg")
+					|| data.startsWith("Ter") || data.startsWith("Qua")
+					|| data.startsWith("Qui") || data.startsWith("Sex")
+					|| data.startsWith("Sab")) {
 				formatador = new SimpleDateFormat(
 						"EEE MMM dd HH:mm:ss zzzz yyyy", new Locale("pt", "BR"));
 			} else {
 				formatador = new SimpleDateFormat(
 						"EEE MMM dd HH:mm:ss zzzz yyyy");
 			}
-
+			
+			while (data.equals("")){
+				Logger.getLogger(getClass()).error("Erro ao tentar buscar data do servidor id " + server.getId());
+				Logger.getLogger(getClass()).info("Buscando dados do servidor id " + server.getId() + "... tentando obter data novamente...");
+	
+				String data1 = GetDateLinux.exec(server.getUser(), server.getIp(), server.getPass(), server.getPort());
+				Logger.getLogger(getClass()).info("Data obtida do servidor " + server.getId() + ": " + data1);
+				if (data1.startsWith("Dom") || data1.startsWith("Seg")
+						|| data1.startsWith("Ter") || data1.startsWith("Qua")
+						|| data1.startsWith("Qui") || data1.startsWith("Sex")
+						|| data1.startsWith("Sab")) {
+					formatador = new SimpleDateFormat(
+							"EEE MMM dd HH:mm:ss zzzz yyyy", new Locale("pt", "BR"));
+				} else {
+					formatador = new SimpleDateFormat(
+							"EEE MMM dd HH:mm:ss zzzz yyyy");
+				}
+				data = data1;
+			} 
+				
 			try {
 				date = formatador.parse(data);
 			} catch (ParseException ex) {
@@ -126,8 +161,7 @@ public class DateUtils {
 		}
 
 		if (SO.equals("WINDOWS")) {
-			formatador = new SimpleDateFormat(
-					"EEE MMM dd HH:mm:ss yyyy");
+			formatador = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
 			try {
 				date = formatador.parse(data);
 			} catch (ParseException ex) {
@@ -137,8 +171,7 @@ public class DateUtils {
 		}
 
 		if (SO.equals("UNIX")) {
-			formatador = new SimpleDateFormat(
-					"EEE MMM dd HH:mm:ss zzzz yyyy");
+			formatador = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy");
 			try {
 				date = formatador.parse(data);
 			} catch (ParseException ex) {
@@ -147,8 +180,7 @@ public class DateUtils {
 		}
 
 		if (SO.equals("OUTRO")) {
-			formatador = new SimpleDateFormat(
-					"EEE MMM dd HH:mm:ss zzzz yyyy");
+			formatador = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy");
 			try {
 				date = formatador.parse(data);
 			} catch (ParseException ex) {

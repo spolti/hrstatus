@@ -84,7 +84,7 @@
 							</tr>
 							<tr>
 								<td align=right>Perfil:</td>
-								<td><select name="user.authority">
+								<td><select name="user.authority" ${isDisabled}>
 										<option value="ROLE_ADMIN"
 											<c:if test="${user.authority == 'ROLE_ADMIN'}"> selected="selected" </c:if>>Admin</option>
 										<option value="ROLE_USER"

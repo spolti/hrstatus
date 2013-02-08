@@ -18,7 +18,7 @@
  -->
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ include file="navbar.jsp" %>
+<%@ include file="navbar.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -52,7 +52,9 @@
 					<div class="row">
 						<div class="span12">
 							<div class="item" align="center">
-								<p align= "center"> <b> Consolidado </b></p>
+								<p align="center">
+									<b> Consolidado </b>
+								</p>
 								<table>
 									<tr>
 										<td align="center"><canvas id="cvs"
@@ -162,10 +164,12 @@
 							<div class="active item" align="center">
 
 								<div class="row">
+
 									<div class="span3"></div>
 
 									<div class="span2">
-										<form method="GET" action="<c:url value='/home/showByStatus/OK'/>">
+										<form method="GET"
+											action="<c:url value='/home/showByStatus/OK'/>">
 											<button input="" type="submit" value="Servidores OK"
 												class="btn btn-primary">Servidores OK</button>
 										</form>
@@ -174,25 +178,26 @@
 
 									<div class="span2">
 										<div class="btn-group">
-											<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-												Iniciar Verificação
-												<span class="caret"></span>
+											<a class="btn btn-primary dropdown-toggle"
+												data-toggle="dropdown" href="#"> Iniciar Verificação <span
+												class="caret"></span>
 											</a>
 											<ul class="dropdown-menu">
-												<li>
-													<a href="<c:url value='/home/startVerification/full' />"> Verificação Completa </a>
-												</li>
-												
-												<li>
-													<a href="<c:url value='/home/startVerification/notFull' />"> Verificação Não Completa </a>
-												</li>
-												
+												<li><a
+													href="<c:url value='/home/startVerification/full' />">
+														Verificação Completa </a></li>
+
+												<li><a
+													href="<c:url value='/home/startVerification/notFull' />">
+														Verificação Não Completa </a></li>
+
 											</ul>
 										</div>
 									</div>
 
 									<div class="span2">
-										<form method="GET" action="<c:url value='/home/showByStatus/NOK'/>">
+										<form method="GET"
+											action="<c:url value='/home/showByStatus/NOK'/>">
 											<button input="" type="submit" value="Servidores N OK"
 												class="btn btn-primary">Servidores N OK</button>
 										</form>
@@ -228,12 +233,21 @@
 										</c:forEach>
 									</tbody>
 								</table>
+								<c:if test="${not empty errors}">
+									<div class="alert">
+										<button type="button" class="close" data-dismiss="alert">×</button>
+										<c:forEach var="error" items="${errors}">
+		   		 				${error.category} - ${error.message}<br />
+										</c:forEach>
+									</div>
+								</c:if>
 							</div>
 							<!-- Caso seja necessário inserir novo ítem ao carrossel, inserir aqui.  -->
 						</div>
 					</div>
 				</div>
 			</div>
+
 
 		</div>
 		<!-- Carousel nav -->

@@ -54,7 +54,7 @@
 									<td>${user.mail}</td>
 									<td>${user.authority}</td>
 									<td><a
-										href="<c:url value='/findForUpdateUser/${user.username}' />"
+										href="<c:url value='/findForUpdateUser/${user.username}/0' />"
 										title="Editar Servidor"><i class="icon-edit"> </i></a> &nbsp;
 										<a
 										href="javascript:setParameterUser('${user.username}' ,'${user.nome}');" title="remover Usuário"><i
