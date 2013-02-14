@@ -65,7 +65,7 @@ public class PassExpireScheduler {
 				Users user = this.userDAO.getUserByID(passExpire.getUsername());
 				
 				user.setPassword(passExpire.getOldPwd());
-				
+				user.setFirstLogin(false);
 				//Salvando novo usuário.
 				this.userDAO.updateUser(user);
 				

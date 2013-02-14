@@ -159,6 +159,6 @@ CREATE TABLE `lockedResources` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 -- User Configurations
-CREATE USER 'hrstatus'@'%' IDENTIFIED BY 'kta25m69';
+CREATE USER 'hrstatus'@'%' IDENTIFIED BY 'P@ssw0rd';
 GRANT SELECT,INSERT,UPDATE,DELETE ON hrstatus.* TO 'hrstatus'@'%' WITH GRANT OPTION;
 FLUSH PRIVILEGES;

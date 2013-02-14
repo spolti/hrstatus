@@ -52,7 +52,7 @@ public class Scheduler {
 		//testando Scheduler para envio de email.
 		int count = this.iteracoesDAO.countServersNOK();
 		if (count > 0) {
-			Logger.getLogger(getClass()).debug("Foram encontrados " + count + " servidor(e)s desatualizado(s), enviando e-mail de alerta.");
+			Logger.getLogger(getClass()).debug("Foram encontrados " + count + " servidor(es) desatualizado(s), enviando e-mail de alerta.");
 			// Envio de e-mail
 			String mail1 = this.configurationDAO.getMailSender();
 			String Subject = this.configurationDAO.getSubject();
@@ -60,7 +60,6 @@ public class Scheduler {
 			String jndiMail = this.configurationDAO.getJndiMail();
 			MailSender mail = new MailSender();
 			mail.Sender(mail1, Subject, Dests, jndiMail);
-			Logger.getLogger(getClass()).info("Done...");
 		}else {
 			Logger.getLogger(getClass()).info("Nenhum servidor desatualizado foi encontrado.");
 		}
