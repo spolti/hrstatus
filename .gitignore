@@ -1,6 +1,6 @@
 *.class
-./target
-./Dumps
+target
+Dumps
 .project
 .classpath
 # Package Files #
