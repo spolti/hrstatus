@@ -51,10 +51,11 @@ public class MailSender{
 			message.setSubject(Subject);
 			message.setSentDate(new java.util.Date());
 
-			
+			GetServerIPAddress getIP = new GetServerIPAddress();
+
 			message.setContent ("<h1>Olá, alguns servidores ainda estão com a data/hora desatualizados.  " +
 					"\nAcesse o link abaixo para maiores detalhes:</h1> " +
-					"<a href=\"http://localhost:8080/hrstatus/reports/reportServersNOK\">Relatório</a>", "text/html");
+					"<a href=\"http://"+getIP.returnIP()+":8080/hrstatus/reports/reportServersNOK\">Relatório</a>", "text/html");
 
 			Transport.send(message);
 			

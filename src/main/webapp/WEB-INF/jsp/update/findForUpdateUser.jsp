@@ -51,7 +51,8 @@
 
 					<form method="POST" action="<c:url value='/updateUser'/>">
 						<table align=center>
-
+							<input type="hidden" name="user.firstLogin"
+								value="${user.firstLogin}" />
 							<tr>
 								<td align=right>Username :</td>
 								<td><input name="user.username" value="${user.username}"

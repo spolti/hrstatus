@@ -56,5 +56,7 @@ public interface UsersInterface {
 	
 	public void delUserHasChangedPass(String username);
 
+	public String getRole(String user);
 	
+	public boolean getFirstLogin(String username);
 }

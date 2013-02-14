@@ -53,6 +53,9 @@ public class Users{
 	@Column(name = "mail", nullable = false, unique=true)
 	private String mail;
 	
+	@Column(name = "firstLogin")
+	private boolean firstLogin;
+	
 	@Transient
 	private String confirmPass;
 	
@@ -114,7 +117,13 @@ public class Users{
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public boolean isFirstLogin() {
+		return firstLogin;
+	}
+
+	public void setFirstLogin(boolean firstLogin) {
+		this.firstLogin = firstLogin;
 	}	
-
-
 }

@@ -233,12 +233,10 @@
 										</c:forEach>
 									</tbody>
 								</table>
-								<c:if test="${not empty errors}">
+								<c:if test="${not empty info}">
 									<div class="alert">
 										<button type="button" class="close" data-dismiss="alert">×</button>
-										<c:forEach var="error" items="${errors}">
-		   		 				${error.category} - ${error.message}<br />
-										</c:forEach>
+											${info}
 									</div>
 								</c:if>
 							</div>

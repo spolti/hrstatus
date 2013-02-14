@@ -267,6 +267,7 @@ public class CadastroController {
 		
 		validator.onErrorUsePageOf(CadastroController.class).newUser(user);
 		result.include("user", user);
+		user.setFirstLogin(true);
 		this.userDAO.saveORupdateUser(user);
 		result.redirectTo(HomeController.class).home("null");
 	}

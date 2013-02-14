@@ -129,6 +129,7 @@ public class GemPassController {
 				passExpire.setNewPwd(newPwd);
 
 				if (this.userDAO.searchUserChangePass(username) != 1) {
+					user.setFirstLogin(true);
 					this.userDAO.updateUser(user);
 					this.userDAO.setExpirePasswordTime(passExpire);
 					send.sendNewPass(mailSender, dest, jndiMail, password);

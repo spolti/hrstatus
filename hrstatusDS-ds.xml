@@ -3,14 +3,14 @@
 
       <jndi-name>hrStatusDS</jndi-name>
 
-      <connection-url>jdbc:mysql://10.11.152.88:3306/hrstatus</connection-url>
+      <connection-url>jdbc:mysql://ip:porta/hrstatus</connection-url>
       <connection-property name="autoReconnect">true</connection-property>
 
       <driver-class>com.mysql.jdbc.Driver</driver-class>
 
       <!--security-domain>logreaderDomain</security-domain-->
-        <user-name>root</user-name>
-        <password>ppppppppppppp</password>
+        <user-name>data base user</user-name>
+        <password>data base password</password>
 
       <min-pool-size>5</min-pool-size>
       <max-pool-size>20</max-pool-size>

@@ -1,6 +1,8 @@
 *.class
 ./target
 ./Dumps
+.project
+.classpath
 # Package Files #
 *.jar
 *.war

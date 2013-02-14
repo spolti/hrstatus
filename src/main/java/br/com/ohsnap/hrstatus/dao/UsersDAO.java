@@ -167,4 +167,24 @@ public class UsersDAO implements UsersInterface {
 		session().delete(passExpire);
 	
 	}
+	
+	public String getRole(String user){
+		Logger.getLogger(getClass()).debug("getRole() -> Obtendo role do usuário " + user);
+		Criteria criteria = session().createCriteria(Users.class);
+		criteria.add(Restrictions.eq("username", user));
+		ProjectionList proList = Projections.projectionList();
+		proList.add(Projections.property("authority"));
+		criteria.setProjection(proList);
+		return criteria.uniqueResult().toString();
+	}
+	
+	public boolean getFirstLogin(String username){
+		Logger.getLogger(getClass()).debug("getFirstLogin() -> Verificando se é o primeiro login para o usuário " + username);
+		Criteria criteria = session().createCriteria(Users.class);
+		criteria.add(Restrictions.eq("username", username));
+		ProjectionList proList = Projections.projectionList();
+		proList.add(Projections.property("firstLogin"));
+		criteria.setProjection(proList);
+		return (Boolean) criteria.uniqueResult();
+	}
 }

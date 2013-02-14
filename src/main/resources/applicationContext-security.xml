@@ -16,7 +16,8 @@
 			<intercept-url pattern="/js/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 			<intercept-url pattern="/img/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 			<intercept-url pattern="/requestNewPass/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
-
+			<intercept-url pattern="/utils/criptPassJboss/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+			
 			<!-- Restrict access to ALL other pages -->
 			<intercept-url pattern="/home" access="ROLE_USER,ROLE_ADMIN" />
 			<intercept-url pattern="/navbar" access="ROLE_USER,ROLE_ADMIN" />

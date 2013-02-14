@@ -222,7 +222,7 @@ public class UpdateController {
 			Users user = this.usersDAO.getUserByID(username);
 			// setando username
 			user.setUsername(username);
-			
+			user.setFirstLogin(false);
 			result.include("isDisabled","disabled");
 				
 			result.include("user", user);
@@ -295,7 +295,9 @@ public class UpdateController {
 			}
 			
 			if (user.getAuthority() == null) {
-				user.setAuthority("ROLE_USER");
+				//Obtendo role do usuário logado do banco Se a mesma vier do jsp em branco.
+				String role = this.usersDAO.getRole(LoggedUsername);
+				user.setAuthority(role);
 			}
 
 			if (user.getPassword().isEmpty()) {

@@ -27,6 +27,7 @@ import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
 import br.com.ohsnap.hrstatus.model.Lock;
+import br.com.ohsnap.hrstatus.model.Users;
 
 public class CreateTables {
 	public static void main(String[] args) {
@@ -36,9 +37,9 @@ public class CreateTables {
 //		SchemaExport se = new SchemaExport(cfg);
 //		se.create(true, true);
 
-//		cfg.addAnnotatedClass(Users.class);
-//		SchemaExport se1 = new SchemaExport(cfg);
-//		se1.create(true, true);
+		cfg.addAnnotatedClass(Users.class);
+		SchemaExport se1 = new SchemaExport(cfg);
+		se1.create(true, true);
 		
 //		cfg.addAnnotatedClass(Authorities.class);
 //		SchemaExport se1 = new SchemaExport(cfg);
@@ -52,9 +53,9 @@ public class CreateTables {
 //		SchemaExport se1 = new SchemaExport(cfg);
 //		se1.create(true, true);
 		
-		cfg.addAnnotatedClass(Lock.class);
-		SchemaExport se = new SchemaExport(cfg);
-		se.create(true, true);
+//		cfg.addAnnotatedClass(Lock.class);
+//		SchemaExport se = new SchemaExport(cfg);
+//		se.create(true, true);
 		
 	}
 }
