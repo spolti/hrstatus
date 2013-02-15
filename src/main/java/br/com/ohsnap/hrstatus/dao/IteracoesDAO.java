@@ -114,7 +114,6 @@ public class IteracoesDAO implements Iteracoes {
 			return criteriaHostname.list();
 
 		} catch (Exception e) {
-			System.out.println(e);
 			Logger.getLogger(getClass()).error("Erro: " + e);
 			return new ArrayList<Servidores>();
 		}
@@ -129,7 +128,7 @@ public class IteracoesDAO implements Iteracoes {
 
 	public void updateServer(Servidores server) {
 
-		System.out.println("Parametros recebidos para update");
+		Logger.getLogger(getClass()).debug("Parametros recebidos para update");
 		Logger.getLogger(getClass()).debug("Server " + server.getHostname());
 		Logger.getLogger(getClass()).debug("IP: " + server.getIp());
 		Logger.getLogger(getClass()).debug("SO: " + server.getSO());
