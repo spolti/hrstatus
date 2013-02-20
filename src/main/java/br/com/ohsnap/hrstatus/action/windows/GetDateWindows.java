@@ -27,6 +27,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.apache.log4j.Logger;
+
 public class GetDateWindows {
 	public static String Exec(String ip) throws IOException {
 
@@ -34,23 +36,30 @@ public class GetDateWindows {
 		String out = null;
 		String s = null;
 		// System.out.println (ip);
-		p = Runtime.getRuntime().exec("net time -S " + ip);
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				p.getInputStream()));
-		while ((s = reader.readLine()) != null)
-			out += s;
+		try{
+			p = Runtime.getRuntime().exec("net time -I " + ip);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					p.getInputStream()));
+			while ((s = reader.readLine()) != null)
+				out += s;
 
-		if (out.startsWith("n")) {
-			String temp = out.substring(4, out.length());
-			out = temp;
+			if (out.startsWith("n")) {
+				String temp = out.substring(4, out.length());
+				out = temp;
+			}
+			return out;
+		}catch(Exception ex){
+			Logger.getLogger(GetDateWindows.class).error(ex);
+			Logger.getLogger(GetDateWindows.class).error("Setando data default");
+			return out = "Sun Jan 01 00:00:00 1950";
 		}
-		return out;
+
 
 	}
-//	public static void main (String args[]) throws IOException{
-//		GetDateWindows get = new GetDateWindows();
-//		
-//		System.out.println(get.Exec("rotacerta"));
-//	}
+	public static void main (String args[]) throws IOException{
+		GetDateWindows get = new GetDateWindows();
+		
+		System.out.println(get.Exec("10.99.1.31"));
+	}
 
 }

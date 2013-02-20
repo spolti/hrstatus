@@ -85,17 +85,20 @@ public class GetDateLinux {
 //		} else {
 //			return s;
 //		}
+		while (s.endsWith(" ")){
+			s = s.substring(0, -1);
+		}
 		return s;
 	}
 
-//	public static void main(String args[]) throws IOException, JSchException {
-//		GetDateLinux get = new GetDateLinux();
-//
-//		String tmp = get.exec("spolti", "sgp01", "kta25m69", 22);
-//		DateUtils util = new DateUtils();
-//		Date data = util.dateConverter(tmp, "LINUX");
-//		
-//		System.out.println(data);
-//	}
+	public static void main(String args[]) throws IOException, JSchException {
+		GetDateLinux get = new GetDateLinux();
+
+		String tmp = get.exec("nagios", "10.11.133.152", "23d3marc0", 22);
+		DateUtils util = new DateUtils();
+		Date data = util.dateConverter(tmp, "LINUX", null);
+		
+		System.out.println(data);
+	}
 
 }

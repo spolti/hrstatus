@@ -42,7 +42,7 @@
 								<td>E-mail</td>
 								<td>Perfil</td>
 								<td>Ações&nbsp;<a href="<c:url value="/newUser"/>"
-									title="Novo Servidor"><i class="icon-plus-sign"> </i></a></td>
+									title="Novo Usuário"><i class="icon-plus-sign"> </i></a></td>
 							</tr>
 						</thead>
 						<tbody>
@@ -55,7 +55,7 @@
 									<td>${user.authority}</td>
 									<td><a
 										href="<c:url value='/findForUpdateUser/${user.username}/0' />"
-										title="Editar Servidor"><i class="icon-edit"> </i></a> &nbsp;
+										title="Editar Usuário"><i class="icon-edit"> </i></a> &nbsp;
 										<a
 										href="javascript:setParameterUser('${user.username}' ,'${user.nome}');" title="remover Usuário"><i
 											class="icon-remove"> </i></a></td>

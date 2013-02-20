@@ -1,20 +1,20 @@
 /*
-    Copyright (C) 2012  Filippe Costa Spolti
+Copyright (C) 2012 Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+This file is part of Hrstatus.
 
-    Hrstatus is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+Hrstatus is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package br.com.ohsnap.hrstatus.utils;
@@ -22,10 +22,8 @@ package br.com.ohsnap.hrstatus.utils;
 /*
  * @author spolti
  */
-
+//implementar conversão para data no formato: domingo, 17 de fevereiro de 2013 05h18min11s BRT
 import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -34,20 +32,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-
 import org.apache.log4j.Logger;
 
 import br.com.ohsnap.hrstatus.action.linux.GetDateLinux;
 import br.com.ohsnap.hrstatus.model.Servidores;
-import br.com.ohsnap.hrstatus.security.Crypto;
 
 import com.jcraft.jsch.JSchException;
 
 public class DateUtils {
-	
+
 	public String getTime(String SO) {
 
 		Calendar cal = Calendar.getInstance();
@@ -55,7 +48,7 @@ public class DateUtils {
 
 		if (SO.equals("LINUX")) {
 			DateFormat dateFormatLinux = new SimpleDateFormat(
-					"EEE MMM dd HH:mm:ss zzzz yyyy");
+					"EEE MMM dd HH:mm:ss z yyyy");
 			serverTime = (dateFormatLinux.format(cal.getTime()));
 			Logger.getLogger(getClass()).debug(
 					"The server time is: " + serverTime);
@@ -72,7 +65,7 @@ public class DateUtils {
 
 		if (SO.equals("UNIX")) {
 			DateFormat dateFormatUnix = new SimpleDateFormat(
-					"EEE MMM dd HH:mm:ss zzzz yyyy");
+					"EEE MMM dd HH:mm:ss z yyyy");
 			serverTime = (dateFormatUnix.format(cal.getTime()));
 			Logger.getLogger(getClass()).debug(
 					"The server time is: " + serverTime);
@@ -80,7 +73,7 @@ public class DateUtils {
 
 		if (SO.equals("OUTRO")) {
 			DateFormat dateFormatOther = new SimpleDateFormat(
-					"EEE MMM dd HH:mm:ss zzzz yyyy");
+					"EEE MMM dd HH:mm:ss z yyyy");
 			serverTime = (dateFormatOther.format(cal.getTime()));
 			Logger.getLogger(getClass()).debug(
 					"The server time is: " + serverTime);
@@ -98,13 +91,13 @@ public class DateUtils {
 
 	}
 
-	public long diffrenceTime(String serverTime, String clientTime, String SO, Servidores servidores) throws JSchException, IOException {
+	public long diffrenceTime(String serverTime, String clientTime, String SO,
+			Servidores servidores) throws JSchException, IOException {
 
 		DateUtils date = new DateUtils();
 		long diff = 0;
 
 		// Converting String dates to java.util.Date
-
 		Date stime = date.dateConverter(serverTime, SO, servidores);
 		Date ctime = date.dateConverter(clientTime, SO, servidores);
 
@@ -116,8 +109,9 @@ public class DateUtils {
 
 		return result;
 	}
-	
-	public Date dateConverter(String data, String SO, Servidores server) throws JSchException, IOException {
+
+	public Date dateConverter(String data, String SO, Servidores server)
+			throws JSchException, IOException {
 		Date date = null;
 		SimpleDateFormat formatador;
 
@@ -127,35 +121,53 @@ public class DateUtils {
 					|| data.startsWith("Qui") || data.startsWith("Sex")
 					|| data.startsWith("Sab")) {
 				formatador = new SimpleDateFormat(
-						"EEE MMM dd HH:mm:ss zzzz yyyy", new Locale("pt", "BR"));
+						"EEE MMM dd HH:mm:ss z yyyy", new Locale("pt", "BR"));
 			} else {
 				formatador = new SimpleDateFormat(
-						"EEE MMM dd HH:mm:ss zzzz yyyy");
+						"EEE MMM dd HH:mm:ss z yyyy");
 			}
-			
-			while (data.equals("")){
-				Logger.getLogger(getClass()).error("Erro ao tentar buscar data do servidor id " + server.getId());
-				Logger.getLogger(getClass()).info("Buscando dados do servidor id " + server.getId() + "... tentando obter data novamente...");
-	
-				String data1 = GetDateLinux.exec(server.getUser(), server.getIp(), server.getPass(), server.getPort());
-				Logger.getLogger(getClass()).info("Data obtida do servidor " + server.getId() + ": " + data1);
-				if (data1.startsWith("Dom") || data1.startsWith("Seg")
-						|| data1.startsWith("Ter") || data1.startsWith("Qua")
-						|| data1.startsWith("Qui") || data1.startsWith("Sex")
-						|| data1.startsWith("Sab")) {
-					formatador = new SimpleDateFormat(
-							"EEE MMM dd HH:mm:ss zzzz yyyy", new Locale("pt", "BR"));
-				} else {
-					formatador = new SimpleDateFormat(
-							"EEE MMM dd HH:mm:ss zzzz yyyy");
+			int trys = 0 ;
+			while (data.equals("")) {
+				trys ++;
+				if (trys >=10 ){
+					Logger.getLogger(getClass()).error("Verifique o usuário utilizado para conexão.");
+					Logger.getLogger(getClass()).info("Setando data default");
+					data = "Sun Feb 17 05:04:27 BRT 2013";
+				}else{
+					Logger.getLogger(getClass()).error(
+							"Erro ao tentar buscar data do servidor id "
+									+ server.getId());
+					Logger.getLogger(getClass()).info(
+							"Buscando dados do servidor id " + server.getId()
+									+ "... tentando obter data novamente...");
+
+					String data1 = GetDateLinux.exec(server.getUser(),
+							server.getIp(), server.getPass(), server.getPort());
+					Logger.getLogger(getClass()).info(
+							"Data obtida do servidor " + server.getId() + ": "
+									+ data1);
+					if (data1.startsWith("Dom") || data1.startsWith("Seg")
+							|| data1.startsWith("Ter") || data1.startsWith("Qua")
+							|| data1.startsWith("Qui") || data1.startsWith("Sex")
+							|| data1.startsWith("Sab")) {
+						formatador = new SimpleDateFormat(
+								"EEE MMM dd HH:mm:ss z yyyy", new Locale("pt",
+										"BR"));
+					} else {
+						formatador = new SimpleDateFormat(
+								"EEE MMM dd HH:mm:ss z yyyy");
+					}
+					data = data1;
 				}
-				data = data1;
-			} 
 				
+			}
+
 			try {
 				date = formatador.parse(data);
 			} catch (ParseException ex) {
-				throw new RuntimeException(ex);
+				Logger.getLogger(getClass()).error(ex);
+				Logger.getLogger(getClass()).error("Setando data default");
+				return new Date("Sun Jan 01 00:00:00 1950");
 			}
 
 		}
@@ -165,26 +177,56 @@ public class DateUtils {
 			try {
 				date = formatador.parse(data);
 			} catch (ParseException ex) {
-				throw new RuntimeException(ex);
+				Logger.getLogger(getClass()).error(ex);
+				Logger.getLogger(getClass()).error("Setando data default");
+				return new Date("Sun Jan 01 00:00:00 1950");
 			}
 
 		}
 
 		if (SO.equals("UNIX")) {
-			formatador = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy");
-			try {
-				date = formatador.parse(data);
-			} catch (ParseException ex) {
-				throw new RuntimeException(ex);
+			if (data.length() > 19){
+				formatador = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+				String dataBRA = data;
+				try {
+					if (data.contains("BRA")){
+						dataBRA	 = data.replaceAll("BRA", "BRT");						
+					}
+					
+					date = formatador.parse(dataBRA.replaceAll("\n", ""));
+				}catch (Exception  ex) {
+					//throw new RuntimeException(ex);
+					Logger.getLogger(getClass()).error(ex);
+					Logger.getLogger(getClass()).error("Setando data default");
+					return new Date("Sun Jan 01 00:00:00 1950");
+				}
+			}else{
+				formatador = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+				String dataBRA = data;
+				try {
+					if (data.contains("BRA")){
+						dataBRA	 = data.replaceAll("BRA", "BRT");						
+					}
+					
+					String data2 = formatador.format(dataBRA);
+					date = formatador.parse(data2);
+				}catch (Exception  ex) {
+					Logger.getLogger(getClass()).error(ex);
+					Logger.getLogger(getClass()).error("Setando data default");
+					return new Date("Sun Jan 01 00:00:00 1950");
+				}
 			}
+
 		}
 
 		if (SO.equals("OUTRO")) {
-			formatador = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy");
+			formatador = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
 			try {
 				date = formatador.parse(data);
 			} catch (ParseException ex) {
-				throw new RuntimeException(ex);
+				Logger.getLogger(getClass()).error(ex);
+				Logger.getLogger(getClass()).error("Setando data default");
+				return new Date("Sun Jan 01 00:00:00 1950");
 			}
 
 		}
