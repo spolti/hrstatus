@@ -33,6 +33,13 @@
 <link
 	href="${pageContext.request.contextPath}/css/bootstrap-responsive.css"
 	rel="stylesheet">
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/filter.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		useFilter('search', 'resultTable');
+	});
+</script>
 
 <script language="JavaScript">
 	function setParameter(id, hostname) {
@@ -146,12 +153,18 @@
 											</a></li>
 										</ul></li>
 								</ul></li>
+							<a href="<c:url value="/selectServer"/>" data-toggle="modal">Verificar
+								logs</a>
 						</ul>
 				</li>
 
 			</ul>
+
 			<ul class="nav pull-right">
 				<li class="divider-vertical" />
+				<input type="text" class="navbar-search" id="search"
+					placeholder="Procurar" />
+
 				<li>
 					<div class="btn-group">
 						<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -159,7 +172,9 @@
 						</a>
 
 						<ul class="dropdown-menu">
-							<li><a href="<c:url value="/atualizarCadastro/${loggedUser}"/>">Atualizar Cadastro</a></li>
+							<li><a
+								href="<c:url value="/atualizarCadastro/${loggedUser}"/>">Atualizar
+									Cadastro</a></li>
 							<li><a href="<c:url value="/j_spring_security_logout"/>">Logout</a></li>
 						</ul>
 					</div>

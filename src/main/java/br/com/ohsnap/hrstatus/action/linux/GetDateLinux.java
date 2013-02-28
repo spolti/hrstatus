@@ -73,7 +73,7 @@ public class GetDateLinux {
 			}
 
 			if (channel.isClosed()) {
-				// System.out.println("exit-status: "+channel.getExitStatus());
+
 				break;
 			}
 		}

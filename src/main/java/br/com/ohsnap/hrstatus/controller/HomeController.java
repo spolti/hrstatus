@@ -169,6 +169,8 @@ public class HomeController {
 		result.include("otherOK", this.iteracoesDAO.countOtherOK());
 		result.include("otherNOK", this.iteracoesDAO.countOtherNOK());
 
+		result.include("totalServer",total);
+		
 		/////////////////////////////////////////////////////////
 		//Verificando se é o primeiro login do usuário após troca de senha ou do cadastro
 		//se for false não faz nade se for true redireciona para atualizar cadastro.

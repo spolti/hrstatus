@@ -77,6 +77,9 @@
 								<td><input type="password" name="servidores.pass" /></td>
 							</tr>
 							<tr>
+								<td align="right">Diretório de logs:</td>
+								<td><input type="text" name="servidores.logDir"></td>
+							</tr><tr>
 								<td align=right>Porta (SSH/TELNET):</td>
 								<td><input type="text" name="servidores.port" /></td>
 							</tr>

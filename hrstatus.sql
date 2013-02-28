@@ -104,6 +104,7 @@ CREATE TABLE `Servidores` (
   `hostname` varchar(255) DEFAULT NULL,
   `ip` varchar(255) DEFAULT NULL,
   `lastCheck` varchar(255) DEFAULT NULL,
+  `logDir` varchar(255) DEFAULT NULL,
   `pass` varchar(255) DEFAULT NULL,
   `port` int(11) DEFAULT NULL,
   `serverTime` varchar(255) DEFAULT NULL,

@@ -79,6 +79,9 @@ public class Servidores {
 	
 	@Column(name = "trClass")
 	private String trClass;
+	
+	@Column(name = "logDir")
+	private String logDir;
 
 	public String getTrClass() {
 		return trClass;
@@ -183,4 +186,14 @@ public class Servidores {
 	public void setLastCheck(String lastCheck) {
 		this.lastCheck = lastCheck;
 	}
+
+	public String getLogDir() {
+		return logDir;
+	}
+
+	public void setLogDir(String logDir) {
+		this.logDir = logDir;
+	}
+	
+	
 }

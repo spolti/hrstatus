@@ -34,17 +34,18 @@
 		<div class="content">
 			<div class="row">
 				<div class="span12">
-					<table class="table table-striped">
+					<table class="table table-striped" id="resultTable">
 						<thead>
 							<tr>
-								<td>ID</td>
-								<td>Servidor</td>
-								<td>IP</td>
-								<td>SO</td>
-								<td>Usuario</td>
-								<td>Password</td>
-								<td>Ações&nbsp;<a href="<c:url value="/newServer"/>"
-									title="Novo Servidor"><i class="icon-plus-sign"> </i></a></td>
+								<th>ID</th>
+								<th>Servidor</th>
+								<th>IP</th>
+								<th>SO</th>
+								<th>Usuario</th>
+								<th>Password</th>
+								<th>Diretŕio de Logs</th>
+								<th>Ações&nbsp;<a href="<c:url value="/newServer"/>"
+									title="Novo Servidor"><i class="icon-plus-sign"> </i></a></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -56,6 +57,7 @@
 									<td>${server.SO}</td>
 									<td>${server.user}</td>
 									<td>${server.pass}</td>
+									<td>${server.logDir}</td>
 									<td><a
 										href="<c:url value='/findForUpdateServer/${server.id}' />"
 										title="Editar Servidor"><i class="icon-edit"> </i></a> &nbsp;

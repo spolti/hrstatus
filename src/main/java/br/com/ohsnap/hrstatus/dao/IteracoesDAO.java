@@ -30,6 +30,7 @@ import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -558,4 +559,35 @@ public class IteracoesDAO implements Iteracoes {
 			return new ArrayList<Servidores>();
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Servidores> getHostnamesWithLogDir() {
+		Logger.getLogger(getClass()).debug(
+				"getHostnames -> Showing servers that have log dir configurated.");
+
+		try {
+
+			Criteria getHostnamesWithLogDir = session().createCriteria(
+					Servidores.class);
+			ProjectionList proList = Projections.projectionList();
+			proList.add(Projections.property("id"));
+			proList.add(Projections.property("hostname"));
+			proList.add(Projections.property("logDir"));
+			getHostnamesWithLogDir.setProjection(proList);
+			getHostnamesWithLogDir.add(Restrictions.ne("logDir","")); 
+			return getHostnamesWithLogDir.list();
+
+		} catch (Exception e) {
+			Logger.getLogger(getClass()).error("Erro: " + e);
+			return new ArrayList<Servidores>();
+		}
+	}
+	
+	public Servidores getServerByHostname(String hostname) {
+		Logger.getLogger(getClass()).debug(
+				"getServerByID -> hostname server selected: " + hostname);
+		return (Servidores) session().createCriteria(Servidores.class)
+				.add(Restrictions.eq("hostname", hostname)).uniqueResult();
+	}
+	
 }

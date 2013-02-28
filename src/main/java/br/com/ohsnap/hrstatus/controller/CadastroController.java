@@ -139,6 +139,8 @@ public class CadastroController {
 		} else if (servidores.getSO().isEmpty()) {
 			validator.add(new ValidationMessage(
 					"O campo SO deve ser informado", "Erro"));
+		}else if (servidores.getLogDir().isEmpty()) {
+			servidores.setLogDir(null);
 		}
 		
 		

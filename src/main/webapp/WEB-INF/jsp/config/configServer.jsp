@@ -48,12 +48,12 @@
 							</c:forEach>
 						</div>
 					</c:if>
-					<table class="table table-striped">
+					<table class="table table-striped"  id="resultTable">
 						<thead>
 							<tr>
-								<td>Parâmetro</td>
-								<td>Valor</td>
-								<td>Ação</td>
+								<th>Parâmetro</th>
+								<th>Valor</th>
+								<th>Ação</th>
 							</tr>
 						</thead>
 						<tbody>

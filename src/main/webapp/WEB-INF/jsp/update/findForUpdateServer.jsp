@@ -88,6 +88,11 @@
 									value="${server.pass}" /></td>
 							</tr>
 							<tr>
+								<td align=right>Diretório de logs:</td>
+								<td><input type="text" name="server.logDir"
+									value="${server.logDir}" /></td>
+							</tr>
+							<tr>
 								<td align=right>Porta (SSH/TELNET):</td>
 								<td><input type="text" name="server.port"
 									value="${server.port}" /></td>
@@ -96,7 +101,8 @@
 								<td align=right>SO:</td>
 								<td><select name="server.SO" id="server.SO">
 										<c:forEach items="${SO}" var="SO">
-											<option value="<c:out value="${SO}" />" <c:if test="${SO == server.SO}" > selected="selected" </c:if> >${SO}</option>
+											<option value="<c:out value="${SO}" />"
+												<c:if test="${SO == server.SO}" > selected="selected" </c:if>>${SO}</option>
 										</c:forEach>
 								</select></td>
 							</tr>

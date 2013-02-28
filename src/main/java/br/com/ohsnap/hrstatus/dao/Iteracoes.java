@@ -85,4 +85,8 @@ public interface Iteracoes {
 	
 	public List<Servidores> getListOfSO();
 	
+	public List<Servidores> getHostnamesWithLogDir();
+	
+	public Servidores getServerByHostname(String hostname);
+	
 }

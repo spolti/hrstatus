@@ -26,6 +26,11 @@
 			<intercept-url pattern="/home/startVerification/**" access="ROLE_USER,ROLE_ADMIN" />
 			<intercept-url pattern="/findForUpdateUser/**" access="ROLE_USER,ROLE_ADMIN" />
 			<intercept-url pattern="/updateUser" access="ROLE_USER,ROLE_ADMIN" />
+			
+			<intercept-url pattern="/selectServer" access="ROLE_USER,ROLE_ADMIN" />
+			<intercept-url pattern="/listLogFiles/**" access="ROLE_USER,ROLE_ADMIN" />
+			<intercept-url pattern="/downloadFile/**" access="ROLE_USER,ROLE_ADMIN" />
+			
 
 			<!-- Reports -->
 			<intercept-url pattern="/reports/reportFull" access="ROLE_USER,ROLE_ADMIN" />

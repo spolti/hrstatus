@@ -33,16 +33,16 @@
 		<div class="content">
 			<div class="row">
 				<div class="span12">
-					<table class="table table-striped">
-						<thead>
+					<table class="table table-striped" id="resultTable">
+						<thead id="resultTable">
 							<tr>
-								<td>Nome</td>
-								<td>Username</td>
-								<td>Enabled</td>
-								<td>E-mail</td>
-								<td>Perfil</td>
-								<td>Ações&nbsp;<a href="<c:url value="/newUser"/>"
-									title="Novo Usuário"><i class="icon-plus-sign"> </i></a></td>
+								<th>Nome</th>
+								<th>Username</th>
+								<th>Enabled</th>
+								<th>E-mail</th>
+								<th>Perfil</th>
+								<th>Ações&nbsp;<a href="<c:url value="/newUser"/>"
+									title="Novo Usuário"><i class="icon-plus-sign"> </i></a></th>
 							</tr>
 						</thead>
 						<tbody>

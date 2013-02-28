@@ -131,7 +131,7 @@
 						            bar.Set('chart.labels', ['Linux', 'Unix', 'Windows','Outros']);
 						            bar.Set('chart.tooltips', ['Linux OK', 'Linux não OK', 'Unix OK', 'Unix não OK', 'Windows OK', 'Windows não OK','Outros OK','Outros não OK']);
 						            bar.Set('chart.tooltips.event', 'onmousemove');
-						            bar.Set('chart.ymax', 100);
+						            bar.Set('chart.ymax', ${totalServer});
 						            bar.Set('chart.strokestyle', 'white');
 						            bar.Set('chart.linewidth', 2);
 						            bar.Set('chart.shadow', true);
@@ -205,17 +205,17 @@
 									<div class="span3"></div>
 								</div>
 
-								<table class="table table-condensed">
+								<table class="table table-condensed" id="resultTable">
 									<thead>
 										<tr>
-											<td>ID</td>
-											<td>Servidor</td>
-											<td>IP</td>
-											<td>SO</td>
-											<td>Client Time</td>
-											<td>Server Time</td>
-											<td>Diference (s)</td>
-											<td>Status</td>
+											<th>ID</th>
+											<th>Servidor</th>
+											<th>IP</th>
+											<th>SO</th>
+											<th>Client Time</th>
+											<th>Server Time</th>
+											<th>Diference (s)</th>
+											<th>Status</th>
 										</tr>
 									</thead>
 									<tbody>
