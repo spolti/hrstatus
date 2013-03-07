@@ -47,12 +47,17 @@ public class Configurations {
 	@Column(name = "subject")
 	private String subject;
 	
-	
 	@Column(name = "dests")
 	private String dests;
 	
 	@Column(name = "jndiMail")
 	private String jndiMail;
+	
+	@Column(name = "ntpServer")
+	private String ntpServer;
+	
+	@Column(name = "updateNtpIsActive")
+	private boolean updateNtpIsActive;
 	
 	public String getSubject() {
 		return subject;
@@ -101,9 +106,21 @@ public class Configurations {
 	public void setMailFrom(String mailFrom) {
 		this.mailFrom = mailFrom;
 	}
-	
-	
 
-	
-	
+	public String getNtpServer() {
+		return ntpServer;
+	}
+
+	public void setNtpServer(String ntpServer) {
+		this.ntpServer = ntpServer;
+	}
+
+	public boolean isUpdateNtpIsActive() {
+		return updateNtpIsActive;
+	}
+
+	public void setUpdateNtpIsActive(boolean updateNtpIsActive) {
+		this.updateNtpIsActive = updateNtpIsActive;
+	}
+
 }

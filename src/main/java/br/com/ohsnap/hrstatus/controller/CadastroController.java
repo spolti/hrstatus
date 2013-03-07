@@ -28,8 +28,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Post;
@@ -43,6 +41,7 @@ import br.com.ohsnap.hrstatus.model.Servidores;
 import br.com.ohsnap.hrstatus.model.Users;
 import br.com.ohsnap.hrstatus.security.Crypto;
 import br.com.ohsnap.hrstatus.security.SpringEncoder;
+import br.com.ohsnap.hrstatus.utils.UserInfo;
 
 @Resource
 public class CadastroController {
@@ -51,6 +50,7 @@ public class CadastroController {
 	private Iteracoes iteracoesDAO;
 	private Validator validator;
 	private UsersInterface userDAO;
+	UserInfo userInfo = new UserInfo();
 
 	public CadastroController(Result result, Iteracoes iteracoesDAO,
 			Validator validator, UsersInterface userDAO) {
@@ -66,10 +66,7 @@ public class CadastroController {
 		//inserindo html tittle no result
 		result.include("title","Registrar Servidor");
 		
-		//inserindo username na home:
-		Object  LoggedObjectUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
-		result.include("loggedUser", LoggedUsername);
+		result.include("loggedUser", userInfo.getLoggedUsername());
 		
 		Logger.getLogger(getClass()).info("URI Called: /newServer");
 		result.include("servidores", servidores);
@@ -105,10 +102,7 @@ public class CadastroController {
 		//inserindo html tittle no result
 		result.include("title","Registrar Servidor");
 		
-		//inserindo username noa home:
-		Object  LoggedObjectUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
-		result.include("loggedUser", LoggedUsername);
+		result.include("loggedUser", userInfo.getLoggedUsername());
 		
 		Logger.getLogger(getClass()).info("URI Called: /registerServer");
 		Crypto encodePass = new Crypto();
@@ -211,10 +205,7 @@ public class CadastroController {
 		//inserindo html tittle no result
 		result.include("title","Registrar Usuário");
 		
-		//inserindo username noa home:
-		Object  LoggedObjectUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
-		result.include("loggedUser", LoggedUsername);
+		result.include("loggedUser", userInfo.getLoggedUsername());
 		
 		Logger.getLogger(getClass()).info("URI Called: /newUser");
 		result.include("user", user);
@@ -225,10 +216,8 @@ public class CadastroController {
 	public void registerUser(Users user) {
 		//inserindo html tittle no result
 		result.include("title","Registrar Usuário");
-		//inserindo username noa home:
-		Object  LoggedObjectUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
-		result.include("loggedUser", LoggedUsername);
+		
+		result.include("loggedUser", userInfo.getLoggedUsername());
 		
 		Logger.getLogger(getClass()).info("URI Called: /registerUser");
 		SpringEncoder encode = new SpringEncoder();

@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 
-import br.com.ohsnap.hrstatus.utils.DateUtils;
+import org.apache.log4j.Logger;
 
 import com.jcraft.jsch.*;
 
@@ -80,11 +80,6 @@ public class GetDateLinux {
 		channel.disconnect();
 		session.disconnect();
 
-//		if (s.endsWith(" ")) {
-//			return s.substring(0, -1);
-//		} else {
-//			return s;
-//		}
 		while (s.endsWith(" ")){
 			s = s.substring(0, -1);
 		}
@@ -94,11 +89,11 @@ public class GetDateLinux {
 	public static void main(String args[]) throws IOException, JSchException {
 		GetDateLinux get = new GetDateLinux();
 
-		String tmp = get.exec("nagios", "10.11.133.152", "23d3marc0", 22);
-		DateUtils util = new DateUtils();
-		Date data = util.dateConverter(tmp, "LINUX", null);
+		String tmp = get.exec("nagios", "10.99.1.151", "23d3marc0", 22);
+//		DateParser parse = new DateParser();
+//		Date data = parse.parser(tmp);
 		
-		System.out.println(data);
+		System.out.println(tmp);
 	}
 
 }

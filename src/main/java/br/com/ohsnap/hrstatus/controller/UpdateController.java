@@ -46,6 +46,7 @@ import br.com.ohsnap.hrstatus.model.Servidores;
 import br.com.ohsnap.hrstatus.model.Users;
 import br.com.ohsnap.hrstatus.security.Crypto;
 import br.com.ohsnap.hrstatus.security.SpringEncoder;
+import br.com.ohsnap.hrstatus.utils.UserInfo;
 
 @Resource
 public class UpdateController {
@@ -55,6 +56,7 @@ public class UpdateController {
 	private Validator validator;
 	private UsersInterface usersDAO;
 	private HttpServletRequest request;
+	UserInfo userInfo = new UserInfo();
 
 	public UpdateController(Result result, Iteracoes iteracoesDAO,
 			Validator validator, UsersInterface usersDAO,HttpServletRequest request) {
@@ -71,11 +73,7 @@ public class UpdateController {
 		//inserindo html title no result
 		result.include("title","Atualizar Servidor");
 		
-		// inserindo username noa home:
-		Object LoggedObjectUser = SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal();
-		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
-		result.include("loggedUser", LoggedUsername);
+		result.include("loggedUser", userInfo.getLoggedUsername());
 
 		Logger.getLogger(getClass()).info("URI Called: /findForUpdateServer");
 		Crypto decodePass = new Crypto();
@@ -139,11 +137,7 @@ public class UpdateController {
 		//inserindo html title no result
 		result.include("title","Atualizar Servidor");
 		
-		// inserindo username noa home:
-		Object LoggedObjectUser = SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal();
-		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
-		result.include("loggedUser", LoggedUsername);
+		result.include("loggedUser", userInfo.getLoggedUsername());
 
 		Crypto encodePass = new Crypto();
 		Logger.getLogger(getClass()).info("URI Called: /updateServer");
@@ -201,11 +195,8 @@ public class UpdateController {
 		//Logger.getLogger(getClass()).info("URI Called: /findForUpdateUser");
 		//inserindo html title no result
 		result.include("title","Atualizar Usuário");
-		
-		// inserindo username noa home:
-		Object LoggedObjectUser = SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal();
-		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
+
+		String LoggedUsername = userInfo.getLoggedUsername();
 		
 		//obtendo roles do usuário:
 		boolean isAdmin = request.isUserInRole("ROLE_ADMIN");
@@ -260,10 +251,8 @@ public class UpdateController {
 	public void updateUser(Users user) {
 		//inserindo html title no result
 		result.include("title","Atualizar Usuário");
-		
-		Object LoggedObjectUser = SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal();
-		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
+
+		String LoggedUsername = userInfo.getLoggedUsername();
 		
 		//obtendo roles do usuário:
 		boolean isAdmin = request.isUserInRole("ROLE_ADMIN");

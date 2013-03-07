@@ -48,6 +48,7 @@ import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.ohsnap.hrstatus.dao.Iteracoes;
 import br.com.ohsnap.hrstatus.model.Servidores;
+import br.com.ohsnap.hrstatus.utils.UserInfo;
 
 @Resource
 public class ReportsController {

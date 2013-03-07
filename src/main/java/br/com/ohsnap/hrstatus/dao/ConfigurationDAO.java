@@ -55,55 +55,64 @@ public class ConfigurationDAO implements Configuration {
 		return ((Session) entityManager.getDelegate());
 	}
 
-	public void updateConfig(Configurations config){
-		
-		Logger.getLogger(getClass()).debug("updateConfig() -> Loading configurations.");
+	public void updateConfig(Configurations config) {
+
+		Logger.getLogger(getClass()).debug(
+				"updateConfig() -> Loading configurations.");
 		session().saveOrUpdate(config);
 	}
-	
-	public Configurations getConfigs(){
-		return (Configurations) session().createCriteria(Configurations.class).uniqueResult();
+
+	public Configurations getConfigs() {
+		return (Configurations) session().createCriteria(Configurations.class)
+				.uniqueResult();
 	}
-	
-	public String getMailSender(){
+
+	public String getMailSender() {
 		Criteria mailFrom = session().createCriteria(Configurations.class);
 		ProjectionList proList = Projections.projectionList();
 		proList.add(Projections.property("mailFrom"));
 		mailFrom.setProjection(proList);
 		return (String) mailFrom.uniqueResult();
 	}
-	
-	public String getSubject(){
+
+	public String getSubject() {
 		Criteria subject = session().createCriteria(Configurations.class);
 		ProjectionList proList = Projections.projectionList();
 		proList.add(Projections.property("subject"));
 		subject.setProjection(proList);
 		return (String) subject.uniqueResult();
 	}
-	
-	public String getDests(){
+
+	public String getDests() {
 		Criteria subject = session().createCriteria(Configurations.class);
 		ProjectionList proList = Projections.projectionList();
 		proList.add(Projections.property("dests"));
 		subject.setProjection(proList);
 		return (String) subject.uniqueResult();
 	}
-	
-	public String getJndiMail(){
+
+	public String getJndiMail() {
 		Criteria subject = session().createCriteria(Configurations.class);
 		ProjectionList proList = Projections.projectionList();
 		proList.add(Projections.property("jndiMail"));
 		subject.setProjection(proList);
 		return (String) subject.uniqueResult();
 	}
-	
-	public int getDiffirenceSecs(){
+
+	public int getDiffirenceSecs() {
 		Criteria difference = session().createCriteria(Configurations.class);
 		ProjectionList proList = Projections.projectionList();
 		proList.add(Projections.property("difference"));
 		difference.setProjection(proList);
 		int value = (Integer) difference.uniqueResult();
-		return  value;	
+		return value;
 	}
-	
+
+	public String getNtpServerAddress() {
+		Criteria ntpServer = session().createCriteria(Configurations.class);
+		ProjectionList proList = Projections.projectionList();
+		proList.add(Projections.property("ntpServer"));
+		ntpServer.setProjection(proList);
+		return (String) ntpServer.uniqueResult();
+	}
 }

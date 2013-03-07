@@ -23,6 +23,9 @@ package br.com.ohsnap.hrstatus.scheduler;
  * @author spolti
  */
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -34,25 +37,28 @@ import br.com.ohsnap.hrstatus.dao.Configuration;
 import br.com.ohsnap.hrstatus.dao.Iteracoes;
 import br.com.ohsnap.hrstatus.utils.MailSender;
 
-
 @Service
 public class Scheduler {
- 
+
 	@Autowired
 	private Iteracoes iteracoesDAO;
 	@Autowired
 	private Configuration configurationDAO;
-	
-	public Scheduler(){}
-	
-	@Scheduled(cron="${br.com.ohsnap.hrstatus.scheduler.MailScheduler.cron}")
+
+	public Scheduler() {
+	}
+
+	@Scheduled(cron = "${br.com.ohsnap.hrstatus.scheduler.MailScheduler.cron}")
 	public void sendMail() {
-		Logger.getLogger(getClass()).info("Invoking sendMail at " + new Date());
-		
-		//testando Scheduler para envio de email.
+		Logger.getLogger(getClass())
+				.debug("Invoking sendMail at " + new Date());
+
 		int count = this.iteracoesDAO.countServersNOK();
 		if (count > 0) {
-			Logger.getLogger(getClass()).debug("Foram encontrados " + count + " servidor(es) desatualizado(s), enviando e-mail de alerta.");
+			Logger.getLogger(getClass())
+					.debug("Foram encontrados "
+							+ count
+							+ " servidor(es) desatualizado(s), enviando e-mail de alerta.");
 			// Envio de e-mail
 			String mail1 = this.configurationDAO.getMailSender();
 			String Subject = this.configurationDAO.getSubject();
@@ -60,9 +66,41 @@ public class Scheduler {
 			String jndiMail = this.configurationDAO.getJndiMail();
 			MailSender mail = new MailSender();
 			mail.Sender(mail1, Subject, Dests, jndiMail);
-		}else {
-			Logger.getLogger(getClass()).info("Nenhum servidor desatualizado foi encontrado.");
+		} else {
+			Logger.getLogger(getClass()).info(
+					"Nenhum servidor desatualizado foi encontrado.");
 		}
-		
+
+	}
+
+	@Scheduled(cron = "${br.com.ohsnap.hrstatus.scheduler.NtpScheduler.cron}")
+	public void NtpUpdater() throws IOException {
+
+		Process p = (Runtime.getRuntime().exec("which ntpdate"));
+		String stdIn = "", s ="";
+		BufferedReader stdInput = new BufferedReader(new InputStreamReader(
+				p.getInputStream()));
+		while ((s = stdInput.readLine()) != null) {
+			stdIn += s + "\n";
+		}
+
+		if (stdIn.equals("")){
+			Logger.getLogger(getClass()).error("Ntpdate não encontrado, abortando atualização automática");
+		}else{ //else if se a opção verificarção estiver ativo (usar boolean no objeto)
+			Logger.getLogger(getClass()).debug("Iniciando checagem NTP");
+			String ntpServer = this.configurationDAO.getNtpServerAddress();
+			Logger.getLogger(getClass()).debug(
+					"Servidor NTP configurado: " + ntpServer);
+			
+			//fazer a atualização com sudo....
+			String stdInAtualiza = "";
+			Process pAtualiza = (Runtime.getRuntime().exec("sudo " + stdIn + " -u " + ntpServer));
+			BufferedReader stdInputAtualiza = new BufferedReader(new InputStreamReader(
+					pAtualiza.getInputStream()));
+			while ((s = stdInputAtualiza.readLine()) != null) {
+				stdInAtualiza += s + "\n";
+			}
+			Logger.getLogger(getClass()).debug("Resultado atualização ntp [ sudo " + stdIn + " -u " + ntpServer + "]: " + stdInAtualiza);
+		}
 	}
 }

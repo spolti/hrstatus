@@ -35,7 +35,6 @@ public class GetDateWindows {
 		Process p = null;
 		String out = null;
 		String s = null;
-		// System.out.println (ip);
 		try{
 			p = Runtime.getRuntime().exec("net time -I " + ip);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -43,6 +42,7 @@ public class GetDateWindows {
 			while ((s = reader.readLine()) != null)
 				out += s;
 
+			//i dont know why, but the net time command returns null before the date, like this: nullTer Mar ......
 			if (out.startsWith("n")) {
 				String temp = out.substring(4, out.length());
 				out = temp;
@@ -50,16 +50,13 @@ public class GetDateWindows {
 			return out;
 		}catch(Exception ex){
 			Logger.getLogger(GetDateWindows.class).error(ex);
-			Logger.getLogger(GetDateWindows.class).error("Setando data default");
-			return out = "Sun Jan 01 00:00:00 1950";
+			return "";
 		}
 
-
 	}
-	public static void main (String args[]) throws IOException{
-		GetDateWindows get = new GetDateWindows();
-		
-		System.out.println(get.Exec("10.99.1.31"));
-	}
-
+//	public static void main (String args[]) throws IOException{
+//		GetDateWindows get = new GetDateWindows();
+//		
+//		System.out.println(get.Exec("10.99.1.31"));
+//	}
 }

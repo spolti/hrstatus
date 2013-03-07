@@ -40,9 +40,11 @@ import br.com.ohsnap.hrstatus.dao.UsersInterface;
 import br.com.ohsnap.hrstatus.model.PassExpire;
 import br.com.ohsnap.hrstatus.model.Users;
 import br.com.ohsnap.hrstatus.security.SpringEncoder;
+import br.com.ohsnap.hrstatus.utils.DateParser;
 import br.com.ohsnap.hrstatus.utils.DateUtils;
 import br.com.ohsnap.hrstatus.utils.MailSender;
 import br.com.ohsnap.hrstatus.utils.PassGenerator;
+import br.com.ohsnap.hrstatus.utils.UserInfo;
 
 @Resource
 public class GemPassController {
@@ -50,6 +52,7 @@ public class GemPassController {
 	private UsersInterface userDAO;
 	private Configuration configurationDAO;
 	private Result result;
+	UserInfo userInfo = new UserInfo();
 
 	public GemPassController(Result result, Configuration configurationDAO, UsersInterface userDAO) {
 		this.result = result;
@@ -62,18 +65,15 @@ public class GemPassController {
 		//inserindo html title no result
 		result.include("title","Atualizar Usuário");
 		
-		Logger.getLogger(getClass()).info("URI Called: /atualizarCadastro");
-		Object LoggedObjectUser = SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal();
-		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
+		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Logger.getLogger(getClass()).debug("Usuário logado: " + LoggedUsername);
+		Logger.getLogger(getClass()).debug("Usuário logado: " + userInfo.getLoggedUsername());
 
-		if (!username.equals(LoggedUsername.toString())) {
+		if (!username.equals(userInfo.getLoggedUsername().toString())) {
 			result.use(Results.http()).sendError(403);
 		} else {
 			Logger.getLogger(getClass()).info("validação de usuário OK");
-			result.redirectTo(UpdateController.class).findForUpdateUser(null, LoggedUsername,"changePass");
+			result.redirectTo(UpdateController.class).findForUpdateUser(null, userInfo.getLoggedUsername(),"changePass");
 		}
 
 	}
@@ -108,9 +108,12 @@ public class GemPassController {
 
 				// Obtendo a hora e calculando a tempo de expiração
 				DateUtils dateUtils = new DateUtils();
-				Date changeTime = dateUtils.dateConverter(
-						dateUtils.getTime("LINUX"), "LINUX",null); // hora completa
-																// atual
+				DateParser parse = new DateParser();
+//				Date changeTime = dateUtils.dateConverter(
+//						dateUtils.getTime(), "LINUX",null); // hora completa
+//																// atual
+				Date changeTime = parse.parser(dateUtils.getTime());
+				
 				passExpire.setChangeTime(changeTime.toString());
 
 				// calculando a soma

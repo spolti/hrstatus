@@ -96,6 +96,22 @@
 									title="Atualizar campo"> <i class="icon-edit"> </i></a></td>
 							</tr>
 
+							<tr class="info">
+								<td>Servidor NTP</td>
+								<td>${ntpServer}</td>
+								<td><a
+									href="javascript:setParameterForUpdate('${ntpServer}','Editar Parametro Servidor NTP','ntpServer');"
+									title="Atualizar campo"> <i class="icon-edit"> </i></a></td>
+							</tr>
+							
+							<tr class="info">
+								<td>Ativar Atualização via NTP:</td>
+								<td>${updateNtpIsActive}</td>
+								<td><a
+									href="javascript:setParameterForUpdate('${updateNtpIsActive}','Editar Parametro Ativar Atualização via NTP','updateNtpIsActive');"
+									title="Atualizar campo"> <i class="icon-edit"> </i></a></td>
+							</tr>
+							
 						</tbody>
 					</table>
 				</div>

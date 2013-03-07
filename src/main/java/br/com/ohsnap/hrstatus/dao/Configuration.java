@@ -40,4 +40,6 @@ public interface Configuration {
 	public String getJndiMail();
 	
 	public int getDiffirenceSecs();
+	
+	public String getNtpServerAddress();
 }

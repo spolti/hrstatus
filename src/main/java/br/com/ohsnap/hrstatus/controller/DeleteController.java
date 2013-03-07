@@ -32,6 +32,7 @@ import br.com.ohsnap.hrstatus.dao.Iteracoes;
 import br.com.ohsnap.hrstatus.dao.UsersInterface;
 import br.com.ohsnap.hrstatus.model.Servidores;
 import br.com.ohsnap.hrstatus.model.Users;
+import br.com.ohsnap.hrstatus.utils.UserInfo;
 
 @Resource
 public class DeleteController {

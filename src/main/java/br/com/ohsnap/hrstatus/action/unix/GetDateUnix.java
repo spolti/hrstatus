@@ -27,8 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 
-import br.com.ohsnap.hrstatus.action.linux.GetDateLinux;
-import br.com.ohsnap.hrstatus.utils.DateUtils;
+import br.com.ohsnap.hrstatus.utils.DateParser;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
@@ -93,21 +92,15 @@ public class GetDateUnix {
 	      channel.disconnect();
 	      session.disconnect();
       
-	 
-//			if (s.endsWith("\n")) {
-//				return s.replace("\n", "");
-//			} else {
-//				return s;
-//			}
-			return s.replaceAll("\n", "");
+		return s.replaceAll("\n", "");
 	 }
 	
 	public static void main(String args[]) throws IOException, JSchException {
 		GetDateUnix get = new GetDateUnix();
 
-		String tmp = get.exec("nagios", "10.51.3.14", "23d3marc0", 22);
-		DateUtils util = new DateUtils();
-		Date data = util.dateConverter(tmp, "UNIX", null);
-		System.out.println(data);
+		String tmp = get.exec("nagios", "10.99.1.151", "23d3marc0", 22);
+		DateParser parse = new DateParser();
+		Date data = parse.parser(tmp);
+		System.out.println(tmp);
 	}
 }

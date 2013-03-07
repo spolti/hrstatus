@@ -39,6 +39,7 @@ import br.com.ohsnap.hrstatus.dao.UsersInterface;
 import br.com.ohsnap.hrstatus.model.Configurations;
 import br.com.ohsnap.hrstatus.model.Servidores;
 import br.com.ohsnap.hrstatus.model.Users;
+import br.com.ohsnap.hrstatus.utils.UserInfo;
 
 @Resource
 public class ConfigController {
@@ -48,6 +49,7 @@ public class ConfigController {
 	private Configuration configurationDAO;
 	private Validator validator;
 	private UsersInterface userDAO;
+	UserInfo userInfo = new UserInfo();
 
 	public ConfigController(Result result, Iteracoes iteracoesDAO,
 			Configuration configurationDAO, Validator validator, UsersInterface userDAO) {
@@ -63,10 +65,7 @@ public class ConfigController {
 		//inserindo html title no result
 		result.include("title","Configurar Servidor");
 		
-		//inserindo username noa home:
-		Object  LoggedObjectUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
-		result.include("loggedUser", LoggedUsername);
+		result.include("loggedUser", userInfo.getLoggedUsername());
 		
 		Logger.getLogger(getClass()).info("URI Called: /configServer");
 		//List<Configurations> opts = this.configurationDAO.getConfigs();
@@ -76,19 +75,29 @@ public class ConfigController {
 		String subject = opts.getSubject();
 		String dests = opts.getDests();
 		String jndiMail = opts.getJndiMail();
-
+		String ntpServer = opts.getNtpServer();
+		boolean updateNtpIsActive = opts.isUpdateNtpIsActive();
+		
 		Logger.getLogger(getClass()).debug("Difference time: " + diff);
 		Logger.getLogger(getClass()).debug("Sender: " + mailFrom);
 		Logger.getLogger(getClass()).debug("Subject: " + subject);
 		Logger.getLogger(getClass()).debug("Dests: " + dests);
 		Logger.getLogger(getClass()).debug("JndiMail: " + jndiMail);
+		Logger.getLogger(getClass()).debug("NtpServer: " + ntpServer);
+		Logger.getLogger(getClass()).debug("updateNtpIsActive: " + updateNtpIsActive);
 		
 		result.include("difference", diff);
 		result.include("mailFrom", mailFrom);
 		result.include("subject", subject);
 		result.include("dests", dests);
 		result.include("jndiMail", jndiMail);
+		result.include("ntpServer",ntpServer);
 		
+		if (updateNtpIsActive){
+			result.include("updateNtpIsActive","ATIVO");
+		}else{
+			result.include("updateNtpIsActive","INATIVO");
+		}
 	}
 	
 	@Get("/updateConfig")
@@ -96,10 +105,7 @@ public class ConfigController {
 		//inserindo html title no result
 		result.include("title","Configurar Servidor");
 		
-		//inserindo username noa home:
-		Object  LoggedObjectUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
-		result.include("loggedUser", LoggedUsername);
+		result.include("loggedUser", userInfo.getLoggedUsername());
 		
 		Logger.getLogger(getClass()).info("URI Called: /updateConfig");
 		Logger.getLogger(getClass()).info("Valor recebido " + campo + " " + new_value);
@@ -132,6 +138,8 @@ public class ConfigController {
 			}
 		}else if (campo.equals("subject")){
 			config.setSubject(new_value);
+		}else if (campo.equals("ntpServer")){
+			config.setNtpServer(new_value);
 		}else if (campo.equals("jndiMail")){
 			config.setJndiMail(new_value);
 		}else if(campo.equals("dests")){
@@ -147,6 +155,14 @@ public class ConfigController {
 				}
 			}
 			
+		}else if(campo.equals("updateNtpIsActive")){
+			if ("ATIVO".equals(new_value.toUpperCase())){
+				config.setUpdateNtpIsActive(true);				
+			}else if("INATIVO".equals(new_value.toUpperCase())){
+				config.setUpdateNtpIsActive(false);
+			}else{
+				validator.add(new ValidationMessage("O campo Ativar Atualização via NTP só permite os valores ATIVO ou INATIVO", "Erro"));
+			}
 		}
 
 		validator.onErrorForwardTo(ConfigController.class).configServer();
@@ -160,10 +176,7 @@ public class ConfigController {
 		//inserindo html title no result
 		result.include("title","Configurar Clientes");
 		
-		//inserindo username noa home:
-		Object  LoggedObjectUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
-		result.include("loggedUser", LoggedUsername);
+		result.include("loggedUser", userInfo.getLoggedUsername());
 		
 		Logger.getLogger(getClass()).info("URI Called: /configClients");
 		List<Servidores> list = this.iteracoesDAO.listServers();
@@ -175,10 +188,7 @@ public class ConfigController {
 		//inserindo html title no result
 		result.include("title","Configurar Usuário");
 		
-		//inserindo username noa home:
-		Object  LoggedObjectUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
-		result.include("loggedUser", LoggedUsername);
+		result.include("loggedUser", userInfo.getLoggedUsername());
 		
 		Logger.getLogger(getClass()).info("URI Called: /configUser");
 		List<Users> list = this.userDAO.listUser();

@@ -48,6 +48,7 @@ import br.com.ohsnap.hrstatus.action.SftpLogs;
 import br.com.ohsnap.hrstatus.dao.Iteracoes;
 import br.com.ohsnap.hrstatus.model.Servidores;
 import br.com.ohsnap.hrstatus.security.Crypto;
+import br.com.ohsnap.hrstatus.utils.UserInfo;
 
 import com.jcraft.jsch.JSchException;
 
@@ -57,6 +58,7 @@ public class LogsController {
 	private Result result;
 	private Iteracoes iteracoesDAO;
 	HttpServletResponse response;
+	UserInfo userInfo = new UserInfo();
 	
 	public LogsController(Result result, Iteracoes iteracoesDAO, HttpServletResponse response) {
 		this.result = result;
@@ -68,10 +70,7 @@ public class LogsController {
 	public void selectServer(){
 		
 		result.include("title","Selecione o Servidor");
-		//inserindo username na home:
-		Object  LoggedObjectUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
-		result.include("loggedUser", LoggedUsername);
+		result.include("loggedUser", userInfo.getLoggedUsername());
 		
 		Logger.getLogger(getClass()).info("URI Called: /selectServer");
 		
@@ -87,9 +86,7 @@ public class LogsController {
 		
 		result.include("title","Lista de Arquivos");
 		//inserindo username na home:
-		Object  LoggedObjectUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
-		result.include("loggedUser", LoggedUsername);
+		result.include("loggedUser", userInfo.getLoggedUsername());
 		
 		Logger.getLogger(getClass()).info("URI Called: /listLogFiles");
 		Logger.getLogger(getClass()).info("Listing files of " + hostname);
