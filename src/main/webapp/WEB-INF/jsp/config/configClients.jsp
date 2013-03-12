@@ -42,8 +42,8 @@
 								<th>IP</th>
 								<th>SO</th>
 								<th>Usuario</th>
-								<th>Password</th>
 								<th>Diretŕio de Logs</th>
+								<th>Comando NTP</th>
 								<th>Ações&nbsp;<a href="<c:url value="/newServer"/>"
 									title="Novo Servidor"><i class="icon-plus-sign"> </i></a></th>
 							</tr>
@@ -56,8 +56,8 @@
 									<td>${server.ip}</td>
 									<td>${server.SO}</td>
 									<td>${server.user}</td>
-									<td>${server.pass}</td>
 									<td>${server.logDir}</td>
+									<td>${server.suCommand}</td>
 									<td><a
 										href="<c:url value='/findForUpdateServer/${server.id}' />"
 										title="Editar Servidor"><i class="icon-edit"> </i></a> &nbsp;

@@ -33,8 +33,22 @@
 <link
 	href="${pageContext.request.contextPath}/css/bootstrap-responsive.css"
 	rel="stylesheet">
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/filter.js"></script>
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/js/filter.js"></script>
+
+<script
+	src="${pageContext.request.contextPath}/js/RGraph.common.core.js"></script>
+<script
+	src="${pageContext.request.contextPath}/js/RGraph.common.tooltips.js"></script>
+<script
+	src="${pageContext.request.contextPath}/js/RGraph.common.dynamic.js"></script>
+<script
+	src="${pageContext.request.contextPath}/js/RGraph.common.effects.js"></script>
+<script src="${pageContext.request.contextPath}/js/RGraph.pie.js"></script>
+<script src="${pageContext.request.contextPath}/js/RGraph.bar.js"></script>
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		useFilter('search', 'resultTable');
@@ -94,6 +108,20 @@
 		}
 		window.setInterval("Tempo()", 1000);
 	</script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.find_1 input:checkbox').change(function() {
+				var ids = $(".find_1 input:checkbox:checked").map(function() {
+					return this.value;
+				}).get().join(',');
+				var url = "/hrstatus/updateTimeSelectedClients/";
+
+				$("#dynamicURL a").attr('href', url + ids);
+			}).change();
+		});
+	</script>
+
 	<!-- Begin NavBar -->
 	<div class="navbar">
 		<div class="navbar-inner">

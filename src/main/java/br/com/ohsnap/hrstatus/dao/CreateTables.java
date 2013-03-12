@@ -27,14 +27,15 @@ import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
 import br.com.ohsnap.hrstatus.model.Configurations;
+import br.com.ohsnap.hrstatus.model.Servidores;
 
 public class CreateTables {
 	public static void main(String[] args) {
 		AnnotationConfiguration cfg = new AnnotationConfiguration();
 		
-//		cfg.addAnnotatedClass(Servidores.class);
-//		SchemaExport se = new SchemaExport(cfg);
-//		se.create(true, true);
+		cfg.addAnnotatedClass(Servidores.class);
+		SchemaExport se = new SchemaExport(cfg);
+		se.create(true, true);
 
 //		cfg.addAnnotatedClass(Users.class);
 //		SchemaExport se1 = new SchemaExport(cfg);
@@ -44,9 +45,9 @@ public class CreateTables {
 //		SchemaExport se1 = new SchemaExport(cfg);
 //		se1.create(true, true);
 	
-		cfg.addAnnotatedClass(Configurations.class);
-		SchemaExport se1 = new SchemaExport(cfg);
-		se1.create(true, true);
+//		cfg.addAnnotatedClass(Configurations.class);
+//		SchemaExport se1 = new SchemaExport(cfg);
+//		se1.create(true, true);
 		
 //		cfg.addAnnotatedClass(PassExpire.class);
 //		SchemaExport se1 = new SchemaExport(cfg);

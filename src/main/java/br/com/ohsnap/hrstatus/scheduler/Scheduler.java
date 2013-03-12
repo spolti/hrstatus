@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.ohsnap.hrstatus.dao.Configuration;
 import br.com.ohsnap.hrstatus.dao.Iteracoes;
+import br.com.ohsnap.hrstatus.model.Configurations;
 import br.com.ohsnap.hrstatus.utils.MailSender;
 
 @Service
@@ -76,31 +77,45 @@ public class Scheduler {
 	@Scheduled(cron = "${br.com.ohsnap.hrstatus.scheduler.NtpScheduler.cron}")
 	public void NtpUpdater() throws IOException {
 
+		Configurations config = this.configurationDAO.getConfigs();
+		Boolean isUpdateNtpIsActive = config.isUpdateNtpIsActive();
+		
 		Process p = (Runtime.getRuntime().exec("which ntpdate"));
-		String stdIn = "", s ="";
+		String stdIn = "", s = "";
 		BufferedReader stdInput = new BufferedReader(new InputStreamReader(
 				p.getInputStream()));
 		while ((s = stdInput.readLine()) != null) {
 			stdIn += s + "\n";
 		}
 
-		if (stdIn.equals("")){
-			Logger.getLogger(getClass()).error("Ntpdate não encontrado, abortando atualização automática");
-		}else{ //else if se a opção verificarção estiver ativo (usar boolean no objeto)
-			Logger.getLogger(getClass()).debug("Iniciando checagem NTP");
-			String ntpServer = this.configurationDAO.getNtpServerAddress();
-			Logger.getLogger(getClass()).debug(
-					"Servidor NTP configurado: " + ntpServer);
-			
-			//fazer a atualização com sudo....
-			String stdInAtualiza = "";
-			Process pAtualiza = (Runtime.getRuntime().exec("sudo " + stdIn + " -u " + ntpServer));
-			BufferedReader stdInputAtualiza = new BufferedReader(new InputStreamReader(
-					pAtualiza.getInputStream()));
-			while ((s = stdInputAtualiza.readLine()) != null) {
-				stdInAtualiza += s + "\n";
+		if (stdIn.equals("")) {
+			Logger.getLogger(getClass())
+					.error("Comando ntpdate não encontrado, abortando atualização automática");
+		} else {
+			Logger.getLogger(getClass()).error("ntp ativo: " + isUpdateNtpIsActive);
+			if (isUpdateNtpIsActive){
+				Logger.getLogger(getClass()).debug("Iniciando checagem NTP");
+				String ntpServer = this.configurationDAO.getNtpServerAddress();
+				Logger.getLogger(getClass()).debug(
+						"Servidor NTP configurado: " + ntpServer);
+
+				// fazer a atualização com sudo....
+				String stdInAtualiza = "";
+				Process pAtualiza = (Runtime.getRuntime().exec("sudo " + stdIn
+						+ " -u " + ntpServer));
+				BufferedReader stdInputAtualiza = new BufferedReader(
+						new InputStreamReader(pAtualiza.getInputStream()));
+				while ((s = stdInputAtualiza.readLine()) != null) {
+					stdInAtualiza += s + "\n";
+				}
+				Logger.getLogger(getClass()).debug(
+						"Resultado atualização ntp [ sudo " + stdIn + " -u "
+								+ ntpServer + "]: " + stdInAtualiza);
+			} else {
+				Logger.getLogger(getClass()).info(
+						"Atualização NTP automática não está ativa.");
 			}
-			Logger.getLogger(getClass()).debug("Resultado atualização ntp [ sudo " + stdIn + " -u " + ntpServer + "]: " + stdInAtualiza);
 		}
 	}
+
 }

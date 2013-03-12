@@ -743,7 +743,6 @@ public class HomeController {
 							}
 							this.iteracoesDAO.updateServer(servidores);
 						}
-
 					}
 
 					// if Windows
@@ -777,7 +776,6 @@ public class HomeController {
 							servidores.setTrClass("error");
 							this.iteracoesDAO.updateServer(servidores);
 						}
-
 					}
 
 					// if Others
@@ -821,7 +819,6 @@ public class HomeController {
 								servidores.setStatus("não OK");
 							}
 							try {
-
 								// Critpografando a senha
 								servidores.setPass(encodePass.encode(servidores
 										.getPass()));
@@ -835,7 +832,6 @@ public class HomeController {
 							servidores.setStatus(e + "");
 							servidores.setTrClass("error");
 							try {
-
 								// Critpografando a senha
 								servidores.setPass(encodePass.encode(servidores
 										.getPass()));
@@ -849,7 +845,6 @@ public class HomeController {
 							servidores.setStatus(e + "");
 							servidores.setTrClass("error");
 							try {
-
 								// Critpografando a senha
 								servidores.setPass(encodePass.encode(servidores
 										.getPass()));

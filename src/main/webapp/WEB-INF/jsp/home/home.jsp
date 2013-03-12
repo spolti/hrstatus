@@ -1,45 +1,4 @@
-<!-- 
-    Copyright (C) 2012  Filippe Costa Spolti
-
-	This file is part of Hrstatus.
-
-    Hrstatus is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- -->
-
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="navbar.jsp"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-<script
-	src="${pageContext.request.contextPath}/js/RGraph.common.core.js"></script>
-<script
-	src="${pageContext.request.contextPath}/js/RGraph.common.tooltips.js"></script>
-<script
-	src="${pageContext.request.contextPath}/js/RGraph.common.dynamic.js"></script>
-<script
-	src="${pageContext.request.contextPath}/js/RGraph.common.effects.js"></script>
-<script src="${pageContext.request.contextPath}/js/RGraph.pie.js"></script>
-<script src="${pageContext.request.contextPath}/js/RGraph.bar.js"></script>
-
-
-<title>HR Status Home</title>
-</head>
-<body>
 
 	<div id="myCarousel" class="carousel slide">
 		<!-- alterado na linha 399 -->
@@ -57,8 +16,8 @@
 								<table>
 									<tr>
 										<td align="center"><canvas id="cvs"
-												!style="border:1px solid #ccc">[No canvas support]</canvas>
-							<script>
+												!style="border: 1px solid #ccc">[No canvas support]</canvas>
+											<script>
 								var graph1 = function() {
 								var data = [ ${linux} , ${windows}, ${unix}, ${other}];
 								var pie = new RGraph.Pie('cvs', data);
@@ -91,31 +50,9 @@
 					        var graph2 = function () 
 					        {
 					            var bar8 = new RGraph.Bar('cvs1', [${serversOK},${serversNOK}])
-					            bar8.Set('chart.labels', ['Servidores OK','Servidores N√£o OK']);
+					            bar8.Set('chart.labels', ['Servidores OK','Servidores N„o OK']);
 					            //bar8.Set('chart.tooltips', function (index) {var label = bar8.Get('chart.labels')[index];return '<h2 style="text-align: center">' + label + '</h2><canvas id="tooltip_canvas" width="250" height="110"></canvas>';});
 					            bar8.Draw();
-					
-					
-					            /**
-					            * The ontooltip event runs when a tooltip is shown and creates the Pie chart in the tooltip
-					            */
-					            //bar8.ontooltip = function (obj)
-					            //{
-					            //    var pie_data = [
-					            //                    [${serversLinuxOK},${serversUnixOK},${serversWindowsOK}],
-					            //                    [${serversLinuxNOK},${serversUnixNOK},${serversWindowsNOK}]
-					            //                   ]
-					                               			
-		
-					            //    var tooltip = RGraph.Registry.Get('chart.tooltip');
-					           //     var index   = tooltip.__index__;
-					
-					               // var pie = new RGraph.Pie('tooltip_canvas', pie_data[index]);
-					           //     pie.Set('chart.labels', ['Linux','Unix','Windows']);
-					            //    pie.Set('chart.gutter.top', 10);
-					           //     pie.Set('chart.gutter.bottom', 25);
-					               // pie.Draw();
-					           // }
 					        }
    					 </script></td>
 									</tr>
@@ -123,12 +60,11 @@
 										<td colspan="2" align="center"><canvas id="cvs2"
 												width="900" height="200">[No canvas support]</canvas> <script>
 						        var graph3 = function ()
-						        {
-						
+						        {						
 						            var bar = new RGraph.Bar('cvs2', [[${serversLinuxOK},${serversLinuxNOK}],[${serversUnixOK},${serversUnixNOK}],[${serversWindowsOK},${serversWindowsNOK}],[${otherOK},${otherNOK}]]);
 						            //var bar = new RGraph.Bar('cvs2', [[${serversLinuxOK},${serversLinuxNOK}],[${serversUnixOK},${serversUnixNOK}],[${serversWindowsOK},serversWindowsNOK]]);
 						            bar.Set('chart.labels', ['Linux', 'Unix', 'Windows','Outros']);
-						            bar.Set('chart.tooltips', ['Linux OK', 'Linux n√£o OK', 'Unix OK', 'Unix n√£o OK', 'Windows OK', 'Windows n√£o OK','Outros OK','Outros n√£o OK']);
+						            bar.Set('chart.tooltips', ['Linux OK', 'Linux n„o OK', 'Unix OK', 'Unix n„o OK', 'Windows OK', 'Windows n„o OK','Outros OK','Outros n„o OK']);
 						            bar.Set('chart.tooltips.event', 'onmousemove');
 						            bar.Set('chart.ymax', ${totalServer});
 						            bar.Set('chart.strokestyle', 'white');
@@ -178,29 +114,45 @@
 									<div class="span2">
 										<div class="btn-group">
 											<a class="btn btn-primary dropdown-toggle"
-												data-toggle="dropdown" href="#"> Iniciar Verifica√ß√£o <span
+												data-toggle="dropdown" href="#"> Iniciar VerificaÁ„o <span
 												class="caret"></span>
 											</a>
 											<ul class="dropdown-menu">
 												<li><a
 													href="<c:url value='/home/startVerification/full' />">
-														Verifica√ß√£o Completa </a></li>
+														VerificaÁ„o Completa </a></li>
 
 												<li><a
 													href="<c:url value='/home/startVerification/notFull' />">
-														Verifica√ß√£o N√£o Completa </a></li>
+														VerificaÁ„o N„o Completa </a></li>
 
 											</ul>
 										</div>
 									</div>
 
 									<div class="span2">
-										<form method="GET"
-											action="<c:url value='/home/showByStatus/NOK'/>">
-											<button input="" type="submit" value="Servidores N OK"
-												class="btn btn-primary">Servidores N OK</button>
-										</form>
+										<div class="btn-group">
+											<a class="btn btn-primary dropdown-toggle"
+												data-toggle="dropdown" href="#"> Servidores N„o OK <span
+												class="caret"></span>
+											</a>
+											<ul class="dropdown-menu">
+												<li><a href="<c:url value='/home/showByStatus/NOK' />">
+														Listar Servidores Desatualizados </a></li>
+
+												<li>
+													<div id="dynamicURL">
+														<a href="montadodinamicamente"> Atualizar Selecionados</a>
+													</div>
+												</li>
+
+												<li><a href="<c:url value='/updateTimeAllClients' />">
+														Atualizar todos </a></li>
+
+											</ul>
+										</div>
 									</div>
+
 									<div class="span3"></div>
 								</div>
 
@@ -228,18 +180,23 @@
 												<td>${server.serverTime}</td>
 												<td>${server.difference}</td>
 												<td>${server.status}</td>
+												<td><c:if test="${server.trClass == 'error'}">
+														<div class="find_1">
+															<input type="checkbox" value="${server.id}" />
+														</div>
+													</c:if></td>
 											</tr>
 										</c:forEach>
 									</tbody>
 								</table>
 								<c:if test="${not empty info}">
 									<div class="alert">
-										<button type="button" class="close" data-dismiss="alert">√ó</button>
-											${info}
+										<button type="button" class="close" data-dismiss="alert">◊</button>
+										${info}
 									</div>
 								</c:if>
 							</div>
-							<!-- Caso seja necess√°rio inserir novo √≠tem ao carrossel, inserir aqui.  -->
+							<!-- Caso seja necess·rio inserir novo Ìtem ao carrossel, inserir aqui.  -->
 						</div>
 					</div>
 				</div>

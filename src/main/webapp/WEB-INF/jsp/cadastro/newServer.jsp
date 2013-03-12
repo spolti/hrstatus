@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ include file="../home/navbar.jsp" %>
+<%@ include file="../home/navbar.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -79,19 +79,22 @@
 							<tr>
 								<td align="right">Diretório de logs:</td>
 								<td><input type="text" name="servidores.logDir"></td>
-							</tr><tr>
+							</tr>
+							<tr>
+								<td align="right">Comando NTP:</td>
+								<td><input type="text" name="servidores.suCommand"></td>
+							</tr>
+							<tr>
 								<td align=right>Porta (SSH/TELNET):</td>
 								<td><input type="text" name="servidores.port" /></td>
 							</tr>
 							<tr>
-								<td align=right>SO: </td>
-								<td>
-									<select name="servidores.SO" id="servidores.SO">
+								<td align=right>SO:</td>
+								<td><select name="servidores.SO" id="servidores.SO">
 										<c:forEach items="${SO}" var="SO">
 											<option value="<c:out value="${SO}" />">${SO}</option>
 										</c:forEach>
-									</select>
-								</td>
+								</select></td>
 
 							</tr>
 

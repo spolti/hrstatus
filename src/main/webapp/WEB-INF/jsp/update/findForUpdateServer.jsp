@@ -93,6 +93,11 @@
 									value="${server.logDir}" /></td>
 							</tr>
 							<tr>
+								<td align=right>Comando NTP:</td>
+								<td><input type="text" name="server.suCommand"
+									value="${server.suCommand}" /></td>
+							</tr>
+							<tr>
 								<td align=right>Porta (SSH/TELNET):</td>
 								<td><input type="text" name="server.port"
 									value="${server.port}" /></td>

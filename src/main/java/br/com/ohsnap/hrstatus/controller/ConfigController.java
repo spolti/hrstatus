@@ -25,8 +25,6 @@ package br.com.ohsnap.hrstatus.controller;
 
 import java.util.List;
 import org.apache.log4j.Logger;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;

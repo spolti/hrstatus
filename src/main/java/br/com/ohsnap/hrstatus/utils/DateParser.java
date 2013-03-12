@@ -192,13 +192,11 @@ public class DateParser {
 			data = ("Tue Mar 01 00:00:00 BRT 1950");
 			formatador = formato1;
 		}
-		
 		try {
 			date1 = formatador.parse(data);
 		} catch (ParseException e) {	
 			e.printStackTrace();
 		}
-		
 		return date1;
 	}
 	

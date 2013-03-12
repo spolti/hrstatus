@@ -82,6 +82,9 @@ public class Servidores {
 	@Column(name = "logDir")
 	private String logDir;
 
+	@Column(name = "suCommand")
+	private String suCommand;
+	
 	public String getTrClass() {
 		return trClass;
 	}
@@ -193,6 +196,13 @@ public class Servidores {
 	public void setLogDir(String logDir) {
 		this.logDir = logDir;
 	}
-	
+
+	public String getSuCommand() {
+		return suCommand;
+	}
+
+	public void setSuCommand(String suCommand) {
+		this.suCommand = suCommand;
+	}
 	
 }

@@ -28,10 +28,10 @@ import java.io.InputStream;
 
 import com.jcraft.jsch.*;
 
-public class GetDateLinux {
+public class RunNtpDate {
 
 	public static String exec(String user, String host, String password,
-			int port) throws JSchException, IOException {
+			int port, String command) throws JSchException, IOException {
 
 		String s = "";
 
@@ -50,7 +50,7 @@ public class GetDateLinux {
 
 		// Exectando o comando
 		Channel channel = session.openChannel("exec");
-		((ChannelExec) channel).setCommand("date");
+		((ChannelExec) channel).setCommand(command);
 		((ChannelExec) channel).setErrStream(System.err);
 		InputStream in = channel.getInputStream();
 
@@ -82,7 +82,7 @@ public class GetDateLinux {
 		}
 		return s;
 	}
-
+	
 	public static void main(String args[]) throws IOException, JSchException {
 		GetDateLinux get = new GetDateLinux();
 
@@ -92,5 +92,5 @@ public class GetDateLinux {
 		
 		System.out.println(tmp);
 	}
-
+	
 }
