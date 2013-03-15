@@ -38,6 +38,7 @@ import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
+import br.com.ohsnap.hrstatus.action.VerifySingleServer;
 import br.com.ohsnap.hrstatus.action.linux.GetDateLinux;
 import br.com.ohsnap.hrstatus.action.other.GetDateOther;
 import br.com.ohsnap.hrstatus.action.unix.GetDateUnix;
@@ -63,17 +64,19 @@ public class HomeController {
 	private Validator validator;
 	private LockIntrface lockDAO;
 	private UsersInterface userDAO;
+	private VerifySingleServer runVerify;
 	UserInfo userInfo = new UserInfo();
 
 	public HomeController(Result result, Iteracoes iteracoesDAO,
 			Configuration configurationDAO, Validator validator,
-			LockIntrface lockDAO, UsersInterface userDAO) {
+			LockIntrface lockDAO, UsersInterface userDAO, VerifySingleServer runVerify) {
 		this.result = result;
 		this.iteracoesDAO = iteracoesDAO;
 		this.configurationDAO = configurationDAO;
 		this.validator = validator;
 		this.lockDAO = lockDAO;
 		this.userDAO = userDAO;
+		this.runVerify = runVerify;
 	}
 
 	@Get("/home")
@@ -866,6 +869,34 @@ public class HomeController {
 				"Verificação finalizada, liberando recurso "
 						+ lockedResource.getRecurso());
 		lockDAO.removeLock(lockedResource);
-
 	}
+	
+	@Get("singleServerToVerify/{id}")
+	public void singleServerToVerify(int id) throws JSchException, IOException{
+		result.include("title", "Home");
+		result.include("loggedUser", userInfo.getLoggedUsername());
+		Logger.getLogger(getClass()).info("URI Called: /singleServerToVerify/" + id);		
+		Servidores servidor = this.iteracoesDAO.getServerByID(id);
+		
+		try {
+			servidor.setPass(String.valueOf(Crypto.decode(servidor.getPass())));
+		} catch (InvalidKeyException e) {
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			e.printStackTrace();
+		}
+		
+		runVerify.runSingleVerification(servidor);
+		
+		List<Servidores> list = this.iteracoesDAO.listServerByID(id);
+		
+		result.include("server", list).forwardTo(HomeController.class).home("");
+	}
+	
 }

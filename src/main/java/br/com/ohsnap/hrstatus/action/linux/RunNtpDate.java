@@ -69,8 +69,8 @@ public class RunNtpDate {
 				s += (new String(tmp, 0, i));
 			}
 
-			if (channel.isClosed()) {
-
+			if (channel.isClosed()) {	
+				
 				break;
 			}
 		}
@@ -80,13 +80,14 @@ public class RunNtpDate {
 		while (s.endsWith(" ")){
 			s = s.substring(0, -1);
 		}
+
 		return s;
 	}
 	
 	public static void main(String args[]) throws IOException, JSchException {
-		GetDateLinux get = new GetDateLinux();
+		RunNtpDate get = new RunNtpDate();
 
-		String tmp = get.exec("nagios", "10.99.1.151", "23d3marc0", 22);
+		String tmp = get.exec("nagios", "jbosseap02hom", "23d3marc0", 22,"sudo /usr/sbin/ntpdate -u 10.32.8.1");
 //		DateParser parse = new DateParser();
 //		Date data = parse.parser(tmp);
 		

@@ -30,7 +30,6 @@ import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -126,6 +125,14 @@ public class IteracoesDAO implements Iteracoes {
 		return (Servidores) session().createCriteria(Servidores.class)
 				.add(Restrictions.eq("id", id)).uniqueResult();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Servidores> listServerByID(int id) {
+		Logger.getLogger(getClass()).debug(
+				"getServerByID -> ID server selected: " + id);
+		Criteria criteria = session().createCriteria(Servidores.class);
+		return criteria.add(Restrictions.eq("id", id)).list();
+	}
 
 	public void updateServer(Servidores server) {
 
@@ -168,8 +175,6 @@ public class IteracoesDAO implements Iteracoes {
 	}
 
 	public int countLinux() {
-		Logger.getLogger(getClass()).debug(
-				"countLinux() -> Count Linux Servers.");
 		Criteria criteria = session().createCriteria(Servidores.class);
 		criteria.add(Restrictions.eq("SO", "LINUX"));
 		criteria.setProjection(Projections.rowCount());
@@ -181,8 +186,6 @@ public class IteracoesDAO implements Iteracoes {
 	}
 
 	public int countWindows() {
-		Logger.getLogger(getClass()).debug(
-				"countWindows() -> Count Linux Servers.");
 		Criteria criteria = session().createCriteria(Servidores.class);
 		criteria.add(Restrictions.eq("SO", "WINDOWS"));
 		criteria.setProjection(Projections.rowCount());
@@ -193,8 +196,6 @@ public class IteracoesDAO implements Iteracoes {
 	}
 
 	public int countUnix() {
-		Logger.getLogger(getClass()).debug(
-				"countUnix() -> Count Linux Servers.");
 		Criteria criteria = session().createCriteria(Servidores.class);
 		criteria.add(Restrictions.eq("SO", "UNIX"));
 		criteria.setProjection(Projections.rowCount());
@@ -205,8 +206,6 @@ public class IteracoesDAO implements Iteracoes {
 	}
 	
 	public int countOther(){
-		Logger.getLogger(getClass()).debug(
-				"countOther() -> Count Other SO Servers.");
 		Criteria criteria = session().createCriteria(Servidores.class);
 		criteria.add(Restrictions.ne("SO", "LINUX"));
 		criteria.add(Restrictions.ne("SO", "Windows"));
@@ -220,8 +219,6 @@ public class IteracoesDAO implements Iteracoes {
 	}
 
 	public int countAllServers() {
-		Logger.getLogger(getClass()).debug(
-				"countLinux() -> Count Linux Servers.");
 		Criteria criteria = session().createCriteria(Servidores.class);
 		criteria.setProjection(Projections.rowCount());
 		int count = ((Long) criteria.uniqueResult()).intValue();
@@ -239,8 +236,6 @@ public class IteracoesDAO implements Iteracoes {
 
 	@SuppressWarnings("unchecked")
 	public List<Servidores> getServersOK() {
-		Logger.getLogger(getClass()).debug(
-				"getServersOK -> Getting Servers OK.");
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
@@ -255,8 +250,6 @@ public class IteracoesDAO implements Iteracoes {
 
 	@SuppressWarnings("unchecked")
 	public List<Servidores> getServersNOK() {
-		Logger.getLogger(getClass()).debug(
-				"getServersOK -> Getting Servers no OK.");
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
@@ -272,8 +265,6 @@ public class IteracoesDAO implements Iteracoes {
 	}
 
 	public int countServersOK() {
-		Logger.getLogger(getClass()).debug(
-				"countServersOK -> Counting Servers OK.");
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
@@ -290,8 +281,6 @@ public class IteracoesDAO implements Iteracoes {
 	}
 
 	public int countServersNOK() {
-		Logger.getLogger(getClass()).debug(
-				"countServersNOK -> Counting Servers not OK.");
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
@@ -309,8 +298,6 @@ public class IteracoesDAO implements Iteracoes {
 	}
 
 	public int countLinuxOK() {
-		Logger.getLogger(getClass()).debug(
-				"countLinuxOK -> Counting Linux Servers OK.");
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
@@ -330,8 +317,6 @@ public class IteracoesDAO implements Iteracoes {
 	}
 
 	public int countLinuxNOK() {
-		Logger.getLogger(getClass()).debug(
-				"countLinuxNOK -> Counting Linux Servers not OK.");
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
@@ -352,8 +337,6 @@ public class IteracoesDAO implements Iteracoes {
 	}
 
 	public int countUnixOK() {
-		Logger.getLogger(getClass()).debug(
-				"countUnixOK -> Counting Unix Servers OK.");
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
@@ -373,8 +356,6 @@ public class IteracoesDAO implements Iteracoes {
 	}
 
 	public int countUnixNOK() {
-		Logger.getLogger(getClass()).debug(
-				"countUnixNOK -> Counting Linux Servers not OK.");
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
@@ -416,8 +397,6 @@ public class IteracoesDAO implements Iteracoes {
 	}
 
 	public int countWindowsNOK() {
-		Logger.getLogger(getClass()).debug(
-				"countWindowsNOK -> Counting Windows Servers not OK.");
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
@@ -437,8 +416,7 @@ public class IteracoesDAO implements Iteracoes {
 	}
 
 	public int countOtherOK() {
-		Logger.getLogger(getClass()).debug(
-				"countOtherOK -> Counting Others SO Servers not OK.");
+
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
 			criteria.add(Restrictions.ne("SO", "LINUX"));
@@ -457,8 +435,7 @@ public class IteracoesDAO implements Iteracoes {
 	}
 	
 	public int countOtherNOK() {
-		Logger.getLogger(getClass()).debug(
-				"countOtherNOK -> Counting Others SO Servers not OK.");
+
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
 			criteria.add(Restrictions.ne("SO", "LINUX"));

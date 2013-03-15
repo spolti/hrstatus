@@ -23,68 +23,164 @@ package br.com.ohsnap.hrstatus.controller;
  * @author spolti
  */
 
+//Erros comuns
+//09:47:11,464 ERROR [stderr] (Connect thread 10.11.152.76 session) sudo: no tty present and no askpass program specified
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 import org.apache.log4j.Logger;
 
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
+import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.Validator;
+import br.com.caelum.vraptor.validator.ValidationMessage;
+import br.com.ohsnap.hrstatus.action.VerifySingleServer;
+import br.com.ohsnap.hrstatus.action.linux.RunNtpDate;
+import br.com.ohsnap.hrstatus.dao.Configuration;
 import br.com.ohsnap.hrstatus.dao.Iteracoes;
 import br.com.ohsnap.hrstatus.model.Servidores;
+import br.com.ohsnap.hrstatus.security.Crypto;
+import br.com.ohsnap.hrstatus.utils.UserInfo;
+
+import com.jcraft.jsch.JSchException;
 
 @Resource
 public class UpdateTimeController {
 
 	Servidores servidor = new Servidores();
-
+	String command = null;
+	int id = 0;
+	String resultCommand = null;
+	UserInfo userInfo = new UserInfo();
+	
 	private Iteracoes iteracoesDAO;
-
-	public UpdateTimeController(Iteracoes iteracoesDAO) {
+	private Configuration configurationDAO;	
+	private Result result;
+	private Validator validator;
+	private VerifySingleServer runVerify;
+	
+	public UpdateTimeController(Iteracoes iteracoesDAO, Configuration configurationDAO, Result result, Validator validator, VerifySingleServer runVerify) {
 		this.iteracoesDAO = iteracoesDAO;
+		this.configurationDAO = configurationDAO;
+		this.result = result;
+		this.validator= validator;
+		this.runVerify = runVerify;
 	}
 
 	@Get("updateTimeSelectedClients/{ids}")
-	public void updateTimeSelectedClients(String ids) {
+	public void updateTimeSelectedClients(String ids) throws JSchException, IOException {
+		
+		result.include("loggedUser", userInfo.getLoggedUsername());
+		
+		result.include("title", "Home");
+		
 		Logger.getLogger(getClass()).info(
 				"URI Called: /updateTimeSelectedClients");
 
 		String servidores[] = ids.split(",");
 		Logger.getLogger(getClass()).debug(
 				"Tentando atualizar data/hora do servidor(es): " + ids);
-
-		int id = 0;
-
+		
 		for (int i = 0; i < servidores.length; i++) {
 			id = Integer.parseInt(servidores[i]);
 			servidor = this.iteracoesDAO.getServerByID(id);
 
-			Logger.getLogger(getClass()).info("Dados obtidos do servidor:");
+			if (servidor.getSO().equals("LINUX") || servidor.getSO().equals("UNIX") || servidor.getSO().equals("OUTRO")){
+				command = (servidor.getSuCommand() + " " + this.configurationDAO.getNtpServerAddress());
+				//descriptografando a senha:
+				try {
+					servidor.setPass(String.valueOf(Crypto.decode(servidor.getPass())));
+				} catch (InvalidKeyException e) {
+					e.printStackTrace();
+				} catch (NoSuchPaddingException e) {
+					e.printStackTrace();
+				} catch (NoSuchAlgorithmException e) {
+					e.printStackTrace();
+				} catch (BadPaddingException e) {
+					e.printStackTrace();
+				} catch (IllegalBlockSizeException e) {
+					e.printStackTrace();
+				}
+				
+				Logger.getLogger(getClass()).info("Tentando atualizar data [command: " + command + "] no servidor " + servidor.getHostname());
+				resultCommand = RunNtpDate.exec(servidor.getUser(), servidor.getIp(), servidor.getPass(), servidor.getPort(), command);
 
-			
-			
-//			Logger.getLogger(getClass()).info(servidor.getClientTime());
-//			Logger.getLogger(getClass()).info(servidor.getDifference());
-//			Logger.getLogger(getClass()).info(servidor.getDifference());
-//			Logger.getLogger(getClass()).info(servidor.getId());
-//			Logger.getLogger(getClass()).info(servidor.getIp());
-//			Logger.getLogger(getClass()).info(servidor.getLastCheck());
-//			Logger.getLogger(getClass()).info(servidor.getLogDir());
-//			Logger.getLogger(getClass()).info(servidor.getPass());
-//			Logger.getLogger(getClass()).info(servidor.getPort());
-//			Logger.getLogger(getClass()).info(servidor.getServerTime());
-//			Logger.getLogger(getClass()).info(servidor.getSO());
-//			Logger.getLogger(getClass()).info(servidor.getStatus());
-//			Logger.getLogger(getClass()).info(servidor.getTrClass());
-//			Logger.getLogger(getClass()).info(servidor.getUser());
-//			Logger.getLogger(getClass()).info(servidor.getSuCommand());
-			
-			
+				if (resultCommand.equals("")){
+					validator.add(new ValidationMessage(servidor.getHostname() + ": Não foi possível executar a atualização automática, provavelmente erro na execução do comando utilizado.", "Erro"));
+				
+				}else{
+					//Está com erro somente para fazer append nas informações do resultado na página.
+					validator.add(new ValidationMessage(servidor.getHostname() + ": " + resultCommand, "Erro"));
+					//chamando a re-verificação individual de servidor passando objeto.
+					runVerify.runSingleVerification(servidor);				
+					Logger.getLogger(getClass()).debug(resultCommand);
+				}
+
+			}else if (servidor.getSO().equals("WINDOWS")){
+				Logger.getLogger(getClass()).info("Servidores Windows não são suportados para esta opção.");
+				validator.add(new ValidationMessage("Servidores Windows não são suportados para esta opção.", "Erro"));
+			}
 		}
-
+		validator.onErrorUsePageOf(HomeController.class).home("");
+		
 	}
 
 	@Get("/updateTimeAllClients")
-	public void updateTimeAllClients() {
+	public void updateTimeAllClients() throws JSchException, IOException {
+		result.include("title", "Home");
 		Logger.getLogger(getClass()).info("URI Called: /updateTimeAllClients");
 		Logger.getLogger(getClass())
 				.debug("Tentando atualizar data/hora de todos os servidores desatualizados.");
+		String ntpAddress = configurationDAO.getNtpServerAddress();
+		//buscar todos os servidores não OK.
+		List<Servidores> tempServer = this.iteracoesDAO.getServersNOK();
+		for (Servidores servidor : tempServer){
+			Logger.getLogger(getClass()).info("Servidor recebido para atualização: " + servidor.getHostname());
+			if (servidor.getSO().equals("LINUX") || servidor.getSO().equals("UNIX") || servidor.getSO().equals("OUTRO")){
+				command = (servidor.getSuCommand() + " " + ntpAddress);
+				//descriptografando a senha:
+				try {
+					servidor.setPass(String.valueOf(Crypto.decode(servidor.getPass())));
+				} catch (InvalidKeyException e) {
+					e.printStackTrace();
+				} catch (NoSuchPaddingException e) {
+					e.printStackTrace();
+				} catch (NoSuchAlgorithmException e) {
+					e.printStackTrace();
+				} catch (BadPaddingException e) {
+					e.printStackTrace();
+				} catch (IllegalBlockSizeException e) {
+					e.printStackTrace();
+				}
+				
+				Logger.getLogger(getClass()).info("Tentando atualizar data [command: " + command + "] no servidor " + servidor.getHostname());
+				resultCommand = RunNtpDate.exec(servidor.getUser(), servidor.getIp(), servidor.getPass(), servidor.getPort(), command);
+
+				if (resultCommand.equals("")){
+					Logger.getLogger(getClass()).info(servidor.getHostname() + ": Não foi possível executar a atualização automática, provavelmente erro na execução do comando utilizado.");
+					validator.add(new ValidationMessage(servidor.getHostname() + ": Não foi possível executar a atualização automática, provavelmente erro na execução do comando utilizado.", "Erro"));
+				}else{
+					//Está com erro somente para fazer append nas informações do resultado na página.
+					Logger.getLogger(getClass()).info(servidor.getHostname() + ": " + resultCommand);	
+					validator.add(new ValidationMessage(servidor.getHostname() + ": " + resultCommand, "Erro"));
+					//chamando a re-verificação individual de servidor passando objeto.
+					runVerify.runSingleVerification(servidor);				
+					Logger.getLogger(getClass()).debug(resultCommand);
+				}
+
+			}else if (servidor.getSO().equals("WINDOWS")){
+				Logger.getLogger(getClass()).info("Servidores Windows não são suportados para esta opção.");
+				validator.add(new ValidationMessage("Servidores Windows não são suportados para esta opção.", "Erro"));
+			}
+		}
+		validator.onErrorUsePageOf(HomeController.class).home("");
+		
 	}
 }

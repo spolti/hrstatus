@@ -89,4 +89,6 @@ public interface Iteracoes {
 	
 	public Servidores getServerByHostname(String hostname);
 	
+	public List<Servidores> listServerByID(int id);
+	
 }

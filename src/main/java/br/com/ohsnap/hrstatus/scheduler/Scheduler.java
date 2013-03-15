@@ -92,7 +92,7 @@ public class Scheduler {
 			Logger.getLogger(getClass())
 					.error("Comando ntpdate não encontrado, abortando atualização automática");
 		} else {
-			Logger.getLogger(getClass()).error("ntp ativo: " + isUpdateNtpIsActive);
+			Logger.getLogger(getClass()).info("ntp ativo: " + isUpdateNtpIsActive);
 			if (isUpdateNtpIsActive){
 				Logger.getLogger(getClass()).debug("Iniciando checagem NTP");
 				String ntpServer = this.configurationDAO.getNtpServerAddress();
