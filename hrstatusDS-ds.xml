@@ -7,10 +7,8 @@
       <connection-property name="autoReconnect">true</connection-property>
 
       <driver-class>com.mysql.jdbc.Driver</driver-class>
-
-      <!--security-domain>logreaderDomain</security-domain-->
-        <user-name>data base user</user-name>
-        <password>data base password</password>
+      <user-name>data base user</user-name>
+      <password>data base password</password>
 
       <min-pool-size>5</min-pool-size>
       <max-pool-size>20</max-pool-size>
@@ -20,8 +18,5 @@
       <metadata>
          <type-mapping>mySQL</type-mapping>
       </metadata>
-
-     
    </local-tx-datasource>
-
 </datasources>

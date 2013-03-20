@@ -48,18 +48,16 @@ CREATE TABLE `Configurations` (
   `difference` int(11) DEFAULT NULL,
   `jndiMail` varchar(255) DEFAULT NULL,
   `mailFrom` varchar(255) DEFAULT NULL,
+  `ntpServer` varchar(255) DEFAULT NULL,
   `subject` varchar(255) DEFAULT NULL,
+  `updateNtpIsActive` bit(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Configurations`
---
 
 LOCK TABLES `Configurations` WRITE;
 /*!40000 ALTER TABLE `Configurations` DISABLE KEYS */;
-INSERT INTO `Configurations` VALUES (1,'hrstatus@example.com.br',70,'java:jboss/mail/HrstatusMail','hrstatus@example.com.br','NO REPLY - Status Horario de Verao');
+INSERT INTO `Configurations` VALUES (1,'hrstatus@example.com.br',70,'java:jboss/mail/HrstatusMail','hrstatus@example.com.br','10.10.10.10','NO REPLY - Status Horario de Verao','');
 /*!40000 ALTER TABLE `Configurations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -81,10 +79,6 @@ CREATE TABLE `PassExpire` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `PassExpire`
---
-
 LOCK TABLES `PassExpire` WRITE;
 /*!40000 ALTER TABLE `PassExpire` DISABLE KEYS */;
 /*!40000 ALTER TABLE `PassExpire` ENABLE KEYS */;
@@ -101,6 +95,7 @@ CREATE TABLE `Servidores` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `SO` varchar(255) DEFAULT NULL,
   `clientTime` varchar(255) DEFAULT NULL,
+  `difference` bigint(20) DEFAULT NULL,
   `hostname` varchar(255) DEFAULT NULL,
   `ip` varchar(255) DEFAULT NULL,
   `lastCheck` varchar(255) DEFAULT NULL,
@@ -109,12 +104,16 @@ CREATE TABLE `Servidores` (
   `port` int(11) DEFAULT NULL,
   `serverTime` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
+  `suCommand` varchar(255) DEFAULT NULL,
   `trClass` varchar(255) DEFAULT NULL,
   `user` varchar(255) DEFAULT NULL,
-  `difference` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `Users`
+--
 
 DROP TABLE IF EXISTS `Users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -123,7 +122,7 @@ CREATE TABLE `Users` (
   `username` varchar(255) NOT NULL,
   `authority` varchar(255) DEFAULT NULL,
   `enabled` bit(1) NOT NULL,
-  `firstLogin` bit(1),
+  `firstLogin` bit(1) DEFAULT NULL,
   `mail` varchar(255) NOT NULL,
   `nome` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -134,13 +133,10 @@ CREATE TABLE `Users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `Users`
---
 
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` VALUES ('admin','ROLE_ADMIN','','','admin@example.com.br','Administrador do Sistema','89794b621a313bb59eed0d9f0f4e8205');
+INSERT INTO `Users` VALUES ('admin','ROLE_ADMIN','','\0','admin@example.com.br','Administrador do Sistema','89794b621a313bb59eed0d9f0f4e8205'),('teste','ROLE_USER','','\0','teste@exemplo.com.br','teste','698dc19d489c4e4db73e28a713eab07b');
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -156,8 +152,24 @@ CREATE TABLE `lockedResources` (
   `recurso` varchar(255) DEFAULT NULL,
   `username` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `lockedResources` WRITE;
+/*!40000 ALTER TABLE `lockedResources` DISABLE KEYS */;
+/*!40000 ALTER TABLE `lockedResources` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
 
 -- User Configurations
 CREATE USER 'hrstatus'@'%' IDENTIFIED BY 'P@ssw0rd';
