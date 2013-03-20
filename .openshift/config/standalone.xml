@@ -94,7 +94,7 @@
                     <statement></statement>
                 </datasource>
                 <!--datasource jndi-name="java:jboss/datasources/MysqlDS" enabled="${mysql.enabled}" use-java-context="true" pool-name="MysqlDS"-->
-                <datasource jndi-name="java:/hrStatusDS" enabled="${mysql.enabled}" use-java-context="true" pool-name="hrStatusDS">
+                <datasource jta="true" jndi-name="java:/hrStatusDS" enabled="true" use-java-context="true" pool-name="hrStatusDS">
                     <connection-url>jdbc:mysql://127.11.225.129:3306/hrstatus</connection-url>
                     <driver>mysql</driver>
                     <security>
@@ -203,7 +203,7 @@
              <modify-wsdl-address>true</modify-wsdl-address>
              <!--wsdl-host>${OPENSHIFT_APP_DNS}</wsdl-host-->
 
-<wsdl-host>test-bech.rhcloud.com</wsdl-host>
+	     <wsdl-host>ex-std-node97.prod.rhcloud.com</wsdl-host>
 
  
              <wsdl-port>80</wsdl-port>
