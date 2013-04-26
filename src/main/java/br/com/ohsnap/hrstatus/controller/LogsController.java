@@ -127,8 +127,10 @@ public class LogsController {
 		File fileDelete = new File("tempFile.log");
 		if (fileDelete.delete()){
 			Logger.getLogger(getClass()).debug("Arquivo temporário removido. (tempFile.log)");
+			Logger.getLogger(getClass()).debug("Local Arquivo: " + fileDelete.getAbsolutePath() );
 		}else {
 			Logger.getLogger(getClass()).debug("Arquivo temporário não encontrado. (tempFile.log)");
+			Logger.getLogger(getClass()).debug("Local Arquivo: " + fileDelete.getAbsolutePath() );
 		}
 		
 		SftpLogs getLogFile = new SftpLogs();
@@ -159,9 +161,19 @@ public class LogsController {
 		} catch (IllegalBlockSizeException e) {
 			e.printStackTrace();
 		}
-				
-		String getName[] = file.split(" ");
-		String filename = getName[1];
+		
+ 		String filename = null;
+		//verificando se o filename começa com espaço
+		if (file.startsWith(" ")){
+			Logger.getLogger(getClass()).debug("Arquivo " + file + " começa com espaço, removemdo." );
+			String temp[]=file.split(" ");
+			file = temp[1] + " " + temp[2];
+			String getName[] = file.split(" ");
+			filename = getName[1];
+		}else {
+			String getName[] = file.split(" ");
+			filename = getName[1];
+		}
 		
 		String rfile = servidor.getLogDir() + "/" + filename;
  		 		
