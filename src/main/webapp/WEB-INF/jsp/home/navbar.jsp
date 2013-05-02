@@ -136,13 +136,13 @@
 				<li>
 					<div class="btn-group">
 						<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-							<i class="icon-wrench"> </i> Configurações <span class="caret"></span>
+							<i class="icon-list"> </i> Menu <span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<a href="<c:url value="/configServer"/>" data-toggle="modal">Sistema</a>
-							<a href="<c:url value="/configClients"/>" data-toggle="modal">Servidores</a>
-							<a href="<c:url value="/configUser"/>" data-toggle="modal">Usuários</a>
-							<li class="dropdown-submenu"><a tabindex="-1" href="#">Relatórios</a>
+							<a href="<c:url value="/configServer"/>" data-toggle="modal"><i class="icon-wrench"> </i> Sistema</a>
+							<a href="<c:url value="/configClients"/>" data-toggle="modal"><i class="icon-hdd"> </i> Servidores</a>
+							<a href="<c:url value="/configUser"/>" data-toggle="modal"><i class="icon-user"> </i> Usuários</a>
+							<li class="dropdown-submenu"><a tabindex="-1" href="#"><i class="icon-folder-open"> </i> Relatórios</a>
 								<ul class="dropdown-menu">
 									<li><a href="<c:url value="/reports/reportFull"/>"
 										title="Download Relatório de todos os Servidores Cadastrados no formato PDF">
@@ -181,7 +181,7 @@
 											</a></li>
 										</ul></li>
 								</ul></li>
-							<a href="<c:url value="/selectServer"/>" data-toggle="modal">Verificar
+							<a href="<c:url value="/selectServer"/>" data-toggle="modal"><i class="icon-file"> </i> Verificar
 								logs</a>
 						</ul>
 				</li>
