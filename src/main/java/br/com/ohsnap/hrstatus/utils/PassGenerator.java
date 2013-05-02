@@ -77,11 +77,4 @@ public class PassGenerator {
     private void setTam(int tam) {  
         this.tam = tam;  
     }  
-    
-//    public static void main(String args[]){
-//    	PassGenerator gem = new PassGenerator();
-//    	
-//    	System.out.println(gem.gemPass());
-//    }
-    
 }

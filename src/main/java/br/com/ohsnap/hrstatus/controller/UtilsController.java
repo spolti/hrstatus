@@ -32,6 +32,7 @@ import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.ohsnap.hrstatus.security.CriptoJbossDSPassword;
+import br.com.ohsnap.hrstatus.utils.UserInfo;
 
 /*
  * @author spolti
@@ -41,6 +42,7 @@ import br.com.ohsnap.hrstatus.security.CriptoJbossDSPassword;
 public class UtilsController {
 
 	private Result result;
+	UserInfo userInfo = new UserInfo();
 
 	public UtilsController(Result result) {
 		this.result = result;
@@ -48,7 +50,7 @@ public class UtilsController {
 	
 	@Get("/utils/criptPassJboss/{password}")
 	public void criptPassJboss (String password) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException{
-		Logger.getLogger(getClass()).info("URI Called: /utils/criptPassJboss/");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /utils/criptPassJboss/");
 		
 		CriptoJbossDSPassword cript = new CriptoJbossDSPassword();
 		result.include("EncriptedPassword",cript.encode(password));

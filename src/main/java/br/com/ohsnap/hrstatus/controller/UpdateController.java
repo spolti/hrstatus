@@ -30,8 +30,6 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Post;
@@ -75,11 +73,10 @@ public class UpdateController {
 		
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Logger.getLogger(getClass()).info("URI Called: /findForUpdateServer");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /findForUpdateServer");
 		Crypto decodePass = new Crypto();
-		// String id_string = request.getParameter("serverID");
 		int id = Integer.parseInt(serverID);
-		Logger.getLogger(getClass()).info("id: " + id);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] id: " + id);
 
 		Servidores server = this.iteracoesDAO.getServerByID(id);
 
@@ -94,8 +91,7 @@ public class UpdateController {
 			server.setPass(textPass);
 
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).error(
-					"Erro ao descriptografar senha: ", e);
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro ao descriptografar senha: ", e);
 		}
 
 		// populating SO combobox
@@ -125,9 +121,8 @@ public class UpdateController {
 
 		if (s != null) {
 			Logger.getLogger(getClass())
-					.info("Objeto do tipo Servidores não está vazio, atribuindo valores.");
+					.info("[ " + userInfo.getLoggedUsername() + " ] Objeto do tipo Servidores não está vazio, atribuindo valores.");
 			server = s;
-			// result.include("server", server);
 		}
 	}
 
@@ -140,7 +135,7 @@ public class UpdateController {
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
 		Crypto encodePass = new Crypto();
-		Logger.getLogger(getClass()).info("URI Called: /updateServer");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /updateServer");
 		Pattern pattern = Pattern
 				.compile("\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\z");
 		Matcher matcher = pattern.matcher(server.getIp());
@@ -181,7 +176,7 @@ public class UpdateController {
 			server.setPass(encodePass.encode(server.getPass()));
 
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).error("Error: ", e);
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ", e);
 		}
 
 		this.iteracoesDAO.updateServer(server);
@@ -192,8 +187,8 @@ public class UpdateController {
 
 	@Get("/findForUpdateUser/{username}/{action}")
 	public void findForUpdateUser(Users u, String username, String action) {
-		//Logger.getLogger(getClass()).info("URI Called: /findForUpdateUser");
-		//inserindo html title no result
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /findForUpdateUser");
+
 		result.include("title","Atualizar Usuário");
 
 		String LoggedUsername = userInfo.getLoggedUsername();
@@ -205,10 +200,10 @@ public class UpdateController {
 		if (!username.equals(LoggedUsername.toString()) && !(isAdmin || isUser)) {
 			result.use(Results.http()).sendError(403);
 		} else if (action.equals("changePass")) {
-			Logger.getLogger(getClass()).info("validação de usuário OK");
+			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] validação de usuário OK");
 			result.include("loggedUser", LoggedUsername);
 
-			Logger.getLogger(getClass()).info("URI Called: /changePass");
+			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /changePass");
 
 			Users user = this.usersDAO.getUserByID(username);
 			// setando username
@@ -220,14 +215,14 @@ public class UpdateController {
 
 			if (user != null) {
 				Logger.getLogger(getClass())
-						.info("Objeto do tipo Users não está vazio, atribuindo valores.");
+						.info("[ " + userInfo.getLoggedUsername() + " ] Objeto do tipo Users não está vazio, atribuindo valores.");
 				u = user;
 			}
 		}else {
 			if (isAdmin){
 				result.include("loggedUser", LoggedUsername);
 	
-				Logger.getLogger(getClass()).info("URI Called: /findForUpdateUser");
+				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /findForUpdateUser");
 	
 				Users user = this.usersDAO.getUserByID(username);
 				// setando username
@@ -237,7 +232,7 @@ public class UpdateController {
 	
 				if (user != null) {
 					Logger.getLogger(getClass())
-							.info("Objeto do tipo Users não está vazio, atribuindo valores.");
+							.info("[ " + userInfo.getLoggedUsername() + " ] Objeto do tipo Users não está vazio, atribuindo valores.");
 					u = user;
 				}
 			}else {
@@ -263,7 +258,7 @@ public class UpdateController {
 		} else {
 			result.include("loggedUser", LoggedUsername);
 
-			Logger.getLogger(getClass()).info("URI Called: /updateUser");
+			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /updateUser");
 			SpringEncoder encode = new SpringEncoder();
 
 			if (user.getNome().isEmpty()) {

@@ -40,6 +40,7 @@ public class DeleteController {
 	private Result result;
 	private Iteracoes iteracoesDAO;
 	private UsersInterface usersDAO;
+	UserInfo userInfo = new UserInfo();
 
 	public DeleteController(Result result, Iteracoes iteracoesDAO, UsersInterface usersDAO) {
 		this.result = result;
@@ -52,7 +53,7 @@ public class DeleteController {
 		//inserindo html title no result
 		result.include("title","Deletar Servidor");
 
-		Logger.getLogger(getClass()).info("URI Called: /deleteServerByID");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /deleteServerByID");
 		int id = Integer.parseInt(id_server);
 		Servidores server = this.iteracoesDAO.getServerByID(id);
 
@@ -69,8 +70,8 @@ public class DeleteController {
 		//inserindo html title no result
 		result.include("title","Deletar Usuário");
 		
-		Logger.getLogger(getClass()).info("URI Called: /deleteUserByID");
-		Logger.getLogger(getClass()).debug("Usuário recebido para deleção: " + username);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /deleteUserByID");
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Usuário recebido para deleção: " + username);
 		
 		Users user = this.usersDAO.getUserByID(username);
 		

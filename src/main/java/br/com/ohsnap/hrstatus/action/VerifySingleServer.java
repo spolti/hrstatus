@@ -31,6 +31,7 @@ import br.com.ohsnap.hrstatus.dao.Iteracoes;
 import br.com.ohsnap.hrstatus.model.Servidores;
 import br.com.ohsnap.hrstatus.security.Crypto;
 import br.com.ohsnap.hrstatus.utils.DateUtils;
+import br.com.ohsnap.hrstatus.utils.UserInfo;
 
 import com.jcraft.jsch.JSchException;
 
@@ -45,6 +46,8 @@ public class VerifySingleServer {
 	private Configuration configurationDAO;
 	@Autowired
 	private Iteracoes iteracoesDAO;
+	
+	UserInfo userInfo = new UserInfo();
 	
 	public VerifySingleServer() {
 	}
@@ -63,7 +66,7 @@ public class VerifySingleServer {
 				String dateSTR = GetDateLinux.exec(
 						servidores.getUser(), servidores.getIp(),
 						servidores.getPass(), servidores.getPort());
-				Logger.getLogger(getClass()).debug("Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
 				servidores.setClientTime(dateSTR);
 				// Calculating time difference
 				servidores.setDifference(dt.diffrenceTime(

@@ -42,8 +42,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
-import br.com.caelum.vraptor.interceptor.download.Download;
-import br.com.caelum.vraptor.interceptor.download.FileDownload;
 import br.com.ohsnap.hrstatus.action.SftpLogs;
 import br.com.ohsnap.hrstatus.dao.Iteracoes;
 import br.com.ohsnap.hrstatus.model.Servidores;
@@ -72,7 +70,7 @@ public class LogsController {
 		result.include("title","Selecione o Servidor");
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		
-		Logger.getLogger(getClass()).info("URI Called: /selectServer");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /selectServer");
 		
 		List<Servidores>server = this.iteracoesDAO.getHostnamesWithLogDir();
 		
@@ -88,8 +86,8 @@ public class LogsController {
 		//inserindo username na home:
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		
-		Logger.getLogger(getClass()).info("URI Called: /listLogFiles");
-		Logger.getLogger(getClass()).info("Listing files of " + hostname);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /listLogFiles");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Listing files of " + hostname);
 		
 		Servidores servidor = this.iteracoesDAO.getServerByHostname(hostname);
 		
@@ -112,7 +110,7 @@ public class LogsController {
 		}
 		
 		String files = listLogs.showGetFiles(servidor.getUser(), servidor.getPass(), servidor.getIp(), servidor.getPort(), servidor.getLogDir());
-		Logger.getLogger(getClass()).debug("Files foind: " + files);
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Files found: " + files);
 		
 		String listOfFiles[] = files.split("\n");
 		result.include("hostname", servidor.getHostname());
@@ -123,14 +121,14 @@ public class LogsController {
 	@Get("/downloadFile/{hostname}/{file}")
 	public File downloadFile(String hostname, String file){
 		
-		Logger.getLogger(getClass()).debug("Apagando Arquivo Temporário");
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Apagando Arquivo Temporário");
 		File fileDelete = new File("tempFile.log");
 		if (fileDelete.delete()){
-			Logger.getLogger(getClass()).debug("Arquivo temporário removido. (tempFile.log)");
-			Logger.getLogger(getClass()).debug("Local Arquivo: " + fileDelete.getAbsolutePath() );
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Arquivo temporário removido. (tempFile.log)");
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Local Arquivo: " + fileDelete.getAbsolutePath() );
 		}else {
-			Logger.getLogger(getClass()).debug("Arquivo temporário não encontrado. (tempFile.log)");
-			Logger.getLogger(getClass()).debug("Local Arquivo: " + fileDelete.getAbsolutePath() );
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Arquivo temporário não encontrado. (tempFile.log)");
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Local Arquivo: " + fileDelete.getAbsolutePath() );
 		}
 		
 		SftpLogs getLogFile = new SftpLogs();
@@ -143,7 +141,7 @@ public class LogsController {
 		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
 		result.include("loggedUser", LoggedUsername);
 		
-		Logger.getLogger(getClass()).info("URI Called: /downloadFile");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /downloadFile");
 		
 		Servidores servidor = this.iteracoesDAO.getServerByHostname(hostname);
 		
@@ -165,7 +163,7 @@ public class LogsController {
  		String filename = null;
 		//verificando se o filename começa com espaço
 		if (file.startsWith(" ")){
-			Logger.getLogger(getClass()).debug("Arquivo " + file + " começa com espaço, removemdo." );
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Arquivo " + file + " começa com espaço, removemdo." );
 			String temp[]=file.split(" ");
 			file = temp[1] + " " + temp[2];
 			String getName[] = file.split(" ");
@@ -180,10 +178,10 @@ public class LogsController {
  		this.response.setContentType("application/octet-stream");
 		this.response.setHeader("Content-disposition", "attachment; filename="+filename+"");
 		
-		Logger.getLogger(getClass()).info("Fazendo download do arquivo " + filename + " do servidor " + hostname);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Fazendo download do arquivo " + filename + " do servidor " + hostname);
 		
 		String downloadResult = getLogFile.getFile(servidor.getUser(), servidor.getPass(), servidor.getIp(), servidor.getPort(), rfile);
-		Logger.getLogger(getClass()).info("Resultado do download: " + downloadResult);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Resultado do download: " + downloadResult);
 		return new File("tempFile.log");
 		
 

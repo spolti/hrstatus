@@ -90,4 +90,35 @@ public class MailSender{
 			Logger.getLogger(getClass()).error(e);
 		}
 	}
+	
+	public void sendCreatUserInfo(String mailSender, String dest, String jndiMail, String name, String username, String pass){
+		
+		try {
+			
+			InitialContext ic = new InitialContext(); 
+			Session session = (Session) ic.lookup(jndiMail);
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(mailSender));
+			InternetAddress to = new InternetAddress(dest);
+			message.setRecipient(Message.RecipientType.TO, to);
+			message.setSubject("NO REPLY - Criação de usuário HR status");
+			message.setSentDate(new java.util.Date());
+			
+			GetServerIPAddress getIP = new GetServerIPAddress();
+			
+			message.setContent("Olá, " + name + " seu usuário foi criado com sucesso no sistema HrStatus\n text/html\n" +
+					" Seus dados para acesso são:\n" +
+					" 		Usuário: " + username + "\n" +
+					"       Senha: " + pass + "\n" + 
+					" Para acesso utilize a url: http://"+getIP.returnIP()+":8080/hrstatus/login", "text/html");
+
+			Transport.send(message);
+			
+			Logger.getLogger(getClass()).info("----> Email enviado.");
+			
+		} catch (Exception e) {
+			Logger.getLogger(getClass()).error(e);
+		}
+	}
+	
 }

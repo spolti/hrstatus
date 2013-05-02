@@ -35,16 +35,16 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.ohsnap.hrstatus.model.Configurations;
+import br.com.ohsnap.hrstatus.utils.UserInfo;
 
 @Repository
 @Transactional
 public class ConfigurationDAO implements Configuration {
 
 	private EntityManager entityManager;
-
-	public ConfigurationDAO() {
-
-	}
+	UserInfo userInfo = new UserInfo();
+	
+	public ConfigurationDAO() {	}
 
 	@PersistenceContext(unitName = "pu-hr")
 	protected final void setEntityManager(EntityManager entityManager) {
@@ -57,8 +57,7 @@ public class ConfigurationDAO implements Configuration {
 
 	public void updateConfig(Configurations config) {
 
-		Logger.getLogger(getClass()).debug(
-				"updateConfig() -> Loading configurations.");
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] updateConfig() -> Loading configurations.");
 		session().saveOrUpdate(config);
 	}
 

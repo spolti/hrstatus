@@ -35,12 +35,14 @@ import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.validator.ValidationMessage;
+import br.com.ohsnap.hrstatus.dao.Configuration;
 import br.com.ohsnap.hrstatus.dao.Iteracoes;
 import br.com.ohsnap.hrstatus.dao.UsersInterface;
 import br.com.ohsnap.hrstatus.model.Servidores;
 import br.com.ohsnap.hrstatus.model.Users;
 import br.com.ohsnap.hrstatus.security.Crypto;
 import br.com.ohsnap.hrstatus.security.SpringEncoder;
+import br.com.ohsnap.hrstatus.utils.MailSender;
 import br.com.ohsnap.hrstatus.utils.UserInfo;
 
 @Resource
@@ -50,14 +52,16 @@ public class CadastroController {
 	private Iteracoes iteracoesDAO;
 	private Validator validator;
 	private UsersInterface userDAO;
+	private Configuration configurationDAO;
 	UserInfo userInfo = new UserInfo();
 
 	public CadastroController(Result result, Iteracoes iteracoesDAO,
-			Validator validator, UsersInterface userDAO) {
+			Validator validator, UsersInterface userDAO, Configuration configurationDAO) {
 		this.result = result;
 		this.iteracoesDAO = iteracoesDAO;
 		this.validator = validator;
 		this.userDAO = userDAO;
+		this.configurationDAO = configurationDAO;
 	}
 
 	@Get("/newServer")
@@ -68,7 +72,7 @@ public class CadastroController {
 		
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		
-		Logger.getLogger(getClass()).info("URI Called: /newServer");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /newServer");
 		result.include("servidores", servidores);
 
 		// populating SO combobox
@@ -104,7 +108,7 @@ public class CadastroController {
 		
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		
-		Logger.getLogger(getClass()).info("URI Called: /registerServer");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /registerServer");
 		Crypto encodePass = new Crypto();
 
 		// Regex to validade IP
@@ -207,7 +211,7 @@ public class CadastroController {
 		
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		
-		Logger.getLogger(getClass()).info("URI Called: /newUser");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /newUser");
 		result.include("user", user);
 
 	}
@@ -219,7 +223,7 @@ public class CadastroController {
 		
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		
-		Logger.getLogger(getClass()).info("URI Called: /registerUser");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ]URI Called: /registerUser");
 		SpringEncoder encode = new SpringEncoder();
 		
 		//expressão regular para validar email
@@ -260,6 +264,12 @@ public class CadastroController {
 		result.include("user", user);
 		user.setFirstLogin(true);
 		this.userDAO.saveORupdateUser(user);
+
+		//enviando e-mail para usuário informando senha e criação do usuário:
+		MailSender sendMail = new MailSender();
+		sendMail.sendCreatUserInfo(this.configurationDAO.getMailSender(),  user.getMail(), 
+			this.configurationDAO.getJndiMail(), user.getNome(), user.getUsername(), user.getPassword());
+
 		result.redirectTo(HomeController.class).home("null");
 	}
 }

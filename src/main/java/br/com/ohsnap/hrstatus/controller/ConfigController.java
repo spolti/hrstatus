@@ -24,6 +24,7 @@ package br.com.ohsnap.hrstatus.controller;
  */
 
 import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import br.com.caelum.vraptor.Get;
@@ -65,7 +66,7 @@ public class ConfigController {
 		
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		
-		Logger.getLogger(getClass()).info("URI Called: /configServer");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ]URI Called: /configServer");
 		//List<Configurations> opts = this.configurationDAO.getConfigs();
 		Configurations opts = this.configurationDAO.getConfigs();
 		int diff = opts.getDifference();;
@@ -105,8 +106,8 @@ public class ConfigController {
 		
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		
-		Logger.getLogger(getClass()).info("URI Called: /updateConfig");
-		Logger.getLogger(getClass()).info("Valor recebido " + campo + " " + new_value);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /updateConfig");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Valor recebido " + campo + " " + new_value);
 		
 		String regex_mail = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
@@ -176,7 +177,7 @@ public class ConfigController {
 		
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		
-		Logger.getLogger(getClass()).info("URI Called: /configClients");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /configClients");
 		List<Servidores> list = this.iteracoesDAO.listServers();
 		result.include("server", list);
 	}
@@ -188,7 +189,7 @@ public class ConfigController {
 		
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		
-		Logger.getLogger(getClass()).info("URI Called: /configUser");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /configUser");
 		List<Users> list = this.userDAO.listUser();
 		result.include("user",list);
 	}

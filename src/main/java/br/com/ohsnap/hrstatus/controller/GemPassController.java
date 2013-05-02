@@ -27,8 +27,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Post;
@@ -67,12 +65,12 @@ public class GemPassController {
 		
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Logger.getLogger(getClass()).debug("Usuário logado: " + userInfo.getLoggedUsername());
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Usuário logado: " + userInfo.getLoggedUsername());
 
 		if (!username.equals(userInfo.getLoggedUsername().toString())) {
 			result.use(Results.http()).sendError(403);
 		} else {
-			Logger.getLogger(getClass()).info("validação de usuário OK");
+			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] validação de usuário OK");
 			result.redirectTo(UpdateController.class).findForUpdateUser(null, userInfo.getLoggedUsername(),"changePass");
 		}
 
@@ -81,8 +79,8 @@ public class GemPassController {
 	@Post("/requestNewPass")
 	public void requestNewPass(String username) {
 		
-		Logger.getLogger(getClass()).info("URI Called: /requestNewPass");
-		Logger.getLogger(getClass()).info("Username recebido: " + username);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /requestNewPass");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Username recebido: " + username);
 		SpringEncoder encode = new SpringEncoder();
 		String password = "";
 		PassExpire passExpire = new PassExpire();
@@ -138,16 +136,16 @@ public class GemPassController {
 					send.sendNewPass(mailSender, dest, jndiMail, password);
 
 					result.redirectTo(LoginController.class)
-							.login("Se o usuário for válido uma nova senha será enviada para seu e-mail.");
+							.login("[ " + userInfo.getLoggedUsername() + " ] Se o usuário for válido uma nova senha será enviada para seu e-mail.");
 				} else {
 					result.redirectTo(LoginController.class)
-							.login("Já foi solicitado uma troca de senha para este usuário, por favor cheque seu e-mail.");
+							.login("[ " + userInfo.getLoggedUsername() + " ]  Já foi solicitado uma troca de senha para este usuário, por favor cheque seu e-mail.");
 				}
 
 			} else {
-				Logger.getLogger(getClass()).info("usuário não encontrado");
+				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] usuário não encontrado");
 				result.redirectTo(LoginController.class)
-				.login("Se o usuário for válido uma nova senha será enviada para seu e-mail.");
+				.login("[ " + userInfo.getLoggedUsername() + " ] Se o usuário for válido uma nova senha será enviada para seu e-mail.");
 			}
 
 		} catch (Exception e) {

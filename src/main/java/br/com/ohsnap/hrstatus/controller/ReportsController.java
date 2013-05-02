@@ -24,8 +24,6 @@ package br.com.ohsnap.hrstatus.controller;
  */
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -41,7 +39,6 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
 
 import org.apache.log4j.Logger;
-import org.springframework.util.ResourceUtils;
 
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Path;
@@ -55,6 +52,7 @@ public class ReportsController {
 
 	private Iteracoes iteracoesDAO;
 	private HttpServletResponse response;
+	UserInfo userInfo = new UserInfo();
 
 	public ReportsController(Iteracoes iteracoesDAO,
 			HttpServletResponse response) {
@@ -64,8 +62,9 @@ public class ReportsController {
 
 	@Get
 	@Path("/reports/reportFull")
+	@SuppressWarnings("unchecked")
 	public InputStream fullReport() throws FileNotFoundException, JRException {
-		Logger.getLogger(getClass()).info("URI Called: /reports/reportFull");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportFull");
 
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
 				.getResourceAsStream("/jasper/reportFull.jasper"));
@@ -92,8 +91,9 @@ public class ReportsController {
 
 	@Get
 	@Path("/reports/reportServersOK")
+	@SuppressWarnings("unchecked")
 	public InputStream serversOK() throws FileNotFoundException, JRException {
-		Logger.getLogger(getClass()).info("URI Called: /reports/serversOK");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/serversOK");
 
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
 				.getResourceAsStream("/jasper/reportServersOK.jasper"));
@@ -119,9 +119,9 @@ public class ReportsController {
 
 	@Get
 	@Path("/reports/reportServersNOK")
+	@SuppressWarnings("unchecked")
 	public InputStream reportServersNOK() throws FileNotFoundException, JRException {
-		Logger.getLogger(getClass()).info(
-				"URI Called: /reports/reportServersNOK");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportServersNOK");
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
 				.getResourceAsStream("/jasper/reportServersNOK.jasper"));
 		List<Servidores> listServers = iteracoesDAO.getServersNOK();
@@ -145,8 +145,9 @@ public class ReportsController {
 
 	@Get
 	@Path("/reports/reportSOLinux")
+	@SuppressWarnings("unchecked")
 	public InputStream soLinux() throws FileNotFoundException, JRException {
-		Logger.getLogger(getClass()).info("URI Called: /reports/reportSOLinux");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportSOLinux");
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
 				.getResourceAsStream("/jasper/reportSOLinux.jasper"));
 		List<Servidores> listServers = iteracoesDAO.getSOLinux();
@@ -170,9 +171,9 @@ public class ReportsController {
 
 	@Get
 	@Path("/reports/reportSOWindows")
+	@SuppressWarnings("unchecked")
 	public InputStream reportSOWindows() throws FileNotFoundException, JRException {
-		Logger.getLogger(getClass()).info(
-				"URI Called: /reports/reportSOWindows");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportSOWindows");
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
 				.getResourceAsStream("/jasper/reportSOWindows.jasper"));
 		List<Servidores> listServers = iteracoesDAO.getSOWindows();
@@ -196,8 +197,9 @@ public class ReportsController {
 
 	@Get
 	@Path("/reports/reportSOUnix")
+	@SuppressWarnings("unchecked")
 	public InputStream reportSOUnix() throws FileNotFoundException, JRException {
-		Logger.getLogger(getClass()).info("URI Called: /reports/reportSOUnix");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportSOUnix");
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
 				.getResourceAsStream("/jasper/reportSOUnix.jasper"));
 		List<Servidores> listServers = iteracoesDAO.getSOUnix();
@@ -221,9 +223,10 @@ public class ReportsController {
 
 	@Get
 	@Path("/reports/reportSOOthers")
+	@SuppressWarnings("unchecked")
 	public InputStream reportSOOthers() throws FileNotFoundException, JRException {
 		Logger.getLogger(getClass())
-				.info("URI Called: /reports/reportSOOthers");
+				.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportSOOthers");
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
 				.getResourceAsStream("/jasper/reportSOOthers.jasper"));
 

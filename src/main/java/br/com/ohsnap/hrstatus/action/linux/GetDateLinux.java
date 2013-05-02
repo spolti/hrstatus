@@ -26,7 +26,11 @@ package br.com.ohsnap.hrstatus.action.linux;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.jcraft.jsch.*;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 
 public class GetDateLinux {
 
@@ -83,14 +87,14 @@ public class GetDateLinux {
 		return s;
 	}
 
-	public static void main(String args[]) throws IOException, JSchException {
-		GetDateLinux get = new GetDateLinux();
-
-		String tmp = get.exec("nagios", "10.99.1.151", "23d3marc0", 22);
-//		DateParser parse = new DateParser();
-//		Date data = parse.parser(tmp);
-		
-		System.out.println(tmp);
-	}
+//	public static void main(String args[]) throws IOException, JSchException {
+//		GetDateLinux get = new GetDateLinux();
+//
+//		String tmp = get.exec("sfssdfsdf", "sdfsdfsdfsd", "sdfsdfsdfsdf", 22);
+////		DateParser parse = new DateParser();
+////		Date data = parse.parser(tmp);
+//		
+//		System.out.println(tmp);
+//	}
 
 }

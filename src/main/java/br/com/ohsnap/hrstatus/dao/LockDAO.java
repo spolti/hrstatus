@@ -32,6 +32,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.ohsnap.hrstatus.model.Lock;
+import br.com.ohsnap.hrstatus.utils.UserInfo;
 
 /*
  * @author spolti
@@ -42,9 +43,9 @@ import br.com.ohsnap.hrstatus.model.Lock;
 public class LockDAO implements LockIntrface{
 
 	private EntityManager entityManager;
+	UserInfo userInfo = new UserInfo();
 
-	public LockDAO() {
-	}
+	public LockDAO() {}
 
 	@PersistenceContext(unitName = "pu-hr")
 	protected final void setEntityManager(EntityManager entityManager) {
@@ -56,15 +57,13 @@ public class LockDAO implements LockIntrface{
 	}
 
 	public void insertLock(Lock lock) {
-		Logger.getLogger(getClass()).info(
-				"Gerando lock para o recurso " + lock.getRecurso()
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Gerando lock para o recurso " + lock.getRecurso()
 						+ " solicitado pelo usuário " + lock.getUsername());
 		session().save(lock);
 	}
 
 	public void removeLock(Lock lock) {
-		Logger.getLogger(getClass()).info(
-				"Removendo lock para o recurso " + lock.getRecurso()
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Removendo lock para o recurso " + lock.getRecurso()
 						+ " solicitado pelo usuário " + lock.getUsername());
 		session().refresh(lock);
 		session().delete(lock);
@@ -72,7 +71,7 @@ public class LockDAO implements LockIntrface{
 
 	@SuppressWarnings("unchecked")
 	public List<Lock> listLockedServices(String recurso){
-		Logger.getLogger(getClass()).debug("Verificando se há algum recurso locado.");
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Verificando se há algum recurso locado.");
 		Criteria criteria = session().createCriteria(Lock.class);
 		criteria.add(Restrictions.eq("recurso", recurso));
 		return criteria.list();

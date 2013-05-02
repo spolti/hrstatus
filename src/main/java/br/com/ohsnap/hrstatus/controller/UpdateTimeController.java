@@ -81,12 +81,10 @@ public class UpdateTimeController {
 		
 		result.include("title", "Home");
 		
-		Logger.getLogger(getClass()).info(
-				"URI Called: /updateTimeSelectedClients");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /updateTimeSelectedClients");
 
 		String servidores[] = ids.split(",");
-		Logger.getLogger(getClass()).debug(
-				"Tentando atualizar data/hora do servidor(es): " + ids);
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Tentando atualizar data/hora do servidor(es): " + ids);
 		
 		for (int i = 0; i < servidores.length; i++) {
 			id = Integer.parseInt(servidores[i]);
@@ -109,7 +107,7 @@ public class UpdateTimeController {
 					e.printStackTrace();
 				}
 				
-				Logger.getLogger(getClass()).info("Tentando atualizar data [command: " + command + "] no servidor " + servidor.getHostname());
+				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Tentando atualizar data [command: " + command + "] no servidor " + servidor.getHostname());
 				resultCommand = RunNtpDate.exec(servidor.getUser(), servidor.getIp(), servidor.getPass(), servidor.getPort(), command);
 
 				if (resultCommand.equals("")){
@@ -120,11 +118,11 @@ public class UpdateTimeController {
 					validator.add(new ValidationMessage(servidor.getHostname() + ": " + resultCommand, "Erro"));
 					//chamando a re-verificação individual de servidor passando objeto.
 					runVerify.runSingleVerification(servidor);				
-					Logger.getLogger(getClass()).debug(resultCommand);
+					Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] " + resultCommand);
 				}
 
 			}else if (servidor.getSO().equals("WINDOWS")){
-				Logger.getLogger(getClass()).info("Servidores Windows não são suportados para esta opção.");
+				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Servidores Windows não são suportados para esta opção.");
 				validator.add(new ValidationMessage("Servidores Windows não são suportados para esta opção.", "Erro"));
 			}
 		}
@@ -135,14 +133,14 @@ public class UpdateTimeController {
 	@Get("/updateTimeAllClients")
 	public void updateTimeAllClients() throws JSchException, IOException {
 		result.include("title", "Home");
-		Logger.getLogger(getClass()).info("URI Called: /updateTimeAllClients");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /updateTimeAllClients");
 		Logger.getLogger(getClass())
-				.debug("Tentando atualizar data/hora de todos os servidores desatualizados.");
+				.debug("[ " + userInfo.getLoggedUsername() + " ] Tentando atualizar data/hora de todos os servidores desatualizados.");
 		String ntpAddress = configurationDAO.getNtpServerAddress();
 		//buscar todos os servidores não OK.
 		List<Servidores> tempServer = this.iteracoesDAO.getServersNOK();
 		for (Servidores servidor : tempServer){
-			Logger.getLogger(getClass()).info("Servidor recebido para atualização: " + servidor.getHostname());
+			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Servidor recebido para atualização: " + servidor.getHostname());
 			if (servidor.getSO().equals("LINUX") || servidor.getSO().equals("UNIX") || servidor.getSO().equals("OUTRO")){
 				command = (servidor.getSuCommand() + " " + ntpAddress);
 				//descriptografando a senha:
@@ -160,23 +158,23 @@ public class UpdateTimeController {
 					e.printStackTrace();
 				}
 				
-				Logger.getLogger(getClass()).info("Tentando atualizar data [command: " + command + "] no servidor " + servidor.getHostname());
+				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Tentando atualizar data [command: " + command + "] no servidor " + servidor.getHostname());
 				resultCommand = RunNtpDate.exec(servidor.getUser(), servidor.getIp(), servidor.getPass(), servidor.getPort(), command);
 
 				if (resultCommand.equals("")){
-					Logger.getLogger(getClass()).info(servidor.getHostname() + ": Não foi possível executar a atualização automática, provavelmente erro na execução do comando utilizado.");
+					Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] " + servidor.getHostname() + ": Não foi possível executar a atualização automática, provavelmente erro na execução do comando utilizado.");
 					validator.add(new ValidationMessage(servidor.getHostname() + ": Não foi possível executar a atualização automática, provavelmente erro na execução do comando utilizado.", "Erro"));
 				}else{
 					//Está com erro somente para fazer append nas informações do resultado na página.
-					Logger.getLogger(getClass()).info(servidor.getHostname() + ": " + resultCommand);	
+					Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] " + servidor.getHostname() + ": " + resultCommand);	
 					validator.add(new ValidationMessage(servidor.getHostname() + ": " + resultCommand, "Erro"));
 					//chamando a re-verificação individual de servidor passando objeto.
 					runVerify.runSingleVerification(servidor);				
-					Logger.getLogger(getClass()).debug(resultCommand);
+					Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] " + resultCommand);
 				}
 
 			}else if (servidor.getSO().equals("WINDOWS")){
-				Logger.getLogger(getClass()).info("Servidores Windows não são suportados para esta opção.");
+				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Servidores Windows não são suportados para esta opção.");
 				validator.add(new ValidationMessage("Servidores Windows não são suportados para esta opção.", "Erro"));
 			}
 		}

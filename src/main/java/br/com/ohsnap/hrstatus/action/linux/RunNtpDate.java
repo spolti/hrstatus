@@ -26,7 +26,11 @@ package br.com.ohsnap.hrstatus.action.linux;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.jcraft.jsch.*;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 
 public class RunNtpDate {
 
@@ -84,14 +88,14 @@ public class RunNtpDate {
 		return s;
 	}
 	
-	public static void main(String args[]) throws IOException, JSchException {
-		RunNtpDate get = new RunNtpDate();
-
-		String tmp = get.exec("nagios", "jbosseap02hom", "23d3marc0", 22,"sudo /usr/sbin/ntpdate -u 10.32.8.1");
-//		DateParser parse = new DateParser();
-//		Date data = parse.parser(tmp);
-		
-		System.out.println(tmp);
-	}
+//	public static void main(String args[]) throws IOException, JSchException {
+//		RunNtpDate get = new RunNtpDate();
+//
+//		String tmp = get.exec("sfsdf", "sdfsdfsdf", "sdfsdfsdf", 22,"sudo /sdfsf/sbin/ntpdate -u 10.32.8.1");
+////		DateParser parse = new DateParser();
+////		Date data = parse.parser(tmp);
+//		
+//		System.out.println(tmp);
+//	}
 	
 }

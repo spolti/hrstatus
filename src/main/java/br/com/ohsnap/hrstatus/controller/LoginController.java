@@ -28,20 +28,23 @@ import org.apache.log4j.Logger;
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
-import br.com.ohsnap.hrstatus.utils.*;
+import br.com.ohsnap.hrstatus.utils.PropertiesLoaderImpl;
+import br.com.ohsnap.hrstatus.utils.UserInfo;
 
 @Resource
 public class LoginController {
 	
 	private Result result;
 
+	UserInfo userInfo = new UserInfo();
+	
 	public LoginController(Result result) {
 		this.result = result;
 	}
 	
 	@Get("/login")
 	public void login(String message){
-		Logger.getLogger(getClass()).info("URI Called: /login");
+		Logger.getLogger(getClass()).info("[ Not Logged ] URI Called: /login");
 		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
 	    String version = load.getValor("version"); 
 	    result.include("version",version);

@@ -52,12 +52,12 @@ public class Scheduler {
 	@Scheduled(cron = "${br.com.ohsnap.hrstatus.scheduler.MailScheduler.cron}")
 	public void sendMail() {
 		Logger.getLogger(getClass())
-				.debug("Invoking sendMail at " + new Date());
+				.debug("[ System ] Invoking sendMail at " + new Date());
 
 		int count = this.iteracoesDAO.countServersNOK();
 		if (count > 0) {
 			Logger.getLogger(getClass())
-					.debug("Foram encontrados "
+					.debug("[ System ] Foram encontrados "
 							+ count
 							+ " servidor(es) desatualizado(s), enviando e-mail de alerta.");
 			// Envio de e-mail
@@ -69,7 +69,7 @@ public class Scheduler {
 			mail.Sender(mail1, Subject, Dests, jndiMail);
 		} else {
 			Logger.getLogger(getClass()).info(
-					"Nenhum servidor desatualizado foi encontrado.");
+					"[ System ] Nenhum servidor desatualizado foi encontrado.");
 		}
 
 	}

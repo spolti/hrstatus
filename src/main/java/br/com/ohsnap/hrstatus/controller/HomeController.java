@@ -84,7 +84,7 @@ public class HomeController {
 		// inserindo html title no result
 		result.include("title", "Hr Status Home");
 
-		Logger.getLogger(getClass()).info("URI Called: /home");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /home");
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		// ///////////////////////////////////////
@@ -99,55 +99,55 @@ public class HomeController {
 			result.include("windows", (windows * 100) / total);
 			result.include("unix", (unix * 100) / total);
 			result.include("other", (other * 100) / total);
-			Logger.getLogger(getClass()).debug("Total: " + total);
-			Logger.getLogger(getClass()).debug("linux: " + linux);
-			Logger.getLogger(getClass()).debug("Windows: " + windows);
-			Logger.getLogger(getClass()).debug("Unix: " + unix);
-			Logger.getLogger(getClass()).debug("Other: " + other);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] linux: " + linux);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Windows: " + windows);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Unix: " + unix);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Other: " + other);
 
 		} else if (linux > 0) {
 			result.include("linux", (linux * 100) / total);
 			result.include("windows", 0);
 			result.include("unix", 0);
 			result.include("other", 0);
-			Logger.getLogger(getClass()).debug("Total: " + total);
-			Logger.getLogger(getClass()).debug("linux: " + linux);
-			Logger.getLogger(getClass()).debug("Windows: " + windows);
-			Logger.getLogger(getClass()).debug("Unix: " + unix);
-			Logger.getLogger(getClass()).debug("Other: " + other);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] linux: " + linux);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Windows: " + windows);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Unix: " + unix);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Other: " + other);
 
 		} else if (windows > 0) {
 			result.include("linux", 0);
 			result.include("windows", (windows * 100) / total);
 			result.include("unix", 0);
 			result.include("other", 0);
-			Logger.getLogger(getClass()).debug("Total: " + total);
-			Logger.getLogger(getClass()).debug("linux: " + linux);
-			Logger.getLogger(getClass()).debug("Windows: " + windows);
-			Logger.getLogger(getClass()).debug("Unix: " + unix);
-			Logger.getLogger(getClass()).debug("Other: " + other);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] linux: " + linux);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Windows: " + windows);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Unix: " + unix);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Other: " + other);
 
 		} else if (unix > 0) {
 			result.include("linux", 0);
 			result.include("windows", 0);
 			result.include("unix", (unix * 100) / total);
 			result.include("other", 0);
-			Logger.getLogger(getClass()).debug("Total: " + total);
-			Logger.getLogger(getClass()).debug("linux: " + linux);
-			Logger.getLogger(getClass()).debug("Windows: " + windows);
-			Logger.getLogger(getClass()).debug("Unix: " + unix);
-			Logger.getLogger(getClass()).debug("Other: " + other);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] linux: " + linux);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Windows: " + windows);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Unix: " + unix);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Other: " + other);
 
 		} else if (other > 0) {
 			result.include("linux", 0);
 			result.include("windows", 0);
 			result.include("unix", 0);
 			result.include("other", (other * 100) / total);
-			Logger.getLogger(getClass()).debug("Total: " + total);
-			Logger.getLogger(getClass()).debug("linux: " + linux);
-			Logger.getLogger(getClass()).debug("Windows: " + windows);
-			Logger.getLogger(getClass()).debug("Unix: " + unix);
-			Logger.getLogger(getClass()).debug("Other: " + other);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] linux: " + linux);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Windows: " + windows);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Unix: " + unix);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Other: " + other);
 		}
 
 		// Populating 2° graph (servers ok and not ok)
@@ -173,17 +173,17 @@ public class HomeController {
 		//Verificando se é o primeiro login do usuário após troca de senha ou do cadastro
 		//se for false não faz nade se for true redireciona para atualizar cadastro.
 		if (this.userDAO.getFirstLogin(userInfo.getLoggedUsername())){
-			Logger.getLogger(getClass()).info("Primeiro login do usuário " + userInfo.getLoggedUsername() + ": "  + this.userDAO.getFirstLogin(userInfo.getLoggedUsername()));
-			Logger.getLogger(getClass()).info("Redirecionando o usuário para troca de senha.");
+			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Primeiro login do usuário " + userInfo.getLoggedUsername() + ": "  + this.userDAO.getFirstLogin(userInfo.getLoggedUsername()));
+			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Redirecionando o usuário para troca de senha.");
 			result.forwardTo(UpdateController.class).findForUpdateUser(null, userInfo.getLoggedUsername(), "changePass");
 		}else{
-			Logger.getLogger(getClass()).info("Primeiro login do usuário " + userInfo.getLoggedUsername() + ": "  + this.userDAO.getFirstLogin(userInfo.getLoggedUsername()));
+			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Primeiro login do usuário " + userInfo.getLoggedUsername() + ": "  + this.userDAO.getFirstLogin(userInfo.getLoggedUsername()));
 		}
 	}
 
 	@Get("/navbar")
 	public void navbar() {
-		Logger.getLogger(getClass()).info("URI Called: /navbar");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /navbar");
 
 	}
 
@@ -192,8 +192,7 @@ public class HomeController {
 		// inserindo html title no result
 		result.include("title", "Hr Status Home");
 
-		Logger.getLogger(getClass()).info(
-				"URI Called: /home/showByStatus/" + status);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /home/showByStatus/" + status);
 
 		if (status.equals("OK")) {
 			List<Servidores> list = this.iteracoesDAO.getServersOK();
@@ -219,15 +218,13 @@ public class HomeController {
 
 		String LoggedUsername = userInfo.getLoggedUsername();
 
-		Logger.getLogger(getClass()).info(
-				"URI called: /home/startVerification/" + value);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI called: /home/startVerification/" + value);
 
 		Lock lockedResource = new Lock();
 
 		// Verifica se já tem alguma verificação ocorrendo...
 
-		Logger.getLogger(getClass()).info(
-				"Initializing a " + value + " verification.");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Initializing a " + value + " verification.");
 
 		DateUtils dt = new DateUtils();
 
@@ -240,8 +237,7 @@ public class HomeController {
 					.listLockedServices("verificationFull");
 			if (lockList.size() != 0) {
 				for (Lock lock : lockList) {
-					Logger.getLogger(getClass()).info(
-							"O recurso verificationFull está locado pelo usuário "
+					Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] O recurso verificationFull está locado pelo usuário "
 									+ lock.getUsername()
 									+ ", aguarde o término da mesma");
 					result.include("info",
@@ -252,7 +248,7 @@ public class HomeController {
 				}
 			} else {
 				Logger.getLogger(getClass())
-						.info("O recurso verificationFull não está locado, locando e proseguindo");
+						.info("[ " + userInfo.getLoggedUsername() + " ] O recurso verificationFull não está locado, locando e proseguindo");
 				// locar recurso.
 				lockDAO.insertLock(lockedResource);
 
@@ -282,7 +278,7 @@ public class HomeController {
 							String dateSTR = GetDateLinux.exec(
 									servidores.getUser(), servidores.getIp(),
 									servidores.getPass(), servidores.getPort());
-							Logger.getLogger(getClass()).debug("Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
+							Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
 							servidores.setDifference(dt.diffrenceTime(
@@ -307,7 +303,7 @@ public class HomeController {
 										.getPass()));
 
 							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error("Error: ",
+								Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ",
 										e1);
 							}
 							this.iteracoesDAO.updateServer(servidores);
@@ -321,7 +317,7 @@ public class HomeController {
 										.getPass()));
 
 							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error("Error: ",
+								Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ",
 										e1);
 							}
 							this.iteracoesDAO.updateServer(servidores);
@@ -335,7 +331,7 @@ public class HomeController {
 										.getPass()));
 
 							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error("Error: ",
+								Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ",
 										e1);
 							}
 							this.iteracoesDAO.updateServer(servidores);
@@ -365,7 +361,7 @@ public class HomeController {
 							String dateSTR = GetDateUnix.exec(
 									servidores.getUser(), servidores.getIp(),
 									servidores.getPass(), servidores.getPort());
-							Logger.getLogger(getClass()).debug("Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
+							Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
 							servidores.setDifference(dt.diffrenceTime(
@@ -391,7 +387,7 @@ public class HomeController {
 
 							} catch (Exception e) {
 								Logger.getLogger(getClass())
-										.error("Error: ", e);
+										.error("[ " + userInfo.getLoggedUsername() + " ] Error: ", e);
 							}
 							this.iteracoesDAO.updateServer(servidores);
 						} catch (JSchException e) {
@@ -404,7 +400,7 @@ public class HomeController {
 										.getPass()));
 
 							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error("Error: ",
+								Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ",
 										e1);
 							}
 							this.iteracoesDAO.updateServer(servidores);
@@ -418,7 +414,7 @@ public class HomeController {
 										.getPass()));
 
 							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error("Error: ",
+								Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ",
 										e1);
 							}
 							this.iteracoesDAO.updateServer(servidores);
@@ -433,7 +429,7 @@ public class HomeController {
 						try {
 							String dateSTR = GetDateWindows.Exec(servidores
 									.getIp());
-							Logger.getLogger(getClass()).debug("Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
+							Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
 							servidores.setDifference(dt.diffrenceTime(
@@ -510,7 +506,7 @@ public class HomeController {
 
 							} catch (Exception e) {
 								Logger.getLogger(getClass())
-										.error("Error: ", e);
+										.error("[ " + userInfo.getLoggedUsername() + " ] Error: ", e);
 							}
 							this.iteracoesDAO.updateServer(servidores);
 						} catch (JSchException e) {
@@ -523,7 +519,7 @@ public class HomeController {
 										.getPass()));
 
 							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error("Error: ",
+								Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ",
 										e1);
 							}
 							this.iteracoesDAO.updateServer(servidores);
@@ -537,7 +533,7 @@ public class HomeController {
 										.getPass()));
 
 							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error("Error: ",
+								Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ",
 										e1);
 							}
 							this.iteracoesDAO.updateServer(servidores);
@@ -559,8 +555,7 @@ public class HomeController {
 					.listLockedServices("notOkverification");
 			if (lockList.size() != 0) {
 				for (Lock lock : lockList) {
-					Logger.getLogger(getClass()).info(
-							"O recurso notOkverification está locado pelo usuário "
+					Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] O recurso notOkverification está locado pelo usuário "
 									+ lock.getUsername()
 									+ ", aguarde o término da mesma");
 					result.include(
@@ -573,7 +568,7 @@ public class HomeController {
 				}
 			} else {
 				Logger.getLogger(getClass())
-						.info("O recurso notOkverification não está locado, locando e proseguindo");
+						.info("[ " + userInfo.getLoggedUsername() + " ] O recurso notOkverification não está locado, locando e proseguindo");
 				// locar recurso.
 				lockDAO.insertLock(lockedResource);
 
@@ -606,7 +601,7 @@ public class HomeController {
 							String dateSTR = GetDateLinux.exec(
 									servidores.getUser(), servidores.getIp(),
 									servidores.getPass(), servidores.getPort());
-							Logger.getLogger(getClass()).debug("Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
+							Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
 							servidores.setDifference(dt.diffrenceTime(
@@ -631,7 +626,7 @@ public class HomeController {
 
 							} catch (Exception e) {
 								Logger.getLogger(getClass())
-										.error("Error: ", e);
+										.error("[ " + userInfo.getLoggedUsername() + " ] Error: ", e);
 							}
 							this.iteracoesDAO.updateServer(servidores);
 
@@ -645,7 +640,7 @@ public class HomeController {
 										.getPass()));
 
 							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error("Error: ",
+								Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ",
 										e1);
 							}
 							this.iteracoesDAO.updateServer(servidores);
@@ -659,7 +654,7 @@ public class HomeController {
 										.getPass()));
 
 							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error("Error: ",
+								Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ",
 										e1);
 							}
 							this.iteracoesDAO.updateServer(servidores);
@@ -689,7 +684,7 @@ public class HomeController {
 							String dateSTR = GetDateUnix.exec(
 									servidores.getUser(), servidores.getIp(),
 									servidores.getPass(), servidores.getPort());
-							Logger.getLogger(getClass()).debug("Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
+							Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
 							servidores.setDifference(dt.diffrenceTime(
@@ -714,7 +709,7 @@ public class HomeController {
 
 							} catch (Exception e) {
 								Logger.getLogger(getClass())
-										.error("Error: ", e);
+										.error("[ " + userInfo.getLoggedUsername() + " ] Error: ", e);
 							}
 							this.iteracoesDAO.updateServer(servidores);
 						} catch (JSchException e) {
@@ -727,7 +722,7 @@ public class HomeController {
 										.getPass()));
 
 							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error("Error: ",
+								Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ",
 										e1);
 							}
 							this.iteracoesDAO.updateServer(servidores);
@@ -741,7 +736,7 @@ public class HomeController {
 										.getPass()));
 
 							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error("Error: ",
+								Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ",
 										e1);
 							}
 							this.iteracoesDAO.updateServer(servidores);
@@ -755,7 +750,7 @@ public class HomeController {
 						try {
 							String dateSTR = GetDateWindows.Exec(servidores
 									.getIp());
-							Logger.getLogger(getClass()).debug("Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
+							Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
 							servidores.setDifference(dt.diffrenceTime(
@@ -804,7 +799,7 @@ public class HomeController {
 							String dateSTR = GetDateOther.exec(
 									servidores.getUser(), servidores.getIp(),
 									servidores.getPass(), servidores.getPort());
-							Logger.getLogger(getClass()).debug("Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
+							Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
 							servidores.setDifference(dt.diffrenceTime(
@@ -828,7 +823,7 @@ public class HomeController {
 
 							} catch (Exception e) {
 								Logger.getLogger(getClass())
-										.error("Error: ", e);
+										.error("[ " + userInfo.getLoggedUsername() + " ] Error: ", e);
 							}
 							this.iteracoesDAO.updateServer(servidores);
 						} catch (JSchException e) {
@@ -840,7 +835,7 @@ public class HomeController {
 										.getPass()));
 
 							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error("Error: ",
+								Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ",
 										e1);
 							}
 							this.iteracoesDAO.updateServer(servidores);
@@ -853,7 +848,7 @@ public class HomeController {
 										.getPass()));
 
 							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error("Error: ",
+								Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ",
 										e1);
 							}
 							this.iteracoesDAO.updateServer(servidores);
@@ -865,8 +860,7 @@ public class HomeController {
 			}
 		}
 		// desloca a tabela quando a verficação terminar.
-		Logger.getLogger(getClass()).info(
-				"Verificação finalizada, liberando recurso "
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Verificação finalizada, liberando recurso "
 						+ lockedResource.getRecurso());
 		lockDAO.removeLock(lockedResource);
 	}
@@ -875,7 +869,7 @@ public class HomeController {
 	public void singleServerToVerify(int id) throws JSchException, IOException{
 		result.include("title", "Home");
 		result.include("loggedUser", userInfo.getLoggedUsername());
-		Logger.getLogger(getClass()).info("URI Called: /singleServerToVerify/" + id);		
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /singleServerToVerify/" + id);		
 		Servidores servidor = this.iteracoesDAO.getServerByID(id);
 		
 		try {
