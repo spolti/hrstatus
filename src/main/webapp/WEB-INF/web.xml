@@ -116,7 +116,7 @@
 
 	<servlet>
 		<servlet-name>VersionServlet</servlet-name>
-		<servlet-class>br.com.ohsnap.hrstatus.utils.VersionServlet</servlet-class>
+		<servlet-class>br.com.hrstatus.utils.VersionServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 

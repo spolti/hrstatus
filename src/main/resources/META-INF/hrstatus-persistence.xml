@@ -6,11 +6,11 @@
 	<persistence-unit name="pu-hr" transaction-type="JTA">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<jta-data-source>java:/hrStatusDS</jta-data-source>
-		<class>br.com.ohsnap.hrstatus.model.Servidores</class>
-		<class>br.com.ohsnap.hrstatus.model.Users</class>
-		<class>br.com.ohsnap.hrstatus.model.Configurations</class>
-		<class>br.com.ohsnap.hrstatus.model.PassExpire</class>
-		<class>br.com.ohsnap.hrstatus.model.Lock</class>
+		<class>br.com.hrstatus.model.Servidores</class>
+		<class>br.com.hrstatus.model.Users</class>
+		<class>br.com.hrstatus.model.Configurations</class>
+		<class>br.com.hrstatus.model.PassExpire</class>
+		<class>br.com.hrstatus.model.Lock</class>
 		<exclude-unlisted-classes />
 	</persistence-unit>
 </persistence>

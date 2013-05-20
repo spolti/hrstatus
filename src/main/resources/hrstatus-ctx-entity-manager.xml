@@ -15,7 +15,7 @@
 
 	<context:annotation-config />
 
-	<context:component-scan base-package="br.com.ohsnap.hrstatus" />
+	<context:component-scan base-package="br.com.hrstatus" />
 	
 	<!-- Schedulers -->
 
@@ -76,8 +76,4 @@
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	<bean
 		class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
-
-
-
-
 </beans>

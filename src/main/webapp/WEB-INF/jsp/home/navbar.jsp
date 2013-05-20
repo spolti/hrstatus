@@ -103,8 +103,7 @@
 			}
 			document.getElementById("time").innerHTML = hora + ":" + minuto;
 			+":" + segundo; // hora no documento
-			// barra de título
-			// barra de status
+
 		}
 		window.setInterval("Tempo()", 1000);
 	</script>
@@ -139,10 +138,14 @@
 							<i class="icon-list"> </i> Menu <span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<a href="<c:url value="/configServer"/>" data-toggle="modal"><i class="icon-wrench"> </i> Sistema</a>
-							<a href="<c:url value="/configClients"/>" data-toggle="modal"><i class="icon-hdd"> </i> Servidores</a>
-							<a href="<c:url value="/configUser"/>" data-toggle="modal"><i class="icon-user"> </i> Usuários</a>
-							<li class="dropdown-submenu"><a tabindex="-1" href="#"><i class="icon-folder-open"> </i> Relatórios</a>
+							<a href="<c:url value="/configServer"/>" data-toggle="modal"><i
+								class="icon-wrench"> </i> Sistema</a>
+							<a href="<c:url value="/configClients"/>" data-toggle="modal"><i
+								class="icon-hdd"> </i> Servidores</a>
+							<a href="<c:url value="/configUser"/>" data-toggle="modal"><i
+								class="icon-user"> </i> Usuários</a>
+							<li class="dropdown-submenu"><a tabindex="-1" href="#"><i
+									class="icon-folder-open"> </i> Relatórios</a>
 								<ul class="dropdown-menu">
 									<li><a href="<c:url value="/reports/reportFull"/>"
 										title="Download Relatório de todos os Servidores Cadastrados no formato PDF">
@@ -181,11 +184,17 @@
 											</a></li>
 										</ul></li>
 								</ul></li>
-							<a href="<c:url value="/selectServer"/>" data-toggle="modal"><i class="icon-file"> </i> Verificar
-								logs</a>
-						</ul>
-				</li>
+							<a href="<c:url value="/selectServer"/>" data-toggle="modal"><i
+								class="icon-file"> </i> Verificar logs</a>
 
+							<div class="btn btn-link">
+								<ul>
+									<a href="#ModalAbout" data-toggle="modal"> Sobre </a>
+								</ul>
+							</div>
+						</ul>
+						
+				</li>
 			</ul>
 
 			<ul class="nav pull-right">
@@ -211,5 +220,23 @@
 				<li>
 				<li>Seu Horário<b><div align="center" id="time">time</div></b>
 			</ul>
+		</div>
+	</div>
+	<div id="ModalAbout" class="modal hide fade" tabindex="-1"
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-hidden="true">×</button>
+			<h3 id="myModalLabel">Sobre</h3>
+		</div>
+		<div class="modal-body">
+			<p>
+				<a href="http://www.hrstatus.com.br/hrstatus/home.html"
+					target="_blank">Hr Status</a><br>Versão: ${version }<br>
+				<br>
+			</p>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 		</div>
 	</div>

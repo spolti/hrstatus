@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
 
-<%@page import="br.com.ohsnap.hrstatus.security.Crypto"%>
+<%@page import="br.com.hrstatus.security.Crypto"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="../home/navbar.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
