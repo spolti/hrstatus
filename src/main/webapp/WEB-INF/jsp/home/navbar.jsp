@@ -193,7 +193,6 @@
 								</ul>
 							</div>
 						</ul>
-						
 				</li>
 			</ul>
 
@@ -233,7 +232,11 @@
 			<p>
 				<a href="http://www.hrstatus.com.br/hrstatus/home.html"
 					target="_blank">Hr Status</a><br>Versão: ${version }<br>
-				<br>
+				<br> <br> <a
+					href="http://www.hrstatus.com.br/hrstatus/home.html"
+					target="_blank"> <img src="${pageContext.request.contextPath}/img/hrimg.JPG"></img></a><br><br><br> Todos os Direitos
+				Reservados.<br> Para Suporte ou reportar bugs: 
+					<a href="mailto:spolti@hrstatus.com.br?Subject=Suporte%20Hrstatus">Contato</a>
 			</p>
 		</div>
 		<div class="modal-footer">
