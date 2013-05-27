@@ -221,22 +221,4 @@ public class SftpLogs {
 		}
 		return b;
 	}
-
-//	public static void main(String args[]) throws JSchException, IOException {
-//		SftpLogs getFiles = new SftpLogs();
-////		String files = getFiles.showGetFiles("spolti", "kta25m69",
-////				"jbosseap01hom", 22,
-////				"/jboss/jboss-eap-5.1/jboss-as/server/web/log");
-////
-////		String listOfFiles[] = files.split("\n");
-////
-////		for (int i = 1; i <= listOfFiles.length; i++) {
-////			System.out.println("Arquivo " + i + ": " + listOfFiles[i]);
-////		}
-//		
-//		getFiles.getFile("spolti", "kta25m69",
-//				"jbosseap01hom", 22,
-//				"/jboss/jboss-eap-5.1/jboss-as/server/web/log/server.log");
-//		
-//	}
 }

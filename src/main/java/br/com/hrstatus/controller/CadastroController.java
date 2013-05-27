@@ -256,20 +256,20 @@ public class CadastroController {
 					"O campo Perfil deve ser informado", "Erro"));
 		}
 
-		//Criptografando senha MD5 springframework
-		user.setPassword(encode.encodePassUser(user.getPassword()));
-		
-		
 		validator.onErrorUsePageOf(CadastroController.class).newUser(user);
 		result.include("user", user);
 		user.setFirstLogin(true);
-		this.userDAO.saveORupdateUser(user);
-
+		
 		//enviando e-mail para usuário informando senha e criação do usuário:
 		MailSender sendMail = new MailSender();
 		sendMail.sendCreatUserInfo(this.configurationDAO.getMailSender(),  user.getMail(), 
 			this.configurationDAO.getJndiMail(), user.getNome(), user.getUsername(), user.getPassword());
-
+		
+		//Criptografando a senha e salvando usuário
+		//Criptografando senha MD5 springframework
+		user.setPassword(encode.encodePassUser(user.getPassword()));
+		this.userDAO.saveORupdateUser(user);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] O usuário " + user.getUsername() + "Foi criado com sucesso");
 		result.redirectTo(HomeController.class).home("null");
 	}
 }

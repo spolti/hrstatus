@@ -183,7 +183,6 @@ public class LogsController {
 		String downloadResult = getLogFile.getFile(servidor.getUser(), servidor.getPass(), servidor.getIp(), servidor.getPort(), rfile);
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Resultado do download: " + downloadResult);
 		return new File("tempFile.log");
-		
 
 	}
 }

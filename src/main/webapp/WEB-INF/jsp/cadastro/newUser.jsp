@@ -45,6 +45,7 @@
 		<div class="content">
 			<div class="row">
 				<div class="span12">
+				<div class="alert alert-info">Caso deseje que o sistema crie uma senha aleatória deixe os Password e Repita Password em branco.</div>
 					<c:if test="${not empty errors}">
 						<div class="alert">
 							<button type="button" class="close" data-dismiss="alert">×</button>
