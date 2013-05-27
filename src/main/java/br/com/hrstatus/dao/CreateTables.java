@@ -26,9 +26,9 @@ package br.com.hrstatus.dao;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
-import br.com.hrstatus.model.Configurations;
 import br.com.hrstatus.model.Servidores;
 
+@SuppressWarnings("deprecation")
 public class CreateTables {
 	public static void main(String[] args) {
 		AnnotationConfiguration cfg = new AnnotationConfiguration();

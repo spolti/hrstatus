@@ -80,6 +80,7 @@ public class HomeController {
 		this.runVerify = runVerify;
 	}
 
+	@SuppressWarnings("static-access")
 	@Get("/home")
 	public void home(String verification) {
 		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
@@ -210,9 +211,9 @@ public class HomeController {
 		} else {
 			validator.onErrorUsePageOf(HomeController.class).home("");
 		}
-
 	}
 
+	@SuppressWarnings("static-access")
 	@Get("/home/startVerification/{value}")
 	public void startVerification(String value) throws InterruptedException,
 			JSchException {

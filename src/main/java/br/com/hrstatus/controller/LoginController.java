@@ -42,6 +42,7 @@ public class LoginController {
 		this.result = result;
 	}
 	
+	@SuppressWarnings("static-access")
 	@Get("/login")
 	public void login(String message){
 		Logger.getLogger(getClass()).info("[ Not Logged ] URI Called: /login");

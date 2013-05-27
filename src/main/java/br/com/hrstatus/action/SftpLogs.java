@@ -86,9 +86,9 @@ public class SftpLogs {
 			s = s.substring(0, -1);
 		}
 		return s;
-
 	}
 
+	@SuppressWarnings("unused")
 	public String getFile(String user, String pass, String host, int port,
 			String rfile) {
 		FileOutputStream fos = null;

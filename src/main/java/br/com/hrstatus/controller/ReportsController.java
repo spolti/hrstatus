@@ -60,9 +60,11 @@ public class ReportsController {
 		this.response = response;
 	}
 
+	
 	@Get
 	@Path("/reports/reportFull")
-	@SuppressWarnings("unchecked")
+
+	@SuppressWarnings("all")
 	public InputStream fullReport() throws FileNotFoundException, JRException {
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportFull");
 
@@ -91,7 +93,7 @@ public class ReportsController {
 
 	@Get
 	@Path("/reports/reportServersOK")
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("all")
 	public InputStream serversOK() throws FileNotFoundException, JRException {
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/serversOK");
 
@@ -119,7 +121,7 @@ public class ReportsController {
 
 	@Get
 	@Path("/reports/reportServersNOK")
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("all")
 	public InputStream reportServersNOK() throws FileNotFoundException, JRException {
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportServersNOK");
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
@@ -145,7 +147,7 @@ public class ReportsController {
 
 	@Get
 	@Path("/reports/reportSOLinux")
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("all")
 	public InputStream soLinux() throws FileNotFoundException, JRException {
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportSOLinux");
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
@@ -171,7 +173,7 @@ public class ReportsController {
 
 	@Get
 	@Path("/reports/reportSOWindows")
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("all")
 	public InputStream reportSOWindows() throws FileNotFoundException, JRException {
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportSOWindows");
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
@@ -197,7 +199,7 @@ public class ReportsController {
 
 	@Get
 	@Path("/reports/reportSOUnix")
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("all")
 	public InputStream reportSOUnix() throws FileNotFoundException, JRException {
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportSOUnix");
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
@@ -223,7 +225,7 @@ public class ReportsController {
 
 	@Get
 	@Path("/reports/reportSOOthers")
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("all")
 	public InputStream reportSOOthers() throws FileNotFoundException, JRException {
 		Logger.getLogger(getClass())
 				.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportSOOthers");

@@ -101,6 +101,7 @@ public class CadastroController {
 
 	}
 
+	@SuppressWarnings("static-access")
 	@Post("/registerServer")
 	public void registerServer(Servidores servidores) {
 		//inserindo html tittle no result
@@ -216,6 +217,7 @@ public class CadastroController {
 
 	}
 
+	@SuppressWarnings("static-access")
 	@Post("/registerUser")
 	public void registerUser(Users user) {
 		//inserindo html tittle no result

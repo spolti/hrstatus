@@ -65,6 +65,7 @@ public class UpdateController {
 		this.request = request;
 	}
 
+	@SuppressWarnings("static-access")
 	@Get("/findForUpdateServer/{serverID}")
 	@Post("/findForUpdateServer/{serverID}")
 	public void findForUpdateServer(Servidores s, String serverID) {
@@ -126,6 +127,7 @@ public class UpdateController {
 		}
 	}
 
+	@SuppressWarnings("static-access")
 	@Get("/updateServer")
 	@Post("/updateServer")
 	public void updateServer(Servidores server) {
@@ -239,9 +241,9 @@ public class UpdateController {
 				result.use(Results.http()).sendError(403);
 			}
 		}
-
 	}
 
+	@SuppressWarnings("static-access")
 	@Post("/updateUser")
 	public void updateUser(Users user) {
 		//inserindo html title no result

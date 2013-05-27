@@ -52,6 +52,7 @@ public class VerifySingleServer {
 	public VerifySingleServer() {
 	}
 	
+	@SuppressWarnings("static-access")
 	public void runSingleVerification(Servidores servidores) throws JSchException, IOException{
 		
 		DateUtils dt = new DateUtils();
@@ -124,11 +125,7 @@ public class VerifySingleServer {
 				}
 				this.iteracoesDAO.updateServer(servidores);
 			}
-
 		}
-		
-	}
 	
-	
-	
+	}	
 }

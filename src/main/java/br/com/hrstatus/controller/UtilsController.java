@@ -48,6 +48,7 @@ public class UtilsController {
 		this.result = result;
 	}
 	
+	@SuppressWarnings("static-access")
 	@Get("/utils/criptPassJboss/{password}")
 	public void criptPassJboss (String password) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException{
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /utils/criptPassJboss/");

@@ -73,9 +73,9 @@ public class GemPassController {
 			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] validação de usuário OK");
 			result.redirectTo(UpdateController.class).findForUpdateUser(null, userInfo.getLoggedUsername(),"changePass");
 		}
-
 	}
 
+	@SuppressWarnings("static-access")
 	@Post("/requestNewPass")
 	public void requestNewPass(String username) {
 		

@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServlet;
 
 import org.apache.log4j.Logger;
 
+@SuppressWarnings("static-access")
 public class VersionServlet  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
