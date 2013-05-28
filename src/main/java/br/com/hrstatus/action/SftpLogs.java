@@ -88,7 +88,112 @@ public class SftpLogs {
 		return s;
 	}
 
-	@SuppressWarnings("unused")
+	public String tailFile(String user, String pass, String host, int port,
+			String remoteDir, String file, Integer numeroLinhas) throws JSchException, IOException {
+		
+		String s = "";
+
+		// informações de usuário/host/porta para conexão
+
+		// definindo a não obrigação do arquivo know_hosts
+		java.util.Properties config = new java.util.Properties();
+		config.put("StrictHostKeyChecking", "no");
+
+		// Criando a sessao e conectando no servidor
+		JSch jsch = new JSch();
+		Session session = jsch.getSession(user, host, port);
+		session.setConfig(config);
+		session.setPassword(pass);
+		session.connect(10000);
+
+		// Exectando o comando
+		Channel channel = session.openChannel("exec");
+		((ChannelExec) channel).setCommand("tail -n " + numeroLinhas + " " + remoteDir + "/" + file);
+		((ChannelExec) channel).setErrStream(System.err);
+		InputStream in = channel.getInputStream();
+
+		channel.connect();
+
+		byte[] tmp = new byte[1024];
+		boolean test = true;
+		while (test == true) {
+
+			while (in.available() > 0) {
+
+				int i = in.read(tmp, 0, 1024);
+				if (i < 0) {
+					break;
+				}
+				s += (new String(tmp, 0, i));
+			}
+			if (channel.isClosed()) {
+
+				break;
+			}
+		}
+		channel.disconnect();
+		session.disconnect();
+
+		while (s.endsWith(" ")) {
+			s = s.substring(0, -1);
+		}
+		return s;
+
+	}
+	
+	public String findInFile(String user, String pass, String host, int port,
+			String remoteDir, String file, String palavraBusca) throws JSchException, IOException {
+		
+		String s = "";
+
+		// informações de usuário/host/porta para conexão
+
+		// definindo a não obrigação do arquivo know_hosts
+		java.util.Properties config = new java.util.Properties();
+		config.put("StrictHostKeyChecking", "no");
+
+		// Criando a sessao e conectando no servidor
+		JSch jsch = new JSch();
+		Session session = jsch.getSession(user, host, port);
+		session.setConfig(config);
+		session.setPassword(pass);
+		session.connect(10000);
+
+		// Exectando o comando
+		Channel channel = session.openChannel("exec");
+		((ChannelExec) channel).setCommand("grep -i '" + palavraBusca + "' " + remoteDir + "/" + file);
+		((ChannelExec) channel).setErrStream(System.err);
+		InputStream in = channel.getInputStream();
+
+		channel.connect();
+
+		byte[] tmp = new byte[1024];
+		boolean test = true;
+		while (test == true) {
+
+			while (in.available() > 0) {
+
+				int i = in.read(tmp, 0, 1024);
+				if (i < 0) {
+					break;
+				}
+				s += (new String(tmp, 0, i));
+			}
+			if (channel.isClosed()) {
+
+				break;
+			}
+		}
+		channel.disconnect();
+		session.disconnect();
+
+		while (s.endsWith(" ")) {
+			s = s.substring(0, -1);
+		}
+		return s;
+
+	}
+
 	public String getFile(String user, String pass, String host, int port,
 			String rfile) {
 		FileOutputStream fos = null;

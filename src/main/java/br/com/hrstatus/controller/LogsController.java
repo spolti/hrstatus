@@ -118,6 +118,110 @@ public class LogsController {
 		result.include("listOfFiles",listOfFiles);
 			
 	}
+	@Get("/tailFile/{hostname}/{file}/{numeroLinhas}")
+	public void tailFile(String hostname, String file, Integer numeroLinhas) throws JSchException, IOException, Exception{
+		SftpLogs listLogs = new SftpLogs();
+		
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Tail of file" + file + " of " + hostname+" - "+numeroLinhas+" linhas. ");
+		
+		result.include("title","Tail do arquivo "+file+". Trazendo as "+numeroLinhas+" últimas linhas.");
+		//inserindo username na home:
+		result.include("loggedUser", userInfo.getLoggedUsername());
+		
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /tailFile");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Tail of file" + file + " of " + hostname);
+		
+		if(numeroLinhas == null || numeroLinhas < 0 || numeroLinhas > 1000){
+			throw new Exception("Número de linhas inválido.");
+		}else if (file == null || file.isEmpty()){
+			throw new Exception("Arquivo inválido.");
+		}else if (hostname == null || hostname.isEmpty()){
+			throw new Exception("Hostname inválido.");
+		}
+		
+		Servidores servidor = this.iteracoesDAO.getServerByHostname(hostname);
+		
+		//setando logDir
+		result.include("logDir",servidor.getLogDir());
+		//setando fileName
+		result.include("fileName",file);
+		
+		try {
+			servidor.setPass(String.valueOf(Crypto
+					.decode(servidor.getPass())));
+		} catch (InvalidKeyException e) {
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			e.printStackTrace();
+		}
+		
+		//TODO criar método no SFTPLogs
+		String files = listLogs.tailFile(servidor.getUser(), servidor.getPass(), servidor.getIp(), servidor.getPort(), servidor.getLogDir(), file, numeroLinhas);
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Files found: " + files);
+		
+		String linhasArquivo[] = files.split("\n");
+		result.include("hostname", servidor.getHostname());
+		result.include("qtdn",linhasArquivo.length);
+		result.include("linhasArquivo",linhasArquivo);
+			
+	}
+	@Get("/findInFile/{hostname}/{file}/{palavraBusca}")
+	public void findInFile(String hostname, String file, String palavraBusca) throws JSchException, IOException, Exception{
+		SftpLogs listLogs = new SftpLogs();
+		
+		result.include("title","Busca no arquivo "+file+". Buscando: "+palavraBusca);
+		//inserindo username na home:
+		result.include("loggedUser", userInfo.getLoggedUsername());
+		
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /findInFile");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Finding "+ palavraBusca+ " in file "+ file + " of " + hostname);
+		
+		if(palavraBusca == null || palavraBusca.isEmpty()){
+			throw new Exception("Número de linhas inválido.");
+		}else if (file == null || file.isEmpty()){
+			throw new Exception("Arquivo inválido.");
+		}else if (hostname == null || hostname.isEmpty()){
+			throw new Exception("Hostname inválido.");
+		}
+		
+		Servidores servidor = this.iteracoesDAO.getServerByHostname(hostname);
+		
+		//setando logDir
+		result.include("logDir",servidor.getLogDir());
+		//setando fileName
+		result.include("fileName",file);
+		
+		try {
+			servidor.setPass(String.valueOf(Crypto
+					.decode(servidor.getPass())));
+		} catch (InvalidKeyException e) {
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			e.printStackTrace();
+		}
+		
+		//TODO criar método no SFTPLog
+		String files = listLogs.findInFile(servidor.getUser(), servidor.getPass(), servidor.getIp(), servidor.getPort(), servidor.getLogDir(), file, palavraBusca);
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Files found: " + files);
+		
+		String findInFile[] = files.split("\n");
+		result.include("hostname", servidor.getHostname());
+		result.include("qtdn",findInFile.length);
+		result.include("findInFile",findInFile);
+			
+	}
 	@Get("/downloadFile/{hostname}/{file}")
 	public File downloadFile(String hostname, String file){
 		
