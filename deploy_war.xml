@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="deploy_adc" default="deploy" basedir=".">
+    <description>
+        Copy war file to jboss dir
+    </description>
+
+  <target name="clean">
+  	<echo>Cleaning...</echo>
+    <delete file="/home/matheus/Valecard/java/jboss-as-7.1.1.Final/standalone/deployments/hrstatus.war.deployed"/>
+  	<delete file="/home/matheus/Valecard/java/jboss-as-7.1.1.Final/standalone/deployments/hrstatus.war"/>
+  	<echo>Cleaned...</echo>
+  </target>
+
+  <target name="deploy" depends="clean" >
+	<echo>Deploying...</echo>
+	<copy file="./target/hrstatus.war" 
+			tofile="/home/matheus/Valecard/java/jboss-as-7.1.1.Final/standalone/deployments/hrstatus.war" 
+			overwrite="true" />
+	<echo>Deployed...</echo>
+  </target> 
+
+</project>
