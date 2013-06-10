@@ -43,6 +43,7 @@ import br.com.hrstatus.model.Users;
 import br.com.hrstatus.security.Crypto;
 import br.com.hrstatus.security.SpringEncoder;
 import br.com.hrstatus.utils.MailSender;
+import br.com.hrstatus.utils.PassGenerator;
 import br.com.hrstatus.utils.UserInfo;
 
 @Resource
@@ -238,12 +239,11 @@ public class CadastroController {
 		} else if (user.getUsername().isEmpty()) {
 			validator.add(new ValidationMessage(
 					"O campo Username deve ser informado", "Erro"));
-		} else if (user.getPassword().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo Password deve ser informado", "Erro"));
-		} else if (user.getConfirmPass().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo Comfirme Password deve ser informado", "Erro"));
+		} else if (user.getPassword().isEmpty() && user.getConfirmPass().isEmpty() ) {
+			PassGenerator gemPass = new PassGenerator();
+			String password = gemPass.gemPass();
+			user.setPassword(password);
+			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] - Senha gerada");
 		} else if (!user.getPassword().equals(user.getConfirmPass())) {
 			validator.add(new ValidationMessage(
 					"As senhas informadas não são iguais.", "Erro"));
@@ -271,7 +271,7 @@ public class CadastroController {
 		//Criptografando senha MD5 springframework
 		user.setPassword(encode.encodePassUser(user.getPassword()));
 		this.userDAO.saveORupdateUser(user);
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] O usuário " + user.getUsername() + "Foi criado com sucesso");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] O usuário " + user.getUsername() + " foi criado com sucesso.");
 		result.redirectTo(HomeController.class).home("null");
 	}
 }
