@@ -129,7 +129,7 @@ public class LogsController {
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /tailFile");
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Tail of file" + file + " of " + hostname);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Tail of file " + file + " of " + hostname);
 		
 		if(numeroLinhas == null || numeroLinhas < 0 || numeroLinhas > 1000){
 			throw new Exception("Número de linhas inválido.");
@@ -269,9 +269,7 @@ public class LogsController {
 		if (file.startsWith(" ")){
 			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Arquivo " + file + " começa com espaço, removemdo." );
 			String temp[]=file.split(" ");
-			file = temp[1] + " " + temp[2];
-			String getName[] = file.split(" ");
-			filename = getName[1];
+			filename = temp[temp.length -1];
 		}else {
 			String getName[] = file.split(" ");
 			filename = getName[1];
