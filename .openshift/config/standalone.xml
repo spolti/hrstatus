@@ -219,10 +219,10 @@
 
     <interfaces>
         <interface name="management">
-            <loopback-address value="${OPENSHIFT_INTERNAL_IP}"/>
+            <loopback-address value="${OPENSHIFT_JBOSSAS_IP}"/>
         </interface>
         <interface name="public">
-            <loopback-address value="${OPENSHIFT_INTERNAL_IP}"/>
+            <loopback-address value="${OPENSHIFT_JBOSSAS_IP}"/>
         </interface>
     </interfaces>
 
