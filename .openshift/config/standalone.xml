@@ -703,10 +703,14 @@
     <interfaces>
         <interface name="management">
 <<<<<<< HEAD
+<<<<<<< HEAD
             <loopback-address value="${OPENSHIFT_INTERNAL_IP}"/>
+=======
+            <loopback-address value="${OPENSHIFT_JBOSSAS_IP}"/>
+>>>>>>> b82a3582f670227e68a9f0cd75378abd27f93036
         </interface>
         <interface name="public">
-            <loopback-address value="${OPENSHIFT_INTERNAL_IP}"/>
+            <loopback-address value="${OPENSHIFT_JBOSSAS_IP}"/>
         </interface>
     </interfaces>
 
