@@ -11,6 +11,7 @@
 		<class>br.com.hrstatus.model.Configurations</class>
 		<class>br.com.hrstatus.model.PassExpire</class>
 		<class>br.com.hrstatus.model.Lock</class>
+		<class>br.com.hrstatus.model.BancoDados</class>
 		<exclude-unlisted-classes />
 	</persistence-unit>
 </persistence>

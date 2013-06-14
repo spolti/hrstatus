@@ -109,14 +109,14 @@
 										<div style="display: inline">
 											Linhas: 
 											<input type="text" name="numLinhas" style="margin-bottom: 0px;" id="file${status.index}" onkeypress="return numbersonly(this,event)"/>
-											<input type="image" src="../img/tail.png" name="image" width="30" height="30" onclick="callTail('${file}', 'file${status.index}')"/>
+											<input type="image" src="../img/tail.png" name="image" width="20" height="20" onclick="callTail('${file}', 'file${status.index}')"/>
 										</div>
 									</td>
 									<td>
 										<div style="display: inline">
 											Buscar: 
 											<input type="text" name="palavraBusca" style="margin-bottom: 0px;" id="findfile${status.index}"/>
-											<input type="image" src="../img/search.png" name="image" width="30" height="30" onclick="findInFile('${file}', 'findfile${status.index}')"/>
+											<input type="image" src="../img/search.png" name="image" width="20" height="20" onclick="findInFile('${file}', 'findfile${status.index}')"/>
 										</div>
 									</td>
 								</tr>

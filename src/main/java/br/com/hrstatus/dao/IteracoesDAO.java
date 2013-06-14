@@ -133,6 +133,10 @@ public class IteracoesDAO implements Iteracoes {
 
 	public void updateServer(Servidores server) {
 
+		Logger.getLogger(getClass()).info(
+				"[ " + userInfo.getLoggedUsername()
+						+ " ] updateServer -> Retrieving parameters");
+		
 		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Parametros recebidos para update");
 		Logger.getLogger(getClass()).debug("Server " + server.getHostname());
 		Logger.getLogger(getClass()).debug("IP: " + server.getIp());
@@ -151,13 +155,6 @@ public class IteracoesDAO implements Iteracoes {
 
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] deleteServerByID -> Server " + server.getHostname()
 						+ " deleted.");
-		Logger.getLogger(getClass()).debug("Server " + server.getHostname());
-		Logger.getLogger(getClass()).debug("IP: " + server.getIp());
-		Logger.getLogger(getClass()).debug("SO: " + server.getSO());
-		Logger.getLogger(getClass()).debug("Port:" + server.getPort());
-		Logger.getLogger(getClass()).debug("User " + server.getUser());
-		Logger.getLogger(getClass()).debug("Pass " + server.getPass());
-		Logger.getLogger(getClass()).debug("ID " + server.getId());
 
 		try {
 			session().refresh(server);

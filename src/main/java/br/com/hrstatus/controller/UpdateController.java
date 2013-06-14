@@ -23,6 +23,7 @@ package br.com.hrstatus.controller;
  * @author spolti
  */
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,8 +39,10 @@ import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.validator.ValidationMessage;
 import br.com.caelum.vraptor.view.Results;
+import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.dao.Iteracoes;
 import br.com.hrstatus.dao.UsersInterface;
+import br.com.hrstatus.model.BancoDados;
 import br.com.hrstatus.model.Servidores;
 import br.com.hrstatus.model.Users;
 import br.com.hrstatus.security.Crypto;
@@ -53,16 +56,18 @@ public class UpdateController {
 	private Iteracoes iteracoesDAO;
 	private Validator validator;
 	private UsersInterface usersDAO;
+	private BancoDadosInterface BancoDadosDAO;
 	private HttpServletRequest request;
 	UserInfo userInfo = new UserInfo();
 
 	public UpdateController(Result result, Iteracoes iteracoesDAO,
-			Validator validator, UsersInterface usersDAO,HttpServletRequest request) {
+			Validator validator, UsersInterface usersDAO,HttpServletRequest request, BancoDadosInterface BancoDadosDAO) {
 		this.result = result;
 		this.iteracoesDAO = iteracoesDAO;
 		this.validator = validator;
 		this.usersDAO = usersDAO;
 		this.request = request;
+		this.BancoDadosDAO = BancoDadosDAO;
 	}
 
 	@SuppressWarnings("static-access")
@@ -77,7 +82,7 @@ public class UpdateController {
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /findForUpdateServer");
 		Crypto decodePass = new Crypto();
 		int id = Integer.parseInt(serverID);
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] id: " + id);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Server id selected for update: " + id);
 
 		Servidores server = this.iteracoesDAO.getServerByID(id);
 
@@ -187,6 +192,107 @@ public class UpdateController {
 		result.redirectTo(ConfigController.class).configClients();
 	}
 
+	@SuppressWarnings("static-access")
+	@Get("/findForUpdateDataBase/{dataBaseID}")
+	public void findForUpdateDataBase(BancoDados db, String dataBaseID) {
+		//inserindo html title no result
+		result.include("title","Atualizar Banco de Dados");
+		
+		result.include("loggedUser", userInfo.getLoggedUsername());
+
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /findForUpdateDataBase");
+		Crypto decodePass = new Crypto();
+		int id = Integer.parseInt(dataBaseID);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] DataBase id selected for update: " + id);
+		
+		BancoDados dataBase = this.BancoDadosDAO.getDataBaseByID(id);
+
+		// Setando ID
+		dataBase.setId(id);
+
+		// Descriptografando senha e a jogando no formulário
+		try {
+
+			String textPass = String
+					.valueOf(decodePass.decode(dataBase.getPass()));
+			dataBase.setPass(textPass);
+
+		} catch (Exception e) {
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro ao descriptografar senha: ", e);
+		}
+		
+		// populating SO combobox
+		ArrayList<String> VENDOR = new ArrayList<String>();
+		VENDOR.add("MySQL");
+		VENDOR.add("ORACLE");
+		VENDOR.add("PostgreSQL");
+		VENDOR.add("SqlServer");
+		result.include("VENDOR", VENDOR);
+		
+		result.include("dataBase", dataBase);
+		
+		if (db != null) {
+			Logger.getLogger(getClass())
+					.info("[ " + userInfo.getLoggedUsername() + " ] Objeto do tipo BancoDados não está vazio, atribuindo valores.");
+			dataBase = db;
+		}
+	}
+	
+	@SuppressWarnings("static-access")
+	@Post("/updateDataBase")
+	public void updateDataBase(BancoDados dataBase) {
+		
+		result.include("title","Atualizar Banco de Dados");
+		
+		result.include("loggedUser", userInfo.getLoggedUsername());
+
+		Crypto encodePass = new Crypto();
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /updateServer");
+		Pattern pattern = Pattern
+				.compile("\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\z");
+		Matcher matcher = pattern.matcher(dataBase.getIp());
+		
+		if (dataBase.getIp().isEmpty()) {
+			validator.add(new ValidationMessage(
+					"O campo Ip deve ser informado", "Erro"));
+		} else if (!matcher.matches()) {
+			validator.add(new ValidationMessage("O ip " + dataBase.getIp()
+					+ " não é válido.", "Erro"));
+		} else if (dataBase.getHostname().isEmpty()) {
+			validator.add(new ValidationMessage(
+					"O campo Hostname deve ser informado", "Erro"));
+		} else if (dataBase.getUser().isEmpty()) {
+			validator.add(new ValidationMessage(
+					"O campo Usuário deve ser informado", "Erro"));
+		} else if (dataBase.getPass().isEmpty()) {
+			validator.add(new ValidationMessage(
+					"O campo Senha deve ser informado", "Erro"));
+		} else if (dataBase.getQueryDate().isEmpty()) {
+			validator.add(new ValidationMessage(
+					"O campo SO deve ser informado", "Erro"));
+		}else if (dataBase.getPort() <= 0 || dataBase.getPort() >= 65536) {
+			validator.add(new ValidationMessage(
+					"O campo porta está incorreto ou vazio", "Erro"));
+		} else if (dataBase.getVendor().isEmpty()) {
+			validator.add(new ValidationMessage(
+					"O campo SO deve ser informado", "Erro"));
+		}
+		validator.onErrorUsePageOf(UpdateController.class).findForUpdateDataBase(dataBase, "");
+		
+		try {
+
+			// Critpografando a senha
+			dataBase.setPass(encodePass.encode(dataBase.getPass()));
+
+		} catch (Exception e) {
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ", e);
+		}
+		
+		this.BancoDadosDAO.updateDataBase(dataBase);
+		
+		result.redirectTo(ConfigController.class).configDataBases();
+	}
+	
 	@Get("/findForUpdateUser/{username}/{action}")
 	public void findForUpdateUser(Users u, String username, String action) {
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /findForUpdateUser");

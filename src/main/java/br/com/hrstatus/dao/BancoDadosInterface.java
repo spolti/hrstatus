@@ -19,27 +19,24 @@
 
 package br.com.hrstatus.dao;
 
+import java.util.List;
+
+import br.com.hrstatus.model.BancoDados;
+
 /*
  * @author spolti
  */
 
-import br.com.hrstatus.model.Configurations;
+public interface BancoDadosInterface {
 
-public interface Configuration {
-
-	public void updateConfig(Configurations config);
+	public int insert_dataBase(BancoDados dataBase);
 	
-	public Configurations getConfigs();
+	public List<BancoDados> listDataBases();
 	
-	public String getMailSender();
+	public BancoDados getDataBaseByID(int id);
 	
-	public String getSubject();
+	public boolean deleteDataBase(BancoDados bancoDados);
 	
-	public String getDests();
+	public void updateDataBase(BancoDados dataBase);
 	
-	public String getJndiMail();
-	
-	public int getDiffirenceSecs();
-	
-	public String getNtpServerAddress();
 }

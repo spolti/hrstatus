@@ -80,12 +80,9 @@ public class HomeController {
 		this.runVerify = runVerify;
 	}
 
-	@SuppressWarnings("static-access")
 	@Get("/home")
 	public void home(String verification) {
-		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
-	    String version = load.getValor("version"); 
-	    result.include("version",version);
+
 		// inserindo html title no result
 		result.include("title", "Hr Status Home");
 
@@ -186,9 +183,14 @@ public class HomeController {
 		}
 	}
 
+	@SuppressWarnings("static-access")
 	@Get("/navbar")
 	public void navbar() {
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /navbar");
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+	    String version = load.getValor("version"); 
+	    System.out.println("Versão1111111111111: " + version);
+	    result.include("version",version);
 	}
 
 	@Get("/home/showByStatus/{status}")

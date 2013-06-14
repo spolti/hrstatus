@@ -64,6 +64,14 @@
 </script>
 
 <script language="JavaScript">
+	function setParameterDataBase(id, hostname) {
+		$('#delete-modal > p').text(id + " - " + hostname);
+		$('#id_dataBase').val(id);
+		$('#ModalDeleteDataBase').modal('show');
+	}
+</script>
+
+<script language="JavaScript">
 	function setParameterUser(username, nome) {
 		$('#delete-modalUser > p').text(username + " - " + nome);
 		$('#username').val(username);
@@ -81,7 +89,6 @@
 		$('#ConfigurationTab').modal('show');
 	}
 </script>
-
 </head>
 <body onload="Tempo()">
 	<script src="http://code.jquery.com/jquery-latest.js"></script>
@@ -142,6 +149,8 @@
 								class="icon-wrench"> </i> Sistema</a>
 							<a href="<c:url value="/configClients"/>" data-toggle="modal"><i
 								class="icon-hdd"> </i> Servidores</a>
+							<a href="<c:url value="/configDataBases"/>" data-toggle="modal"><i
+								class="icon-book"> </i> Banco de Dados </a>
 							<a href="<c:url value="/configUser"/>" data-toggle="modal"><i
 								class="icon-user"> </i> Usuários</a>
 							<li class="dropdown-submenu"><a tabindex="-1" href="#"><i
@@ -187,11 +196,8 @@
 							<a href="<c:url value="/selectServer"/>" data-toggle="modal"><i
 								class="icon-file"> </i> Verificar logs</a>
 
-							<div class="btn btn-link">
-								<ul>
-									<a href="#ModalAbout" data-toggle="modal"> Sobre </a>
-								</ul>
-							</div>
+							<a href="#ModalAbout" data-toggle="modal"><i class="icon-info-sign"></i> Sobre </a>
+							
 						</ul>
 				</li>
 			</ul>
@@ -231,12 +237,15 @@
 		<div class="modal-body">
 			<p>
 				<a href="http://www.hrstatus.com.br/hrstatus/home.html"
-					target="_blank">Hr Status</a><br>Versão: ${version }<br>
+					target="_blank">Hr Status</a><br>Versão: 2.4.1<br>
 				<br> <br> <a
 					href="http://www.hrstatus.com.br/hrstatus/home.html"
-					target="_blank"> <img src="${pageContext.request.contextPath}/img/hrimg.JPG"></img></a><br><br><br> Todos os Direitos
-				Reservados.<br> Para Suporte ou reportar bugs: 
-					<a href="mailto:spolti@hrstatus.com.br?Subject=Suporte%20Hrstatus">Contato</a>
+					target="_blank"> <img
+					src="${pageContext.request.contextPath}/img/hrimg.JPG"></img></a><br>
+				<br>
+				<br> Todos os Direitos Reservados.<br> Para Suporte ou
+				reportar bugs: <a
+					href="mailto:spolti@hrstatus.com.br?Subject=Suporte%20Hrstatus">Contato</a>
 			</p>
 		</div>
 		<div class="modal-footer">

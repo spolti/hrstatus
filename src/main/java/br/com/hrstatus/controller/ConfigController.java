@@ -32,9 +32,11 @@ import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.validator.ValidationMessage;
+import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.dao.Iteracoes;
 import br.com.hrstatus.dao.UsersInterface;
+import br.com.hrstatus.model.BancoDados;
 import br.com.hrstatus.model.Configurations;
 import br.com.hrstatus.model.Servidores;
 import br.com.hrstatus.model.Users;
@@ -48,15 +50,17 @@ public class ConfigController {
 	private Configuration configurationDAO;
 	private Validator validator;
 	private UsersInterface userDAO;
+	private BancoDadosInterface BancoDadosDAO;
 	UserInfo userInfo = new UserInfo();
 
 	public ConfigController(Result result, Iteracoes iteracoesDAO,
-			Configuration configurationDAO, Validator validator, UsersInterface userDAO) {
+			Configuration configurationDAO, Validator validator, UsersInterface userDAO, BancoDadosInterface BancoDadosDAO) {
 		this.result = result;
 		this.iteracoesDAO = iteracoesDAO;
 		this.configurationDAO = configurationDAO;
 		this.validator = validator;
 		this.userDAO = userDAO;
+		this.BancoDadosDAO = BancoDadosDAO;
 	}
 
 	@Get("/configServer")
@@ -180,6 +184,17 @@ public class ConfigController {
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /configClients");
 		List<Servidores> list = this.iteracoesDAO.listServers();
 		result.include("server", list);
+	}
+	
+	@Get("/configDataBases")
+	public void configDataBases() {
+		//inserindo html title no result
+		result.include("title","Configurar Banco de Dados");
+		result.include("loggedUser", userInfo.getLoggedUsername());
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /configDataBases");
+		List<BancoDados> list = this.BancoDadosDAO.listDataBases();
+		result.include("dataBase", list);
+		
 	}
 
 	@Get("/configUser")

@@ -28,8 +28,10 @@ import org.apache.log4j.Logger;
 import br.com.caelum.vraptor.Delete;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.dao.Iteracoes;
 import br.com.hrstatus.dao.UsersInterface;
+import br.com.hrstatus.model.BancoDados;
 import br.com.hrstatus.model.Servidores;
 import br.com.hrstatus.model.Users;
 import br.com.hrstatus.utils.UserInfo;
@@ -40,12 +42,14 @@ public class DeleteController {
 	private Result result;
 	private Iteracoes iteracoesDAO;
 	private UsersInterface usersDAO;
+	private BancoDadosInterface BancoDadosDAO;
 	UserInfo userInfo = new UserInfo();
 
-	public DeleteController(Result result, Iteracoes iteracoesDAO, UsersInterface usersDAO) {
+	public DeleteController(Result result, Iteracoes iteracoesDAO, UsersInterface usersDAO, BancoDadosInterface BancoDadosDAO) {
 		this.result = result;
 		this.iteracoesDAO = iteracoesDAO;
 		this.usersDAO = usersDAO;
+		this.BancoDadosDAO = BancoDadosDAO;
 	}
 
 	@Delete("/deleteServerByID")
@@ -56,13 +60,20 @@ public class DeleteController {
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /deleteServerByID");
 		int id = Integer.parseInt(id_server);
 		Servidores server = this.iteracoesDAO.getServerByID(id);
-
 		// Setando ID
 		server.setId(id);
-
 		this.iteracoesDAO.deleteServerByID(server);
-
 		result.redirectTo(HomeController.class).home("");
+	}
+	
+	@Delete("/deleteDataBaseByID")
+	public void deleteDataBaseByID(String id_dataBase) {
+		//inserindo html title no result
+		result.include("title","Deletar Banco de Dados");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /deleteDataBaseByID");
+		int id = Integer.parseInt(id_dataBase);
+		BancoDados dataBase = this.BancoDadosDAO.getDataBaseByID(id);
+		this.BancoDadosDAO.deleteDataBase(dataBase);
 	}
 
 	@Delete("/deleteUserByID")

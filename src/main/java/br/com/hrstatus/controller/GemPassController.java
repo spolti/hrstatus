@@ -107,9 +107,7 @@ public class GemPassController {
 				// Obtendo a hora e calculando a tempo de expiração
 				DateUtils dateUtils = new DateUtils();
 				DateParser parse = new DateParser();
-//				Date changeTime = dateUtils.dateConverter(
-//						dateUtils.getTime(), "LINUX",null); // hora completa
-//																// atual
+
 				Date changeTime = parse.parser(dateUtils.getTime());
 				
 				passExpire.setChangeTime(changeTime.toString());
