@@ -189,7 +189,6 @@ public class HomeController {
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /navbar");
 		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
 	    String version = load.getValor("version"); 
-	    System.out.println("Versão1111111111111: " + version);
 	    result.include("version",version);
 	}
 

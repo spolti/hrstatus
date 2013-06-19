@@ -196,8 +196,22 @@
 							<a href="<c:url value="/selectServer"/>" data-toggle="modal"><i
 								class="icon-file"> </i> Verificar logs</a>
 
+							<li class="dropdown-submenu"><a tabindex="-1" href="#"><i
+									class="icon-tasks"> </i> Gráficos </a>
+								<ul class="dropdown-menu">
+									<li><a href="<c:url value="/charts/servers/consolidated"/>"
+										title="Plotar os gráficos de status das checagens de Servidores">
+											<i class="icon-arrow-right"></i> Servidores </a></li>
+									<li><a href="<c:url value="/reports/reportFull"/>"
+										title="Plotar os gráficos de status das checagens de Banco de Dados">
+											<i class="icon-arrow-right"></i> Banco de Dados </a></li>											
+											
+								</ul>
+							</li>
+
 							<a href="#ModalAbout" data-toggle="modal"><i class="icon-info-sign"></i> Sobre </a>
 							
+
 						</ul>
 				</li>
 			</ul>
@@ -237,7 +251,7 @@
 		<div class="modal-body">
 			<p>
 				<a href="http://www.hrstatus.com.br/hrstatus/home.html"
-					target="_blank">Hr Status</a><br>Versão: 2.4.1<br>
+					target="_blank">Hr Status</a><br>Versão: 3.0.BETA<br>
 				<br> <br> <a
 					href="http://www.hrstatus.com.br/hrstatus/home.html"
 					target="_blank"> <img
