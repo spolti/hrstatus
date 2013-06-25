@@ -105,7 +105,6 @@ public class CadastroController {
 		} else {
 			result.include("SO", so);
 		}
-
 	}
 
 	@SuppressWarnings("static-access")
@@ -251,10 +250,6 @@ public class CadastroController {
 				.compile("\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\z");
 		Matcher matcher = pattern.matcher(bancoDados.getIp());
 		
-		//retirar após o teste
-		System.out.println("Query " + bancoDados.getQueryDate());
-		System.out.println("Query " + bancoDados.getQueryDate().length());
-		
 		if (bancoDados.getIp().isEmpty()) {
 			validator.add(new ValidationMessage(
 					"O campo Ip deve ser informado", "Erro"));
@@ -289,7 +284,7 @@ public class CadastroController {
 		}
 		if (bancoDados.getQueryDate().isEmpty()) {
 			if (bancoDados.getVendor().toUpperCase().equals("MYSQL")){
-				bancoDados.setQueryDate("mysql query default");
+				bancoDados.setQueryDate("SELECT NOW() AS date;");
 			}
 			if (bancoDados.getVendor().toUpperCase().equals("ORACLE")){
 				bancoDados.setQueryDate("oracle query default");
