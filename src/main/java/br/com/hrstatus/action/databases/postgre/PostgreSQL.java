@@ -17,12 +17,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.action.databases;
+package br.com.hrstatus.action.databases.postgre;
 
 /*
  * @author spolti
  */
 
-public class SqlServer {
+public class PostgreSQL {
 
 }

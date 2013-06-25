@@ -41,7 +41,9 @@ public class DateParser {
 		String patternFormato4 = "(Dom|Seg|Ter|Qua|Qui|Sex|Sab)\\s(Jan|Fev|Mar|Abr|Mai|Jun|Jul|Ago|Set|Out|Nov|Dez)\\s\\d{1,}\\s\\d{2}:\\d{2}:\\d{2}\\s\\d{4}";
 		
 		SimpleDateFormat formato5 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy",new Locale("pt", "BR")); // padrão segunda-feira,  4 de março de 2013 16h13min27s BRT
-				
+		
+		SimpleDateFormat formato6 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String patternFormato6 = "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}";
 		//verificando se o Timezone é nativo AIX GRNLNDST e GRNLNDDT e GRNLNDST3, se for ignora timezone.
 		if (data.contains("GRNLNDST") || data.contains("GRNLNDDT") || data.contains("GRNLNDST3")){
 			Logger.getLogger(getClass()).debug("Padrao AIX reconhecido, ignorando timezone.");
@@ -186,7 +188,14 @@ public class DateParser {
 			data = dataFinal;
 			formatador = formato5;
 	
-		}else{
+		//validando padrão 6
+		}else if (data.matches(patternFormato6)){
+			Logger.getLogger(getClass()).debug("Padrão reconhecido yyy-dd-mm HH:mm:ss");
+			System.out.println("Padrão reconhecido yyy-dd-mm HH:mm:ss");
+			formatador = formato6;
+		}
+		
+		else{
 			Logger.getLogger(getClass()).error("Nenhum padrão reconhecido");
 			Logger.getLogger(getClass()).error("Unparsable date: " + data);
 			data = ("Tue Mar 01 00:00:00 BRT 1950");

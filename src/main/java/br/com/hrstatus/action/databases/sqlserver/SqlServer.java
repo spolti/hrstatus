@@ -17,12 +17,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.action.databases;
+package br.com.hrstatus.action.databases.sqlserver;
 
 /*
  * @author spolti
  */
 
-public class MySQL {
+public class SqlServer {
 
 }
