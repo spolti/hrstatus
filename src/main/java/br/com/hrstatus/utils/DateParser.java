@@ -202,9 +202,7 @@ public class DateParser {
 			formatador = formato1;
 		}
 		try {
-			System.out.println(data);
 			date1 = formatador.parse(data);
-			System.out.println(date1);
 		} catch (ParseException e) {	
 			e.printStackTrace();
 		}
