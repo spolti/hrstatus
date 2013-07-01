@@ -89,6 +89,7 @@ public class HomeController {
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /home");
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
+		//result.include("class","activeServer");
 		// ///////////////////////////////////////
 		
 		/////////////////////////////////////////////////////////
@@ -121,14 +122,17 @@ public class HomeController {
 
 		if (status.equals("OK")) {
 			List<Servidores> list = this.iteracoesDAO.getServersOK();
+			result.include("class","activeServer");
 			result.include("server", list).forwardTo(HomeController.class)
 					.home("");
+			result.include("class","activeServer");
 
 		} else if (!status.equals("OK")) {
 			List<Servidores> list = this.iteracoesDAO.getServersNOK();
+			result.include("class","activeServer");
 			result.include("server", list).forwardTo(HomeController.class)
 					.home("");
-
+			
 		} else {
 			validator.onErrorUsePageOf(HomeController.class).home("");
 		}
@@ -165,6 +169,7 @@ public class HomeController {
 					Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] O recurso verificationFull está locado pelo usuário "
 									+ lock.getUsername()
 									+ ", aguarde o término da mesma");
+					result.include("class","activeServer");
 					result.include("info",
 							"O recurso verificationFull está locado pelo usuário "
 									+ lock.getUsername()
@@ -472,6 +477,7 @@ public class HomeController {
 
 				result.include("server", list).forwardTo(HomeController.class)
 						.home("");
+				result.include("class","activeServer");
 			}
 		}
 
@@ -485,6 +491,7 @@ public class HomeController {
 					Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] O recurso notOkverification está locado pelo usuário "
 									+ lock.getUsername()
 									+ ", aguarde o término da mesma");
+					result.include("class","activeServer");
 					result.include(
 							"info",
 							"O recurso notOkverification está locado pelo usuário "
@@ -782,8 +789,10 @@ public class HomeController {
 						}
 					}
 				}
+				result.include("class","activeServer");
 				result.include("server", list).forwardTo(HomeController.class)
 						.home("");
+				
 			}
 		}
 		// desloca a tabela quando a verficação terminar.
@@ -816,8 +825,9 @@ public class HomeController {
 		runVerify.runSingleVerification(servidor);
 		
 		List<Servidores> list = this.iteracoesDAO.listServerByID(id);
-		
+		result.include("class","activeServer");
 		result.include("server", list).forwardTo(HomeController.class).home("");
+		
 	}
 	
 }

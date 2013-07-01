@@ -74,6 +74,7 @@ public class DeleteController {
 		int id = Integer.parseInt(id_dataBase);
 		BancoDados dataBase = this.BancoDadosDAO.getDataBaseByID(id);
 		this.BancoDadosDAO.deleteDataBase(dataBase);
+		result.redirectTo(HomeController.class).home("");
 	}
 
 	@Delete("/deleteUserByID")

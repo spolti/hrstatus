@@ -30,21 +30,20 @@ import java.sql.SQLException;
 public class ConnMysql {
 
 	public static boolean status = false;
-	public ConnMysql() {
-	}
+	
+	public ConnMysql() {}
 
-	public static Connection getConexaoMySQL() {
+	public static Connection getConexaoMySQL(String serverAddress, String username, String password) {
 
 		Connection connection = null;
-
 		try {
 			String driver = "com.mysql.jdbc.Driver";
 			Class.forName(driver);
-			String serverAddress = "localhost";
+//			String serverAddress = "localhost";
 			String database = "mysql";
 			String url = "jdbc:mysql://" + serverAddress + "/" + database;
-			String username = "root";
-			String password = "kta25m69";
+//			String username = "root";
+//			String password = "kta25m69";
 			connection = DriverManager.getConnection(url, username, password);
 
 			if (connection != null) {

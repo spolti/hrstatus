@@ -70,7 +70,7 @@ public class ConfigController {
 		
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ]URI Called: /configServer");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /configServer");
 		//List<Configurations> opts = this.configurationDAO.getConfigs();
 		Configurations opts = this.configurationDAO.getConfigs();
 		int diff = opts.getDifference();;

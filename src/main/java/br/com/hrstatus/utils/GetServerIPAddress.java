@@ -21,8 +21,6 @@ package br.com.hrstatus.utils;
 
 import java.net.UnknownHostException;
 
-
-
 /*
  * @author spolti
  */
