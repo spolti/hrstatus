@@ -23,6 +23,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
+import br.com.hrstatus.utils.UserInfo;
+
 /*
  * @author spolti
  */
@@ -35,6 +39,7 @@ public class ConnMysql {
 
 	public static Connection getConexaoMySQL(String serverAddress, String username, String password) {
 
+		UserInfo userInfo = new UserInfo();
 		Connection connection = null;
 		try {
 			String driver = "com.mysql.jdbc.Driver";
@@ -45,22 +50,20 @@ public class ConnMysql {
 
 			if (connection != null) {
 				status = (true);
-				System.out.println(status);
+				Logger.getLogger(ConnMysql.class).debug("[ " + userInfo.getLoggedUsername() + " ] " + status);
 			} else {
 				status = (false);
-				System.out.println(status);
+				Logger.getLogger(ConnMysql.class).debug("[ " + userInfo.getLoggedUsername() + " ] " + status);
 			}
 			return connection;
 
 		} catch (ClassNotFoundException e) {
-			//System.out.println("O driver expecificado nao foi encontrado.");
-			System.out.println(e.fillInStackTrace());
-			System.out.println(e.getMessage());
+			Logger.getLogger(ConnMysql.class).info("[ " + userInfo.getLoggedUsername() + " ] " + e.fillInStackTrace());
+			Logger.getLogger(ConnMysql.class).info("[ " + userInfo.getLoggedUsername() + " ] " + e.getMessage());
 			return null;
 		} catch (SQLException e) {
-			//System.out.println("Nao foi possivel conectar ao Banco de Dados." + e);
-			System.out.println(e.fillInStackTrace());
-			System.out.println(e.getMessage());
+			Logger.getLogger(ConnMysql.class).info("[ " + userInfo.getLoggedUsername() + " ] " + e.fillInStackTrace());
+			Logger.getLogger(ConnMysql.class).info("[ " + userInfo.getLoggedUsername() + " ] " + e.getMessage());
 			return null;
 		}
 	}
