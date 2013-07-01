@@ -37,11 +37,10 @@ public class ConnMysql {
 	
 	public ConnMysql() {}
 
-	public static Connection getConexaoMySQL(String serverAddress, String username, String password) {
+	public static Connection getConexaoMySQL(String serverAddress, String username, String password) throws ClassNotFoundException, SQLException {
 
 		UserInfo userInfo = new UserInfo();
 		Connection connection = null;
-		try {
 			String driver = "com.mysql.jdbc.Driver";
 			Class.forName(driver);
 			String database = "mysql";
@@ -56,15 +55,5 @@ public class ConnMysql {
 				Logger.getLogger(ConnMysql.class).debug("[ " + userInfo.getLoggedUsername() + " ] " + status);
 			}
 			return connection;
-
-		} catch (ClassNotFoundException e) {
-			Logger.getLogger(ConnMysql.class).info("[ " + userInfo.getLoggedUsername() + " ] " + e.fillInStackTrace());
-			Logger.getLogger(ConnMysql.class).info("[ " + userInfo.getLoggedUsername() + " ] " + e.getMessage());
-			return null;
-		} catch (SQLException e) {
-			Logger.getLogger(ConnMysql.class).info("[ " + userInfo.getLoggedUsername() + " ] " + e.fillInStackTrace());
-			Logger.getLogger(ConnMysql.class).info("[ " + userInfo.getLoggedUsername() + " ] " + e.getMessage());
-			return null;
-		}
 	}
 }
