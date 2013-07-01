@@ -23,9 +23,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
 
-import br.com.hrstatus.utils.DateParser;
+import br.com.hrstatus.model.BancoDados;
 
 /*
  * @author spolti
@@ -33,9 +32,9 @@ import br.com.hrstatus.utils.DateParser;
 
 public class MySQL {
 
-	   public Date getDate() throws SQLException {  
-		   Connection conn = ConnMysql.getConexaoMySQL();
-		   String sql = "SELECT NOW() AS date;";
+	   public String getDate(BancoDados dataBase) throws SQLException {  
+		   Connection conn = ConnMysql.getConexaoMySQL(dataBase.getHostname(), dataBase.getUser(), dataBase.getPass());
+		   String sql = dataBase.getQueryDate();
 		   
 		   Statement stm = conn.createStatement();
 		   ResultSet rs = stm.executeQuery(sql);
@@ -46,9 +45,8 @@ public class MySQL {
             	   dt_db  = rs.getString("date");
                }
            }
-           
            //Formatando data.
-           DateParser dt_parser = new DateParser();
+           //DateParser dt_parser = new DateParser();
            //Removendo, caso exista o .0 do final
            if (dt_db.endsWith(".0")){
         	   dt_db = dt_db.replace(".","#");
@@ -59,12 +57,6 @@ public class MySQL {
 		   stm.close();
 		   conn.close();
 		   
-		   return dt_parser.parser(dt_db);
-	   }
-	   
-	   public static void main (String args[]) throws SQLException{
-		   
-		   MySQL geta = new MySQL();
-		   System.out.println(geta.getDate());
+		   return dt_db;
 	   }
 }

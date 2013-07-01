@@ -9,7 +9,17 @@
 			<div class="content">
 				<div class="row">
 					<div class="span12">
-						<div class="item" align="center">
+					
+						<!-- Aba Banco de dados -->
+						<div  <c:choose> 
+								<c:when test="${class == 'activeBanco'}">
+									class="active item"
+								 </c:when>
+								 <c:otherwise>  
+									class="item"
+								</c:otherwise> 
+							 </c:choose>
+						 align="center">
 
 							<div class="row">
 
@@ -18,8 +28,8 @@
 								<div class="span2">
 									<form method="GET"
 										action="<c:url value='/home/showByStatus/OK'/>">
-										<button input="" type="submit" value="Servidores OK"
-											class="btn btn-primary">Servidores OK</button>
+										<button input="" type="submit" value="Banco de Dados OK"
+											class="btn btn-primary">Banco de Dados OK</button>
 									</form>
 
 								</div>
@@ -32,7 +42,7 @@
 										</a>
 										<ul class="dropdown-menu">
 											<li><a
-												href="<c:url value='/home/startVerification/full' />">
+												href="<c:url value='/database/startDataBaseVerification/fullDBVerification' />">
 													Verificação Completa </a></li>
 
 											<li><a
@@ -46,12 +56,12 @@
 								<div class="span2">
 									<div class="btn-group">
 										<a class="btn btn-primary dropdown-toggle"
-											data-toggle="dropdown" href="#"> Servidores Não OK <span
+											data-toggle="dropdown" href="#"> Banco de Dados Não OK <span
 											class="caret"></span>
 										</a>
 										<ul class="dropdown-menu">
 											<li><a href="<c:url value='/home/showByStatus/NOK' />">
-													Listar Servidores Desatualizados </a></li>
+													Listar Banco de Dados Desatualizados </a></li>
 
 											<li>
 												<div id="dynamicURL">
@@ -73,9 +83,9 @@
 								<thead>
 									<tr>
 										<th>ID</th>
-										<th>Servidor</th>
+										<th>Banco de Dados</th>
 										<th>IP</th>
-										<th>SO</th>
+										<th>Vendor</th>
 										<th>Client Time</th>
 										<th>Server Time</th>
 										<th>Diference (s)</th>
@@ -83,25 +93,25 @@
 									</tr>
 								</thead>
 								<tbody>
-									<c:forEach var="server" items="${server}">
-										<tr class="${server.trClass}">
-											<td>${server.id}</td>
-											<c:if test="${server.trClass == 'success'}">
-												<td>${server.hostname}</td>
+									<c:forEach var="bancoDados" items="${bancoDados}">
+										<tr class="${bancoDados.trClass}">
+											<td>${bancoDados.id}</td>
+											<c:if test="${bancoDados.trClass == 'success'}">
+												<td>${bancoDados.hostname}</td>
 											</c:if>
-											<c:if test="${server.trClass == 'error'}">
+											<c:if test="${bancoDados.trClass == 'error'}">
 												<td><a
-													href="<c:url value='/singleServerToVerify/${server.id}' />">${server.hostname}</a></td>
+													href="<c:url value='/singleServerToVerify/${bancoDados.id}' />">${bancoDados.hostname}</a></td>
 											</c:if>
-											<td>${server.ip}</td>
-											<td>${server.SO}</td>
-											<td>${server.clientTime}</td>
-											<td>${server.serverTime}</td>
-											<td>${server.difference}</td>
-											<td>${server.status}</td>
-											<td><c:if test="${server.trClass == 'error'}">
+											<td>${bancoDados.ip}</td>
+											<td>${bancoDados.vendor}</td>
+											<td>${bancoDados.clientTime}</td>
+											<td>${bancoDados.serverTime}</td>
+											<td>${bancoDados.difference}</td>
+											<td>${bancoDados.status}</td>
+											<td><c:if test="${bancoDados.trClass == 'error'}">
 													<div class="find_1">
-														<input type="checkbox" value="${server.id}" />
+														<input type="checkbox" value="${bancoDados.id}" />
 													</div>
 												</c:if></td>
 										</tr>
@@ -127,8 +137,18 @@
 						</div>
 
 
-
-						<div class="active item" align="center">
+						<!-- Aba servidores -->
+						<div <c:if test="${class == null }"> 
+								class="active item"
+							 </c:if>
+						     <c:choose> 
+								<c:when test="${class == 'activeServer'}">
+									class="active item"
+								 </c:when>
+								 <c:otherwise>  
+									class="item"
+								</c:otherwise> 
+							 </c:choose>  align="center">
 
 							<div class="row">
 

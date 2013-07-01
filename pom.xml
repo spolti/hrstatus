@@ -219,6 +219,13 @@
 			<artifactId>DynamicJasper-core-fonts</artifactId>
 			<version>1.0</version>
 		</dependency>
+		
+		<!-- Dependency for third party data bases -->
+		<dependency>
+			<groupId>org.firebirdsql.jdbc</groupId>
+			<artifactId>jaybird</artifactId>
+			<version>2.1.6</version>
+		</dependency>
 
 	</dependencies>
 

@@ -267,17 +267,29 @@ public class UpdateController {
 		} else if (dataBase.getPass().isEmpty()) {
 			validator.add(new ValidationMessage(
 					"O campo Senha deve ser informado", "Erro"));
-		} else if (dataBase.getQueryDate().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo SO deve ser informado", "Erro"));
-		}else if (dataBase.getPort() <= 0 || dataBase.getPort() >= 65536) {
+		} else if (dataBase.getPort() <= 0 || dataBase.getPort() >= 65536) {
 			validator.add(new ValidationMessage(
 					"O campo porta está incorreto ou vazio", "Erro"));
 		} else if (dataBase.getVendor().isEmpty()) {
 			validator.add(new ValidationMessage(
 					"O campo SO deve ser informado", "Erro"));
 		}
-		validator.onErrorUsePageOf(UpdateController.class).findForUpdateDataBase(dataBase, "");
+		if (dataBase.getQueryDate().isEmpty()) {
+			if (dataBase.getVendor().toUpperCase().equals("MYSQL")){
+				dataBase.setQueryDate("SELECT NOW() AS date;");
+			}
+			if (dataBase.getVendor().toUpperCase().equals("ORACLE")){
+				dataBase.setQueryDate("oracle query default");
+			}
+			if (dataBase.getVendor().toUpperCase().equals("SQLSERVER")){
+				dataBase.setQueryDate("sqlserver query default");
+			}
+			if (dataBase.getVendor().toUpperCase().equals("POSTGRESQL")){
+				dataBase.setQueryDate("postgres query default");
+			}
+		
+		}
+		validator.onErrorUsePageOf(UpdateController.class).findForUpdateDataBase(dataBase,"");
 		
 		try {
 

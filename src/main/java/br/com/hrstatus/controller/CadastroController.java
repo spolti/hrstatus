@@ -221,7 +221,7 @@ public class CadastroController {
 		Logger.getLogger(getClass()).info(
 				"[ " + userInfo.getLoggedUsername()
 						+ " ] URI Called: /newDataBase");
-		result.include("servidores", bancoDados);
+		result.include("bancoDados", bancoDados);
 
 		// populating SO combobox
 		ArrayList<String> VENDOR = new ArrayList<String>();
