@@ -25,7 +25,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import br.com.hrstatus.model.BancoDados;
-import br.com.hrstatus.utils.DateParser;
 
 /*
  * @author spolti
@@ -46,9 +45,8 @@ public class MySQL {
             	   dt_db  = rs.getString("date");
                }
            }
-           
            //Formatando data.
-           DateParser dt_parser = new DateParser();
+           //DateParser dt_parser = new DateParser();
            //Removendo, caso exista o .0 do final
            if (dt_db.endsWith(".0")){
         	   dt_db = dt_db.replace(".","#");

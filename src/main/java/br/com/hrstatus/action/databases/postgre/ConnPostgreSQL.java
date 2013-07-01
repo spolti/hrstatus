@@ -17,7 +17,7 @@ public class ConnPostgreSQL {
 			String driver = "org.firebirdsql.jdbc.FBDriver";
 			Class.forName(driver);
 			String serverAddress = "localhost";
-			String database = "mysql";
+			String database = "teste";
 			String url = "jdbc:firebirdsql" + serverAddress + "/3050:" + database;
 			String username = "root";
 			String password = "5555";

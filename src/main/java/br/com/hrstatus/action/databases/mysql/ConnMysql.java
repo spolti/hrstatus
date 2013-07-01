@@ -39,11 +39,8 @@ public class ConnMysql {
 		try {
 			String driver = "com.mysql.jdbc.Driver";
 			Class.forName(driver);
-//			String serverAddress = "localhost";
 			String database = "mysql";
 			String url = "jdbc:mysql://" + serverAddress + "/" + database;
-//			String username = "root";
-//			String password = "kta25m69";
 			connection = DriverManager.getConnection(url, username, password);
 
 			if (connection != null) {
