@@ -34,7 +34,6 @@ import org.apache.log4j.Logger;
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
-import br.com.caelum.vraptor.Validator;
 import br.com.hrstatus.action.databases.mysql.MySQL;
 import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.dao.Configuration;
@@ -55,18 +54,15 @@ import com.jcraft.jsch.JSchException;
 public class VerifyDataBase {
 
 	private Result result;
-	private Validator validator;
 	private LockIntrface lockDAO;
 	private BancoDadosInterface dbDAO;
 	private Configuration configurationDAO;
 	UserInfo userInfo = new UserInfo();
 
-	public VerifyDataBase(Result result, Validator validator,
-			LockIntrface lockDAO, BancoDadosInterface dbDAO,
+	public VerifyDataBase(Result result, LockIntrface lockDAO, BancoDadosInterface dbDAO,
 			Configuration configurationDAO) {
 
 		this.result = result;
-		this.validator = validator;
 		this.lockDAO = lockDAO;
 		this.dbDAO = dbDAO;
 		this.configurationDAO = configurationDAO;
@@ -76,7 +72,7 @@ public class VerifyDataBase {
 	@SuppressWarnings("static-access")
 	@Get("/database/startDataBaseVerification/{value}")
 	public void startDataBaseVerification(String value)
-			throws InterruptedException, JSchException, SQLException {
+			throws InterruptedException, JSchException, SQLException, ClassNotFoundException {
 		DateUtils dt = new DateUtils();
 		Lock lockedResource = new Lock();
 		Crypto encodePass = new Crypto();
@@ -127,7 +123,7 @@ public class VerifyDataBase {
 
 				List<BancoDados> listdb = this.dbDAO.listDataBases();
 				for (BancoDados bancoDados : listdb) {
-					if (bancoDados.getVendor().equals("MySQL")) {
+					//if (bancoDados.getVendor().equals("MySQL")) {
 						bancoDados.setServerTime(dt.getTime());
 						bancoDados.setLastCheck(bancoDados.getServerTime());
 
@@ -148,7 +144,16 @@ public class VerifyDataBase {
 						}
 
 						try {
-							dateSTR = runMySQL.getDate(bancoDados);
+							
+							if (bancoDados.getVendor().toUpperCase().equals("MYSQL")) {
+								dateSTR = runMySQL.getDate(bancoDados);
+							}else if (bancoDados.getVendor().toUpperCase().equals("POSTGRESQL")){
+								dateSTR = runMySQL.getDate(bancoDados);
+							}else if (bancoDados.getVendor().toUpperCase().equals("SQLSERVER")){
+								dateSTR = runMySQL.getDate(bancoDados);
+							}else if (bancoDados.getVendor().toUpperCase().equals("ORACLE")){
+								dateSTR = runMySQL.getDate(bancoDados);
+							}
 							Logger.getLogger(getClass()).debug(
 									"[ " + userInfo.getLoggedUsername()
 											+ " ] Hora obtida do servidor "
@@ -219,11 +224,11 @@ public class VerifyDataBase {
 					// else if (bancoDados.getVendor().equals("POSTGRESQL")){
 					// else if (bancoDados.getVendor().equals("ORACLE")){
 					// else if (bancoDados.getVendor().equals("SQLSERVER")){
-				}
+				//}
+
 				result.include("class","activeBanco");
 				result.include("bancoDados", listdb).forwardTo(HomeController.class)
 				.home("");
-				
 			}
 		}
 		lockDAO.removeLock(lockedResource);

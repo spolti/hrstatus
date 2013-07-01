@@ -328,7 +328,7 @@ public class CadastroController {
 			Logger.getLogger(getClass()).info(
 					"DataBase " + bancoDados.getHostname()
 							+ " was sucessfully registred.");
-			//result.redirectTo(ConfigController.class).configDataBases();
+			result.redirectTo(ConfigController.class).configDataBases();
 		}else {
 			validator.add(new ValidationMessage("DataBase "
 					+ bancoDados.getHostname()
