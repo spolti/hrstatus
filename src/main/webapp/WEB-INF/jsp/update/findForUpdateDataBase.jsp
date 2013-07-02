@@ -76,6 +76,11 @@
 									value="${dataBase.hostname}" /></td>
 							</tr>
 							<tr>
+								<td align=right>Instancia:</td>
+								<td><input type="text" name="dataBase.instance"
+									value="${dataBase.instance}" /></td>
+							</tr>
+							<tr>
 								<td align=right>Usuário:</td>
 								<td><input type="text" name="dataBase.user"
 									value="${dataBase.user}" /></td>

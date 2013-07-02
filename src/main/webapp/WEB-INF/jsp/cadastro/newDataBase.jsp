@@ -48,7 +48,9 @@
 		<div class="content">
 			<div class="row">
 				<div class="span12">
-				<div class="alert alert-info">Caso deseje deseje usar porta e query default do banco de dados selecionados deixe os campos Porta e Query em branco.</div>
+					<div class="alert alert-info">Caso deseje deseje usar porta e
+						query default do banco de dados selecionados deixe os campos Porta
+						e Query em branco.</div>
 					<c:if test="${not empty errors}">
 						<div class="alert">
 							<button type="button" class="close" data-dismiss="alert">×</button>
@@ -70,6 +72,10 @@
 								<td><input type="text" name="bancoDados.hostname" /></td>
 							</tr>
 							<tr>
+								<td align=right>Instancia:</td>
+								<td><input type="text" name="bancoDados.instance" /></td>
+							</tr>
+							<tr>
 								<td align=right>Usuário:</td>
 								<td><input type="text" name="bancoDados.user" /></td>
 							</tr>
@@ -84,7 +90,7 @@
 							<tr>
 								<td align=right>Porta:</td>
 								<td><input type="text" name="bancoDados.port" /></td>
-							</tr>						
+							</tr>
 							<tr>
 								<td align=right>Banco de Dados:</td>
 								<td><select name="bancoDados.VENDOR" id="bancoDados.VENDOR">

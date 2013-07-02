@@ -77,6 +77,9 @@ public class BancoDados {
 	@Column(name = "trClass")
 	private String trClass;
 
+	@Column(name = "instance")
+	private String instance;
+	
 	public int getId() {
 		return id;
 	}
@@ -188,5 +191,12 @@ public class BancoDados {
 	public void setTrClass(String trClass) {
 		this.trClass = trClass;
 	}
+	
+	public String getInstance() {
+		return instance;
+	}
 
+	public void setInstance(String instance) {
+		this.instance = instance;
+	}
 }

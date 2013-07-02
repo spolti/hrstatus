@@ -37,14 +37,13 @@ public class ConnMysql {
 	
 	public ConnMysql() {}
 
-	public static Connection getConexaoMySQL(String serverAddress, String username, String password) throws ClassNotFoundException, SQLException {
+	public static Connection getConexaoMySQL(String serverAddress, String username, String password, String instance) throws ClassNotFoundException, SQLException {
 
 		UserInfo userInfo = new UserInfo();
 		Connection connection = null;
 			String driver = "com.mysql.jdbc.Driver";
 			Class.forName(driver);
-			String database = "mysql";
-			String url = "jdbc:mysql://" + serverAddress + "/" + database;
+			String url = "jdbc:mysql://" + serverAddress + "/" + instance;
 			connection = DriverManager.getConnection(url, username, password);
 
 			if (connection != null) {
