@@ -41,6 +41,7 @@
 								<th>Servidor</th>
 								<th>IP</th>
 								<th>Vendor</th>
+								<th>Instancia</th>
 								<th>Usuario</th>
 								<th>Query</th>
 								<th>Ações&nbsp;<a href="<c:url value="/newDataBase"/>"
@@ -54,6 +55,7 @@
 									<td>${dataBase.hostname}</td>
 									<td>${dataBase.ip}</td>
 									<td>${dataBase.vendor}</td>
+									<td>${dataBase.instance}</td>
 									<td>${dataBase.user}</td>
 									<td>${dataBase.queryDate}</td>
 									<td><a

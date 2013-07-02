@@ -105,6 +105,7 @@ public class VerifyDataBase {
 									+ " está locado pelo usuário "
 									+ lock.getUsername()
 									+ ", aguarde o término da mesma.");
+					result.include("class","activeBanco");
 					result.include(
 							"info",
 							"O recurso " + value + " está locado pelo usuário "
@@ -123,7 +124,6 @@ public class VerifyDataBase {
 
 				List<BancoDados> listdb = this.dbDAO.listDataBases();
 				for (BancoDados bancoDados : listdb) {
-					//if (bancoDados.getVendor().equals("MySQL")) {
 						bancoDados.setServerTime(dt.getTime());
 						bancoDados.setLastCheck(bancoDados.getServerTime());
 
@@ -221,10 +221,6 @@ public class VerifyDataBase {
 
 						}
 					}
-					// else if (bancoDados.getVendor().equals("POSTGRESQL")){
-					// else if (bancoDados.getVendor().equals("ORACLE")){
-					// else if (bancoDados.getVendor().equals("SQLSERVER")){
-				//}
 
 				result.include("class","activeBanco");
 				result.include("bancoDados", listdb).forwardTo(HomeController.class)
