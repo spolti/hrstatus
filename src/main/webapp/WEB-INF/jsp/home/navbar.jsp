@@ -257,9 +257,10 @@
 					target="_blank"> <img
 					src="${pageContext.request.contextPath}/img/hrimg.JPG"></img></a><br>
 				<br>
-				<br> Todos os Direitos Reservados.<br> Para Suporte ou
-				reportar bugs: <a
+				<br> Todos os Direitos Reservados.<br> Para Suporte: <a
 					href="mailto:spolti@hrstatus.com.br?Subject=Suporte%20Hrstatus">Contato</a>
+				<br>
+					Para reportar bugs: <a href="https://github.com/spolti/hrstatus/issues/new" target="_blank" > Registrar Issue </a>
 			</p>
 		</div>
 		<div class="modal-footer">

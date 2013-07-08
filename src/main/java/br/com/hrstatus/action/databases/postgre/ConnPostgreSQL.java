@@ -9,19 +9,19 @@ public class ConnPostgreSQL {
 	public static boolean status = false;
 	public ConnPostgreSQL() {}
 
-	public static Connection getConexaoMySQL() {
+	public static Connection getConexaoPSQL() {
 
 		Connection connection = null;
 
 		try {
-			String driver = "org.firebirdsql.jdbc.FBDriver";
+			String driver = "org.postgresql.Driver";
 			Class.forName(driver);
 			String serverAddress = "localhost";
-			String database = "teste";
-			String url = "jdbc:firebirdsql" + serverAddress + "/3050:" + database;
-			String username = "root";
-			String password = "5555";
-			connection = DriverManager.getConnection(url, username, password);
+			String database = "postgres";
+			String username = "postgres";
+			String password = "123mudar";
+			connection = DriverManager.getConnection("jdbc:postgresql://"+serverAddress+":5432/"+database+"",username,password);
+			//connection = DriverManager.getConnection(url, username, password);
 
 			if (connection != null) {
 				status = (true);
