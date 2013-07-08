@@ -24,15 +24,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import br.com.hrstatus.model.BancoDados;
+
 /*
  * @author spolti
  */
 
 public class PostgreSQL {
 	
-	public String getDate() throws SQLException, ClassNotFoundException {
-
-		Connection conn = ConnPostgreSQL.getConexaoPSQL();
+	public String getDate(BancoDados db) throws SQLException, ClassNotFoundException { 
+		Connection conn = ConnPostgreSQL.getConexaoPSQL(db.getIp(), db.getInstance(), db.getUser(), db.getPass());
 		Statement stm = conn.createStatement();
 		ResultSet rs = stm.executeQuery("SELECT now();");
 		String dt_db = null;
@@ -53,11 +54,4 @@ public class PostgreSQL {
         
 		return dt_db;
 	}
-	
-	public static void main(String args[]) throws SQLException, ClassNotFoundException{
-		
-		PostgreSQL br = new PostgreSQL();
-		System.out.println(br.getDate());	
-	}
-	
 }
