@@ -33,6 +33,7 @@ import br.com.hrstatus.model.BancoDados;
 public class MySQL {
 
 	   public String getDate(BancoDados dataBase) throws SQLException, ClassNotFoundException {  
+		   
 		   Connection conn = ConnMysql.getConexaoMySQL(dataBase.getIp(), dataBase.getUser(), dataBase.getPass(), dataBase.getInstance());
 		   String sql = dataBase.getQueryDate();
 		   
@@ -47,7 +48,7 @@ public class MySQL {
            }
            //Formatando data.
            //DateParser dt_parser = new DateParser();
-           //Removendo, caso exista o .0 do final
+           //Removendo, caso exista o timestamp
            if (dt_db.endsWith(".0")){
         	   dt_db = dt_db.replace(".","#");
         	   String dt_tmp[] = dt_db.split("#");

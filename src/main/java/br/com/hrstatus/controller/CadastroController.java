@@ -293,7 +293,7 @@ public class CadastroController {
 				bancoDados.setQueryDate("sqlserver query default");
 			}
 			if (bancoDados.getVendor().toUpperCase().equals("POSTGRESQL")){
-				bancoDados.setQueryDate("postgres query default");
+				bancoDados.setQueryDate("SELECT now();");
 			}
 		
 		}

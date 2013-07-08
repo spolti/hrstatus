@@ -285,7 +285,7 @@ public class UpdateController {
 				dataBase.setQueryDate("sqlserver query default");
 			}
 			if (dataBase.getVendor().toUpperCase().equals("POSTGRESQL")){
-				dataBase.setQueryDate("postgres query default");
+				dataBase.setQueryDate("SELECT now();");
 			}
 		
 		}
