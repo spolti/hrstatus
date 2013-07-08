@@ -35,6 +35,7 @@ import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.hrstatus.action.databases.mysql.MySQL;
+import br.com.hrstatus.action.databases.postgre.PostgreSQL;
 import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.dao.LockIntrface;
@@ -77,6 +78,7 @@ public class VerifyDataBase {
 		Lock lockedResource = new Lock();
 		Crypto encodePass = new Crypto();
 		MySQL runMySQL = new MySQL();
+		PostgreSQL runPSQL = new PostgreSQL();
 		String dateSTR = null;
 
 		// inserindo html title no result
@@ -148,7 +150,7 @@ public class VerifyDataBase {
 							if (bancoDados.getVendor().toUpperCase().equals("MYSQL")) {
 								dateSTR = runMySQL.getDate(bancoDados);
 							}else if (bancoDados.getVendor().toUpperCase().equals("POSTGRESQL")){
-								dateSTR = runMySQL.getDate(bancoDados);
+								dateSTR = runPSQL.getDate(bancoDados);
 							}else if (bancoDados.getVendor().toUpperCase().equals("SQLSERVER")){
 								dateSTR = runMySQL.getDate(bancoDados);
 							}else if (bancoDados.getVendor().toUpperCase().equals("ORACLE")){

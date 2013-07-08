@@ -4,31 +4,32 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
+import br.com.hrstatus.utils.UserInfo;
+
 public class ConnPostgreSQL {
 
 	public static boolean status = false;
 	public ConnPostgreSQL() {}
 
-	public static Connection getConexaoPSQL() {
+	public static Connection getConexaoPSQL(String serverAddress, String database, String username, String password) {
 
+		UserInfo userInfo = new UserInfo();
 		Connection connection = null;
 
 		try {
 			String driver = "org.postgresql.Driver";
 			Class.forName(driver);
-			String serverAddress = "localhost";
-			String database = "postgres";
-			String username = "postgres";
-			String password = "123mudar";
 			connection = DriverManager.getConnection("jdbc:postgresql://"+serverAddress+":5432/"+database+"",username,password);
 			//connection = DriverManager.getConnection(url, username, password);
 
 			if (connection != null) {
 				status = (true);
-				System.out.println(status);
+				Logger.getLogger(ConnPostgreSQL.class).debug("[ " + userInfo.getLoggedUsername() + " ] " + status);
 			} else {
 				status = (false);
-				System.out.println(status);
+				Logger.getLogger(ConnPostgreSQL.class).debug("[ " + userInfo.getLoggedUsername() + " ] " + status);
 			}
 			return connection;
 
