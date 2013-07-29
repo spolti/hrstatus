@@ -279,7 +279,7 @@ public class UpdateController {
 				dataBase.setQueryDate("SELECT NOW() AS date;");
 			}
 			if (dataBase.getVendor().toUpperCase().equals("ORACLE")){
-				dataBase.setQueryDate("oracle query default");
+				dataBase.setQueryDate("select sysdate from dual");
 			}
 			if (dataBase.getVendor().toUpperCase().equals("SQLSERVER")){
 				dataBase.setQueryDate("sqlserver query default");

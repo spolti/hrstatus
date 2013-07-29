@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.action.databases.postgre;
+package br.com.hrstatus.action.databases.oracle;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -31,41 +31,28 @@ import br.com.hrstatus.utils.UserInfo;
  * @author spolti
  */
 
-public class ConnPostgreSQL {
-
+public class ConnOracle {
+	
 	public static boolean status = false;
-	public ConnPostgreSQL() {}
+	
+	public ConnOracle() {}
 
-	public static Connection getConexaoPSQL(String serverAddress, String database, String username, String password) {
+	public static Connection getConexaoOracle(String serverAddress, String username, String password, String instance) throws ClassNotFoundException, SQLException {
 
 		UserInfo userInfo = new UserInfo();
 		Connection connection = null;
-
-		try {
-			String driver = "org.postgresql.Driver";
+			String driver = "oracle.jdbc.driver.OracleDriver";
 			Class.forName(driver);
-			connection = DriverManager.getConnection("jdbc:postgresql://"+serverAddress+":5432/"+database+"",username,password);
-			//connection = DriverManager.getConnection(url, username, password);
+			String url = "jdbc:oracle:thin:@" + serverAddress + ":" + 1521 + "/" + instance;
+			connection = DriverManager.getConnection(url, username, password);
 
 			if (connection != null) {
 				status = (true);
-				Logger.getLogger(ConnPostgreSQL.class).debug("[ " + userInfo.getLoggedUsername() + " ] " + status);
+				Logger.getLogger(ConnOracle.class).debug("[ " + userInfo.getLoggedUsername() + " ] " + status);
 			} else {
 				status = (false);
-				Logger.getLogger(ConnPostgreSQL.class).debug("[ " + userInfo.getLoggedUsername() + " ] " + status);
+				Logger.getLogger(ConnOracle.class).debug("[ " + userInfo.getLoggedUsername() + " ] " + status);
 			}
 			return connection;
-
-		} catch (ClassNotFoundException e) {
-			//System.out.println("O driver expecificado nao foi encontrado.");
-			System.out.println(e.fillInStackTrace());
-			System.out.println(e.getMessage());
-			return null;
-		} catch (SQLException e) {
-			//System.out.println("Nao foi possivel conectar ao Banco de Dados." + e);
-			System.out.println(e.fillInStackTrace());
-			System.out.println(e.getMessage());
-			return null;
-		}
 	}
 }

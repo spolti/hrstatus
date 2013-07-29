@@ -34,8 +34,10 @@ public class PostgreSQL {
 	
 	public String getDate(BancoDados db) throws SQLException, ClassNotFoundException { 
 		Connection conn = ConnPostgreSQL.getConexaoPSQL(db.getIp(), db.getInstance(), db.getUser(), db.getPass());
+		String sql = db.getQueryDate();
+		
 		Statement stm = conn.createStatement();
-		ResultSet rs = stm.executeQuery("SELECT now();");
+		ResultSet rs = stm.executeQuery(sql);
 		String dt_db = null;
 		
         if(rs != null) {  
