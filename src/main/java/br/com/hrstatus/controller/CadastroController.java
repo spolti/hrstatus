@@ -287,7 +287,7 @@ public class CadastroController {
 				bancoDados.setQueryDate("SELECT NOW() AS date;");
 			}
 			if (bancoDados.getVendor().toUpperCase().equals("ORACLE")){
-				bancoDados.setQueryDate("oracle query default");
+				bancoDados.setQueryDate("select sysdate from dual");
 			}
 			if (bancoDados.getVendor().toUpperCase().equals("SQLSERVER")){
 				bancoDados.setQueryDate("sqlserver query default");

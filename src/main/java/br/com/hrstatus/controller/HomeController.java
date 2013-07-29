@@ -801,7 +801,7 @@ public class HomeController {
 		lockDAO.removeLock(lockedResource);
 	}
 	
-	@Get("singleServerToVerify/{id}")
+	@Get("/singleServerToVerify/{id}")
 	public void singleServerToVerify(int id) throws JSchException, IOException{
 		result.include("title", "Home");
 		result.include("loggedUser", userInfo.getLoggedUsername());
