@@ -1,31 +1,3 @@
-<<<<<<< HEAD
-<!--
-     ~ JBoss, Home of Professional Open Source.
-~ Copyright 2011, Red Hat, Inc., and individual contributors
-~ as indicated by the @author tags. See the copyright.txt file in the
-~ distribution for a full listing of individual contributors.
-~
-~ This is free software; you can redistribute it and/or modify it
-~ under the terms of the GNU Lesser General Public License as
-~ published by the Free Software Foundation; either version 2.1 of
-~ the License, or (at your option) any later version.
-~
-~ This software is distributed in the hope that it will be useful,
-~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-~ Lesser General Public License for more details.
-~
-~ You should have received a copy of the GNU Lesser General Public
-~ License along with this software; if not, write to the Free
-~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
--->
-
-<server xmlns="urn:jboss:domain:1.0">
-
-    <extensions>
-        <extension module="org.jboss.as.clustering.infinispan"/>
-=======
 <?xml version='1.0' encoding='UTF-8'?>
 
 <server xmlns="urn:jboss:domain:1.1">
@@ -35,18 +7,10 @@
         <extension module="org.jboss.as.clustering.jgroups"/>
         <extension module="org.jboss.as.cmp"/>
         <extension module="org.jboss.as.configadmin"/>
->>>>>>> 59cf34251c5c29ef1a7d07ee729297c12f9f9d0b
         <extension module="org.jboss.as.connector"/>
         <extension module="org.jboss.as.deployment-scanner"/>
         <extension module="org.jboss.as.ee"/>
         <extension module="org.jboss.as.ejb3"/>
-<<<<<<< HEAD
-        <extension module="org.jboss.as.jaxrs"/>
-        <extension module="org.jboss.as.jmx"/>
-        <extension module="org.jboss.as.jpa"/>
-        <extension module="org.jboss.as.logging"/>
-        <extension module="org.jboss.as.naming"/>	
-=======
         <extension module="org.jboss.as.jacorb"/>
         <extension module="org.jboss.as.jaxr"/>
         <extension module="org.jboss.as.jaxrs"/>
@@ -61,29 +25,10 @@
         <extension module="org.jboss.as.osgi"/>
         <extension module="org.jboss.as.pojo"/>
         <extension module="org.jboss.as.remoting"/>
->>>>>>> 59cf34251c5c29ef1a7d07ee729297c12f9f9d0b
         <extension module="org.jboss.as.sar"/>
         <extension module="org.jboss.as.security"/>
         <extension module="org.jboss.as.threads"/>
         <extension module="org.jboss.as.transactions"/>
-<<<<<<< HEAD
-        <extension module="org.jboss.as.web" />
-<extension module="org.jboss.as.webservices"/>
-        <extension module="org.jboss.as.weld" />	
-
-    </extensions>
-
-    <profile>
-        <subsystem xmlns="urn:jboss:domain:logging:1.0">
-            <!--console-handler name="CONSOLE">
-                 <level name="INFO"/>
-<formatter>
-<pattern-formatter pattern="%d{HH:mm:ss,SSS} %-5p [%c] (%t) %s%E%n"/>
-</formatter>
-</console-handler-->
-
-            <periodic-rotating-file-handler name="FILE">
-=======
         <extension module="org.jboss.as.web"/>
         <extension module="org.jboss.as.webservices"/>
         <extension module="org.jboss.as.weld"/>
@@ -107,17 +52,10 @@
     <profile>
         <subsystem xmlns="urn:jboss:domain:logging:1.1">
             <!--console-handler name="CONSOLE">
->>>>>>> 59cf34251c5c29ef1a7d07ee729297c12f9f9d0b
-                <level name="INFO"/>
+                                 <level name="INFO"/>
                 <formatter>
                     <pattern-formatter pattern="%d{HH:mm:ss,SSS} %-5p [%c] (%t) %s%E%n"/>
                 </formatter>
-<<<<<<< HEAD
-                <file relative-to="jboss.server.log.dir" path="server.log"/>
-                <suffix value=".yyyy-MM-dd"/>
-            </periodic-rotating-file-handler>
-
-=======
             </console-handler-->
             <periodic-rotating-file-handler name="FILE">
                 <formatter>
@@ -127,7 +65,6 @@
                 <suffix value=".yyyy-MM-dd"/>
                 <append value="true"/>
             </periodic-rotating-file-handler>
->>>>>>> 59cf34251c5c29ef1a7d07ee729297c12f9f9d0b
             <logger category="com.arjuna">
                 <level name="WARN"/>
             </logger>
@@ -137,16 +74,12 @@
             <logger category="sun.rmi">
                 <level name="WARN"/>
             </logger>
-<<<<<<< HEAD
-
-=======
             <logger category="jacorb">
                 <level name="WARN"/>
             </logger>
             <logger category="jacorb.config">
                 <level name="ERROR"/>
             </logger>
->>>>>>> 59cf34251c5c29ef1a7d07ee729297c12f9f9d0b
             <root-logger>
                 <level name="INFO"/>
                 <handlers>
@@ -155,53 +88,25 @@
                 </handlers>
             </root-logger>
         </subsystem>
-<<<<<<< HEAD
-=======
         <subsystem xmlns="urn:jboss:domain:cmp:1.0"/>
         <subsystem xmlns="urn:jboss:domain:configadmin:1.0"/>
->>>>>>> 59cf34251c5c29ef1a7d07ee729297c12f9f9d0b
         <subsystem xmlns="urn:jboss:domain:datasources:1.0">
             <datasources>
                 <datasource jndi-name="java:jboss/datasources/ExampleDS" enabled="true" use-java-context="true" pool-name="H2DS">
                     <connection-url>jdbc:h2:${jboss.server.data.dir}/test;DB_CLOSE_DELAY=-1</connection-url>
                     <driver>h2</driver>
-<<<<<<< HEAD
-                    <pool></pool>
-=======
->>>>>>> 59cf34251c5c29ef1a7d07ee729297c12f9f9d0b
                     <security>
                         <user-name>sa</user-name>
                         <password>sa</password>
                     </security>
-<<<<<<< HEAD
-                    <validation></validation>
-                    <timeout></timeout>
-                    <statement></statement>
                 </datasource>
-                <!--datasource jndi-name="java:jboss/datasources/MysqlDS" enabled="${mysql.enabled}" use-java-context="true" pool-name="MysqlDS"-->
-                <datasource jta="true" jndi-name="java:/hrStatusDS" enabled="true" use-java-context="true" pool-name="hrStatusDS">
-                    <connection-url>jdbc:mysql://127.11.225.129:3306/hrstatus</connection-url>
+                <!--datasource jndi-name="java:jboss/datasources/MysqlDS" enabled="true" use-java-context="true" pool-name="MysqlDS" use-ccm="true"-->
+		<datasource jta="true" jndi-name="java:/hrStatusDS" enabled="true" use-java-context="true" pool-name="hrStatusDS"> 
+                    <connection-url>jdbc:mysql://127.7.7.130:3306/hrstatus</connection-url>
                     <driver>mysql</driver>
                     <security>
-                      <user-name>adminwMB2bsX</user-name>
-                      <password>fKHulV3SkJRx</password>
-                    </security>
-                </datasource>
-                <datasource jndi-name="java:jboss/datasources/PostgreSQLDS" enabled="${postgresql.enabled}" use-java-context="true" pool-name="PostgreSQLDS" use-ccm="true">
-                    <connection-url>jdbc:postgresql://${OPENSHIFT_DB_HOST}:${OPENSHIFT_DB_PORT}/${OPENSHIFT_APP_NAME}</connection-url>
-                    <driver>postgresql</driver>
-                    <security>
-                      <user-name>${OPENSHIFT_DB_USERNAME}</user-name>
-                      <password>${OPENSHIFT_DB_PASSWORD}</password>
-                    </security>
-=======
-                </datasource>
-                <datasource jndi-name="java:jboss/datasources/MysqlDS" enabled="${mysql.enabled}" use-java-context="true" pool-name="MysqlDS" use-ccm="true">
-                    <connection-url>jdbc:mysql://${env.OPENSHIFT_MYSQL_DB_HOST}:${env.OPENSHIFT_MYSQL_DB_PORT}/${env.OPENSHIFT_APP_NAME}</connection-url>
-                    <driver>mysql</driver>
-                    <security>
-                      <user-name>${env.OPENSHIFT_MYSQL_DB_USERNAME}</user-name>
-                      <password>${env.OPENSHIFT_MYSQL_DB_PASSWORD}</password>
+                      <user-name>adminVJlvPaB</user-name>
+                      <password>N8H1hBmXy6Jh</password>
                     </security>
                     <validation>
                     	<check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
@@ -211,8 +116,8 @@
 						<flush-strategy>IdleConnections</flush-strategy>
 					</pool>
                 </datasource>
-                <datasource jndi-name="java:jboss/datasources/PostgreSQLDS" enabled="${postgresql.enabled}" use-java-context="true" pool-name="PostgreSQLDS" use-ccm="true">
-                    <connection-url>jdbc:postgresql://${env.OPENSHIFT_POSTGRESQL_DB_HOST}:${env.OPENSHIFT_POSTGRESQL_DB_PORT}/${env.OPENSHIFT_APP_NAME}</connection-url>
+                <datasource jndi-name="java:jboss/datasources/PostgreSQLDS" enabled="false" use-java-context="true" pool-name="PostgreSQLDS" use-ccm="true">
+                    <connection-url>jdbc:postgresql://${env.OPENSHIFT_POSTGRESQL_DB_HOST}:${env.OPENSHIFT_POSTGRESQL_DB_PORT}/hrstatus</connection-url>
                     <driver>postgresql</driver>
                     <security>
                       <user-name>${env.OPENSHIFT_POSTGRESQL_DB_USERNAME}</user-name>
@@ -225,7 +130,6 @@
                 	<pool>
 						<flush-strategy>IdleConnections</flush-strategy>
 					</pool>
->>>>>>> 59cf34251c5c29ef1a7d07ee729297c12f9f9d0b
                 </datasource>
                 <drivers>
                     <driver name="h2" module="com.h2database.h2">
@@ -240,59 +144,6 @@
                 </drivers>
             </datasources>
         </subsystem>
-<<<<<<< HEAD
-        <subsystem xmlns="urn:jboss:domain:deployment-scanner:1.0">
-            <deployment-scanner scan-interval="5000" relative-to="jboss.server.base.dir" path="deployments"  deployment-timeout="1200"/>
-        </subsystem>
-        <subsystem xmlns="urn:jboss:domain:ee:1.0" />
-        <subsystem xmlns="urn:jboss:domain:ejb3:1.0" />
-        <subsystem xmlns="urn:jboss:domain:infinispan:1.0" default-cache-container="hibernate">
-            <cache-container name="hibernate" default-cache="local-query">
-                <local-cache name="entity">
-                    <eviction strategy="LRU" max-entries="10000"/>
-                    <expiration max-idle="100000"/>
-                </local-cache>
-                <local-cache name="local-query">
-                    <eviction strategy="LRU" max-entries="10000"/>
-                    <expiration max-idle="100000"/>
-                </local-cache>
-                <local-cache name="timestamps">
-                    <eviction strategy="NONE"/>
-                </local-cache>
-            </cache-container>
-        </subsystem>
-        <subsystem xmlns="urn:jboss:domain:jaxrs:1.0"/>
-        <subsystem xmlns="urn:jboss:domain:jca:1.0">
-            <archive-validation enabled="false" />
-            <bean-validation enabled="false" />
-            <default-workmanager>
-                <short-running-threads blocking="true">
-                        <core-threads count="5" per-cpu="10"/>
-                        <queue-length count="5" per-cpu="10"/>
-                        <max-threads count="5" per-cpu="10"/>
-                        <keepalive-time time="10" unit="seconds"/>
-                </short-running-threads>
-                <long-running-threads blocking="true">
-                        <core-threads count="5" per-cpu="10"/>
-                        <queue-length count="5" per-cpu="10"/>
-                        <max-threads count="5" per-cpu="10"/>
-                        <keepalive-time time="10" unit="seconds"/>
-                </long-running-threads>
-            </default-workmanager>
-        </subsystem>
-        
-<subsystem xmlns="urn:jboss:domain:jmx:1.0">
-            <jmx-connector registry-binding="jmx-connector-registry" server-binding="jmx-connector-server" />
-        </subsystem>
-
-<subsystem xmlns="urn:jboss:domain:jpa:1.0">
-            <jpa default-datasource=""/>
-        </subsystem>
-        <subsystem xmlns="urn:jboss:domain:naming:1.0" />
-        <subsystem xmlns="urn:jboss:domain:resource-adapters:1.0" />
-<subsystem xmlns="urn:jboss:domain:sar:1.0"/>
-        <subsystem xmlns="urn:jboss:domain:security:1.0">
-=======
         <subsystem xmlns="urn:jboss:domain:deployment-scanner:1.1">
             <deployment-scanner path="deployments" relative-to="jboss.server.base.dir" scan-interval="5000" deployment-timeout="300"/>
         </subsystem>
@@ -361,7 +212,7 @@
                     <file-store/>
                 </replicated-cache>
                 <!-- Clustered cache used internally by EJB subsytem for managing the client-mapping(s) of
-                the socketbinding referenced by the EJB remoting connector -->
+                                     the socketbinding referenced by the EJB remoting connector -->
                 <replicated-cache name="remote-connector-client-mappings" mode="SYNC" batching="true"/>
                 <distributed-cache name="dist" mode="ASYNC" batching="true">
                     <eviction strategy="LRU"/>
@@ -393,7 +244,7 @@
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:jaxr:1.0">
             <connection-factory jndi-name="java:jboss/jaxr/ConnectionFactory"/>
-            <juddi-server publish-url="http://${env.OPENSHIFT_JBOSSAS_IP}:8080/juddi/publish" query-url="http://${env.OPENSHIFT_JBOSSAS_IP}:8080/juddi/query"/>
+            <juddi-server publish-url="http://127.7.7.129:8080/juddi/publish" query-url="http://127.7.7.129:8080/juddi/query"/>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:jaxrs:1.0"/>
         <subsystem xmlns="urn:jboss:domain:jca:1.1">
@@ -418,15 +269,15 @@
         <subsystem xmlns="urn:jboss:domain:jgroups:1.0" default-stack="tcp">
             <stack name="tcp">
                 <transport type="TCP" socket-binding="jgroups-tcp"> 
-                	<property name="external_addr">${env.OPENSHIFT_GEAR_DNS}</property>
-                    <property name="external_port">${env.OPENSHIFT_JBOSSAS_CLUSTER_PROXY_PORT}</property>
+                	<property name="external_addr">hrstatus-demonstration.rhcloud.com</property>
+                    <property name="external_port">7600</property>
                     <property name="bind_port">7600</property>
-                    <property name="bind_addr">${env.OPENSHIFT_JBOSSAS_IP}</property>
+                    <property name="bind_addr">127.7.7.129</property>
                     <property name="defer_client_bind_addr">true</property>
                 </transport>
                 <protocol type="TCPPING">
                 	<property name="timeout">30000</property>
-                	<property name="initial_hosts">${env.OPENSHIFT_JBOSSAS_CLUSTER}</property>
+                	<property name="initial_hosts">127.7.7.129[7600]</property>
                 	<property name="port_range">0</property>
                 	<property name="num_initial_members">1</property>
                 </protocol>
@@ -440,14 +291,14 @@
                 <protocol type="AUTH">
                         <property name="auth_class">org.jgroups.auth.MD5Token</property>
                         <property name="token_hash">SHA</property>
-                        <property name="auth_value">${env.OPENSHIFT_APP_UUID}</property>
+                        <property name="auth_value">51b7312fe0b8cd0234000158</property>
                 </protocol>
                 <protocol type="pbcast.GMS"/>
                 <protocol type="UFC"/>
                 <protocol type="MFC"/>
                 <protocol type="FRAG2"/>  
                 <!--protocol type="pbcast.STATE_TRANSFER"/>
-                <protocol type="pbcast.FLUSH"/-->
+                                     <protocol type="pbcast.FLUSH"/-->
             </stack>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:jmx:1.1">
@@ -472,8 +323,8 @@
                 <journal-file-size>102400</journal-file-size>
                 <journal-min-files>2</journal-min-files>
                 
-                <thread-pool-max-size>${messaging.thread.pool.max.size}</thread-pool-max-size>
- 	            <scheduled-thread-pool-max-size>${messaging.scheduled.thread.pool.max.size}</scheduled-thread-pool-max-size>
+                <thread-pool-max-size>50</thread-pool-max-size>
+ 	            <scheduled-thread-pool-max-size>5</scheduled-thread-pool-max-size>
 
                 <connectors>
                     <netty-connector name="netty" socket-binding="messaging"/>
@@ -493,7 +344,7 @@
                 </acceptors>
 
                 <!--broadcast-groups>
-                    <broadcast-group name="bg-group1">
+                                         <broadcast-group name="bg-group1">
                         <group-address>231.7.7.7</group-address>
                         <group-port>9876</group-port>
                         <broadcast-period>5000</broadcast-period>
@@ -520,7 +371,7 @@
                 </cluster-connections-->
 
                 <!--security-settings>
-                    <security-setting match="#">
+                                         <security-setting match="#">
                         <permission type="send" roles="guest"/>
                         <permission type="consume" roles="guest"/>
                         <permission type="createNonDurableQueue" roles="guest"/>
@@ -605,50 +456,12 @@
         <subsystem xmlns="urn:jboss:domain:resource-adapters:1.0"/>
         <subsystem xmlns="urn:jboss:domain:sar:1.0"/>
         <subsystem xmlns="urn:jboss:domain:security:1.1">
->>>>>>> 59cf34251c5c29ef1a7d07ee729297c12f9f9d0b
             <security-domains>
                 <security-domain name="other" cache-type="default">
                     <authentication>
                         <login-module code="UsersRoles" flag="required"/>
                     </authentication>
                 </security-domain>
-<<<<<<< HEAD
-            </security-domains>
-        </subsystem>
-        <subsystem xmlns="urn:jboss:domain:threads:1.0"/>
-        <subsystem xmlns="urn:jboss:domain:transactions:1.0">
-            <recovery-environment socket-binding="txn-recovery-environment" status-socket-binding="txn-status-manager"/>
-            <core-environment>
-                <process-id>
-                    <uuid />
-                </process-id>
-            </core-environment>
-            <coordinator-environment default-timeout="300"/>
-        </subsystem>
-        <subsystem xmlns="urn:jboss:domain:web:1.0" default-virtual-server="default-host">
-            <connector name="http" scheme="http" protocol="HTTP/1.1" socket-binding="http"/>
-            <virtual-server name="default-host" enable-welcome-root="false">
-               <alias name="localhost" />
-            </virtual-server>
-        </subsystem>
-
-<subsystem xmlns="urn:jboss:domain:webservices:1.0">
-             <modify-wsdl-address>true</modify-wsdl-address>
-             <!--wsdl-host>${OPENSHIFT_APP_DNS}</wsdl-host-->
-
-	     <wsdl-host>ex-std-node97.prod.rhcloud.com</wsdl-host>
-
- 
-             <wsdl-port>80</wsdl-port>
-             <wsdl-secure-port>443</wsdl-secure-port>
-
-
-        </subsystem>
-
-        <subsystem xmlns="urn:jboss:domain:weld:1.0" />
-
-
-=======
                 <security-domain name="jboss-web-policy" cache-type="default">
                     <authorization>
                         <policy-module code="Delegating" flag="required"/>
@@ -687,7 +500,7 @@
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:webservices:1.1">
             <modify-wsdl-address>true</modify-wsdl-address>
-            <wsdl-host>${env.OPENSHIFT_GEAR_DNS}</wsdl-host>
+            <wsdl-host>hrstatus-demonstration.rhcloud.com</wsdl-host>
             <wsdl-port>80</wsdl-port>
             <endpoint-config name="Standard-Endpoint-Config"/>
             <endpoint-config name="Recording-Endpoint-Config">
@@ -697,45 +510,19 @@
             </endpoint-config>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:weld:1.0"/>
->>>>>>> 59cf34251c5c29ef1a7d07ee729297c12f9f9d0b
     </profile>
 
     <interfaces>
         <interface name="management">
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <loopback-address value="${OPENSHIFT_INTERNAL_IP}"/>
-=======
-            <loopback-address value="${OPENSHIFT_JBOSSAS_IP}"/>
->>>>>>> b82a3582f670227e68a9f0cd75378abd27f93036
+            <loopback-address value="127.7.7.129"/>
         </interface>
         <interface name="public">
-            <loopback-address value="${OPENSHIFT_JBOSSAS_IP}"/>
-        </interface>
-    </interfaces>
-
-    <socket-binding-group name="standard-sockets" default-interface="public">
-        <socket-binding name="http" port="8080"/>
-        <socket-binding name="https" port="8443"/>
-        <socket-binding name="jmx-connector-registry" port="9090"/>
-        <socket-binding name="jmx-connector-server" port="1091"/>
-        <socket-binding name="jndi" port="1099"/>
-        <socket-binding name="osgi-http" port="8090"/>
-        <socket-binding name="remoting" port="4447"/>
-        <socket-binding name="txn-recovery-environment" port="4712"/>
-        <socket-binding name="txn-status-manager" port="4713"/>
-    </socket-binding-group>
-
-=======
-            <loopback-address value="${env.OPENSHIFT_JBOSSAS_IP}"/>
-        </interface>
-        <interface name="public">
-            <loopback-address value="${env.OPENSHIFT_JBOSSAS_IP}"/>
+            <loopback-address value="127.7.7.129"/>
         </interface>
         <interface name="unsecure">
             <!-- Used for IIOP sockets in the standarad configuration.
-                 To secure JacORB you need to setup SSL -->
-            <loopback-address value="${env.OPENSHIFT_JBOSSAS_IP}"/>
+                                  To secure JacORB you need to setup SSL -->
+            <loopback-address value="127.7.7.129"/>
         </interface>
     </interfaces>
 
@@ -756,5 +543,4 @@
             <remote-destination host="localhost" port="25"/>
         </outbound-socket-binding>
     </socket-binding-group>
->>>>>>> 59cf34251c5c29ef1a7d07ee729297c12f9f9d0b
 </server>
