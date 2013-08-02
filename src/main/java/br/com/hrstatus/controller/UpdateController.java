@@ -317,7 +317,7 @@ public class UpdateController {
 		boolean isAdmin = request.isUserInRole("ROLE_ADMIN");
 		boolean isUser = request.isUserInRole("ROLE_USER");
 		
-		if (!username.equals(LoggedUsername.toString()) && !(isAdmin || isUser)) {
+		if (!username.equals(LoggedUsername.toString()) && (isUser)) {
 			result.use(Results.http()).sendError(403);
 		} else if (action.equals("changePass")) {
 			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] validação de usuário OK");
@@ -373,7 +373,7 @@ public class UpdateController {
 		boolean isAdmin = request.isUserInRole("ROLE_ADMIN");
 		boolean isUser = request.isUserInRole("ROLE_USER");
 		
-		if (!user.getUsername().equals(LoggedUsername.toString()) && !(isAdmin || isUser)) {
+		if (!user.getUsername().equals(LoggedUsername.toString()) && (isUser)) {
 			result.use(Results.http()).sendError(403);
 		} else {
 			result.include("loggedUser", LoggedUsername);
