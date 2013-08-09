@@ -178,7 +178,6 @@ public class UpdateController {
 		// estiverem seta os campos com valores default
 
 		try {
-
 			// Critpografando a senha
 			server.setPass(encodePass.encode(server.getPass()));
 
@@ -316,6 +315,15 @@ public class UpdateController {
 		//obtendo roles do usuário:
 		boolean isAdmin = request.isUserInRole("ROLE_ADMIN");
 		boolean isUser = request.isUserInRole("ROLE_USER");
+				
+		if (username.toUpperCase().equals("ADMIN")){
+			if ((isAdmin) && (LoggedUsername.toUpperCase().equals("ADMIN"))){
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] O Usuário Administrador está alterou ou está alterando seus dados.");
+			}else {
+				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] O usuário " + userInfo.getLoggedUsername() + " não tem permissão para alterar dados da conta do Administrador.");
+				result.use(Results.http()).sendError(403);
+			}
+		}
 		
 		if (!username.equals(LoggedUsername.toString()) && (isUser)) {
 			result.use(Results.http()).sendError(403);
