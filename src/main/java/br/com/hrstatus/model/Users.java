@@ -56,6 +56,17 @@ public class Users{
 	@Column(name = "firstLogin")
 	private boolean firstLogin;
 	
+	@Column(name = "lastLogin")
+	private String lastLogin;
+	
+	public String getLastLogin() {
+		return lastLogin;
+	}
+
+	public void setLastLogin(String lastLogin) {
+		this.lastLogin = lastLogin;
+	}
+
 	@Transient
 	private String confirmPass;
 	

@@ -49,6 +49,7 @@ import br.com.hrstatus.dao.LockIntrface;
 import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.model.Lock;
 import br.com.hrstatus.model.Servidores;
+import br.com.hrstatus.model.Users;
 import br.com.hrstatus.security.Crypto;
 import br.com.hrstatus.utils.DateUtils;
 import br.com.hrstatus.utils.PropertiesLoaderImpl;
@@ -91,6 +92,14 @@ public class HomeController {
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		//result.include("class","activeServer");
 		// ///////////////////////////////////////
+		
+		//inserindo no banco timepstamp do login.
+		DateUtils dt = new DateUtils();
+		Users user = this.userDAO.getUserByID(userInfo.getLoggedUsername());
+		String lastLoginTime = dt.getTime();
+		user.setLastLogin(lastLoginTime);
+		this.userDAO.updateUser(user);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Successful login at " + lastLoginTime);
 		
 		/////////////////////////////////////////////////////////
 		//Verificando se é o primeiro login do usuário após troca de senha ou do cadastro

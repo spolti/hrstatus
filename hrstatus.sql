@@ -136,6 +136,7 @@ CREATE TABLE `Users` (
   `authority` varchar(255) DEFAULT NULL,
   `enabled` bit(1) NOT NULL,
   `firstLogin` bit(1) DEFAULT NULL,
+  `lastLogin` varchar(255) NOT NULL,
   `mail` varchar(255) NOT NULL,
   `nome` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -152,7 +153,7 @@ CREATE TABLE `Users` (
 
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` VALUES ('admin','ROLE_ADMIN','','\0','admin@example.com.br','Administrador do Sistema','89794b621a313bb59eed0d9f0f4e8205');
+INSERT INTO `Users` VALUES ('admin','ROLE_ADMIN','true','false','admin@example.com.br','Administrador do Sistema','89794b621a313bb59eed0d9f0f4e8205');
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -220,7 +221,6 @@ UNLOCK TABLES;
 
 
 -- User Configurations
-CREATE USER 'hrstatus'@'%' IDENTIFIED BY 'P@ssw0rd';
-GRANT SELECT,INSERT,UPDATE,DELETE ON hrstatus.* TO 'hrstatus'@'%' WITH GRANT OPTION;
+CREATE USER hrstatus@localhost IDENTIFIED BY 'P@ssw0rd';
 GRANT SELECT,INSERT,UPDATE,DELETE ON hrstatus.* TO 'hrstatus'@'localhost' WITH GRANT OPTION;
 FLUSH PRIVILEGES;

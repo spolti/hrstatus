@@ -38,6 +38,7 @@
 							<tr>
 								<th>Nome</th>
 								<th>Username</th>
+								<th>Último Login</th>
 								<th>Enabled</th>
 								<th>E-mail</th>
 								<th>Perfil</th>
@@ -50,6 +51,7 @@
 								<tr>
 									<td>${user.nome}</td>
 									<td>${user.username}</td>
+									<td>${user.lastLogin}</td>
 									<td>${user.enabled}</td>
 									<td>${user.mail}</td>
 									<td>${user.authority}</td>
