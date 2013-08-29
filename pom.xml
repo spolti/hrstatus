@@ -226,8 +226,9 @@
 			<artifactId>postgresql</artifactId>
 			<version>9.1-901.jdbc4</version>
 		</dependency>
-		
+
 		<!--Comment when deploy on openshift -->
+
 		<!--dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc14</artifactId>
