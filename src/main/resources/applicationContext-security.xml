@@ -26,11 +26,17 @@
 			<intercept-url pattern="/home/startVerification/**" access="ROLE_USER,ROLE_ADMIN" />
 			<intercept-url pattern="/findForUpdateUser/**" access="ROLE_USER,ROLE_ADMIN" />
 			<intercept-url pattern="/updateUser" access="ROLE_USER,ROLE_ADMIN" />
-			
 			<intercept-url pattern="/selectServer" access="ROLE_USER,ROLE_ADMIN" />
 			<intercept-url pattern="/listLogFiles/**" access="ROLE_USER,ROLE_ADMIN" />
 			<intercept-url pattern="/downloadFile/**" access="ROLE_USER,ROLE_ADMIN" />
-			
+			<intercept-url pattern="/verifySingleServer/runSingleVerification" access="ROLE_USER,ROLE_ADMIN" />
+			<intercept-url pattern="/updateTimeSelectedClients/**" access="ROLE_USER,ROLE_ADMIN" />
+			<intercept-url pattern="/updateTimeAllClients" access="ROLE_USER,ROLE_ADMIN" />
+			<intercept-url pattern="/singleServerToVerify/**" access="ROLE_USER,ROLE_ADMIN" />
+			<intercept-url pattern="/tailFile/**" access="ROLE_USER,ROLE_ADMIN" />
+			<intercept-url pattern="/findInFile/**" access="ROLE_USER,ROLE_ADMIN" />
+			<intercept-url pattern="/database/startDataBaseVerification/**" access="ROLE_USER,ROLE_ADMIN" />
+			<intercept-url pattern="/charts/servers/consolidated" access="ROLE_USER,ROLE_ADMIN" />
 
 			<!-- Reports -->
 			<intercept-url pattern="/reports/reportFull" access="ROLE_USER,ROLE_ADMIN" />
@@ -53,6 +59,12 @@
 			<intercept-url pattern="/registerServer" access="ROLE_ADMIN" />
 			<intercept-url pattern="/newUser" access="ROLE_ADMIN" />
 			<intercept-url pattern="/registerUser" access="ROLE_ADMIN" />
+			<intercept-url pattern="/newDataBase" access="ROLE_ADMIN" />
+			<intercept-url pattern="/registerDataBase" access="ROLE_ADMIN" />
+			<intercept-url pattern="/configDataBases" access="ROLE_ADMIN" />
+			<intercept-url pattern="/updateDataBase" access="ROLE_ADMIN" />
+			<intercept-url pattern="/findForUpdateDataBase/**" access="ROLE_ADMIN" />
+			<intercept-url pattern="/deleteDataBaseByID" access="ROLE_ADMIN" />
 
 			<!-- Set the login page and what to do if login fails -->
 			<form-login login-page="/login" default-target-url="/home"

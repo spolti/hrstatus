@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>hrstatus</groupId>
 	<artifactId>hrstatus</artifactId>
-	<version>3.0.BETA</version>
+	<version>3.0.1</version>
 	<packaging>war</packaging>
 	<name>hrstatus</name>
 	<description>Auxiliar na verificação do horário de verão</description>
@@ -251,7 +251,7 @@
 			</plugin>
 		</plugins>
 
-		<finalName>hrstatus</finalName>
+		<!-- finalName>hrstatus</finalName> -->
 
 		<resources>
 			<resource>

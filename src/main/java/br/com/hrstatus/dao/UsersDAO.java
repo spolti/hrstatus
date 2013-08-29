@@ -187,4 +187,10 @@ public class UsersDAO implements UsersInterface {
 		criteria.setProjection(proList);
 		return (Boolean) criteria.uniqueResult();
 	}
+	
+	public void setLastLoginTime(String timeStamp){
+		Logger.getLogger(getClass()).debug("saveORupdateUser() -> Saving or Update User.");
+		session().save(timeStamp);
+	}
+	
 }
