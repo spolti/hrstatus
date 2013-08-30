@@ -39,4 +39,28 @@ public interface BancoDadosInterface {
 	
 	public void updateDataBase(BancoDados dataBase);
 	
+	public int countMysql();
+	
+	public int countOracle();
+
+	public int countPostgre();
+	
+	public int countAllDataBases();
+	
+	public int countDataBasesOK();
+	
+	public int countDataBasesNOK();
+	
+	public int countMySQLOK();
+	
+	public int countMySQLNOK();
+	
+	public int countOracleOK();
+	
+	public int countOracleNOK();
+	
+	public int countPostgreOK();
+	
+	public int countPostgreNOK();
+
 }

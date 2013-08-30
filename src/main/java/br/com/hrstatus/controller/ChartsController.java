@@ -24,12 +24,8 @@ import org.apache.log4j.Logger;
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
-import br.com.caelum.vraptor.Validator;
-import br.com.hrstatus.action.VerifySingleServer;
-import br.com.hrstatus.dao.Configuration;
+import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.dao.Iteracoes;
-import br.com.hrstatus.dao.LockIntrface;
-import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.utils.UserInfo;
 
 /*
@@ -41,23 +37,15 @@ public class ChartsController {
 	
 	private Result result;
 	private Iteracoes iteracoesDAO;
-	private Configuration configurationDAO;
-	private Validator validator;
-	private LockIntrface lockDAO;
-	private UsersInterface userDAO;
-	private VerifySingleServer runVerify;
+	private BancoDadosInterface BancoDadosInterfaceDAO;
+
 	UserInfo userInfo = new UserInfo();
 
-	public ChartsController(Result result, Iteracoes iteracoesDAO,
-			Configuration configurationDAO, Validator validator,
-			LockIntrface lockDAO, UsersInterface userDAO, VerifySingleServer runVerify) {
+	public ChartsController(Result result, Iteracoes iteracoesDAO, BancoDadosInterface BancoDadosInterfaceDAO) {
 		this.result = result;
 		this.iteracoesDAO = iteracoesDAO;
-		this.configurationDAO = configurationDAO;
-		this.validator = validator;
-		this.lockDAO = lockDAO;
-		this.userDAO = userDAO;
-		this.runVerify = runVerify;
+		this.BancoDadosInterfaceDAO = BancoDadosInterfaceDAO;
+
 	}
 
 	@Get("/charts/servers/consolidated")
@@ -149,5 +137,76 @@ public class ChartsController {
 			result.include("otherNOK", this.iteracoesDAO.countOtherNOK());
 
 			result.include("totalServer",total);
+	}
+	
+	@Get("/charts/database/consolidated")
+	public void chartDataBase(){
+	// inserindo html title no result
+			result.include("title", "Gráficos - Banco de Dados");
+
+			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /charts/servers/consolidated");
+
+			result.include("loggedUser", userInfo.getLoggedUsername());
+			// ///////////////////////////////////////
+			// Sending DataBases % to plot SO's graph
+			int mysql = this.BancoDadosInterfaceDAO.countMysql();
+			int oracle = this.BancoDadosInterfaceDAO.countOracle();
+			int postgre = this.BancoDadosInterfaceDAO.countPostgre();
+			int total = this.BancoDadosInterfaceDAO.countAllDataBases();
+			if (mysql > 0 && oracle > 0 && postgre > 0) {
+				result.include("mysql", (mysql * 100) / total);
+				result.include("oracle", (oracle * 100) / total);
+				result.include("postgre", (postgre * 100) / total);
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Mysql: " + mysql);
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Oracle: " + oracle);
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Postgre: " + postgre);
+
+			} else if (mysql > 0) {
+				result.include("mysql", (mysql * 100) / total);
+				result.include("oracle", 0);
+				result.include("postgre", 0);
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Mysql: " + mysql);
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Oracle: " + oracle);
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Postgre: " + postgre);
+
+			} else if (oracle > 0) {
+				result.include("mysql", 0);
+				result.include("oracle", (oracle * 100) / total);
+				result.include("postgre", 0);
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Mysql: " + mysql);
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Oracle: " + oracle);
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Postgre: " + postgre);
+
+			} else if (postgre > 0) {
+				result.include("mysql", 0);
+				result.include("oracle", 0);
+				result.include("postgre", (postgre * 100) / total);
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Mysql: " + mysql);
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Oracle: " + oracle);
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Postgre: " + postgre);
+
+			} 
+			
+			// Populating 2° graph (databases ok and not ok)
+			int dbOK = this.BancoDadosInterfaceDAO.countDataBasesOK();
+			int dbNOK = BancoDadosInterfaceDAO.countDataBasesNOK();
+			result.include("databaseOK", dbOK);
+			result.include("databaseNOK", dbNOK);
+
+			// Ploting 3° graph.
+			result.include("dbMysqlOK", this.BancoDadosInterfaceDAO.countMySQLOK());
+			result.include("dbMysqlNOK", this.BancoDadosInterfaceDAO.countMySQLNOK());
+
+			result.include("dbOracleOK", this.BancoDadosInterfaceDAO.countOracleOK());
+			result.include("dbOracleNOK", this.BancoDadosInterfaceDAO.countOracleNOK());
+
+			result.include("dbPostgreOK", this.BancoDadosInterfaceDAO.countPostgreOK());
+			result.include("dbPostgreNOK", this.BancoDadosInterfaceDAO.countPostgreNOK());
+
+			result.include("totalDB",total);
 	}
 }

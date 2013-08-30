@@ -151,4 +151,184 @@ public class BancoDadosDAO implements BancoDadosInterface {
 		session().update(dataBase);
 	}
 	
+	public int countMysql() {
+		Criteria criteria = session().createCriteria(BancoDados.class);
+		criteria.add(Restrictions.eq("vendor", "MYSQL"));
+		criteria.setProjection(Projections.rowCount());
+		int count = ((Long) criteria.uniqueResult()).intValue();
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countMysql() -> Found " + count + " Mysql Databases.");
+		return count;
+	}
+	
+	public int countOracle() {
+		Criteria criteria = session().createCriteria(BancoDados.class);
+		criteria.add(Restrictions.eq("vendor", "ORACLE"));
+		criteria.setProjection(Projections.rowCount());
+		int count = ((Long) criteria.uniqueResult()).intValue();
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countOracle() -> Found " + count + " Oracle Databases..");
+		return count;
+	}
+	
+	public int countPostgre() {
+		Criteria criteria = session().createCriteria(BancoDados.class);
+		criteria.add(Restrictions.eq("vendor", "POSTGRESQL"));
+		criteria.setProjection(Projections.rowCount());
+		int count = ((Long) criteria.uniqueResult()).intValue();
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countPostgre() -> Found " + count + " Postgre Databases.");
+		return count;
+	}
+	
+	public int countAllDataBases() {
+		Criteria criteria = session().createCriteria(BancoDados.class);
+		criteria.setProjection(Projections.rowCount());
+		int count = ((Long) criteria.uniqueResult()).intValue();
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countAllDataBases() -> Found " + count + " Databases.");
+		return count;
+	}
+	
+	public int countDataBasesOK() {
+
+		try {
+			Criteria criteria = session().createCriteria(BancoDados.class);
+			criteria.add(Restrictions.eq("status", "OK"));
+			criteria.setProjection(Projections.rowCount());
+			int count = ((Long) criteria.uniqueResult()).intValue();
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco De Dados OK: " + count);
+			return count;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			return 0;
+		}
+	}
+	
+	public int countDataBasesNOK() {
+
+		try {
+			Criteria criteria = session().createCriteria(BancoDados.class);
+			criteria.add(Restrictions.or(Restrictions.eq("trClass", "error"),
+					Restrictions.eq("status", "NOK")));
+			criteria.setProjection(Projections.rowCount());
+			int count = ((Long) criteria.uniqueResult()).intValue();
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco De Dados não OK: " + count);
+			return count;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			return 0;
+		}
+	}
+	
+	public int countMySQLOK() {
+
+		try {
+			Criteria criteria = session().createCriteria(BancoDados.class);
+			criteria.add(Restrictions.and(Restrictions.eq("vendor", "MYSQL"),
+					Restrictions.eq("status", "OK")));
+			criteria.setProjection(Projections.rowCount());
+			int count = ((Long) criteria.uniqueResult()).intValue();
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countMySQLOK() -> " + count + " found.");
+			return count;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			return 0;
+		}
+	}
+	
+	public int countMySQLNOK() {
+
+		try {
+			Criteria criteria = session().createCriteria(BancoDados.class);
+			criteria.add(Restrictions.and(Restrictions.eq("vendor", "MYSQL"),
+					Restrictions.and(Restrictions.eq("trClass", "error"),
+							Restrictions.eq("status", "NOK"))));
+			criteria.setProjection(Projections.rowCount());
+			int count = ((Long) criteria.uniqueResult()).intValue();
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countMySQLNOK() -> " + count + " found.");
+			return count;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			return 0;
+		}
+	}
+	
+	public int countOracleOK() {
+
+		try {
+			Criteria criteria = session().createCriteria(BancoDados.class);
+			criteria.add(Restrictions.and(Restrictions.eq("vendor", "oracle"),
+					Restrictions.eq("status", "OK")));
+			criteria.setProjection(Projections.rowCount());
+			int count = ((Long) criteria.uniqueResult()).intValue();
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countOracleOK() -> " + count + " found.");
+			return count;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			return 0;
+		}
+	}
+
+	public int countOracleNOK() {
+
+		try {
+			Criteria criteria = session().createCriteria(BancoDados.class);
+			criteria.add(Restrictions.and(Restrictions.eq("vendor", "oracle"),
+					Restrictions.and(Restrictions.eq("trClass", "error"),
+							Restrictions.eq("status", "NOK"))));
+			criteria.setProjection(Projections.rowCount());
+			int count = ((Long) criteria.uniqueResult()).intValue();
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countOracleNOK() -> " + count + " found.");
+			return count;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			return 0;
+		}
+	}
+	
+	public int countPostgreOK() {
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countPostgreOK() -> Counting Windows Servers not OK.");
+
+		try {
+			Criteria criteria = session().createCriteria(BancoDados.class);
+			criteria.add(Restrictions.and(Restrictions.eq("vendor", "POSTGRESQL"),
+					Restrictions.eq("status", "OK")));
+			criteria.setProjection(Projections.rowCount());
+			int count = ((Long) criteria.uniqueResult()).intValue();
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countWindowsOK -> " + count + " found.");
+			return count;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			return 0;
+		}
+	}
+
+	public int countPostgreNOK() {
+
+		try {
+			Criteria criteria = session().createCriteria(BancoDados.class);
+			criteria.add(Restrictions.and(Restrictions.eq("vendor", "POSTGRESQL"),
+					Restrictions.and(Restrictions.eq("trClass", "error"),
+							Restrictions.eq("status", "NOK"))));
+			criteria.setProjection(Projections.rowCount());
+			int count = ((Long) criteria.uniqueResult()).intValue();
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countPostgreNOK() -> " + count + " found.");
+			return count;
+
+		} catch (Exception e) {
+			Logger.getLogger(getClass()).error("Erro: " + e);
+			return 0;
+		}
+	}
 }

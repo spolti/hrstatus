@@ -312,7 +312,7 @@ public class CadastroController {
 		result.include("bancoDados", bancoDados);
 		
 		bancoDados.setVendor(bancoDados.getVendor().toUpperCase());
-		bancoDados.setStatus("Banco de dados ainda não verificado.");
+		bancoDados.setStatus("NOK");
 		bancoDados.setTrClass("error");
 		
 		try {

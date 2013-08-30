@@ -38,8 +38,9 @@
 						<thead>
 							<tr>
 								<th>ID</th>
-								<th>Servidor</th>
+								<th>Hostname</th>
 								<th>IP</th>
+								<th>Porta</th>
 								<th>Vendor</th>
 								<th>Instancia</th>
 								<th>Usuario</th>
@@ -54,6 +55,7 @@
 									<td>${dataBase.id}</td>
 									<td>${dataBase.hostname}</td>
 									<td>${dataBase.ip}</td>
+									<td>${dataBase.port}</td>
 									<td>${dataBase.vendor}</td>
 									<td>${dataBase.instance}</td>
 									<td>${dataBase.user}</td>
