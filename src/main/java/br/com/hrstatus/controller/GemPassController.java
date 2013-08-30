@@ -88,7 +88,7 @@ public class GemPassController {
 			// Verificando se o usuário existe
 			if (this.userDAO.searchUser(username) == 1) {
 				Users user = this.userDAO.getUserByID(username);
-				Logger.getLogger(getClass()).info("usuário encontrado");
+				Logger.getLogger(getClass()).info("[ Not Logged ] usuário encontrado");
 				PassGenerator gemPass = new PassGenerator();
 				String mailSender = this.configurationDAO.getMailSender();
 				String jndiMail = this.configurationDAO.getJndiMail();
@@ -141,7 +141,7 @@ public class GemPassController {
 				}
 
 			} else {
-				Logger.getLogger(getClass()).info("Usuário não encontrado");
+				Logger.getLogger(getClass()).info("[ Not Logged ] Usuário não encontrado");
 				result.redirectTo(LoginController.class)
 				.login("Se o usuário for válido uma nova senha será enviada para seu e-mail.");
 			}

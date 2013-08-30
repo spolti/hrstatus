@@ -156,6 +156,8 @@
 							<li class="dropdown-submenu"><a tabindex="-1" href="#"><i
 									class="icon-folder-open"> </i> Relatórios</a>
 								<ul class="dropdown-menu">
+								<li class="dropdown-submenu"><a tabindex="-1" href="#">Servidores</a>
+								<ul class="dropdown-menu">
 									<li><a href="<c:url value="/reports/reportFull"/>"
 										title="Download Relatório de todos os Servidores Cadastrados no formato PDF">
 											<i class="icon-download-alt"></i> Todos Servidores
@@ -192,6 +194,12 @@
 													<i class="icon-download-alt"></i> Servidores não OK
 											</a></li>
 										</ul></li>
+										</ul></li>
+										<li class="dropdown-submenu"><a tabindex="-1" href="#">Banco de Dados</a>
+										<ul class="dropdown-menu">
+											<li>Em Construção</li>
+										
+										</ul></li>
 								</ul></li>
 							<a href="<c:url value="/selectServer"/>" data-toggle="modal"><i
 								class="icon-file"> </i> Verificar logs</a>
@@ -202,7 +210,7 @@
 									<li><a href="<c:url value="/charts/servers/consolidated"/>"
 										title="Plotar os gráficos de status das checagens de Servidores">
 											<i class="icon-arrow-right"></i> Servidores </a></li>
-									<li><a href="<c:url value="/reports/reportFull"/>"
+									<li><a href="<c:url value="/charts/database/consolidated"/>"
 										title="Plotar os gráficos de status das checagens de Banco de Dados">
 											<i class="icon-arrow-right"></i> Banco de Dados </a></li>											
 											
@@ -251,7 +259,7 @@
 		<div class="modal-body">
 			<p>
 				<a href="http://www.hrstatus.com.br/hrstatus/home.html"
-					target="_blank">Hr Status</a><br>Versão: 3.0.BETA<br>
+					target="_blank">Hr Status</a><br>Versão: 3.1<br>
 				<br> <br> <a
 					href="http://www.hrstatus.com.br/hrstatus/home.html"
 					target="_blank"> <img

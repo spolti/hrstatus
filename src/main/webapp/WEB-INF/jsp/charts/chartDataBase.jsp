@@ -1,103 +1,102 @@
-<!-- 
-    Copyright (C) 2012  Filippe Costa Spolti
+<%@ include file="../home/navbar.jsp"%>
 
-	This file is part of Hrstatus.
+<div class="container">
+	<div class="content">
+		<div class="row">
+			<div class="span12">
+				<div class="item" align="center">
+					<p align="center">
+						<b>Banco de Dados - Consolidado </b>
+					</p>
+					<table>
+						<tr>
+							<td align="center"><canvas id="cvs"
+									!style="border: 1px solid #ccc">[No canvas support]</canvas> <script>
+								var graph1 = function() {
+								var data = [${mysql} , ${oracle}, ${postgre}];
+								var pie = new RGraph.Pie('cvs', data);
+								pie.Set('chart.labels', [ 'Mysql', 'Oracle','Postgre' ]);
+								pie.Set('chart.tooltips', [ 'Mysql', 'Oracle','Postgre']);
+								pie.Set('chart.tooltips.event', 'onmousemove');
+								pie.Set('chart.colors', [ '#EC0033', '#A0D300',
+										'#FFCD00', '#00B869', '#999999', '#FF7300',
+										'#004CB0' ]);
+								pie.Set('chart.strokestyle', 'white');
+								pie.Set('chart.linewidth', 3);
+								pie.Set('chart.shadow', true);
+								pie.Set('chart.shadow.offsetx', 2);
+								pie.Set('chart.shadow.offsety', 2);
+								pie.Set('chart.shadow.blur', 3);
+								pie.Set('chart.exploded', 7);
+		
+								for ( var i = 0; i < data.length; ++i) {
+									pie.Get('chart.labels')[i] = pie
+											.Get('chart.labels')[i]
+											+ ', ' + data[i] + '%';
+								}
+		
+								pie.Draw();
+							}
+						</script></td>
 
-    Hrstatus is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- -->
-
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ include file="../home/navbar.jsp" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Configura√ß√£o Clientes</title>
-
-</head>
-<body>
-
-	<div class="container">
-		<div class="content">
-			<div class="row">
-				<div class="span12">
-					<table class="table table-striped" id="resultTable">
-						<thead>
-							<tr>
-								<th>ID</th>
-								<th>Servidor</th>
-								<th>IP</th>
-								<th>SO</th>
-								<th>Usuario</th>
-								<th>Diret≈ïio de Logs</th>
-								<th>Comando NTP</th>
-								<th>A√ß√µes&nbsp;<a href="<c:url value="/newServer"/>"
-									title="Novo Servidor"><i class="icon-plus-sign"> </i></a></th>
-							</tr>
-						</thead>
-						<tbody>
-							<c:forEach var="server" items="${server}">
-								<tr>
-									<td>${server.id}</td>
-									<td>${server.hostname}</td>
-									<td>${server.ip}</td>
-									<td>${server.SO}</td>
-									<td>${server.user}</td>
-									<td>${server.logDir}</td>
-									<td>${server.suCommand}</td>
-									<td><a
-										href="<c:url value='/findForUpdateServer/${server.id}' />"
-										title="Editar Servidor"><i class="icon-edit"> </i></a> &nbsp;
-										<a
-										href="javascript:setParameter('${server.id}' ,'${server.hostname}');" title="remover Servidor"><i
-											class="icon-remove"> </i></a></td>
-								</tr>
-							</c:forEach>
-						</tbody>
-					</table>
+							<td align="center"><canvas id="cvs1">[No canvas
+											support]</canvas> <script>
+					        var graph2 = function () 
+					        {
+					            var bar8 = new RGraph.Bar('cvs1', [${databaseOK},${databaseNOK}])
+					            bar8.Set('chart.labels', ['BD OK','BD N„o OK']);
+					            //bar8.Set('chart.tooltips', function (index) {var label = bar8.Get('chart.labels')[index];return '<h2 style="text-align: center">' + label + '</h2><canvas id="tooltip_canvas" width="250" height="110"></canvas>';});
+					            bar8.Draw();
+					        }
+   					 </script></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center"><canvas id="cvs2" width="900"
+									height="200">[No canvas support]</canvas> <script>
+						        var graph3 = function ()
+						        {						
+						            var bar = new RGraph.Bar('cvs2', [[${dbMysqlOK},${dbMysqlNOK}],[${dbOracleOK},${dbOracleNOK}],[${dbPostgreOK},${dbPostgreNOK}]]);
+						            bar.Set('chart.labels', ['Mysql', 'Oracle', 'Postgree']);
+						            bar.Set('chart.tooltips', ['Mysql OK', 'Mysql n„o OK', 'Oracle OK', 'Oracle n„o OK', 'Postgree OK', 'Postgree n„o OK']);
+						            bar.Set('chart.tooltips.event', 'onmousemove');
+						            bar.Set('chart.ymax', ${totalDB});
+						            bar.Set('chart.strokestyle', 'white');
+						            bar.Set('chart.linewidth', 2);
+						            bar.Set('chart.shadow', true);
+						            bar.Set('chart.shadow.offsetx', 0);
+						            bar.Set('chart.shadow.offsety', 0);
+						            bar.Set('chart.shadow.blur', 10);
+						            bar.Set('chart.hmargin.grouped', 2);
+						            
+						            bar.Set('chart.title', '');
+						            bar.Set('chart.gutter.bottom', 20);
+						            bar.Set('chart.gutter.left', 40);
+						            bar.Set('chart.gutter.right', 15);
+						            bar.Set('chart.colors', [
+						                                     RGraph.LinearGradient(bar, 0,225,0,0, 'white', 'rgba(255, 176, 176, 0.5)'),
+						                                     RGraph.LinearGradient(bar, 0,225,0,0, 'white', 'rgba(153, 208, 249,0.5)')
+						                                    ]); 
+						            bar.Set('chart.background.grid.autofit.numhlines', 5);
+						            bar.Set('chart.background.grid.autofit.numvlines', 3);
+						            
+						            // This draws the chart
+						            RGraph.Effects.Fade.In(bar, {'duration': 250});        
+						        }
+    </script></td>
+						</tr>
+	</table>
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- Begin ModalDelete -->
-	<form method="post" action="<c:url value='/deleteServerByID'/>"
-		onload="javascript:getParameter()">
-		<div class="modal" id="ModalDeleteServer" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true"
-			style="display: none">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">√ó</button>
-				<h3 id="myModalLabel">Deseja realmente deletar este servidor?</h3>
-			</div>
-			<div id="delete-modal" class="modal-body">
-				<input type="hidden" id="id_server" name="id_server">
-				<p align="center"></p>
+</div>
 
-			</div>
-			<div class="modal-footer">
-				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-				<button type=submit class="btn btn-primary" name="_method"
-					value="DELETE">Delete</button>
-			</div>
-		</div>
-	</form>
-	<!-- End forms delete bottons table -->
-
+<script>
+		window.onload = function() {
+			graph1();
+			graph2();
+			graph3(); 
+		}
+	</script>
 </body>
 </html>
-
-
