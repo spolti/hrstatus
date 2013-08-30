@@ -19,6 +19,7 @@
 
 package br.com.hrstatus.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -329,6 +330,36 @@ public class BancoDadosDAO implements BancoDadosInterface {
 		} catch (Exception e) {
 			Logger.getLogger(getClass()).error("Erro: " + e);
 			return 0;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BancoDados> getdataBasesOK() {
+
+		try {
+			Criteria criteria = session().createCriteria(BancoDados.class);
+			return criteria.add(Restrictions.eq("status", "OK")).list();
+
+		} catch (Exception e) {
+			System.out.println(e);
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			return new ArrayList<BancoDados>();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BancoDados> getdataBasesNOK() {
+
+		try {
+			Criteria criteria = session().createCriteria(BancoDados.class);
+			criteria.add(Restrictions.or(Restrictions.eq("trClass", "error"),
+					Restrictions.eq("status", "NOK")));
+			return criteria.list();
+
+		} catch (Exception e) {
+			System.out.println(e);
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			return new ArrayList<BancoDados>();
 		}
 	}
 }

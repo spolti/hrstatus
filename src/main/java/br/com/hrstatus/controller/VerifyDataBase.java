@@ -34,6 +34,7 @@ import org.apache.log4j.Logger;
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.Validator;
 import br.com.hrstatus.action.databases.mysql.MySQL;
 import br.com.hrstatus.action.databases.postgre.PostgreSQL;
 import br.com.hrstatus.dao.BancoDadosInterface;
@@ -58,15 +59,17 @@ public class VerifyDataBase {
 	private LockIntrface lockDAO;
 	private BancoDadosInterface dbDAO;
 	private Configuration configurationDAO;
+	private Validator validator;
 	UserInfo userInfo = new UserInfo();
 
 	public VerifyDataBase(Result result, LockIntrface lockDAO, BancoDadosInterface dbDAO,
-			Configuration configurationDAO) {
+			Configuration configurationDAO, Validator validator) {
 
 		this.result = result;
 		this.lockDAO = lockDAO;
 		this.dbDAO = dbDAO;
 		this.configurationDAO = configurationDAO;
+		this.validator = validator;
 
 	}
 
@@ -231,4 +234,29 @@ public class VerifyDataBase {
 		}
 		lockDAO.removeLock(lockedResource);
 	}
+	
+	@Get("/database/showByStatus/{status}")
+	public void showByStatus(String status) {
+		// inserindo html title no result
+		result.include("title", "Hr Status Home");
+
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /database/showByStatus/" + status);
+
+		if (status.equals("OK")) {
+			List<BancoDados> listdb = this.dbDAO.getdataBasesOK();
+			result.include("class","activeBanco");
+			result.include("bancoDados", listdb).forwardTo(HomeController.class)
+					.home("");
+			
+		} else if (!status.equals("OK")) {
+			List<BancoDados> listdb = this.dbDAO.getdataBasesNOK();
+			result.include("class","activeBanco");
+			result.include("bancoDados", listdb).forwardTo(HomeController.class)
+					.home("");
+			
+		} else {
+			validator.onErrorUsePageOf(HomeController.class).home("");
+		}
+	}
+	
 }

@@ -27,7 +27,7 @@
 
 								<div class="span2">
 									<form method="GET"
-										action="<c:url value='/home/showByStatus/OK'/>">
+										action="<c:url value='/database/showByStatus/OK'/>">
 										<button input="" type="submit" value="Banco de Dados OK"
 											class="btn btn-primary">Banco de Dados OK</button>
 									</form>
@@ -60,7 +60,7 @@
 											class="caret"></span>
 										</a>
 										<ul class="dropdown-menu">
-											<li><a href="<c:url value='/home/showByStatus/NOK' />">
+											<li><a href="<c:url value='/database/showByStatus/NOK' />">
 													Listar Banco de Dados Desatualizados </a></li>
 
 											<li>
