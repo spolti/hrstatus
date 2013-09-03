@@ -203,8 +203,10 @@
 									<li class="dropdown-submenu"><a tabindex="-1" href="#">Banco
 											de Dados</a>
 										<ul class="dropdown-menu">
-											<li>Em Construção</li>
-
+											<li><a href="<c:url value="/reports/reportDataBaseFull"/>"
+												title="Download Relatório Servidores não OK no formato PDF">
+													<i class="icon-download-alt"></i> Todos os Banco de Dados
+											</a></li> 
 										</ul></li>
 								</ul></li>
 							<a href="<c:url value="/selectServer"/>" data-toggle="modal"><i

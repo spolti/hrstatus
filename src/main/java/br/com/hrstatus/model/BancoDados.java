@@ -180,8 +180,8 @@ public class BancoDados {
 		return Difference;
 	}
 
-	public void setDifference(long difference) {
-		Difference = difference;
+	public void setDifference(long Difference) {
+		this.Difference = Difference;
 	}
 
 	public String getTrClass() {
