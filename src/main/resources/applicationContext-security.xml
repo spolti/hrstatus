@@ -36,7 +36,10 @@
 			<intercept-url pattern="/tailFile/**" access="ROLE_USER,ROLE_ADMIN" />
 			<intercept-url pattern="/findInFile/**" access="ROLE_USER,ROLE_ADMIN" />
 			<intercept-url pattern="/database/startDataBaseVerification/**" access="ROLE_USER,ROLE_ADMIN" />
+			<intercept-url pattern="/database/showByStatus/**" access="ROLE_USER,ROLE_ADMIN" />
 			<intercept-url pattern="/charts/servers/consolidated" access="ROLE_USER,ROLE_ADMIN" />
+			<intercept-url pattern="/charts/database/consolidated" access="ROLE_USER,ROLE_ADMIN" />
+			<intercept-url pattern="/listLocks" access="ROLE_USER,ROLE_ADMIN" />
 
 			<!-- Reports -->
 			<intercept-url pattern="/reports/reportFull" access="ROLE_USER,ROLE_ADMIN" />
@@ -65,6 +68,7 @@
 			<intercept-url pattern="/updateDataBase" access="ROLE_ADMIN" />
 			<intercept-url pattern="/findForUpdateDataBase/**" access="ROLE_ADMIN" />
 			<intercept-url pattern="/deleteDataBaseByID" access="ROLE_ADMIN" />
+			<intercept-url pattern="/deleteLockByID" access="ROLE_ADMIN" />
 
 			<!-- Set the login page and what to do if login fails -->
 			<form-login login-page="/login" default-target-url="/home"

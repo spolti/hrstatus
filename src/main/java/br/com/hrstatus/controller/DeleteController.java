@@ -30,8 +30,10 @@ import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.dao.Iteracoes;
+import br.com.hrstatus.dao.LockIntrface;
 import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.model.BancoDados;
+import br.com.hrstatus.model.Lock;
 import br.com.hrstatus.model.Servidores;
 import br.com.hrstatus.model.Users;
 import br.com.hrstatus.utils.UserInfo;
@@ -43,13 +45,15 @@ public class DeleteController {
 	private Iteracoes iteracoesDAO;
 	private UsersInterface usersDAO;
 	private BancoDadosInterface BancoDadosDAO;
+	private LockIntrface lockDAO;
 	UserInfo userInfo = new UserInfo();
 
-	public DeleteController(Result result, Iteracoes iteracoesDAO, UsersInterface usersDAO, BancoDadosInterface BancoDadosDAO) {
+	public DeleteController(Result result, Iteracoes iteracoesDAO, UsersInterface usersDAO, BancoDadosInterface BancoDadosDAO, LockIntrface lockDAO) {
 		this.result = result;
 		this.iteracoesDAO = iteracoesDAO;
 		this.usersDAO = usersDAO;
 		this.BancoDadosDAO = BancoDadosDAO;
+		this.lockDAO = lockDAO;
 	}
 
 	@Delete("/deleteServerByID")
@@ -96,5 +100,15 @@ public class DeleteController {
 			this.usersDAO.deleteUserByID(user);
 			result.redirectTo(HomeController.class).home("");
 		}
+	}
+	
+	@Delete("/deleteLockByID")
+	public void deleteLockByID(String id_lock){
+		result.include("title","Deletar Lock");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /deleteLockByID");
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Lock id para deleção: " + id_lock);
+		Lock lock = this.lockDAO.getLockByID(Integer.parseInt(id_lock));
+		this.lockDAO.removeLock(lock);
+		result.redirectTo(HomeController.class).home("");
 	}
 }

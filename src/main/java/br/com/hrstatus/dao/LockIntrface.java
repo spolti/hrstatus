@@ -35,4 +35,8 @@ public interface LockIntrface {
 	
 	public List<Lock> listLockedServices(String recurso);
 	
+	public List<Lock> ListAllLocks();
+	
+	public Lock getLockByID(int id);
+	
 }
