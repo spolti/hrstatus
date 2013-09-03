@@ -76,5 +76,16 @@ public class LockDAO implements LockIntrface{
 		criteria.add(Restrictions.eq("recurso", recurso));
 		return criteria.list();
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<Lock> ListAllLocks(){
+		Logger.getLogger(getClass()).debug("ListAllLocks() -> listing all locks.");
+		return session().createCriteria(Lock.class).list();	
+	}
 	
+	public Lock getLockByID(int id) {
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] getLockByID -> Lock ID selected: " + id);
+		return (Lock) session().createCriteria(Lock.class)
+				.add(Restrictions.eq("id", id)).uniqueResult();
+	}
 }
