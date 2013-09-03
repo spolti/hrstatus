@@ -43,7 +43,9 @@ import org.apache.log4j.Logger;
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
+import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.dao.Iteracoes;
+import br.com.hrstatus.model.BancoDados;
 import br.com.hrstatus.model.Servidores;
 import br.com.hrstatus.utils.UserInfo;
 
@@ -51,13 +53,15 @@ import br.com.hrstatus.utils.UserInfo;
 public class ReportsController {
 
 	private Iteracoes iteracoesDAO;
+	private BancoDadosInterface bancoDadosDAO;
 	private HttpServletResponse response;
 	UserInfo userInfo = new UserInfo();
 
 	public ReportsController(Iteracoes iteracoesDAO,
-			HttpServletResponse response) {
+			HttpServletResponse response, BancoDadosInterface bancoDadosDAO) {
 		this.iteracoesDAO = iteracoesDAO;
 		this.response = response;
+		this.bancoDadosDAO = bancoDadosDAO;
 	}
 
 	
@@ -71,7 +75,7 @@ public class ReportsController {
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
 				.getResourceAsStream("/jasper/reportFull.jasper"));
 
-		List<Servidores> listServers = iteracoesDAO.listServers();
+		List<Servidores> listServers = this.iteracoesDAO.listServers();
 		JasperReport jasperStream = jasperFile;
 		JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(
 				listServers, false);
@@ -243,6 +247,34 @@ public class ReportsController {
 			response.setContentType("application/pdf");
 			response.setHeader("Content-disposition",
 					"attachment; filename=reportSOOthers.pdf");
+			return new ByteArrayInputStream(bytes);
+
+		} catch (JRException e) {
+			Logger.getLogger(getClass()).error(e.getMessage());
+		}
+		return null;
+	}
+	
+	@Get
+	@Path("/reports/reportDataBaseFull")
+	@SuppressWarnings("all")
+	public InputStream reportDataBaseFull() throws FileNotFoundException, JRException {
+		Logger.getLogger(getClass())
+				.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportDataBaseFull");
+		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
+				.getResourceAsStream("/jasper/reportDataBaseFull.jasper"));
+
+		List<BancoDados> listDataBases = this.bancoDadosDAO.listDataBases();
+		JasperReport jasperStream = jasperFile;
+		JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(
+				listDataBases, false);
+		Map parametros = new HashMap();
+		try {
+			byte[] bytes = JasperRunManager.runReportToPdf(jasperStream,
+					parametros, ds);
+			response.setContentType("application/pdf");
+			response.setHeader("Content-disposition",
+					"attachment; filename=reportDataBaseFull.pdf");
 			return new ByteArrayInputStream(bytes);
 
 		} catch (JRException e) {

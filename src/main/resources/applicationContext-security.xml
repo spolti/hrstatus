@@ -49,6 +49,7 @@
 			<intercept-url pattern="/reports/reportSOWindows" access="ROLE_USER,ROLE_ADMIN" />
 			<intercept-url pattern="/reports/reportSOUnix" access="ROLE_USER,ROLE_ADMIN" />
 			<intercept-url pattern="/reports/reportSOOthers" access="ROLE_USER,ROLE_ADMIN" />
+			<intercept-url pattern="/reports/reportDataBaseFull" access="ROLE_USER,ROLE_ADMIN" />
 
 			<!-- Admin Pages -->
 			<intercept-url pattern="/updateServer" access="ROLE_ADMIN" />
