@@ -67,7 +67,6 @@ public class ReportsController {
 	
 	@Get
 	@Path("/reports/reportFull")
-
 	@SuppressWarnings("all")
 	public InputStream fullReport() throws FileNotFoundException, JRException {
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportFull");
@@ -280,6 +279,62 @@ public class ReportsController {
 		} catch (JRException e) {
 			Logger.getLogger(getClass()).error(e.getMessage());
 		}
+		return null;
+	}
+	
+	@Get
+	@Path("/reports/reportDataBaseOK")
+	@SuppressWarnings("all")
+	public InputStream reportDataBaseOK() throws FileNotFoundException, JRException {
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportDataBaseOK");
+
+		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
+				.getResourceAsStream("/jasper/reportDataBaseOK.jasper"));
+		List<BancoDados> listDataBases = this.bancoDadosDAO.getdataBasesOK();
+		JasperReport jasperStream = jasperFile;
+		JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(
+				listDataBases, false);
+		Map parametros = new HashMap();
+		try {
+			byte[] bytes = JasperRunManager.runReportToPdf(jasperStream,
+					parametros, ds);
+			response.setContentType("application/pdf");
+			response.setHeader("Content-disposition",
+					"attachment; filename=reportDataBaseOK.pdf");
+			return new ByteArrayInputStream(bytes);
+
+		} catch (JRException e) {
+			Logger.getLogger(getClass()).error(e.getMessage());
+		}
+
+		return null;
+	}
+	
+	@Get
+	@Path("/reports/reportDataBaseNOK")
+	@SuppressWarnings("all")
+	public InputStream reportDataBaseNOK() throws FileNotFoundException, JRException {
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportDataBaseNOK");
+
+		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
+				.getResourceAsStream("/jasper/reportDataBaseNOK.jasper"));
+		List<BancoDados> listDataBases = this.bancoDadosDAO.getdataBasesNOK();
+		JasperReport jasperStream = jasperFile;
+		JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(
+				listDataBases, false);
+		Map parametros = new HashMap();
+		try {
+			byte[] bytes = JasperRunManager.runReportToPdf(jasperStream,
+					parametros, ds);
+			response.setContentType("application/pdf");
+			response.setHeader("Content-disposition",
+					"attachment; filename=reportDataBaseNOK.pdf");
+			return new ByteArrayInputStream(bytes);
+
+		} catch (JRException e) {
+			Logger.getLogger(getClass()).error(e.getMessage());
+		}
+
 		return null;
 	}
 }
