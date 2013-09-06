@@ -337,4 +337,88 @@ public class ReportsController {
 
 		return null;
 	}
+	
+	@Get
+	@Path("/reports/reportDataBaseMysql")
+	@SuppressWarnings("all")
+	public InputStream reportDataBaseMysql() throws FileNotFoundException, JRException {
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportDataBaseMysql");
+
+		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
+				.getResourceAsStream("/jasper/reportDataBaseMysql.jasper"));
+		List<BancoDados> listDataBases = this.bancoDadosDAO.getVendorMysql();
+		JasperReport jasperStream = jasperFile;
+		JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(
+				listDataBases, false);
+		Map parametros = new HashMap();
+		try {
+			byte[] bytes = JasperRunManager.runReportToPdf(jasperStream,
+					parametros, ds);
+			response.setContentType("application/pdf");
+			response.setHeader("Content-disposition",
+					"attachment; filename=reportDataBaseMysql.pdf");
+			return new ByteArrayInputStream(bytes);
+
+		} catch (JRException e) {
+			Logger.getLogger(getClass()).error(e.getMessage());
+		}
+
+		return null;
+	}
+	
+	@Get
+	@Path("/reports/reportDataBaseOracle")
+	@SuppressWarnings("all")
+	public InputStream reportDataBaseOracle() throws FileNotFoundException, JRException {
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportDataBaseOracle");
+
+		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
+				.getResourceAsStream("/jasper/reportDataBaseOracle.jasper"));
+		List<BancoDados> listDataBases = this.bancoDadosDAO.getVendorOracle();
+		JasperReport jasperStream = jasperFile;
+		JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(
+				listDataBases, false);
+		Map parametros = new HashMap();
+		try {
+			byte[] bytes = JasperRunManager.runReportToPdf(jasperStream,
+					parametros, ds);
+			response.setContentType("application/pdf");
+			response.setHeader("Content-disposition",
+					"attachment; filename=reportDataBaseOracle.pdf");
+			return new ByteArrayInputStream(bytes);
+
+		} catch (JRException e) {
+			Logger.getLogger(getClass()).error(e.getMessage());
+		}
+
+		return null;
+	}
+	
+	@Get
+	@Path("/reports/reportDataBasePostgre")
+	@SuppressWarnings("all")
+	public InputStream reportDataBasePostgre() throws FileNotFoundException, JRException {
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportDataBasePostgre");
+
+		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class
+				.getResourceAsStream("/jasper/reportDataBasePostgre.jasper"));
+		List<BancoDados> listDataBases = this.bancoDadosDAO.getVendorPostgre();
+		JasperReport jasperStream = jasperFile;
+		JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(
+				listDataBases, false);
+		Map parametros = new HashMap();
+		try {
+			byte[] bytes = JasperRunManager.runReportToPdf(jasperStream,
+					parametros, ds);
+			response.setContentType("application/pdf");
+			response.setHeader("Content-disposition",
+					"attachment; filename=reportDataBasePostgre.pdf");
+			return new ByteArrayInputStream(bytes);
+
+		} catch (JRException e) {
+			Logger.getLogger(getClass()).error(e.getMessage());
+		}
+
+		return null;
+	}
 }
