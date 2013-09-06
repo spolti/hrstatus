@@ -66,5 +66,11 @@ public interface BancoDadosInterface {
 	public List<BancoDados> getdataBasesOK();
 	
 	public List<BancoDados> getdataBasesNOK();
+	
+	public List<BancoDados> getVendorMysql();
+	
+	public List<BancoDados> getVendorOracle();
+	
+	public List<BancoDados> getVendorPostgre();
 
 }

@@ -362,4 +362,49 @@ public class BancoDadosDAO implements BancoDadosInterface {
 			return new ArrayList<BancoDados>();
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BancoDados> getVendorMysql() {
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] getvendorMysql -> Getting Mysql DataBases.");
+
+		try {
+			Criteria criteria = session().createCriteria(BancoDados.class);
+			return criteria.add(Restrictions.eq("vendor", "MYSQL")).list();
+
+		} catch (Exception e) {
+			System.out.println(e);
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			return new ArrayList<BancoDados>();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BancoDados> getVendorOracle() {
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] getVendorOracle -> Getting Oracle DataBases.");
+
+		try {
+			Criteria criteria = session().createCriteria(BancoDados.class);
+			return criteria.add(Restrictions.eq("vendor", "ORACLE")).list();
+
+		} catch (Exception e) {
+			System.out.println(e);
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			return new ArrayList<BancoDados>();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BancoDados> getVendorPostgre() {
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] getVendorPostgre -> Getting Postgre DataBases.");
+
+		try {
+			Criteria criteria = session().createCriteria(BancoDados.class);
+			return criteria.add(Restrictions.eq("vendor", "POSTGRESQL")).list();
+
+		} catch (Exception e) {
+			System.out.println(e);
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			return new ArrayList<BancoDados>();
+		}
+	}
 }

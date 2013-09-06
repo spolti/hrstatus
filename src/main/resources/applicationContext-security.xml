@@ -52,7 +52,10 @@
 			<intercept-url pattern="/reports/reportDataBaseFull" access="ROLE_USER,ROLE_ADMIN" />
 			<intercept-url pattern="/reports/reportDataBaseOK" access="ROLE_USER,ROLE_ADMIN" />
 			<intercept-url pattern="/reports/reportDataBaseNOK" access="ROLE_USER,ROLE_ADMIN" />
-
+			<intercept-url pattern="/reports/reportDataBaseMysql" access="ROLE_USER,ROLE_ADMIN" />
+			<intercept-url pattern="/reports/reportDataBaseOracle" access="ROLE_USER,ROLE_ADMIN" />
+			<intercept-url pattern="/reports/reportDataBasePostgre" access="ROLE_USER,ROLE_ADMIN" />
+			
 			<!-- Admin Pages -->
 			<intercept-url pattern="/updateServer" access="ROLE_ADMIN" />
 			<intercept-url pattern="/deleteServerByID" access="ROLE_ADMIN" />
