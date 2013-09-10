@@ -306,9 +306,7 @@ public class IteracoesDAO implements Iteracoes {
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.and(Restrictions.eq("SO", "LINUX"),
-					Restrictions.and(Restrictions.eq("trClass", "error"),
-							Restrictions.eq("status", "NOK"))));
+			criteria.add(Restrictions.and(Restrictions.eq("SO", "LINUX"),(Restrictions.eq("trClass", "error"))));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countLinuxNOK -> " + count + " found.");
@@ -343,9 +341,7 @@ public class IteracoesDAO implements Iteracoes {
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.and(Restrictions.eq("SO", "UNIX"),
-					Restrictions.and(Restrictions.eq("trClass", "error"),
-							Restrictions.eq("status", "NOK"))));
+			criteria.add(Restrictions.and(Restrictions.eq("SO", "UNIX"),(Restrictions.eq("trClass", "error"))));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countUnixNOK -> " + count + " found.");
@@ -381,9 +377,7 @@ public class IteracoesDAO implements Iteracoes {
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.and(Restrictions.eq("SO", "WINDOWS"),
-					Restrictions.and(Restrictions.eq("trClass", "error"),
-							Restrictions.eq("status", "NOK"))));
+			criteria.add(Restrictions.and(Restrictions.eq("SO", "WINDOWS"),(Restrictions.eq("trClass", "error"))));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countWindowsNOK -> " + count + " found.");
@@ -421,7 +415,6 @@ public class IteracoesDAO implements Iteracoes {
 			criteria.add(Restrictions.ne("SO", "Windows"));
 			criteria.add(Restrictions.ne("SO", "Unix"));
 			criteria.add(Restrictions.eq("trClass", "error"));
-			criteria.add(Restrictions.eq("status", "NOK"));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countOtherNOK -> " + count + " found.");
