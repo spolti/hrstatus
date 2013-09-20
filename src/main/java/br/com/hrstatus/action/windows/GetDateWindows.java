@@ -41,7 +41,7 @@ public class GetDateWindows {
 					p.getInputStream()));
 			while ((s = reader.readLine()) != null)
 				out += s;
-
+			
 			//i dont know why, but the net time command returns null before the date, like this: nullTer Mar ......
 			if (out.startsWith("n")) {
 				String temp = out.substring(4, out.length());

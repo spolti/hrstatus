@@ -9,9 +9,10 @@
 			<div class="content">
 				<div class="row">
 					<div class="span12">
-					
+
 						<!-- Aba Banco de dados -->
-						<div  <c:choose> 
+						<div
+							<c:choose> 
 								<c:when test="${class == 'activeBanco'}">
 									class="active item"
 								 </c:when>
@@ -19,8 +20,8 @@
 									class="item"
 								</c:otherwise> 
 							 </c:choose>
-						 align="center">
-
+							align="center">
+							<b>Banco de Dados</b><br>
 							<div class="row">
 
 								<div class="span3"></div>
@@ -60,7 +61,8 @@
 											class="caret"></span>
 										</a>
 										<ul class="dropdown-menu">
-											<li><a href="<c:url value='/database/showByStatus/NOK' />">
+											<li><a
+												href="<c:url value='/database/showByStatus/NOK' />">
 													Listar Banco de Dados Desatualizados </a></li>
 
 											<li>
@@ -138,18 +140,20 @@
 
 
 						<!-- Aba servidores -->
-						<div <c:if test="${class == null }"> 
+						<div
+							<c:if test="${class == null }"> 
 								class="active item"
 							 </c:if>
-						     <c:choose> 
+							<c:choose> 
 								<c:when test="${class == 'activeServer'}">
 									class="active item"
 								 </c:when>
 								 <c:otherwise>  
 									class="item"
 								</c:otherwise> 
-							 </c:choose>  align="center">
-
+							 </c:choose>
+							align="center">
+							<b>Servidores</b><br>
 							<div class="row">
 
 								<div class="span3"></div>

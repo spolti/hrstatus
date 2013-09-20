@@ -121,7 +121,7 @@
 				var ids = $(".find_1 input:checkbox:checked").map(function() {
 					return this.value;
 				}).get().join(',');
-				var url = "/hrstatus/updateTimeSelectedClients/";
+				var url = "/hs/updateTimeSelectedClients/";
 
 				$("#dynamicURL a").attr('href', url + ids);
 			}).change();
