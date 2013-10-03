@@ -29,7 +29,7 @@ public class DateParser {
 		
 		//Formatos Aceitos
 		SimpleDateFormat formato1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy"); // padrao Mon Mar 04 16:09:05 BRT 2013
-		String patternFormato1 = "(Sun|Mon|Tue|Wed|Thu|Fri|Sat)\\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Out|Nov|Dec)\\s\\d{1,}\\s\\d{2}:\\d{2}:\\d{2}\\s(BRA|[A-Z]{3,})\\s\\d{4}";
+		String patternFormato1 = "(Sun|Mon|Tue|Wed|Thu|Fri|Sat)\\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s\\d{1,}\\s\\d{2}:\\d{2}:\\d{2}\\s(BRA|[A-Z]{3,})\\s\\d{4}";
 		
 		SimpleDateFormat formato2 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy",new Locale("pt", "BR")); // Seg Mar 04 16:09:05 BRT 2013
 		String patternFormato2 = "(Dom|Seg|Ter|Qua|Qui|Sex|Sab)\\s(Jan|Fev|Mar|Abr|Mai|Jun|Jul|Ago|Set|Out|Nov|Dez)\\s\\d{1,}\\s\\d{2}:\\d{2}:\\d{2}\\s([A-Z]{3,})\\s\\d{4}";
@@ -43,6 +43,7 @@ public class DateParser {
 		SimpleDateFormat formato5 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy",new Locale("pt", "BR")); // padrão segunda-feira,  4 de março de 2013 16h13min27s BRT
 		
 		SimpleDateFormat formato6 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
 		String patternFormato6 = "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}";
 		//verificando se o Timezone é nativo AIX GRNLNDST e GRNLNDDT e GRNLNDST3, se for ignora timezone.
 		if (data.contains("GRNLNDST") || data.contains("GRNLNDDT") || data.contains("GRNLNDST3")){
@@ -209,11 +210,10 @@ public class DateParser {
 		return date1;
 	}
 	
-	public static void main(String args[]){
-		
-		DateParser test = new DateParser();
-		Date NewFormat = test.parser("");
-		
-		System.out.println("Data formadata: " + NewFormat);			
-	}	
+//	public static void main(String args[]){
+//		
+//		DateParser test = new DateParser();
+//		Date NewFormat = test.parser("");
+//		System.out.println("Data formadata: " + NewFormat);			
+//	}	
 }
