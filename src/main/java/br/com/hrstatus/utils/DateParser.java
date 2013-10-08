@@ -229,10 +229,10 @@ public class DateParser {
 		return date1;
 	}
 	
-//	public static void main(String args[]){
-//		
-//		DateParser test = new DateParser();
-//		Date NewFormat = test.parser("");
-//		System.out.println("Data formadata: " + NewFormat);			
-//	}	
+	public static void main(String args[]){
+		
+		DateParser test = new DateParser();
+		Date NewFormat = test.parser("Tue Oct 08 14:10:00 BRT 2013");
+		System.out.println("Data formadata: " + NewFormat);			
+	}	
 }

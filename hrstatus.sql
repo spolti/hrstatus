@@ -136,7 +136,7 @@ CREATE TABLE `Users` (
   `authority` varchar(255) DEFAULT NULL,
   `enabled` bit(1) NOT NULL,
   `firstLogin` bit(1) DEFAULT NULL,
-  `lastLogin` varchar(255) NOT NULL,
+  `lastLogin` varchar(255) DEFAULT NULL,
   `mail` varchar(255) NOT NULL,
   `nome` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
