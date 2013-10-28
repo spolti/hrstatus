@@ -55,7 +55,7 @@ public class MailSender{
 
 			message.setContent ("<h1>Olá, alguns servidores ainda estão com a data/hora desatualizados.  " +
 					"\nAcesse o link abaixo para maiores detalhes:</h1> " +
-					"<a href=\"http://"+getIP.returnIP()+":8080/hrstatus/reports/reportServersNOK\">Relatório</a>", "text/html");
+					"<a href=\"http://"+getIP.returnIP()+"/hs/reports/reportServersNOK\">Relatório</a>", "text/html");
 
 			Transport.send(message);
 			
@@ -110,7 +110,7 @@ public class MailSender{
 					" Seus dados para acesso são:\n" +
 					" 		Usuário: " + username + "\n" +
 					"       Senha: " + pass + "\n" + 
-					" Para acesso utilize a url: http://"+getIP.returnIP()+":8080/hrstatus/login", "text/html");
+					" Para acesso utilize a url: http://"+getIP.returnIP()+"/hs/login", "text/html");
 
 			Transport.send(message);
 			
