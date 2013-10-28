@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Resource;
 import br.com.hrstatus.action.linux.GetDateLinux;
+import br.com.hrstatus.action.windows.GetDateWindows;
 import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.dao.Iteracoes;
 import br.com.hrstatus.model.Servidores;
@@ -126,6 +127,36 @@ public class VerifySingleServer {
 				this.iteracoesDAO.updateServer(servidores);
 			}
 		}
-	
+		if (servidores.getSO().equals("WINDOWS")) {
+			servidores.setServerTime(dt.getTime());
+			servidores.setLastCheck(servidores.getServerTime());
+			try {
+				String dateSTR = GetDateWindows.Exec(servidores
+						.getIp());
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
+				servidores.setClientTime(dateSTR);
+				// Calculating time difference
+				servidores.setDifference(dt.diffrenceTime(
+						servidores.getServerTime(), dateSTR,
+						"WINDOWS"));
+				if (servidores.getDifference() < 0){
+					servidores.setDifference(servidores.getDifference() * -1);
+				}
+				if (servidores.getDifference() <= this.configurationDAO
+						.getDiffirenceSecs()) {
+					servidores.setTrClass("success");
+					servidores.setStatus("OK");
+				} else {
+					servidores.setTrClass("error");
+					servidores.setStatus("não OK");
+				}
+
+				this.iteracoesDAO.updateServer(servidores);
+			} catch (IOException e) {
+				servidores.setStatus(e + "");
+				servidores.setTrClass("error");
+				this.iteracoesDAO.updateServer(servidores);
+			}
+		}
 	}	
 }
