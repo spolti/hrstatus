@@ -25,9 +25,6 @@ package br.com.hrstatus.action.linux;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
-
-import br.com.hrstatus.utils.DateParser;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
@@ -91,14 +88,14 @@ public class RunNtpDate {
 		return s;
 	}
 	
-	public static void main(String args[]) throws IOException, JSchException {
-		RunNtpDate get = new RunNtpDate();
-
-		String tmp = get.exec("spolti", "127.0.0.1", "lipe33spol90", 22,"sudo /usr/sbin/ntpdate -u 192.168.10.2");
-		DateParser parse = new DateParser();
-		Date data = parse.parser(tmp);
-		
-		System.out.println(tmp);
-	}
-	
+//	public static void main(String args[]) throws IOException, JSchException {
+//		RunNtpDate get = new RunNtpDate();
+//
+//		String tmp = get.exec("spolti", "127.0.0.1", "XXXXXXXXXXXXX", 22,"sudo /usr/sbin/ntpdate -u XXXXXXXXXXX");
+//		DateParser parse = new DateParser();
+//		Date data = parse.parser(tmp);
+//		
+//		System.out.println(tmp);
+//	}
+//	
 }
