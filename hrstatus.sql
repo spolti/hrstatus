@@ -120,8 +120,9 @@ CREATE TABLE `Servidores` (
   `suCommand` varchar(255) DEFAULT NULL,
   `trClass` varchar(255) DEFAULT NULL,
   `user` varchar(255) DEFAULT NULL,
+  `verify` varchar(3) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
