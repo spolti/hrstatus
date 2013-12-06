@@ -89,6 +89,13 @@
 								<td><input type="text" name="servidores.port" /></td>
 							</tr>
 							<tr>
+								<td align=right>Verificação Ativa:</td>
+								<td><select name="servidores.verify" id="servidores.verify">
+										<option value="SIM">Sim</option>
+										<option value="NAO">Nao</option>
+								</select></td>
+							</tr>
+							<tr>
 								<td align=right>SO:</td>
 								<td><select name="servidores.SO" id="servidores.SO">
 										<c:forEach items="${SO}" var="SO">

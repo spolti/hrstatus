@@ -10,6 +10,5 @@ public class UserInfo {
 		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
 		return LoggedUsername;
 	}
-	
-	
+
 }

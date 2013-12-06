@@ -26,16 +26,16 @@ package br.com.hrstatus.dao;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
-import br.com.hrstatus.model.BancoDados;
+import br.com.hrstatus.model.Servidores;
 
 @SuppressWarnings("deprecation")
 public class CreateTables {
 	public static void main(String[] args) {
 		AnnotationConfiguration cfg = new AnnotationConfiguration();
 		
-//		cfg.addAnnotatedClass(Servidores.class);
-//		SchemaExport se = new SchemaExport(cfg);
-//		se.create(true, true);
+		cfg.addAnnotatedClass(Servidores.class);
+		SchemaExport se = new SchemaExport(cfg);
+		se.create(true, true);
 
 //		cfg.addAnnotatedClass(Users.class);
 //		SchemaExport se1 = new SchemaExport(cfg);
@@ -57,8 +57,8 @@ public class CreateTables {
 //		SchemaExport se = new SchemaExport(cfg);
 //		se.create(true, true);
 		
-		cfg.addAnnotatedClass(BancoDados.class);
-		SchemaExport se = new SchemaExport(cfg);
-		se.create(true, true);
+//		cfg.addAnnotatedClass(BancoDados.class);
+//		SchemaExport se = new SchemaExport(cfg);
+//		se.create(true, true);
 	}
 }

@@ -194,7 +194,7 @@ public class HomeController {
 				List<Servidores> list = this.iteracoesDAO.listServers();
 				for (Servidores servidores : list) {
 					// if Linux
-					if (servidores.getSO().equals("LINUX")) {
+					if (servidores.getSO().equals("LINUX") && servidores.getVerify().equals("SIM")) {
 						servidores.setServerTime(dt.getTime());
 						servidores.setLastCheck(servidores.getServerTime());
 						// Decripting password
@@ -276,9 +276,11 @@ public class HomeController {
 							this.iteracoesDAO.updateServer(servidores);
 						}
 
+					} else {
+						Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] - O servidor " + servidores.getHostname() + " não será verificado pois o mesmo não está com verificação ativa.");
 					}
 
-					if (servidores.getSO().equals("UNIX")) {
+					if (servidores.getSO().equals("UNIX") && servidores.getVerify().equals("SIM")) {
 						servidores.setServerTime(dt.getTime());
 						servidores.setLastCheck(servidores.getServerTime());
 						// Decripting password
@@ -362,7 +364,7 @@ public class HomeController {
 					}
 
 					// if Windows
-					if (servidores.getSO().equals("WINDOWS")) {
+					if (servidores.getSO().equals("WINDOWS") && servidores.getVerify().equals("SIM")) {
 						servidores.setServerTime(dt.getTime());
 						servidores.setLastCheck(servidores.getServerTime());
 						try {
@@ -397,7 +399,7 @@ public class HomeController {
 					}
 
 					// if Others
-					if (servidores.getSO().equals("OUTRO")) {
+					if (servidores.getSO().equals("OUTRO") && servidores.getVerify().equals("SIM")) {
 						servidores.setServerTime(dt.getTime());
 						servidores.setLastCheck(servidores.getServerTime());
 						// Decripting password
@@ -521,7 +523,7 @@ public class HomeController {
 				List<Servidores> list = this.iteracoesDAO.getServersNOK();
 				for (Servidores servidores : list) {
 					// if Linux
-					if (servidores.getSO().equals("LINUX")) {
+					if (servidores.getSO().equals("LINUX") && servidores.getVerify().equals("SIM")) {
 						servidores.setServerTime(dt.getTime());
 						servidores.setLastCheck(servidores.getServerTime());
 						// Decripting password
@@ -605,7 +607,7 @@ public class HomeController {
 
 					}
 
-					if (servidores.getSO().equals("UNIX")) {
+					if (servidores.getSO().equals("UNIX") && servidores.getVerify().equals("SIM")) {
 						servidores.setServerTime(dt.getTime());
 						servidores.setLastCheck(servidores.getServerTime());
 						// Decripting password
@@ -687,7 +689,7 @@ public class HomeController {
 					}
 
 					// if Windows
-					if (servidores.getSO().equals("WINDOWS")) {
+					if (servidores.getSO().equals("WINDOWS") && servidores.getVerify().equals("SIM")) {
 						servidores.setServerTime(dt.getTime());
 						servidores.setLastCheck(servidores.getServerTime());
 						try {
@@ -720,7 +722,7 @@ public class HomeController {
 					}
 
 					// if Others
-					if (servidores.getSO().equals("OUTRO")) {
+					if (servidores.getSO().equals("OUTRO")&& servidores.getVerify().equals("SIM")) {
 						servidores.setServerTime(dt.getTime());
 						servidores.setLastCheck(servidores.getServerTime());
 						// Decripting password

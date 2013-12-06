@@ -50,6 +50,6 @@ public class LoginController {
 	    String version = load.getValor("version"); 
 	    result.include("version",version);
 		result.include("info",message);
+
 	}
- 
 }
