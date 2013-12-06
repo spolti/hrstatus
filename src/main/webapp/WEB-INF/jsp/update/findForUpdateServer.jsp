@@ -103,6 +103,13 @@
 									value="${server.port}" /></td>
 							</tr>
 							<tr>
+								<td align=right>Verificação Ativa:</td>
+								<td><select name="server.verify" id="server.verify">
+										<option value="SIM" <c:if test="${server.verify == 'SIM' }" > selected="selected"</c:if>>Sim</option>
+										<option value="NAO" <c:if test="${server.verify == 'NAO' }" > selected="selected"</c:if>>Nao</option>
+								</select></td>
+							</tr>
+							<tr>
 								<td align=right>SO:</td>
 								<td><select name="server.SO" id="server.SO">
 										<c:forEach items="${SO}" var="SO">

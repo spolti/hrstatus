@@ -85,6 +85,17 @@ public class Servidores {
 	@Column(name = "suCommand")
 	private String suCommand;
 	
+	@Column(name = "verify", length = 3)
+	private String verify;
+	
+	public String getVerify() {
+		return verify;
+	}
+
+	public void setVerify(String verify) {
+		this.verify = verify;
+	}
+
 	public String getTrClass() {
 		return trClass;
 	}
@@ -204,5 +215,4 @@ public class Servidores {
 	public void setSuCommand(String suCommand) {
 		this.suCommand = suCommand;
 	}
-	
 }

@@ -44,6 +44,7 @@
 								<th>Usuario</th>
 								<th>Diretŕio de Logs</th>
 								<th>Comando NTP</th>
+								<th>Verificação Ativa</th>
 								<th>Ações&nbsp;<a href="<c:url value="/newServer"/>"
 									title="Novo Servidor"><i class="icon-plus-sign"> </i></a></th>
 							</tr>
@@ -58,6 +59,7 @@
 									<td>${server.user}</td>
 									<td>${server.logDir}</td>
 									<td>${server.suCommand}</td>
+									<td>${server.verify}</td>
 									<td><a
 										href="<c:url value='/findForUpdateServer/${server.id}' />"
 										title="Editar Servidor"><i class="icon-edit"> </i></a> &nbsp;
