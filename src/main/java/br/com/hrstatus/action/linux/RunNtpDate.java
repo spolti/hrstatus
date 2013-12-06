@@ -91,7 +91,7 @@ public class RunNtpDate {
 //	public static void main(String args[]) throws IOException, JSchException {
 //		RunNtpDate get = new RunNtpDate();
 //
-//		String tmp = get.exec("spolti", "127.0.0.1", "XXXXXXXXXXXXX", 22,"sudo /usr/sbin/ntpdate -u XXXXXXXXXXX");
+//		String tmp = get.exec("spolti", "127.0.0.1", "XXXXXXXXXXXXXX", 22,"sudo /usr/sbin/ntpdate -u XXXXXXXXXXX");
 //		DateParser parse = new DateParser();
 //		Date data = parse.parser(tmp);
 //		
