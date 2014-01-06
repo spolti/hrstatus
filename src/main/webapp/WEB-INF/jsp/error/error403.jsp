@@ -109,7 +109,7 @@
 
     <div id="footer">
       <div class="container">
-        <p class="muted credit"> <a href="http://www.ohsnap.com.br/hrstatus">Hrstatus</a> - 2012,  Todos os Direitos Reservados.</p>
+        <p class="muted credit"> <a href="http://www.hrstatus.com.br/hrstatus/home.html">Hrstatus</a> - 2012,  Todos os Direitos Reservados.</p>
       </div>
     </div>
 

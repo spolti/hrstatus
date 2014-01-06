@@ -94,12 +94,10 @@ html,body {
 			if ($bar.width() == 650) {
 				clearInterval(progress);
 				$('.progress').removeClass('active');
-				//$(window.location).attr('href', 'http://localhost:8080/hrstatus/home');
-				//window.history.back();
 				var url = window.location;
 				var urlStr = url.toString();
 				var urlArray = urlStr.split("/");
-				$(window.location).attr('href', urlArray[0]+'/hrstatus/home');
+				$(window.location).attr('href', urlArray[0]+'/hs/home');
 			} else {
 				$bar.width($bar.width() + 65);
 			}
@@ -146,7 +144,7 @@ html,body {
 	<div id="footer">
 		<div class="container">
 			<p class="muted credit">
-				<a href="http://www.ohsnap.com.br/hrstatus">Hrstatus</a> - 2012. Todos os Direitos Reservados
+				<a href="http://www.hrstatus.com.br/hs">Hrstatus</a> - 2012. Todos os Direitos Reservados
 			</p>
 		</div>
 	</div>

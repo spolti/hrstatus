@@ -17,6 +17,7 @@
 			<intercept-url pattern="/img/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 			<intercept-url pattern="/requestNewPass/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 			<intercept-url pattern="/utils/criptPassJboss/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+			<intercept-url pattern="/show/logo/imagem/home" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 			
 			<!-- Restrict access to ALL other pages -->
 			<intercept-url pattern="/home" access="ROLE_USER,ROLE_ADMIN" />
@@ -55,6 +56,7 @@
 			<intercept-url pattern="/reports/reportDataBaseMysql" access="ROLE_USER,ROLE_ADMIN" />
 			<intercept-url pattern="/reports/reportDataBaseOracle" access="ROLE_USER,ROLE_ADMIN" />
 			<intercept-url pattern="/reports/reportDataBasePostgre" access="ROLE_USER,ROLE_ADMIN" />
+			<intercept-url pattern="/show/logo/imagem/settings" access="ROLE_USER,ROLE_ADMIN" />
 			
 			<!-- Admin Pages -->
 			<intercept-url pattern="/updateServer" access="ROLE_ADMIN" />
@@ -75,6 +77,8 @@
 			<intercept-url pattern="/findForUpdateDataBase/**" access="ROLE_ADMIN" />
 			<intercept-url pattern="/deleteDataBaseByID" access="ROLE_ADMIN" />
 			<intercept-url pattern="/deleteLockByID" access="ROLE_ADMIN" />
+			<intercept-url pattern="/uploud/logo/imagem" access="ROLE_ADMIN" />
+			<intercept-url pattern="/delete/logo/imagem" access="ROLE_ADMIN" />
 
 			<!-- Set the login page and what to do if login fails -->
 			<form-login login-page="/login" default-target-url="/home"

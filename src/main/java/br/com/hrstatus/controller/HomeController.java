@@ -840,5 +840,4 @@ public class HomeController {
 		result.include("server", list).forwardTo(HomeController.class).home("");
 		
 	}
-	
 }
