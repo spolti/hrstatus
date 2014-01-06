@@ -69,6 +69,7 @@ body {
 </head>
 
 <body>
+
 	<script src="http://code.jquery.com/jquery-latest.js" />
 	</script>
 	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
@@ -79,69 +80,78 @@ body {
 			${info}
 		</div>
 	</c:if>
-	<div class="container">
 
-		<form class="form-signin" name="f"
-			action="<c:url value='j_spring_security_check'/>" method="POST">
+	<table>
+		<tr>
+			<td align="center">
+			<img src="<c:url value="/show/logo/imagem/home"/>" /></td>
 
-			<c:if test="${not empty param.login_error}">
-				<font color="red"> Your login attempt was not successful, try
-					again.<br> <br> Reason: <c:out
-						value="${SPRING_SECURITY_LAST_EXCEPTION.message}"></c:out>.
-				</font>
-			</c:if>
-			<h2 class="form-signin-heading" align="center">Login</h2>
-			<input type="text" name='j_username'
-				value='<c:if test="${not empty param.login_error}"><c:out value="${SPRING_SECURITY_LAST_USERNAME}"/></c:if>'
-				class="input-block-level" placeholder="Username"> <input
-				type="password" name='j_password' class="input-block-level"
-				placeholder="Password">
+			<td align="left">
+				<div class="container">
 
-			<table>
-				<tbody>
-					<tr>
-						<td><label class="checkbox"><input
-								name="_spring_security_remember_me" value="remember-me"
-								type="checkbox"> Lembre-me </label></td>
+					<form class="form-signin" name="f"
+						action="<c:url value='j_spring_security_check'/>" method="POST">
 
-						<td><a href="#SubmitUser" data-toggle="modal" role="button">
-								Recuperar Senha </a></td>
-					</tr>
-					<tr>
-						<td><button class="btn btn-large btn-primary" type="submit">Sign
-								in</button></td>
-					</tr>
-				</tbody>
-			</table>
-		</form>
+						<c:if test="${not empty param.login_error}">
+							<font color="red"> Your login attempt was not successful,
+								try again.<br> <br> Reason: <c:out
+									value="${SPRING_SECURITY_LAST_EXCEPTION.message}"></c:out>.
+							</font>
+						</c:if>
+						<h2 class="form-signin-heading" align="center">Login</h2>
+						<input type="text" name='j_username'
+							value='<c:if test="${not empty param.login_error}"><c:out value="${SPRING_SECURITY_LAST_USERNAME}"/></c:if>'
+							class="input-block-level" placeholder="Username"> <input
+							type="password" name='j_password' class="input-block-level"
+							placeholder="Password">
 
-	</div>
-	<!-- /container -->
-	<!-- Modal -->
-	<form method="post" action="<c:url value='/requestNewPass'/>">
-		<div id="SubmitUser" class="modal hide fade" style="display: none;">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">×</button>
-				<h3 id="myModalLabel" align="center">Recuperar senha</h3>
-			</div>
-			<div class="modal-body">
-				<p align="center">
-					Usuário: <input type="text" name="username" />
-				</p>
-			</div>
-			<div class="modal-footer">
-				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-				<button type="submit" class="btn btn-primary">Enviar</button>
-			</div>
-		</div>
-	</form>
+						<table>
+							<tbody>
+								<tr>
+									<td><label class="checkbox"><input
+											name="_spring_security_remember_me" value="remember-me"
+											type="checkbox"> Lembre-me </label></td>
 
-	<div id="footer">
-		<div class="container">
-			<p align="center" class="muted credit">Versão: ${version }</p>
-		</div>
-	</div>
+									<td><a href="#SubmitUser" data-toggle="modal"
+										role="button"> Recuperar Senha </a></td>
+								</tr>
+								<tr>
+									<td><button class="btn btn-large btn-primary"
+											type="submit">Sign in</button></td>
+								</tr>
+							</tbody>
+						</table>
+					</form>
+				</div>
 
+				</div> <!-- /container --> <!-- Modal -->
+				<form method="post" action="<c:url value='/requestNewPass'/>">
+					<div id="SubmitUser" class="modal hide fade" style="display: none;">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-hidden="true">×</button>
+							<h3 id="myModalLabel" align="center">Recuperar senha</h3>
+						</div>
+						<div class="modal-body">
+							<p align="center">
+								Usuário: <input type="text" name="username" />
+							</p>
+						</div>
+						<div class="modal-footer">
+							<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+							<button type="submit" class="btn btn-primary">Enviar</button>
+						</div>
+					</div>
+				</form>
+
+				<div id="footer">
+					<div class="container">
+						<p align="center" class="muted credit">Versão: ${version }</p>
+					</div>
+				</div>
+			</td>
+		<tr>
+	</table>
+	
 </body>
 </html>

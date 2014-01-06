@@ -18,7 +18,7 @@
  -->
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ include file="../home/navbar.jsp" %>
+<%@ include file="../home/navbar.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -48,7 +48,7 @@
 							</c:forEach>
 						</div>
 					</c:if>
-					<table class="table table-striped"  id="resultTable">
+					<table class="table table-striped" id="resultTable">
 						<thead>
 							<tr>
 								<th>Parâmetro</th>
@@ -103,7 +103,7 @@
 									href="javascript:setParameterForUpdate('${ntpServer}','Editar Parametro Servidor NTP','ntpServer');"
 									title="Atualizar campo"> <i class="icon-edit"> </i></a></td>
 							</tr>
-							
+
 							<tr class="info">
 								<td>Ativar Atualização via NTP:</td>
 								<td>${updateNtpIsActive}</td>
@@ -111,7 +111,25 @@
 									href="javascript:setParameterForUpdate('${updateNtpIsActive}','Editar Parametro Ativar Atualização via NTP','updateNtpIsActive');"
 									title="Atualizar campo"> <i class="icon-edit"> </i></a></td>
 							</tr>
-							
+							<tr class="info">
+								<td>
+									<form action="<c:url value="/uploud/logo/imagem"/>"
+										method="POST" enctype="multipart/form-data">
+										<fieldset>
+											<legend><h4>Enviar Logo Tela de Login</h1></legend>
+											<input type="file" name="imagem" />
+
+											<button type="submit">Enviar</button>
+										</fieldset>
+									</form>
+								</td>
+								<td>
+									<img src="<c:url value="/show/logo/imagem/settings"/>"/>
+								</td>
+								<td>
+									<a href="<c:url value="/delete/logo/imagem"/>" title="Remover Imagem"> <i class="icon-remove-circle"> </i> </a>
+								</td>
+							</tr>
 						</tbody>
 					</table>
 				</div>
