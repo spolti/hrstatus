@@ -47,7 +47,7 @@
 													Verificação Completa </a></li>
 
 											<li><a
-												href="<c:url value='/home/startVerification/notFull' />">
+												href="<c:url value='/database/startDataBaseVerification/notFullDBVerification' />">
 													Verificação Não Completa </a></li>
 
 										</ul>
