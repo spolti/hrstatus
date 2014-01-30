@@ -9,6 +9,5 @@ public class UserInfo {
 		Object  LoggedObjectUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
 		return LoggedUsername;
-	}
-
+	}	
 }
