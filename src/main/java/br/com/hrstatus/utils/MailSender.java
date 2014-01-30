@@ -16,11 +16,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package br.com.hrstatus.utils;
 
 /*
  * @author spolti
  */
+
+import java.io.UnsupportedEncodingException;
 
 import javax.mail.Message;
 import javax.mail.Session;
@@ -31,47 +34,65 @@ import javax.naming.InitialContext;
 
 import org.apache.log4j.Logger;
 
-public class MailSender{
+public class MailSender {
 
-	//public Configuration configurationDAO;
+	GetServerIPAddress getIP = new GetServerIPAddress();
 
-	public void Sender(String mailSender, String Subject, String dests[], String jndiMail) {
-	
+	public void Sender(String mailSender, String Subject, String dests[],
+			String jndiMail) {
+
 		try {
-	
-			InitialContext ic = new InitialContext(); 
+
+			InitialContext ic = new InitialContext();
 			Session session = (Session) ic.lookup(jndiMail);
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(mailSender));
 			InternetAddress to[] = new InternetAddress[dests.length];
-			for(int i = 0; i < dests.length; i++){
+			for (int i = 0; i < dests.length; i++) {
 				to[i] = new InternetAddress(dests[i]);
 			}
 			message.setRecipients(Message.RecipientType.TO, to);
 			message.setSubject(Subject);
 			message.setSentDate(new java.util.Date());
 
-			GetServerIPAddress getIP = new GetServerIPAddress();
-
-			message.setContent ("<h1>Olá, alguns servidores ainda estão com a data/hora desatualizados.  " +
-					"\nAcesse o link abaixo para maiores detalhes:</h1> " +
-					"<a href=\"http://"+getIP.returnIP()+"/hs/reports/reportServersNOK\">Relatório</a>", "text/html");
-
-			Transport.send(message);
+			String msg ="<html>"
+					+ "<body>"
+					+ "<div style='text-align:center; width: 100%;'>"
+					+ "<div style='width: 700px; margin: 0 auto;'>"
+					+ "<a href='http://"+getIP.returnIP() + "/hs/home'><img src='http://"+getIP.returnIP()+"/hs/show/emailHeader/up' height='125' width='700'/></a><br>"
+					+ "<br><br><h2>Olá, alguns servidores ainda estão com a data/hora desatualizados.  "
+					+ "\nAcesse o link abaixo para maiores detalhes:"
+					+ "<a href=\"http://" + getIP.returnIP()
+					+ "/hs/reports/reportServersNOK\"> Relatório</a>"
+					+ "</h1><br><br><a href='http://"
+					+ getIP.returnIP()
+					+ "/hs/home'><img src='http://"
+					+ getIP.returnIP()
+					+ "/hs/show/emailHeader/down' height='125' width='700'/></a>"
+					+ "</div>" + "</div>" + "</body>" + "</html>";
 			
-			Logger.getLogger(getClass()).info("----> Email enviado.");
-		
-			
+			Logger.getLogger(getClass()).debug(msg);
+			message.setContent(msg,	"text/html; charset=UTF-8");
+
+			try {
+				Transport.send(message);
+				Logger.getLogger(getClass()).info("----> Email enviado.");
+	
+			}catch(Exception e){
+				Logger.getLogger(getClass()).error("----> Email não enviado.");
+				Logger.getLogger(getClass()).error(e);
+			}
 		} catch (Exception e) {
 			Logger.getLogger(getClass()).error(e);
 		}
 	}
-	
-	public void sendNewPass(String mailSender, String dest, String jndiMail, String pass){
-	
+
+	public void sendNewPass(String mailSender, String dest, String jndiMail,
+			String pass, String username) {
+
 		try {
-			
-			InitialContext ic = new InitialContext(); 
+
+			InitialContext ic = new InitialContext();
 			Session session = (Session) ic.lookup(jndiMail);
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(mailSender));
@@ -79,23 +100,55 @@ public class MailSender{
 			message.setRecipient(Message.RecipientType.TO, to);
 			message.setSubject("NO REPLY - Recuperação de Senha HR status");
 			message.setSentDate(new java.util.Date());
-			
-			message.setContent ("Nova senha: " + pass , "text/html");
 
-			Transport.send(message);
-			
-			Logger.getLogger(getClass()).info("----> Email enviado.");
-			
+			String msg = "<html>"
+					+ "<body>"
+					+ "<div style='text-align:center; width: 100%;'>"
+					+ "<div style='width: 700px; margin: 0 auto;'>"
+					+ "<a href='http://"
+					+ getIP.returnIP()
+					+ "/hs/home'><img src='http://"
+					+ getIP.returnIP()
+					+ "/hs/show/emailHeader/up' height='125' width='700'/></a><br>"
+					+ "<h2><br><p align='left' style='width:630px; margin: 0 auto;'>Olá <a style='color: blue;'>"
+					+ username
+					+ "</a><br> Sua nova é senha: <a style='color: blue;'>"
+					+ pass
+					+ "</a><br>"
+					+ " Para acesso utilize a url: <br><a href='http://"
+					+ getIP.returnIP()
+					+ "/hs/login'> HrStatus </p></h2>"
+					+ "<br><a href='http://"
+					+ getIP.returnIP()
+					+ "/hs/home'><img src='http://"
+					+ getIP.returnIP()
+					+ "/hs/show/emailHeader/down' height='125' width='700'/></a>"
+					+ "</div>" + "</div>" + "</body>" + "</html>";
+
+			Logger.getLogger(getClass()).debug(msg);
+			message.setContent(msg, "text/html; charset=UTF-8");
+
+			try {
+				Transport.send(message);
+				Logger.getLogger(getClass()).info("----> Email enviado.");
+
+			} catch (Exception e) {
+				Logger.getLogger(getClass()).error("----> Email não enviado.");
+				Logger.getLogger(getClass()).error(e);
+			}
+
 		} catch (Exception e) {
 			Logger.getLogger(getClass()).error(e);
 		}
 	}
-	
-	public void sendCreatUserInfo(String mailSender, String dest, String jndiMail, String name, String username, String pass){
-		
+
+	public void sendCreatUserInfo(String mailSender, String dest,
+			String jndiMail, String name, String username, String pass)
+			throws UnsupportedEncodingException {
+
 		try {
-			
-			InitialContext ic = new InitialContext(); 
+
+			InitialContext ic = new InitialContext();
 			Session session = (Session) ic.lookup(jndiMail);
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(mailSender));
@@ -103,22 +156,51 @@ public class MailSender{
 			message.setRecipient(Message.RecipientType.TO, to);
 			message.setSubject("NO REPLY - Criação de usuário HR status");
 			message.setSentDate(new java.util.Date());
-			
-			GetServerIPAddress getIP = new GetServerIPAddress();
-			
-			message.setContent("Olá, " + name + " seu usuário foi criado com sucesso no sistema HrStatus\n" +
-					" Seus dados para acesso são:\n" +
-					" 		Usuário: " + username + "\n" +
-					"       Senha: " + pass + "\n" + 
-					" Para acesso utilize a url: http://"+getIP.returnIP()+"/hs/login", "text/html");
 
-			Transport.send(message);
-			
-			Logger.getLogger(getClass()).info("----> Email enviado.");
-			
+			String msg = "<html>" + "<body>"
+					+ "<div style='text-align:center; width: 100%;'>"
+					+ "<div style='width: 700px; margin: 0 auto;'>"
+					+ "<a href='http://"
+					+ getIP.returnIP()
+					+ "/hs/home'><img src='http://"
+					+ getIP.returnIP()
+					+ "/hs/show/emailHeader/up' height='125' width='700'/></a><br>"
+					+ "<h2><br>Olá <a style='color: blue;'>"
+					+ name
+					+ "</a>, seu usuário foi criado com sucesso no sistema HrStatus"
+					+ " Seus dados para acesso são:<br><br> "
+					+ "<p align='left' style='width:630px; margin: 0 auto;'>Usuário: "
+					+ username
+					+ "<br>"
+					+ "Senha: "
+					+ pass
+					+ "</p><br>"
+					+ " Para acesso utilize a url: <br><a href='http://"
+					+ getIP.returnIP()
+					+ "/hs/login'> HrStatus </a></h2>"
+					+ "<br><a href='http://"
+					+ getIP.returnIP()
+					+ "/hs/home'><img src='http://"
+					+ getIP.returnIP()
+					+ "/hs/show/emailHeader/down' height='125' width='700'/></a>"
+					+ "</div>" + "</div>" + "</body>" + "</html>";
+
+			Logger.getLogger(getClass()).debug(msg);
+			message.setContent(msg, "text/html; charset=UTF-8");
+
+			try {
+				Transport.send(message);
+				Logger.getLogger(getClass()).info("----> Email enviado.");
+
+			} catch (Exception e) {
+				Logger.getLogger(getClass()).error("----> Email não enviado.");
+				Logger.getLogger(getClass()).error(e);
+			}
+
 		} catch (Exception e) {
 			Logger.getLogger(getClass()).error(e);
+
 		}
 	}
-	
+
 }
