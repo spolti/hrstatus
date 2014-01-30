@@ -131,7 +131,7 @@ public class GemPassController {
 					user.setFirstLogin(true);
 					this.userDAO.updateUser(user);
 					this.userDAO.setExpirePasswordTime(passExpire);
-					send.sendNewPass(mailSender, dest, jndiMail, password);
+					send.sendNewPass(mailSender, dest, jndiMail, password, username);
 
 					result.redirectTo(LoginController.class)
 							.login("Se o usuário for válido uma nova senha será enviada para seu e-mail.");
