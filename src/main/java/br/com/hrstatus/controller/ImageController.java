@@ -21,6 +21,11 @@ package br.com.hrstatus.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
 
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Post;
@@ -42,13 +47,16 @@ public class ImageController {
 	private Result result;
 	private Validator validator;
 	private final Images images;
+	private HttpServletRequest request;
+	
 	UserInfo userInfo = new UserInfo();
 	
-	public ImageController(Result result, Validator validator, Images images) {
+	public ImageController(Result result, Validator validator, Images images,HttpServletRequest request) {
 		
 		this.result = result;
 		this.validator = validator;
 		this.images = images;
+		this.request = request;
 	}
 	
 	@Post("/uploud/logo/imagem")
@@ -91,4 +99,23 @@ public class ImageController {
 		}
 	}
 	
+	@Get("/show/emailHeader/{local}")
+	public File emailHeader (String local) throws UnsupportedEncodingException{
+		
+		String UPfileName = request.getRealPath("img/up.jpg");
+		String DOWNfileName = request.getRealPath("img/down.jpg");
+
+		
+		Logger.getLogger(getClass()).debug("FILE:  " + UPfileName);
+		
+		if (local.equals("up")){
+			File file = new File(UPfileName);
+			return file;
+		} else if (local.equals("down")){
+			File file = new File(DOWNfileName);
+			return file;
+		}
+		
+		return null;
+	}
 }
