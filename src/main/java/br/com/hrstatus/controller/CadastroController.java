@@ -24,6 +24,7 @@ package br.com.hrstatus.controller;
  */
 
 import java.io.UnsupportedEncodingException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -356,7 +357,7 @@ public class CadastroController {
 
 	@SuppressWarnings("static-access")
 	@Post("/registerUser")
-	public void registerUser(Users user) throws UnsupportedEncodingException {
+	public void registerUser(Users user) throws UnsupportedEncodingException, UnknownHostException {
 		// inserindo html tittle no result
 		result.include("title", "Registrar Usuário");
 

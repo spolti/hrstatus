@@ -26,6 +26,7 @@ package br.com.hrstatus.scheduler;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.UnknownHostException;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -50,7 +51,7 @@ public class Scheduler {
 	}
 
 	@Scheduled(cron = "${br.com.hrstatus.scheduler.MailScheduler.cron}")
-	public void sendMail() {
+	public void sendMail() throws UnknownHostException {
 		Logger.getLogger(getClass())
 				.debug("[ System ] Invoking sendMail at " + new Date());
 
