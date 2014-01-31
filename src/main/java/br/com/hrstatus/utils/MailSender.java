@@ -24,6 +24,7 @@ package br.com.hrstatus.utils;
  */
 
 import java.io.UnsupportedEncodingException;
+import java.net.UnknownHostException;
 
 import javax.mail.Message;
 import javax.mail.Session;
@@ -39,7 +40,9 @@ public class MailSender {
 	GetServerIPAddress getIP = new GetServerIPAddress();
 
 	public void Sender(String mailSender, String Subject, String dests[],
-			String jndiMail) {
+			String jndiMail) throws UnknownHostException {
+		
+		String url = (""+ getIP.returnIP());
 
 		try {
 
@@ -59,15 +62,15 @@ public class MailSender {
 					+ "<body>"
 					+ "<div style='text-align:center; width: 100%;'>"
 					+ "<div style='width: 700px; margin: 0 auto;'>"
-					+ "<a href='http://"+getIP.returnIP() + "/hs/home'><img src='http://"+getIP.returnIP()+"/hs/show/emailHeader/up' height='125' width='700'/></a><br>"
+					+ "<a href='http://"+ url + "/hs/home'><img src='http://"+ url +"/hs/show/emailHeader/up' height='125' width='700'/></a><br>"
 					+ "<br><br><h2>Olá, alguns servidores ainda estão com a data/hora desatualizados.  "
 					+ "\nAcesse o link abaixo para maiores detalhes:"
-					+ "<a href=\"http://" + getIP.returnIP()
+					+ "<a href=\"http://" + url
 					+ "/hs/reports/reportServersNOK\"> Relatório</a>"
 					+ "</h1><br><br><a href='http://"
-					+ getIP.returnIP()
+					+ url
 					+ "/hs/home'><img src='http://"
-					+ getIP.returnIP()
+					+ url
 					+ "/hs/show/emailHeader/down' height='125' width='700'/></a>"
 					+ "</div>" + "</div>" + "</body>" + "</html>";
 			
@@ -88,8 +91,10 @@ public class MailSender {
 	}
 
 	public void sendNewPass(String mailSender, String dest, String jndiMail,
-			String pass, String username) {
+			String pass, String username) throws UnknownHostException {
 
+		String url = (""+ getIP.returnIP());
+		
 		try {
 
 			InitialContext ic = new InitialContext();
@@ -106,9 +111,9 @@ public class MailSender {
 					+ "<div style='text-align:center; width: 100%;'>"
 					+ "<div style='width: 700px; margin: 0 auto;'>"
 					+ "<a href='http://"
-					+ getIP.returnIP()
+					+ url
 					+ "/hs/home'><img src='http://"
-					+ getIP.returnIP()
+					+ url
 					+ "/hs/show/emailHeader/up' height='125' width='700'/></a><br>"
 					+ "<h2><br><p align='left' style='width:630px; margin: 0 auto;'>Olá <a style='color: blue;'>"
 					+ username
@@ -116,12 +121,12 @@ public class MailSender {
 					+ pass
 					+ "</a><br>"
 					+ " Para acesso utilize a url: <br><a href='http://"
-					+ getIP.returnIP()
+					+ url
 					+ "/hs/login'> HrStatus </p></h2>"
 					+ "<br><a href='http://"
-					+ getIP.returnIP()
+					+ url
 					+ "/hs/home'><img src='http://"
-					+ getIP.returnIP()
+					+ url
 					+ "/hs/show/emailHeader/down' height='125' width='700'/></a>"
 					+ "</div>" + "</div>" + "</body>" + "</html>";
 
@@ -144,8 +149,10 @@ public class MailSender {
 
 	public void sendCreatUserInfo(String mailSender, String dest,
 			String jndiMail, String name, String username, String pass)
-			throws UnsupportedEncodingException {
+			throws UnsupportedEncodingException, UnknownHostException {
 
+		String url = (""+ getIP.returnIP());
+		
 		try {
 
 			InitialContext ic = new InitialContext();
@@ -161,9 +168,9 @@ public class MailSender {
 					+ "<div style='text-align:center; width: 100%;'>"
 					+ "<div style='width: 700px; margin: 0 auto;'>"
 					+ "<a href='http://"
-					+ getIP.returnIP()
+					+ url
 					+ "/hs/home'><img src='http://"
-					+ getIP.returnIP()
+					+ url
 					+ "/hs/show/emailHeader/up' height='125' width='700'/></a><br>"
 					+ "<h2><br>Olá <a style='color: blue;'>"
 					+ name
@@ -176,12 +183,12 @@ public class MailSender {
 					+ pass
 					+ "</p><br>"
 					+ " Para acesso utilize a url: <br><a href='http://"
-					+ getIP.returnIP()
+					+ url
 					+ "/hs/login'> HrStatus </a></h2>"
 					+ "<br><a href='http://"
-					+ getIP.returnIP()
+					+ url
 					+ "/hs/home'><img src='http://"
-					+ getIP.returnIP()
+					+ url
 					+ "/hs/show/emailHeader/down' height='125' width='700'/></a>"
 					+ "</div>" + "</div>" + "</body>" + "</html>";
 
