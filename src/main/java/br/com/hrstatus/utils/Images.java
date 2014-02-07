@@ -21,7 +21,6 @@ package br.com.hrstatus.utils;
 
 /*
  *  @author spolti
- * caelum vraptor
  */
 
 import java.awt.Graphics2D;
@@ -48,9 +47,10 @@ public class Images {
 	private static final int IMG_HEIGHT_HOME = 300;
 
 	public Images() throws IOException {
+
 		String caminhoImagens = (System.getProperty("jboss.server.base.dir") + "/images");
 		pastaImages = new File(caminhoImagens);
-		Logger.getLogger(Images.class).info(pastaImages);
+		Logger.getLogger(Images.class).debug("Local Imagens: " + pastaImages);
 
 		if (pastaImages.isDirectory()) {
 			Logger.getLogger(Images.class).debug(
@@ -74,48 +74,75 @@ public class Images {
 		}
 	}
 
-	public void delete(){
-		
+	public void delete() {
+
 		Logger.getLogger(Images.class).info("Removendo imagem de logo.");
 		File logo = new File(pastaImages, "logo.imagem");
 		File logo_home = new File(pastaImages, "logo_login.imagem");
 		File logo_settings = new File(pastaImages, "logo_resized.imagem");
-		
+
 		logo.delete();
 		logo_home.delete();
 		logo_settings.delete();
-		
+
 	}
-	
+
 	public File show(String VizualizationType) throws IOException {
 
 		if (VizualizationType.equals("settings")) {
 			// resized image
-			BufferedImage originalImage = ImageIO.read(new File(pastaImages+ "/logo.imagem"));
-			int type = originalImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
-			BufferedImage resizeImagePng = resizeImage(originalImage, type, "settings");
-			ImageIO.write(resizeImagePng, "png", new File(pastaImages+ "/logo_resized.imagem"));
-			
-			Logger.getLogger(Images.class).debug("Resizing oringinal Image to previous vizualization.");
-			
-			return new File(pastaImages+"/logo_resized.imagem");
-			
+			BufferedImage originalImage = ImageIO.read(new File(pastaImages
+					+ "/logo.imagem"));
+			int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB
+					: originalImage.getType();
+			BufferedImage resizeImagePng = resizeImage(originalImage, type,
+					"settings");
+			ImageIO.write(resizeImagePng, "png", new File(pastaImages
+					+ "/logo_resized.imagem"));
+
+			Logger.getLogger(Images.class).debug(
+					"Resizing oringinal Image to previous vizualization.");
+
+			return new File(pastaImages + "/logo_resized.imagem");
+
 		} else {
-			Logger.getLogger(Images.class).debug("Resizing oringinal Image to login page vizualization.");
-			BufferedImage originalImage = ImageIO.read(new File(pastaImages+ "/logo.imagem"));
-			int type = originalImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
-			BufferedImage resizeImagePng = resizeImage(originalImage, type, "home");
-			ImageIO.write(resizeImagePng, "png", new File(pastaImages+ "/logo_login.imagem"));
+			Logger.getLogger(Images.class).debug(
+					"Resizing original Image to login page vizualization.");
+			BufferedImage originalImage = ImageIO.read(new File(pastaImages
+					+ "/logo.imagem"));
+			int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB
+					: originalImage.getType();
+			BufferedImage resizeImagePng = resizeImage(originalImage, type,
+					"home");
+			ImageIO.write(resizeImagePng, "png", new File(pastaImages
+					+ "/logo_login.imagem"));
 			return new File(pastaImages + "/logo_login.imagem");
 		}
 
 	}
 
-	private static BufferedImage resizeImage(BufferedImage originalImage, int type, String target) {
-		BufferedImage resizedImage = new BufferedImage(IMG_WIDTH_SETTINGS, IMG_HEIGHT_SETTINGS,type);
-		Graphics2D g = resizedImage.createGraphics();
-		g.drawImage(originalImage, 0, 0, IMG_WIDTH_SETTINGS, IMG_HEIGHT_SETTINGS, null);
-		g.dispose();
-		return resizedImage;
+	private static BufferedImage resizeImage(BufferedImage originalImage,
+			int type, String target) {
+
+		if (target.equals("settings")) {
+			BufferedImage resizedImage = new BufferedImage(IMG_WIDTH_SETTINGS,
+					IMG_HEIGHT_SETTINGS, type);
+			Graphics2D g = resizedImage.createGraphics();
+			g.drawImage(originalImage, 0, 0, IMG_WIDTH_SETTINGS,
+					IMG_HEIGHT_SETTINGS, null);
+			g.dispose();
+			return resizedImage;
+			
+		} else if (target.equals("home")) {
+			BufferedImage resizedImage = new BufferedImage(IMG_WIDTH_HOME,
+					IMG_HEIGHT_HOME, type);
+			Graphics2D g = resizedImage.createGraphics();
+			g.drawImage(originalImage, 0, 0, IMG_WIDTH_HOME,
+					IMG_HEIGHT_HOME, null);
+			g.dispose();
+			return resizedImage;
+			
+		} else return null;
+						
 	}
 }

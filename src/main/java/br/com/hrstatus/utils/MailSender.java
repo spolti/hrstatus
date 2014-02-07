@@ -41,8 +41,8 @@ public class MailSender {
 
 	public void Sender(String mailSender, String Subject, String dests[],
 			String jndiMail) throws UnknownHostException {
-		
-		String url = (""+ getIP.returnIP());
+
+		String url = ("" + getIP.returnIP());
 
 		try {
 
@@ -58,14 +58,19 @@ public class MailSender {
 			message.setSubject(Subject);
 			message.setSentDate(new java.util.Date());
 
-			String msg ="<html>"
+			String msg = "<html>"
 					+ "<body>"
 					+ "<div style='text-align:center; width: 100%;'>"
 					+ "<div style='width: 700px; margin: 0 auto;'>"
-					+ "<a href='http://"+ url + "/hs/home'><img src='http://"+ url +"/hs/show/emailHeader/up' height='125' width='700'/></a><br>"
+					+ "<a href='http://"
+					+ url
+					+ "/hs/home'><img src='http://"
+					+ url
+					+ "/hs/show/emailHeader/up' height='125' width='700'/></a><br>"
 					+ "<br><br><h2>Olá, alguns servidores ainda estão com a data/hora desatualizados.  "
 					+ "\nAcesse o link abaixo para maiores detalhes:"
-					+ "<a href=\"http://" + url
+					+ "<a href=\"http://"
+					+ url
 					+ "/hs/reports/reportServersNOK\"> Relatório</a>"
 					+ "</h1><br><br><a href='http://"
 					+ url
@@ -73,15 +78,15 @@ public class MailSender {
 					+ url
 					+ "/hs/show/emailHeader/down' height='125' width='700'/></a>"
 					+ "</div>" + "</div>" + "</body>" + "</html>";
-			
+
 			Logger.getLogger(getClass()).debug(msg);
-			message.setContent(msg,	"text/html; charset=UTF-8");
+			message.setContent(msg, "text/html; charset=UTF-8");
 
 			try {
 				Transport.send(message);
 				Logger.getLogger(getClass()).info("----> Email enviado.");
-	
-			}catch(Exception e){
+
+			} catch (Exception e) {
 				Logger.getLogger(getClass()).error("----> Email não enviado.");
 				Logger.getLogger(getClass()).error(e);
 			}
@@ -93,8 +98,8 @@ public class MailSender {
 	public void sendNewPass(String mailSender, String dest, String jndiMail,
 			String pass, String username) throws UnknownHostException {
 
-		String url = (""+ getIP.returnIP());
-		
+		String url = ("" + getIP.returnIP());
+
 		try {
 
 			InitialContext ic = new InitialContext();
@@ -151,8 +156,8 @@ public class MailSender {
 			String jndiMail, String name, String username, String pass)
 			throws UnsupportedEncodingException, UnknownHostException {
 
-		String url = (""+ getIP.returnIP());
-		
+		String url = ("" + getIP.returnIP());
+
 		try {
 
 			InitialContext ic = new InitialContext();
