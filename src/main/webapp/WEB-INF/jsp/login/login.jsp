@@ -40,7 +40,6 @@ body {
 .form-signin {
 	max-width: 300px;
 	padding: 19px 29px 29px;
-	margin: 0 auto 20px;
 	background-color: #fff;
 	border: 1px solid #e5e5e5;
 	-webkit-border-radius: 5px;
@@ -81,13 +80,13 @@ body {
 		</div>
 	</c:if>
 
-	<table>
+	<table style="margin: 0px; width: 100%;">
 		<tr>
-			<td align="center">
-			<img src="<c:url value="/show/logo/imagem/home"/>" /></td>
+			<td align="center" style="width: 40%;">
+				<img src="<c:url value="/show/logo/imagem/home"/>" /></td>
 
-			<td align="left">
-				<div class="container">
+			<td align="left" style="position: absolute;">
+				<div>
 
 					<form class="form-signin" name="f"
 						action="<c:url value='j_spring_security_check'/>" method="POST">
@@ -145,13 +144,12 @@ body {
 				</form>
 
 				<div id="footer">
-					<div class="container">
+					<div>
 						<p align="center" class="muted credit">Versão: ${version }</p>
 					</div>
 				</div>
 			</td>
 		<tr>
 	</table>
-	
 </body>
 </html>
