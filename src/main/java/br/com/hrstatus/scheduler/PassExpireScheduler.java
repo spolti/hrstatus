@@ -57,7 +57,6 @@ public class PassExpireScheduler {
 		List<PassExpire> list = this.userDAO.getExpireTime();
 		
 		DateUtils time = new DateUtils();
-		//Date timeNow = time.dateConverter(time.getTime(), "LINUX",null);
 		DateParser parse = new DateParser();
 		Date timeNow = parse.parser(time.getTime());
 				

@@ -24,9 +24,9 @@ package br.com.hrstatus.utils;
  */
 
 
-import java.io.IOException;  
-import java.io.InputStream;  
-import java.util.Properties;  
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class PropertiesLoader {
 	

@@ -59,4 +59,6 @@ public interface UsersInterface {
 	public String getRole(String user);
 	
 	public boolean getFirstLogin(String username);
+	
+	public void lastActivityTimeStamp(String lastActivityTimeStamp);
 }

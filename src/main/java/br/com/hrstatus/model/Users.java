@@ -58,6 +58,7 @@ public class Users{
 	
 	@Column(name = "lastLogin")
 	private String lastLogin;
+
 	
 	public String getLastLogin() {
 		return lastLogin;
@@ -136,5 +137,6 @@ public class Users{
 
 	public void setFirstLogin(boolean firstLogin) {
 		this.firstLogin = firstLogin;
-	}	
+	}
+
 }
