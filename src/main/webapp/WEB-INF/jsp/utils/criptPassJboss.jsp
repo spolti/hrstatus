@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
   <head>
     <meta charset="utf-8">
@@ -101,7 +101,10 @@
         </div>
         <p class="lead">Senha: ${EncriptedPassword}</p>
         
-        <button class="btn btn-primary" type="button" onclick="history.go(-1)">Voltar</button>
+        <form method="GET" action="<c:url value='/home'/>">
+        	<button align="right" input type="submit"
+			value="Home" class="btn btn-primary">Home</button>
+        </form>
       </div>
 
       <div id="push"></div>
@@ -109,7 +112,7 @@
 
     <div id="footer">
       <div class="container">
-        <p class="muted credit"> <a href="http://www.ohsnap.com.br/hrstatus">Hrstatus</a> - 2012,  Todos os Direitos Reservados.</p>
+        <p class="muted credit"> <a href="http://www.hrstatus.com.br/hrstatus">Hrstatus</a> - 2012,  Todos os Direitos Reservados.</p>
       </div>
     </div>
 

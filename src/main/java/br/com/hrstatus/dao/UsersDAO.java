@@ -193,4 +193,8 @@ public class UsersDAO implements UsersInterface {
 		session().save(timeStamp);
 	}
 	
+	public void lastActivityTimeStamp(String lastActivityTimeStamp){
+		Logger.getLogger(getClass()).debug("saveORupdateUser() -> Saving or Update User.");
+		session().save(lastActivityTimeStamp);
+	}
 }

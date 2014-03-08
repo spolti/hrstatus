@@ -34,11 +34,6 @@ import com.jcraft.jsch.Session;
 
 public class GetDateUnix {
 
-//	public static void main(String[] args){
-//		GetDateUnix li = new GetDateUnix();
-//		/System.out.println(li.exec("spolti","10.11.135.151","Ctbc@2012",22));
-		
-//	}
 	
 	public static String exec (String user, String host, String password, int port) throws JSchException, IOException{
 	
@@ -91,13 +86,5 @@ public class GetDateUnix {
       
 		return s.replaceAll("\n", "");
 	 }
-	
-//	public static void main(String args[]) throws IOException, JSchException {
-//		GetDateUnix get = new GetDateUnix();
-//
-//		String tmp = get.exec("23423423", "12123", "123123123", 22);
-//		DateParser parse = new DateParser();
-//		Date data = parse.parser(tmp);
-//		System.out.println(tmp);
-//	}
+
 }

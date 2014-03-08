@@ -30,33 +30,72 @@ import java.io.InputStreamReader;
 import org.apache.log4j.Logger;
 
 public class GetDateWindows {
-	public static String Exec(String ip) throws IOException {
+
+	public static String Exec(String ip, String parameter) throws IOException {
 
 		Process p = null;
 		String out = null;
 		String s = null;
-		try{
-			p = Runtime.getRuntime().exec("net time -I " + ip);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					p.getInputStream()));
-			while ((s = reader.readLine()) != null)
-				out += s;
-			
-			//i dont know why, but the net time command returns null before the date, like this: nullTer Mar ......
-			if (out.startsWith("n")) {
-				String temp = out.substring(4, out.length());
-				out = temp;
+		try {
+
+			if (parameter.equals("I")) {
+				Logger.getLogger(GetDateWindows.class).debug(
+						"Trying parameter -I");
+				//System.out.println("Trying parameter -I");
+				p = Runtime.getRuntime().exec("net time -I " + ip);
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(p.getInputStream()));
+				while ((s = reader.readLine()) != null) {
+					out += s;
+				}
+
+				// i dont know why, but the net time command returns null before
+				// the date, like this: nullTer Mar ......
+				if (out.startsWith("n")) {
+					String temp = out.substring(4, out.length());
+					out = temp;
+				}
+
+			} else if (parameter.equals("S")) {
+				Logger.getLogger(GetDateWindows.class).debug(
+						"Trying parameter -S");
+				//System.out.println("Trying parameter -S");
+				p = Runtime.getRuntime().exec("net time -S " + ip);
+				if (p.equals(null)) {
+					System.out.println("To nulooo");
+				}
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(p.getInputStream()));
+				while ((s = reader.readLine()) != null) {
+					out += s;
+				}
+
+				// i dont know why, but the net time command returns null before
+				// the date, like this: nullTer Mar ......
+				if (out.startsWith("n")) {
+					String temp = out.substring(4, out.length());
+					out = temp;
+				}
+	
 			}
+			
 			return out;
-		}catch(Exception ex){
+			
+		} catch (Exception ex) {
 			Logger.getLogger(GetDateWindows.class).error(ex);
 			return "";
 		}
 
 	}
-//	public static void main (String args[]) throws IOException{
+
+//	public static void main(String args[]) throws IOException {
 //		GetDateWindows get = new GetDateWindows();
-//		
-//		System.out.println(get.Exec("10.99.1.31"));
+//
+//		//System.out.println(get.Exec("10.1.0.108", "I"));
+//		if (get.Exec("10.1.0.108", "I") == null){
+//			System.out.println("paremtro -I retorno nulo");
+//			System.out.println("Tentando parametro -S");
+//			System.out.println(get.Exec("10.1.0.108", "S"));
+//		}
 //	}
 }

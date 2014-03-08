@@ -131,8 +131,11 @@ public class VerifySingleServer {
 			servidores.setServerTime(dt.getTime());
 			servidores.setLastCheck(servidores.getServerTime());
 			try {
-				String dateSTR = GetDateWindows.Exec(servidores
-						.getIp());
+				String dateSTR = GetDateWindows.Exec(servidores.getIp(),"I");
+				if (dateSTR == null || dateSTR == ""){
+					Logger.getLogger(getClass()).debug("Parametro net time -I retornou nulo, tentando o parametro S");
+					dateSTR = GetDateWindows.Exec(servidores.getIp(),"S");
+				}
 				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
 				servidores.setClientTime(dateSTR);
 				// Calculating time difference

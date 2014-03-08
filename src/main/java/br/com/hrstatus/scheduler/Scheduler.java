@@ -36,7 +36,10 @@ import org.springframework.stereotype.Service;
 
 import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.dao.Iteracoes;
+import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.model.Configurations;
+import br.com.hrstatus.utils.DateUtils;
+import br.com.hrstatus.utils.GetServerIPAddress;
 import br.com.hrstatus.utils.MailSender;
 
 @Service
@@ -46,7 +49,12 @@ public class Scheduler {
 	private Iteracoes iteracoesDAO;
 	@Autowired
 	private Configuration configurationDAO;
+	@Autowired
+	private UsersInterface userDAO;
+	DateUtils dateUtils = new DateUtils();
 
+	GetServerIPAddress getIP = new GetServerIPAddress();
+	
 	public Scheduler() {
 	}
 
@@ -118,5 +126,4 @@ public class Scheduler {
 			}
 		}
 	}
-
 }

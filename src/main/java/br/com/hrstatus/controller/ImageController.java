@@ -91,14 +91,20 @@ public class ImageController {
 	@Get("/show/logo/imagem/{type}")
 	public File download(String type) throws IOException {
 		
-	  
-		if (type.equals("settings")){
-			return images.show("settings");
-		} else {
-			return images.show("home");
-		}
+	  try{
+			if (type.equals("settings") && !images.show("settings").equals(null)){
+				return images.show("settings");
+			} else if (type.equals("home") && !images.show("home").equals(null)){
+				return images.show("home");
+			}
+	  }catch (javax.imageio.IIOException ex){
+		  Logger.getLogger(getClass()).debug("Imagem não encontrada ou ainda não configurada");
+		
+	  }
+	  return null;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Get("/show/emailHeader/{local}")
 	public File emailHeader (String local) throws UnsupportedEncodingException{
 		

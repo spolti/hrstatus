@@ -49,7 +49,6 @@ import br.com.hrstatus.dao.LockIntrface;
 import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.model.Lock;
 import br.com.hrstatus.model.Servidores;
-import br.com.hrstatus.model.Users;
 import br.com.hrstatus.security.Crypto;
 import br.com.hrstatus.utils.DateUtils;
 import br.com.hrstatus.utils.PropertiesLoaderImpl;
@@ -68,6 +67,7 @@ public class HomeController {
 	private UsersInterface userDAO;
 	private VerifySingleServer runVerify;
 	UserInfo userInfo = new UserInfo();
+	DateUtils getTime = new DateUtils();
 
 	public HomeController(Result result, Iteracoes iteracoesDAO,
 			Configuration configurationDAO, Validator validator,
@@ -84,7 +84,7 @@ public class HomeController {
 
 	@Get("/home")
 	public void home(String verification) {
-
+		// Users user = this.userDAO.getUserByID(userInfo.getLoggedUsername());
 		// inserindo html title no result
 		result.include("title", "Hr Status Home");
 
@@ -92,19 +92,6 @@ public class HomeController {
 				"[ " + userInfo.getLoggedUsername() + " ] URI Called: /home");
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
-		// result.include("class","activeServer");
-		// ///////////////////////////////////////
-
-		// inserindo no banco timepstamp do login.
-
-		DateUtils dt = new DateUtils();
-		Users user = this.userDAO.getUserByID(userInfo.getLoggedUsername());
-		String lastLoginTime = dt.getTime();
-		user.setLastLogin(lastLoginTime);
-		this.userDAO.updateUser(user);
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername() + " ] Successful login at "
-						+ lastLoginTime);
 
 		// ///////////////////////////////////////////////////////
 		// Verificando se é o primeiro login do usuário após troca de senha ou
@@ -432,8 +419,15 @@ public class HomeController {
 						servidores.setServerTime(dt.getTime());
 						servidores.setLastCheck(servidores.getServerTime());
 						try {
-							String dateSTR = GetDateWindows.Exec(servidores
-									.getIp());
+
+							String dateSTR = GetDateWindows.Exec(
+									servidores.getIp(), "I");
+							if (dateSTR == null || dateSTR == "") {
+								Logger.getLogger(getClass())
+										.debug("Parametro net time -I retornou nulo, tentando o parametro S");
+								dateSTR = GetDateWindows.Exec(
+										servidores.getIp(), "S");
+							}
 							Logger.getLogger(getClass()).debug(
 									"[ " + userInfo.getLoggedUsername()
 											+ " ] Hora obtida do servidor "
@@ -796,8 +790,14 @@ public class HomeController {
 						servidores.setServerTime(dt.getTime());
 						servidores.setLastCheck(servidores.getServerTime());
 						try {
-							String dateSTR = GetDateWindows.Exec(servidores
-									.getIp());
+							String dateSTR = GetDateWindows.Exec(
+									servidores.getIp(), "I");
+							if (dateSTR == null || dateSTR == "") {
+								Logger.getLogger(getClass())
+										.debug("Parametro net time -I retornou nulo, tentando o parametro S");
+								dateSTR = GetDateWindows.Exec(
+										servidores.getIp(), "S");
+							}
 							Logger.getLogger(getClass()).debug(
 									"[ " + userInfo.getLoggedUsername()
 											+ " ] Hora obtida do servidor "
@@ -940,18 +940,22 @@ public class HomeController {
 						+ " ] URI Called: /singleServerToVerify/" + id);
 		Servidores servidor = this.iteracoesDAO.getServerByID(id);
 
-		try {
-			servidor.setPass(String.valueOf(Crypto.decode(servidor.getPass())));
-		} catch (InvalidKeyException e) {
-			e.printStackTrace();
-		} catch (NoSuchPaddingException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (BadPaddingException e) {
-			e.printStackTrace();
-		} catch (IllegalBlockSizeException e) {
-			e.printStackTrace();
+		if (!servidor.getSO().equals("WINDOWS")) {
+			
+			try {
+				servidor.setPass(String.valueOf(Crypto.decode(servidor
+						.getPass())));
+			} catch (InvalidKeyException e) {
+				e.printStackTrace();
+			} catch (NoSuchPaddingException e) {
+				e.printStackTrace();
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			} catch (BadPaddingException e) {
+				e.printStackTrace();
+			} catch (IllegalBlockSizeException e) {
+				e.printStackTrace();
+			}
 		}
 
 		runVerify.runSingleVerification(servidor);
