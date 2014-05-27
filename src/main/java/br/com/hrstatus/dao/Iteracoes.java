@@ -51,9 +51,13 @@ public interface Iteracoes {
 	
 	public  List<Servidores> listServers();
 	
+	public List<Servidores> listServersVerActive();
+	
 	public List<Servidores> getServersOK();
 	
 	public List<Servidores> getServersNOK();
+	
+	public List<Servidores> getServersNOKVerActive();
 	
 	public int countServersOK();
 	

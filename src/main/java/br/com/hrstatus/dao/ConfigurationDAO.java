@@ -73,6 +73,14 @@ public class ConfigurationDAO implements Configuration {
 		mailFrom.setProjection(proList);
 		return (String) mailFrom.uniqueResult();
 	}
+	
+	public boolean sendNotification() {
+		Criteria sendNotification = session().createCriteria(Configurations.class);
+		ProjectionList proList = Projections.projectionList();
+		proList.add(Projections.property("sendNotification"));
+		sendNotification.setProjection(proList);
+		return (Boolean) sendNotification.uniqueResult();
+	}
 
 	public String getSubject() {
 		Criteria subject = session().createCriteria(Configurations.class);

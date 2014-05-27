@@ -42,4 +42,6 @@ public interface Configuration {
 	public int getDiffirenceSecs();
 	
 	public String getNtpServerAddress();
+	
+	public boolean sendNotification();
 }

@@ -48,6 +48,13 @@
 							</c:forEach>
 						</div>
 					</c:if>
+					<c:if test="${not empty info}">
+						<div class="alert">
+							<button type="button" class="close" data-dismiss="alert">×</button>
+							${info}
+						</div>
+					</c:if>
+					
 					<table class="table table-striped" id="resultTable">
 						<thead>
 							<tr>
@@ -57,6 +64,15 @@
 							</tr>
 						</thead>
 						<tbody>
+
+							<tr class="info">
+								<form method="GET" action="<c:url value='/sendMailtest'/>">
+									<td>Enviar E-Mail de Teste</td>
+									<td>Enviar para: <input type="text" id="rcpt" name="rcpt"></td>
+									<td><button type="submit" class="btn btn-primary"
+											value="Atualizar">Enviar</button></td>
+								</form>
+							</tr>
 							<tr class="info">
 								<td>Diferença de Tempo (segundos)</td>
 								<td>${difference}</td>
@@ -69,6 +85,14 @@
 								<td>${mailFrom}</td>
 								<td><a
 									href="javascript:setParameterForUpdate('${mailFrom}','Editar Parametro Remetente do E-mail','mailFrom');"
+									title="Atualizar campo"> <i class="icon-edit"> </i></a></td>
+							</tr>
+
+							<tr class="info">
+								<td>Ativar Notificação Via e-mail</td>
+								<td>${sendNotification}</td>
+								<td><a
+									href="javascript:setParameterForUpdate('${sendNotification}','Editar Parametro Ativação de Notificação','sendNotification');"
 									title="Atualizar campo"> <i class="icon-edit"> </i></a></td>
 							</tr>
 
@@ -116,19 +140,23 @@
 									<form action="<c:url value="/uploud/logo/imagem"/>"
 										method="POST" enctype="multipart/form-data">
 										<fieldset>
-											<legend><h4>Enviar Logo Tela de Login</h1></legend>
+											<legend>
+												<h4>
+													Enviar Logo Tela de Login
+													</h1>
+											</legend>
 											<input type="file" name="imagem" />
 
 											<button type="submit">Enviar</button>
 										</fieldset>
 									</form>
 								</td>
-								<td>
-									<img src="<c:url value="/show/logo/imagem/settings"/>"/>
+								<td><img src="<c:url value="/show/logo/imagem/settings"/>" />
 								</td>
-								<td>
-									<a href="<c:url value="/delete/logo/imagem"/>" title="Remover Imagem"> <i class="icon-remove-circle"> </i> </a>
-								</td>
+								<td><a href="<c:url value="/delete/logo/imagem"/>"
+									title="Remover Imagem"> <i class="icon-remove-circle">
+									</i>
+								</a></td>
 							</tr>
 						</tbody>
 					</table>
@@ -161,6 +189,5 @@
 			</div>
 		</div>
 	</form>
-
 </body>
 </html>

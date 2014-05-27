@@ -27,11 +27,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 
@@ -213,6 +216,33 @@ public class MailSender {
 			Logger.getLogger(getClass()).error(e);
 
 		}
+	}
+		
+	public String sendTestMail(String mailSender,  String dest,
+			String jndiMail) throws UnknownHostException, NamingException, AddressException, MessagingException {
+
+		InitialContext ic = new InitialContext();
+		Session session = (Session) ic.lookup(jndiMail);
+		Message message = new MimeMessage(session);
+		message.setFrom(new InternetAddress(mailSender));
+		InternetAddress to = new InternetAddress(dest);
+		message.setRecipient(Message.RecipientType.TO, to);
+		message.setSubject("NO REPLY - E-mail de teste");
+		message.setSentDate(new java.util.Date());
+		String msg = "Teste realizado com sucesso.";
+		Logger.getLogger(getClass()).debug(msg);
+		message.setContent(msg, "text/html; charset=UTF-8");
+
+		try {
+			Transport.send(message);
+			Logger.getLogger(getClass()).info("----> Email de teste enviado.");
+			return "----> Email de teste enviado.";
+		} catch (Exception e) {
+			Logger.getLogger(getClass()).error("----> Email de teste não enviado.");
+			Logger.getLogger(getClass()).error(e);
+			return "----> Email de teste não enviado -----> " + e;
+		}
+
 	}
 
 }

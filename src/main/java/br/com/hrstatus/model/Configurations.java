@@ -43,6 +43,9 @@ public class Configurations {
 	
 	@Column(name = "mailFrom")
 	private String mailFrom;
+	
+	@Column(name = "sendNotification")
+	private boolean sendNotification;
 
 	@Column(name = "subject")
 	private String subject;
@@ -107,6 +110,15 @@ public class Configurations {
 		this.mailFrom = mailFrom;
 	}
 
+
+	public boolean isSendNotification() {
+		return sendNotification;
+	}
+
+	public void setSendNotification(boolean sendNotification) {
+		this.sendNotification = sendNotification;
+	}
+	
 	public String getNtpServer() {
 		return ntpServer;
 	}

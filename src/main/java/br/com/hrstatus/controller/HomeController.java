@@ -214,356 +214,405 @@ public class HomeController {
 						.info("[ "
 								+ userInfo.getLoggedUsername()
 								+ " ] O recurso verificationFull não está locado, locando e proseguindo");
-				// locar recurso.
-				lockDAO.insertLock(lockedResource);
 
-				List<Servidores> list = this.iteracoesDAO.listServers();
-				for (Servidores servidores : list) {
-					// if Linux
-					if (servidores.getSO().equals("LINUX")
-							&& servidores.getVerify().equals("SIM")) {
-						servidores.setServerTime(dt.getTime());
-						servidores.setLastCheck(servidores.getServerTime());
-						// Decripting password
-						try {
-							servidores.setPass(String.valueOf(Crypto
-									.decode(servidores.getPass())));
-						} catch (InvalidKeyException e) {
-							e.printStackTrace();
-						} catch (NoSuchPaddingException e) {
-							e.printStackTrace();
-						} catch (NoSuchAlgorithmException e) {
-							e.printStackTrace();
-						} catch (BadPaddingException e) {
-							e.printStackTrace();
-						} catch (IllegalBlockSizeException e) {
-							e.printStackTrace();
-						}
+				// List<Servidores> list = this.iteracoesDAO.listServers();
+				List<Servidores> list = this.iteracoesDAO
+						.listServersVerActive();
+				if (list.size() <= 0) {
+					Logger.getLogger(getClass())
+							.info("[ "
+									+ userInfo.getLoggedUsername()
+									+ " ] Nenhum servidor encontrado ou não há servidores com verficação ativa");
+					result.include("info",
+							"Nenhum servidor encontrado ou não há servidores com verficação ativa")
+							.forwardTo(HomeController.class).home("");
 
-						try {
-							String dateSTR = GetDateLinux.exec(
-									servidores.getUser(), servidores.getIp(),
-									servidores.getPass(), servidores.getPort());
-							Logger.getLogger(getClass()).debug(
-									"[ " + userInfo.getLoggedUsername()
-											+ " ] Hora obtida do servidor "
-											+ servidores.getHostname() + ": "
-											+ dateSTR);
-							servidores.setClientTime(dateSTR);
-							// Calculating time difference
-							servidores.setDifference(dt.diffrenceTime(
-									servidores.getServerTime(), dateSTR,
-									"LINUX"));
-
-							if (servidores.getDifference() < 0) {
-								servidores.setDifference(servidores
-										.getDifference() * -1);
+				} else {
+					// locar recurso.
+					lockDAO.insertLock(lockedResource);
+					for (Servidores servidores : list) {
+						// if Linux
+						if (servidores.getSO().equals("LINUX")
+								&& servidores.getVerify().equals("SIM")) {
+							servidores.setServerTime(dt.getTime());
+							servidores.setLastCheck(servidores.getServerTime());
+							// Decripting password
+							try {
+								servidores.setPass(String.valueOf(Crypto
+										.decode(servidores.getPass())));
+							} catch (InvalidKeyException e) {
+								e.printStackTrace();
+							} catch (NoSuchPaddingException e) {
+								e.printStackTrace();
+							} catch (NoSuchAlgorithmException e) {
+								e.printStackTrace();
+							} catch (BadPaddingException e) {
+								e.printStackTrace();
+							} catch (IllegalBlockSizeException e) {
+								e.printStackTrace();
 							}
 
-							if (servidores.getDifference() <= this.configurationDAO
-									.getDiffirenceSecs()) {
-								servidores.setTrClass("success");
-								servidores.setStatus("OK");
-							} else {
+							try {
+								String dateSTR = GetDateLinux.exec(
+										servidores.getUser(),
+										servidores.getIp(),
+										servidores.getPass(),
+										servidores.getPort());
+								Logger.getLogger(getClass()).debug(
+										"[ " + userInfo.getLoggedUsername()
+												+ " ] Hora obtida do servidor "
+												+ servidores.getHostname()
+												+ ": " + dateSTR);
+								servidores.setClientTime(dateSTR);
+								// Calculating time difference
+								servidores.setDifference(dt.diffrenceTime(
+										servidores.getServerTime(), dateSTR,
+										"LINUX"));
+
+								if (servidores.getDifference() < 0) {
+									servidores.setDifference(servidores
+											.getDifference() * -1);
+								}
+
+								if (servidores.getDifference() <= this.configurationDAO
+										.getDiffirenceSecs()) {
+									servidores.setTrClass("success");
+									servidores.setStatus("OK");
+								} else {
+									servidores.setTrClass("error");
+									servidores.setStatus("não OK");
+								}
+								try {
+									// Critpografando a senha
+									servidores.setPass(encodePass
+											.encode(servidores.getPass()));
+
+								} catch (Exception e1) {
+									Logger.getLogger(getClass()).error(
+											"[ " + userInfo.getLoggedUsername()
+													+ " ] Error: ", e1);
+								}
+								this.iteracoesDAO.updateServer(servidores);
+
+							} catch (JSchException e) {
+								servidores.setStatus(e + "");
 								servidores.setTrClass("error");
-								servidores.setStatus("não OK");
+								try {
+									// Critpografando a senha
+									servidores.setPass(encodePass
+											.encode(servidores.getPass()));
+
+								} catch (Exception e1) {
+									Logger.getLogger(getClass()).error(
+											"[ " + userInfo.getLoggedUsername()
+													+ " ] Error: ", e1);
+								}
+								this.iteracoesDAO.updateServer(servidores);
+							} catch (IOException e) {
+								servidores.setStatus(e + "");
+								servidores.setTrClass("error");
+								try {
+
+									// Critpografando a senha
+									servidores.setPass(encodePass
+											.encode(servidores.getPass()));
+
+								} catch (Exception e1) {
+									Logger.getLogger(getClass()).error(
+											"[ " + userInfo.getLoggedUsername()
+													+ " ] Error: ", e1);
+								}
+								this.iteracoesDAO.updateServer(servidores);
 							}
-							try {
-								// Critpografando a senha
-								servidores.setPass(encodePass.encode(servidores
-										.getPass()));
 
-							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error(
-										"[ " + userInfo.getLoggedUsername()
-												+ " ] Error: ", e1);
-							}
-							this.iteracoesDAO.updateServer(servidores);
-
-						} catch (JSchException e) {
-							servidores.setStatus(e + "");
-							servidores.setTrClass("error");
-							try {
-								// Critpografando a senha
-								servidores.setPass(encodePass.encode(servidores
-										.getPass()));
-
-							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error(
-										"[ " + userInfo.getLoggedUsername()
-												+ " ] Error: ", e1);
-							}
-							this.iteracoesDAO.updateServer(servidores);
-						} catch (IOException e) {
-							servidores.setStatus(e + "");
-							servidores.setTrClass("error");
-							try {
-
-								// Critpografando a senha
-								servidores.setPass(encodePass.encode(servidores
-										.getPass()));
-
-							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error(
-										"[ " + userInfo.getLoggedUsername()
-												+ " ] Error: ", e1);
-							}
-							this.iteracoesDAO.updateServer(servidores);
+						} else if (servidores.getVerify().equals("NAO")) {
+							Logger.getLogger(getClass())
+									.info("[ "
+											+ userInfo.getLoggedUsername()
+											+ " ] - O servidor "
+											+ servidores.getHostname()
+											+ " não será verificado pois o mesmo não está com verificação ativa.");
 						}
 
-					} else {
-						Logger.getLogger(getClass())
-								.info("[ "
-										+ userInfo.getLoggedUsername()
-										+ " ] - O servidor "
-										+ servidores.getHostname()
-										+ " não será verificado pois o mesmo não está com verificação ativa.");
+						if (servidores.getSO().equals("UNIX")
+								&& servidores.getVerify().equals("SIM")) {
+							servidores.setServerTime(dt.getTime());
+							servidores.setLastCheck(servidores.getServerTime());
+							// Decripting password
+							try {
+								servidores.setPass(String.valueOf(Crypto
+										.decode(servidores.getPass())));
+							} catch (InvalidKeyException e) {
+								e.printStackTrace();
+							} catch (NoSuchPaddingException e) {
+								e.printStackTrace();
+							} catch (NoSuchAlgorithmException e) {
+								e.printStackTrace();
+							} catch (BadPaddingException e) {
+								e.printStackTrace();
+							} catch (IllegalBlockSizeException e) {
+								e.printStackTrace();
+							}
+							try {
+								String dateSTR = GetDateUnix.exec(
+										servidores.getUser(),
+										servidores.getIp(),
+										servidores.getPass(),
+										servidores.getPort());
+								Logger.getLogger(getClass()).debug(
+										"[ " + userInfo.getLoggedUsername()
+												+ " ] Hora obtida do servidor "
+												+ servidores.getHostname()
+												+ ": " + dateSTR);
+								servidores.setClientTime(dateSTR);
+								// Calculating time difference
+								servidores.setDifference(dt.diffrenceTime(
+										servidores.getServerTime(), dateSTR,
+										"UNIX"));
+
+								if (servidores.getDifference() < 0) {
+									servidores.setDifference(servidores
+											.getDifference() * -1);
+								}
+								if (servidores.getDifference() <= this.configurationDAO
+										.getDiffirenceSecs()) {
+									servidores.setTrClass("success");
+									servidores.setStatus("OK");
+								} else {
+									servidores.setTrClass("error");
+									servidores.setStatus("não OK");
+								}
+								try {
+
+									// Critpografando a senha
+									servidores.setPass(encodePass
+											.encode(servidores.getPass()));
+
+								} catch (Exception e) {
+									Logger.getLogger(getClass()).error(
+											"[ " + userInfo.getLoggedUsername()
+													+ " ] Error: ", e);
+								}
+								this.iteracoesDAO.updateServer(servidores);
+							} catch (JSchException e) {
+								servidores.setStatus(e + "");
+								servidores.setTrClass("error");
+								try {
+
+									// Critpografando a senha
+									servidores.setPass(encodePass
+											.encode(servidores.getPass()));
+
+								} catch (Exception e1) {
+									Logger.getLogger(getClass()).error(
+											"[ " + userInfo.getLoggedUsername()
+													+ " ] Error: ", e1);
+								}
+								this.iteracoesDAO.updateServer(servidores);
+							} catch (IOException e) {
+								servidores.setStatus(e + "");
+								servidores.setTrClass("error");
+								try {
+
+									// Critpografando a senha
+									servidores.setPass(encodePass
+											.encode(servidores.getPass()));
+
+								} catch (Exception e1) {
+									Logger.getLogger(getClass()).error(
+											"[ " + userInfo.getLoggedUsername()
+													+ " ] Error: ", e1);
+								}
+								this.iteracoesDAO.updateServer(servidores);
+							}
+
+						} else if (servidores.getVerify().equals("NAO")) {
+							Logger.getLogger(getClass())
+									.info("[ "
+											+ userInfo.getLoggedUsername()
+											+ " ] - O servidor "
+											+ servidores.getHostname()
+											+ " não será verificado pois o mesmo não está com verificação ativa.");
+						}
+
+						// if Windows
+						if (servidores.getSO().equals("WINDOWS")
+								&& servidores.getVerify().equals("SIM")) {
+							servidores.setServerTime(dt.getTime());
+							servidores.setLastCheck(servidores.getServerTime());
+							try {
+
+								String dateSTR = GetDateWindows.Exec(
+										servidores.getIp(), "I");
+								if (dateSTR == null || dateSTR == "") {
+									Logger.getLogger(getClass())
+											.debug("Parametro net time -I retornou nulo, tentando o parametro S");
+									dateSTR = GetDateWindows.Exec(
+											servidores.getIp(), "S");
+								}
+								Logger.getLogger(getClass()).debug(
+										"[ " + userInfo.getLoggedUsername()
+												+ " ] Hora obtida do servidor "
+												+ servidores.getHostname()
+												+ ": " + dateSTR);
+								servidores.setClientTime(dateSTR);
+								// Calculating time difference
+								servidores.setDifference(dt.diffrenceTime(
+										servidores.getServerTime(), dateSTR,
+										"WINDOWS"));
+
+								if (servidores.getDifference() < 0) {
+									servidores.setDifference(servidores
+											.getDifference() * -1);
+								}
+
+								if (servidores.getDifference() <= this.configurationDAO
+										.getDiffirenceSecs()) {
+									servidores.setTrClass("success");
+									servidores.setStatus("OK");
+								} else if (dateSTR == null || dateSTR == "") {
+									servidores.setTrClass("error");
+									servidores
+											.setStatus("Não foi possível obter data/hora deste servidor, verique conectividade.");
+									servidores.setDifference(00);
+								} else {
+									servidores.setTrClass("error");
+									servidores.setStatus("não OK");
+								}
+								this.iteracoesDAO.updateServer(servidores);
+							} catch (IOException e) {
+								servidores.setStatus(e + "");
+								servidores.setTrClass("error");
+								this.iteracoesDAO.updateServer(servidores);
+							}
+
+						} else if (servidores.getVerify().equals("NAO")) {
+							Logger.getLogger(getClass())
+									.info("[ "
+											+ userInfo.getLoggedUsername()
+											+ " ] - O servidor "
+											+ servidores.getHostname()
+											+ " não será verificado pois o mesmo não está com verificação ativa.");
+						}
+
+						// if Others
+						if (servidores.getSO().equals("OUTRO")
+								&& servidores.getVerify().equals("SIM")) {
+							servidores.setServerTime(dt.getTime());
+							servidores.setLastCheck(servidores.getServerTime());
+							// Decripting password
+							try {
+								servidores.setPass(String.valueOf(Crypto
+										.decode(servidores.getPass())));
+							} catch (InvalidKeyException e) {
+								e.printStackTrace();
+							} catch (NoSuchPaddingException e) {
+								e.printStackTrace();
+							} catch (NoSuchAlgorithmException e) {
+								e.printStackTrace();
+							} catch (BadPaddingException e) {
+								e.printStackTrace();
+							} catch (IllegalBlockSizeException e) {
+								e.printStackTrace();
+							}
+							try {
+								String dateSTR = GetDateOther.exec(
+										servidores.getUser(),
+										servidores.getIp(),
+										servidores.getPass(),
+										servidores.getPort());
+								Logger.getLogger(getClass()).debug(
+										"Hora obtida do servidor "
+												+ servidores.getHostname()
+												+ ": " + dateSTR);
+								servidores.setClientTime(dateSTR);
+								// Calculating time difference
+								servidores.setDifference(dt.diffrenceTime(
+										servidores.getServerTime(), dateSTR,
+										"OUTRO"));
+
+								PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+								String version = load.getValor("version");
+								result.include("version", version);
+								if (servidores.getDifference() < 0) {
+									servidores.setDifference(servidores
+											.getDifference() * -1);
+								}
+								if (servidores.getDifference() <= this.configurationDAO
+										.getDiffirenceSecs()) {
+									servidores.setTrClass("success");
+									servidores.setStatus("OK");
+								} else {
+									servidores.setTrClass("error");
+									servidores.setStatus("não OK");
+								}
+								try {
+
+									// Critpografando a senha
+									servidores.setPass(encodePass
+											.encode(servidores.getPass()));
+
+								} catch (Exception e) {
+									Logger.getLogger(getClass()).error(
+											"[ " + userInfo.getLoggedUsername()
+													+ " ] Error: ", e);
+								}
+								this.iteracoesDAO.updateServer(servidores);
+							} catch (JSchException e) {
+								servidores.setStatus(e + "");
+								servidores.setTrClass("error");
+								try {
+
+									// Critpografando a senha
+									servidores.setPass(encodePass
+											.encode(servidores.getPass()));
+
+								} catch (Exception e1) {
+									Logger.getLogger(getClass()).error(
+											"[ " + userInfo.getLoggedUsername()
+													+ " ] Error: ", e1);
+								}
+								this.iteracoesDAO.updateServer(servidores);
+							} catch (IOException e) {
+								servidores.setStatus(e + "");
+								servidores.setTrClass("error");
+								try {
+
+									// Critpografando a senha
+									servidores.setPass(encodePass
+											.encode(servidores.getPass()));
+
+								} catch (Exception e1) {
+									Logger.getLogger(getClass()).error(
+											"[ " + userInfo.getLoggedUsername()
+													+ " ] Error: ", e1);
+								}
+								this.iteracoesDAO.updateServer(servidores);
+							}
+
+						} else if (servidores.getVerify().equals("NAO")) {
+							Logger.getLogger(getClass())
+									.info("[ "
+											+ userInfo.getLoggedUsername()
+											+ " ] - O servidor "
+											+ servidores.getHostname()
+											+ " não será verificado pois o mesmo não está com verificação ativa.");
+						}
+
 					}
 
-					if (servidores.getSO().equals("UNIX")
-							&& servidores.getVerify().equals("SIM")) {
-						servidores.setServerTime(dt.getTime());
-						servidores.setLastCheck(servidores.getServerTime());
-						// Decripting password
-						try {
-							servidores.setPass(String.valueOf(Crypto
-									.decode(servidores.getPass())));
-						} catch (InvalidKeyException e) {
-							e.printStackTrace();
-						} catch (NoSuchPaddingException e) {
-							e.printStackTrace();
-						} catch (NoSuchAlgorithmException e) {
-							e.printStackTrace();
-						} catch (BadPaddingException e) {
-							e.printStackTrace();
-						} catch (IllegalBlockSizeException e) {
-							e.printStackTrace();
-						}
-						try {
-							String dateSTR = GetDateUnix.exec(
-									servidores.getUser(), servidores.getIp(),
-									servidores.getPass(), servidores.getPort());
-							Logger.getLogger(getClass()).debug(
-									"[ " + userInfo.getLoggedUsername()
-											+ " ] Hora obtida do servidor "
-											+ servidores.getHostname() + ": "
-											+ dateSTR);
-							servidores.setClientTime(dateSTR);
-							// Calculating time difference
-							servidores
-									.setDifference(dt.diffrenceTime(
-											servidores.getServerTime(),
-											dateSTR, "UNIX"));
-
-							if (servidores.getDifference() < 0) {
-								servidores.setDifference(servidores
-										.getDifference() * -1);
-							}
-							if (servidores.getDifference() <= this.configurationDAO
-									.getDiffirenceSecs()) {
-								servidores.setTrClass("success");
-								servidores.setStatus("OK");
-							} else {
-								servidores.setTrClass("error");
-								servidores.setStatus("não OK");
-							}
-							try {
-
-								// Critpografando a senha
-								servidores.setPass(encodePass.encode(servidores
-										.getPass()));
-
-							} catch (Exception e) {
-								Logger.getLogger(getClass()).error(
-										"[ " + userInfo.getLoggedUsername()
-												+ " ] Error: ", e);
-							}
-							this.iteracoesDAO.updateServer(servidores);
-						} catch (JSchException e) {
-							servidores.setStatus(e + "");
-							servidores.setTrClass("error");
-							try {
-
-								// Critpografando a senha
-								servidores.setPass(encodePass.encode(servidores
-										.getPass()));
-
-							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error(
-										"[ " + userInfo.getLoggedUsername()
-												+ " ] Error: ", e1);
-							}
-							this.iteracoesDAO.updateServer(servidores);
-						} catch (IOException e) {
-							servidores.setStatus(e + "");
-							servidores.setTrClass("error");
-							try {
-
-								// Critpografando a senha
-								servidores.setPass(encodePass.encode(servidores
-										.getPass()));
-
-							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error(
-										"[ " + userInfo.getLoggedUsername()
-												+ " ] Error: ", e1);
-							}
-							this.iteracoesDAO.updateServer(servidores);
-						}
-
-					}
-
-					// if Windows
-					if (servidores.getSO().equals("WINDOWS")
-							&& servidores.getVerify().equals("SIM")) {
-						servidores.setServerTime(dt.getTime());
-						servidores.setLastCheck(servidores.getServerTime());
-						try {
-
-							String dateSTR = GetDateWindows.Exec(
-									servidores.getIp(), "I");
-							if (dateSTR == null || dateSTR == "") {
-								Logger.getLogger(getClass())
-										.debug("Parametro net time -I retornou nulo, tentando o parametro S");
-								dateSTR = GetDateWindows.Exec(
-										servidores.getIp(), "S");
-							}
-							Logger.getLogger(getClass()).debug(
-									"[ " + userInfo.getLoggedUsername()
-											+ " ] Hora obtida do servidor "
-											+ servidores.getHostname() + ": "
-											+ dateSTR);
-							servidores.setClientTime(dateSTR);
-							// Calculating time difference
-							servidores.setDifference(dt.diffrenceTime(
-									servidores.getServerTime(), dateSTR,
-									"WINDOWS"));
-
-							if (servidores.getDifference() < 0) {
-								servidores.setDifference(servidores
-										.getDifference() * -1);
-							}
-
-							if (servidores.getDifference() <= this.configurationDAO
-									.getDiffirenceSecs()) {
-								servidores.setTrClass("success");
-								servidores.setStatus("OK");
-							} else {
-								servidores.setTrClass("error");
-								servidores.setStatus("não OK");
-							}
-							this.iteracoesDAO.updateServer(servidores);
-						} catch (IOException e) {
-							servidores.setStatus(e + "");
-							servidores.setTrClass("error");
-							this.iteracoesDAO.updateServer(servidores);
-						}
-
-					}
-
-					// if Others
-					if (servidores.getSO().equals("OUTRO")
-							&& servidores.getVerify().equals("SIM")) {
-						servidores.setServerTime(dt.getTime());
-						servidores.setLastCheck(servidores.getServerTime());
-						// Decripting password
-						try {
-							servidores.setPass(String.valueOf(Crypto
-									.decode(servidores.getPass())));
-						} catch (InvalidKeyException e) {
-							e.printStackTrace();
-						} catch (NoSuchPaddingException e) {
-							e.printStackTrace();
-						} catch (NoSuchAlgorithmException e) {
-							e.printStackTrace();
-						} catch (BadPaddingException e) {
-							e.printStackTrace();
-						} catch (IllegalBlockSizeException e) {
-							e.printStackTrace();
-						}
-						try {
-							String dateSTR = GetDateOther.exec(
-									servidores.getUser(), servidores.getIp(),
-									servidores.getPass(), servidores.getPort());
-							Logger.getLogger(getClass()).debug(
-									"Hora obtida do servidor "
-											+ servidores.getHostname() + ": "
-											+ dateSTR);
-							servidores.setClientTime(dateSTR);
-							// Calculating time difference
-							servidores.setDifference(dt.diffrenceTime(
-									servidores.getServerTime(), dateSTR,
-									"OUTRO"));
-
-							PropertiesLoaderImpl load = new PropertiesLoaderImpl();
-							String version = load.getValor("version");
-							result.include("version", version);
-							if (servidores.getDifference() < 0) {
-								servidores.setDifference(servidores
-										.getDifference() * -1);
-							}
-							if (servidores.getDifference() <= this.configurationDAO
-									.getDiffirenceSecs()) {
-								servidores.setTrClass("success");
-								servidores.setStatus("OK");
-							} else {
-								servidores.setTrClass("error");
-								servidores.setStatus("não OK");
-							}
-							try {
-
-								// Critpografando a senha
-								servidores.setPass(encodePass.encode(servidores
-										.getPass()));
-
-							} catch (Exception e) {
-								Logger.getLogger(getClass()).error(
-										"[ " + userInfo.getLoggedUsername()
-												+ " ] Error: ", e);
-							}
-							this.iteracoesDAO.updateServer(servidores);
-						} catch (JSchException e) {
-							servidores.setStatus(e + "");
-							servidores.setTrClass("error");
-							try {
-
-								// Critpografando a senha
-								servidores.setPass(encodePass.encode(servidores
-										.getPass()));
-
-							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error(
-										"[ " + userInfo.getLoggedUsername()
-												+ " ] Error: ", e1);
-							}
-							this.iteracoesDAO.updateServer(servidores);
-						} catch (IOException e) {
-							servidores.setStatus(e + "");
-							servidores.setTrClass("error");
-							try {
-
-								// Critpografando a senha
-								servidores.setPass(encodePass.encode(servidores
-										.getPass()));
-
-							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error(
-										"[ " + userInfo.getLoggedUsername()
-												+ " ] Error: ", e1);
-							}
-							this.iteracoesDAO.updateServer(servidores);
-						}
-
-					}
-
+					result.include("server", list)
+							.forwardTo(HomeController.class).home("");
+					result.include("class", "activeServer");
 				}
-
-				result.include("server", list).forwardTo(HomeController.class)
-						.home("");
-				result.include("class", "activeServer");
 			}
+			// desloca a tabela quando a verficação terminar.
+			Logger.getLogger(getClass()).info(
+					"[ " + userInfo.getLoggedUsername()
+							+ " ] Verificação finalizada, liberando recurso "
+							+ lockedResource.getRecurso());
+			lockDAO.removeLock(lockedResource);
 		}
-
 		if (value.equals("notFull")) {
 			lockedResource.setRecurso("notOkverification");
 			lockedResource.setUsername(LoggedUsername);
@@ -591,344 +640,396 @@ public class HomeController {
 						.info("[ "
 								+ userInfo.getLoggedUsername()
 								+ " ] O recurso notOkverification não está locado, locando e proseguindo");
-				// locar recurso.
-				lockDAO.insertLock(lockedResource);
 
 				// inserindo html title no result
 				result.include("title", "Hr Status Home");
 				// arrumar o select NOK
-				List<Servidores> list = this.iteracoesDAO.getServersNOK();
-				for (Servidores servidores : list) {
-					// if Linux
-					if (servidores.getSO().equals("LINUX")
-							&& servidores.getVerify().equals("SIM")) {
-						servidores.setServerTime(dt.getTime());
-						servidores.setLastCheck(servidores.getServerTime());
-						// Decripting password
-						try {
-							servidores.setPass(String.valueOf(Crypto
-									.decode(servidores.getPass())));
-						} catch (InvalidKeyException e) {
-							e.printStackTrace();
-						} catch (NoSuchPaddingException e) {
-							e.printStackTrace();
-						} catch (NoSuchAlgorithmException e) {
-							e.printStackTrace();
-						} catch (BadPaddingException e) {
-							e.printStackTrace();
-						} catch (IllegalBlockSizeException e) {
-							e.printStackTrace();
-						}
+				// List<Servidores> list = this.iteracoesDAO.getServersNOK();
+				List<Servidores> list = this.iteracoesDAO
+						.getServersNOKVerActive();
 
-						try {
-							String dateSTR = GetDateLinux.exec(
-									servidores.getUser(), servidores.getIp(),
-									servidores.getPass(), servidores.getPort());
-							Logger.getLogger(getClass()).debug(
-									"[ " + userInfo.getLoggedUsername()
-											+ " ] Hora obtida do servidor "
-											+ servidores.getHostname() + ": "
-											+ dateSTR);
-							servidores.setClientTime(dateSTR);
-							// Calculating time difference
-							servidores.setDifference(dt.diffrenceTime(
-									servidores.getServerTime(), dateSTR,
-									"LINUX"));
-							if (servidores.getDifference() < 0) {
-								servidores.setDifference(servidores
-										.getDifference() * -1);
+				if (list.size() <= 0) {
+					Logger.getLogger(getClass())
+							.info("[ "
+									+ userInfo.getLoggedUsername()
+									+ " ] Nenhum servidor encontrado ou não há servidores com verficação ativa");
+					result.include("info",
+							"Nenhum servidor encontrado ou não há servidores com verficação ativa")
+							.forwardTo(HomeController.class).home("");
+
+				} else {
+					// locar recurso.
+					lockDAO.insertLock(lockedResource);
+					for (Servidores servidores : list) {
+						// if Linux
+						if (servidores.getSO().equals("LINUX")
+								&& servidores.getVerify().equals("SIM")) {
+							servidores.setServerTime(dt.getTime());
+							servidores.setLastCheck(servidores.getServerTime());
+							// Decripting password
+							try {
+								servidores.setPass(String.valueOf(Crypto
+										.decode(servidores.getPass())));
+							} catch (InvalidKeyException e) {
+								e.printStackTrace();
+							} catch (NoSuchPaddingException e) {
+								e.printStackTrace();
+							} catch (NoSuchAlgorithmException e) {
+								e.printStackTrace();
+							} catch (BadPaddingException e) {
+								e.printStackTrace();
+							} catch (IllegalBlockSizeException e) {
+								e.printStackTrace();
 							}
-							if (servidores.getDifference() <= this.configurationDAO
-									.getDiffirenceSecs()) {
-								servidores.setTrClass("success");
-								servidores.setStatus("OK");
-							} else {
+
+							try {
+								String dateSTR = GetDateLinux.exec(
+										servidores.getUser(),
+										servidores.getIp(),
+										servidores.getPass(),
+										servidores.getPort());
+								Logger.getLogger(getClass()).debug(
+										"[ " + userInfo.getLoggedUsername()
+												+ " ] Hora obtida do servidor "
+												+ servidores.getHostname()
+												+ ": " + dateSTR);
+								servidores.setClientTime(dateSTR);
+								// Calculating time difference
+								servidores.setDifference(dt.diffrenceTime(
+										servidores.getServerTime(), dateSTR,
+										"LINUX"));
+								if (servidores.getDifference() < 0) {
+									servidores.setDifference(servidores
+											.getDifference() * -1);
+								}
+								if (servidores.getDifference() <= this.configurationDAO
+										.getDiffirenceSecs()) {
+									servidores.setTrClass("success");
+									servidores.setStatus("OK");
+								} else {
+									servidores.setTrClass("error");
+									servidores.setStatus("não OK");
+								}
+								try {
+
+									// Critpografando a senha
+									servidores.setPass(encodePass
+											.encode(servidores.getPass()));
+
+								} catch (Exception e) {
+									Logger.getLogger(getClass()).error(
+											"[ " + userInfo.getLoggedUsername()
+													+ " ] Error: ", e);
+								}
+								this.iteracoesDAO.updateServer(servidores);
+
+							} catch (JSchException e) {
+								servidores.setStatus(e + "");
 								servidores.setTrClass("error");
-								servidores.setStatus("não OK");
-							}
-							try {
+								try {
 
-								// Critpografando a senha
-								servidores.setPass(encodePass.encode(servidores
-										.getPass()));
+									// Critpografando a senha
+									servidores.setPass(encodePass
+											.encode(servidores.getPass()));
 
-							} catch (Exception e) {
-								Logger.getLogger(getClass()).error(
-										"[ " + userInfo.getLoggedUsername()
-												+ " ] Error: ", e);
-							}
-							this.iteracoesDAO.updateServer(servidores);
-
-						} catch (JSchException e) {
-							servidores.setStatus(e + "");
-							servidores.setTrClass("error");
-							try {
-
-								// Critpografando a senha
-								servidores.setPass(encodePass.encode(servidores
-										.getPass()));
-
-							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error(
-										"[ " + userInfo.getLoggedUsername()
-												+ " ] Error: ", e1);
-							}
-							this.iteracoesDAO.updateServer(servidores);
-						} catch (IOException e) {
-							servidores.setStatus(e + "");
-							servidores.setTrClass("error");
-							try {
-
-								// Critpografando a senha
-								servidores.setPass(encodePass.encode(servidores
-										.getPass()));
-
-							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error(
-										"[ " + userInfo.getLoggedUsername()
-												+ " ] Error: ", e1);
-							}
-							this.iteracoesDAO.updateServer(servidores);
-						}
-
-					}
-
-					if (servidores.getSO().equals("UNIX")
-							&& servidores.getVerify().equals("SIM")) {
-						servidores.setServerTime(dt.getTime());
-						servidores.setLastCheck(servidores.getServerTime());
-						// Decripting password
-						try {
-							servidores.setPass(String.valueOf(Crypto
-									.decode(servidores.getPass())));
-						} catch (InvalidKeyException e) {
-							e.printStackTrace();
-						} catch (NoSuchPaddingException e) {
-							e.printStackTrace();
-						} catch (NoSuchAlgorithmException e) {
-							e.printStackTrace();
-						} catch (BadPaddingException e) {
-							e.printStackTrace();
-						} catch (IllegalBlockSizeException e) {
-							e.printStackTrace();
-						}
-						try {
-							String dateSTR = GetDateUnix.exec(
-									servidores.getUser(), servidores.getIp(),
-									servidores.getPass(), servidores.getPort());
-							Logger.getLogger(getClass()).debug(
-									"[ " + userInfo.getLoggedUsername()
-											+ " ] Hora obtida do servidor "
-											+ servidores.getHostname() + ": "
-											+ dateSTR);
-							servidores.setClientTime(dateSTR);
-							// Calculating time difference
-							servidores
-									.setDifference(dt.diffrenceTime(
-											servidores.getServerTime(),
-											dateSTR, "UNIX"));
-							if (servidores.getDifference() < 0) {
-								servidores.setDifference(servidores
-										.getDifference() * -1);
-							}
-							if (servidores.getDifference() <= this.configurationDAO
-									.getDiffirenceSecs()) {
-								servidores.setTrClass("success");
-								servidores.setStatus("OK");
-							} else {
+								} catch (Exception e1) {
+									Logger.getLogger(getClass()).error(
+											"[ " + userInfo.getLoggedUsername()
+													+ " ] Error: ", e1);
+								}
+								this.iteracoesDAO.updateServer(servidores);
+							} catch (IOException e) {
+								servidores.setStatus(e + "");
 								servidores.setTrClass("error");
-								servidores.setStatus("não OK");
+								try {
+
+									// Critpografando a senha
+									servidores.setPass(encodePass
+											.encode(servidores.getPass()));
+
+								} catch (Exception e1) {
+									Logger.getLogger(getClass()).error(
+											"[ " + userInfo.getLoggedUsername()
+													+ " ] Error: ", e1);
+								}
+								this.iteracoesDAO.updateServer(servidores);
 							}
-							try {
 
-								// Critpografando a senha
-								servidores.setPass(encodePass.encode(servidores
-										.getPass()));
-
-							} catch (Exception e) {
-								Logger.getLogger(getClass()).error(
-										"[ " + userInfo.getLoggedUsername()
-												+ " ] Error: ", e);
-							}
-							this.iteracoesDAO.updateServer(servidores);
-						} catch (JSchException e) {
-							servidores.setStatus(e + "");
-							servidores.setTrClass("error");
-							try {
-
-								// Critpografando a senha
-								servidores.setPass(encodePass.encode(servidores
-										.getPass()));
-
-							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error(
-										"[ " + userInfo.getLoggedUsername()
-												+ " ] Error: ", e1);
-							}
-							this.iteracoesDAO.updateServer(servidores);
-						} catch (IOException e) {
-							servidores.setStatus(e + "");
-							servidores.setTrClass("error");
-							try {
-
-								// Critpografando a senha
-								servidores.setPass(encodePass.encode(servidores
-										.getPass()));
-
-							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error(
-										"[ " + userInfo.getLoggedUsername()
-												+ " ] Error: ", e1);
-							}
-							this.iteracoesDAO.updateServer(servidores);
+						} else if (servidores.getVerify().equals("NAO")) {
+							Logger.getLogger(getClass())
+									.info("[ "
+											+ userInfo.getLoggedUsername()
+											+ " ] - O servidor "
+											+ servidores.getHostname()
+											+ " não será verificado pois o mesmo não está com verificação ativa.");
 						}
-					}
 
-					// if Windows
-					if (servidores.getSO().equals("WINDOWS")
-							&& servidores.getVerify().equals("SIM")) {
-						servidores.setServerTime(dt.getTime());
-						servidores.setLastCheck(servidores.getServerTime());
-						try {
-							String dateSTR = GetDateWindows.Exec(
-									servidores.getIp(), "I");
-							if (dateSTR == null || dateSTR == "") {
-								Logger.getLogger(getClass())
-										.debug("Parametro net time -I retornou nulo, tentando o parametro S");
-								dateSTR = GetDateWindows.Exec(
-										servidores.getIp(), "S");
+						if (servidores.getSO().equals("UNIX")
+								&& servidores.getVerify().equals("SIM")) {
+							servidores.setServerTime(dt.getTime());
+							servidores.setLastCheck(servidores.getServerTime());
+							// Decripting password
+							try {
+								servidores.setPass(String.valueOf(Crypto
+										.decode(servidores.getPass())));
+							} catch (InvalidKeyException e) {
+								e.printStackTrace();
+							} catch (NoSuchPaddingException e) {
+								e.printStackTrace();
+							} catch (NoSuchAlgorithmException e) {
+								e.printStackTrace();
+							} catch (BadPaddingException e) {
+								e.printStackTrace();
+							} catch (IllegalBlockSizeException e) {
+								e.printStackTrace();
 							}
-							Logger.getLogger(getClass()).debug(
-									"[ " + userInfo.getLoggedUsername()
-											+ " ] Hora obtida do servidor "
-											+ servidores.getHostname() + ": "
-											+ dateSTR);
-							servidores.setClientTime(dateSTR);
-							// Calculating time difference
-							servidores.setDifference(dt.diffrenceTime(
-									servidores.getServerTime(), dateSTR,
-									"WINDOWS"));
-							if (servidores.getDifference() < 0) {
-								servidores.setDifference(servidores
-										.getDifference() * -1);
-							}
-							if (servidores.getDifference() <= this.configurationDAO
-									.getDiffirenceSecs()) {
-								servidores.setTrClass("success");
-								servidores.setStatus("OK");
-							} else {
+							try {
+								String dateSTR = GetDateUnix.exec(
+										servidores.getUser(),
+										servidores.getIp(),
+										servidores.getPass(),
+										servidores.getPort());
+								Logger.getLogger(getClass()).debug(
+										"[ " + userInfo.getLoggedUsername()
+												+ " ] Hora obtida do servidor "
+												+ servidores.getHostname()
+												+ ": " + dateSTR);
+								servidores.setClientTime(dateSTR);
+								// Calculating time difference
+								servidores.setDifference(dt.diffrenceTime(
+										servidores.getServerTime(), dateSTR,
+										"UNIX"));
+								if (servidores.getDifference() < 0) {
+									servidores.setDifference(servidores
+											.getDifference() * -1);
+								}
+								if (servidores.getDifference() <= this.configurationDAO
+										.getDiffirenceSecs()) {
+									servidores.setTrClass("success");
+									servidores.setStatus("OK");
+								} else {
+									servidores.setTrClass("error");
+									servidores.setStatus("não OK");
+								}
+								try {
+
+									// Critpografando a senha
+									servidores.setPass(encodePass
+											.encode(servidores.getPass()));
+
+								} catch (Exception e) {
+									Logger.getLogger(getClass()).error(
+											"[ " + userInfo.getLoggedUsername()
+													+ " ] Error: ", e);
+								}
+								this.iteracoesDAO.updateServer(servidores);
+							} catch (JSchException e) {
+								servidores.setStatus(e + "");
 								servidores.setTrClass("error");
-								servidores.setStatus("não OK");
-							}
+								try {
 
-							this.iteracoesDAO.updateServer(servidores);
-						} catch (IOException e) {
-							servidores.setStatus(e + "");
-							servidores.setTrClass("error");
-							this.iteracoesDAO.updateServer(servidores);
-						}
-					}
+									// Critpografando a senha
+									servidores.setPass(encodePass
+											.encode(servidores.getPass()));
 
-					// if Others
-					if (servidores.getSO().equals("OUTRO")
-							&& servidores.getVerify().equals("SIM")) {
-						servidores.setServerTime(dt.getTime());
-						servidores.setLastCheck(servidores.getServerTime());
-						// Decripting password
-						try {
-							servidores.setPass(String.valueOf(Crypto
-									.decode(servidores.getPass())));
-						} catch (InvalidKeyException e) {
-							e.printStackTrace();
-						} catch (NoSuchPaddingException e) {
-							e.printStackTrace();
-						} catch (NoSuchAlgorithmException e) {
-							e.printStackTrace();
-						} catch (BadPaddingException e) {
-							e.printStackTrace();
-						} catch (IllegalBlockSizeException e) {
-							e.printStackTrace();
-						}
-						try {
-							String dateSTR = GetDateOther.exec(
-									servidores.getUser(), servidores.getIp(),
-									servidores.getPass(), servidores.getPort());
-							Logger.getLogger(getClass()).debug(
-									"[ " + userInfo.getLoggedUsername()
-											+ " ] Hora obtida do servidor "
-											+ servidores.getHostname() + ": "
-											+ dateSTR);
-							servidores.setClientTime(dateSTR);
-							// Calculating time difference
-							servidores.setDifference(dt.diffrenceTime(
-									servidores.getServerTime(), dateSTR,
-									"OUTRO"));
-							if (servidores.getDifference() < 0) {
-								servidores.setDifference(servidores
-										.getDifference() * -1);
-							}
-							if (servidores.getDifference() <= this.configurationDAO
-									.getDiffirenceSecs()) {
-								servidores.setTrClass("success");
-								servidores.setStatus("OK");
-							} else {
+								} catch (Exception e1) {
+									Logger.getLogger(getClass()).error(
+											"[ " + userInfo.getLoggedUsername()
+													+ " ] Error: ", e1);
+								}
+								this.iteracoesDAO.updateServer(servidores);
+							} catch (IOException e) {
+								servidores.setStatus(e + "");
 								servidores.setTrClass("error");
-								servidores.setStatus("não OK");
+								try {
+
+									// Critpografando a senha
+									servidores.setPass(encodePass
+											.encode(servidores.getPass()));
+
+								} catch (Exception e1) {
+									Logger.getLogger(getClass()).error(
+											"[ " + userInfo.getLoggedUsername()
+													+ " ] Error: ", e1);
+								}
+								this.iteracoesDAO.updateServer(servidores);
+							}
+						} else if (servidores.getVerify().equals("NAO")) {
+							Logger.getLogger(getClass())
+									.info("[ "
+											+ userInfo.getLoggedUsername()
+											+ " ] - O servidor "
+											+ servidores.getHostname()
+											+ " não será verificado pois o mesmo não está com verificação ativa.");
+						}
+
+						// if Windows
+						if (servidores.getSO().equals("WINDOWS")
+								&& servidores.getVerify().equals("SIM")) {
+							servidores.setServerTime(dt.getTime());
+							servidores.setLastCheck(servidores.getServerTime());
+							try {
+								String dateSTR = GetDateWindows.Exec(
+										servidores.getIp(), "I");
+								if (dateSTR == null || dateSTR == "") {
+									Logger.getLogger(getClass())
+											.debug("Parametro net time -I retornou nulo, tentando o parametro S");
+									dateSTR = GetDateWindows.Exec(
+											servidores.getIp(), "S");
+								}
+								Logger.getLogger(getClass()).debug(
+										"[ " + userInfo.getLoggedUsername()
+												+ " ] Hora obtida do servidor "
+												+ servidores.getHostname()
+												+ ": " + dateSTR);
+								servidores.setClientTime(dateSTR);
+								// Calculating time difference
+								servidores.setDifference(dt.diffrenceTime(
+										servidores.getServerTime(), dateSTR,
+										"WINDOWS"));
+								if (servidores.getDifference() < 0) {
+									servidores.setDifference(servidores
+											.getDifference() * -1);
+								}
+								if (servidores.getDifference() <= this.configurationDAO
+										.getDiffirenceSecs()) {
+									servidores.setTrClass("success");
+									servidores.setStatus("OK");
+								} else if (dateSTR == null || dateSTR == "") {
+									servidores.setTrClass("error");
+									servidores
+											.setStatus("Não foi possível obter data/hora deste servidor, verique conectividade.");
+									servidores.setDifference(00);
+								} else {
+									servidores.setTrClass("error");
+									servidores.setStatus("não OK");
+								}
+
+								this.iteracoesDAO.updateServer(servidores);
+							} catch (IOException e) {
+								servidores.setStatus(e + "");
+								servidores.setTrClass("error");
+								this.iteracoesDAO.updateServer(servidores);
+							}
+						} else if (servidores.getVerify().equals("NAO")) {
+							Logger.getLogger(getClass())
+									.info("[ "
+											+ userInfo.getLoggedUsername()
+											+ " ] - O servidor "
+											+ servidores.getHostname()
+											+ " não será verificado pois o mesmo não está com verificação ativa.");
+						}
+
+						// if Others
+						if (servidores.getSO().equals("OUTRO")
+								&& servidores.getVerify().equals("SIM")) {
+							servidores.setServerTime(dt.getTime());
+							servidores.setLastCheck(servidores.getServerTime());
+							// Decripting password
+							try {
+								servidores.setPass(String.valueOf(Crypto
+										.decode(servidores.getPass())));
+							} catch (InvalidKeyException e) {
+								e.printStackTrace();
+							} catch (NoSuchPaddingException e) {
+								e.printStackTrace();
+							} catch (NoSuchAlgorithmException e) {
+								e.printStackTrace();
+							} catch (BadPaddingException e) {
+								e.printStackTrace();
+							} catch (IllegalBlockSizeException e) {
+								e.printStackTrace();
 							}
 							try {
-								// Critpografando a senha
-								servidores.setPass(encodePass.encode(servidores
-										.getPass()));
-
-							} catch (Exception e) {
-								Logger.getLogger(getClass()).error(
+								String dateSTR = GetDateOther.exec(
+										servidores.getUser(),
+										servidores.getIp(),
+										servidores.getPass(),
+										servidores.getPort());
+								Logger.getLogger(getClass()).debug(
 										"[ " + userInfo.getLoggedUsername()
-												+ " ] Error: ", e);
-							}
-							this.iteracoesDAO.updateServer(servidores);
-						} catch (JSchException e) {
-							servidores.setStatus(e + "");
-							servidores.setTrClass("error");
-							try {
-								// Critpografando a senha
-								servidores.setPass(encodePass.encode(servidores
-										.getPass()));
+												+ " ] Hora obtida do servidor "
+												+ servidores.getHostname()
+												+ ": " + dateSTR);
+								servidores.setClientTime(dateSTR);
+								// Calculating time difference
+								servidores.setDifference(dt.diffrenceTime(
+										servidores.getServerTime(), dateSTR,
+										"OUTRO"));
+								if (servidores.getDifference() < 0) {
+									servidores.setDifference(servidores
+											.getDifference() * -1);
+								}
+								if (servidores.getDifference() <= this.configurationDAO
+										.getDiffirenceSecs()) {
+									servidores.setTrClass("success");
+									servidores.setStatus("OK");
+								} else {
+									servidores.setTrClass("error");
+									servidores.setStatus("não OK");
+								}
+								try {
+									// Critpografando a senha
+									servidores.setPass(encodePass
+											.encode(servidores.getPass()));
 
-							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error(
-										"[ " + userInfo.getLoggedUsername()
-												+ " ] Error: ", e1);
-							}
-							this.iteracoesDAO.updateServer(servidores);
-						} catch (IOException e) {
-							servidores.setStatus(e + "");
-							servidores.setTrClass("error");
-							try {
-								// Critpografando a senha
-								servidores.setPass(encodePass.encode(servidores
-										.getPass()));
+								} catch (Exception e) {
+									Logger.getLogger(getClass()).error(
+											"[ " + userInfo.getLoggedUsername()
+													+ " ] Error: ", e);
+								}
+								this.iteracoesDAO.updateServer(servidores);
+							} catch (JSchException e) {
+								servidores.setStatus(e + "");
+								servidores.setTrClass("error");
+								try {
+									// Critpografando a senha
+									servidores.setPass(encodePass
+											.encode(servidores.getPass()));
 
-							} catch (Exception e1) {
-								Logger.getLogger(getClass()).error(
-										"[ " + userInfo.getLoggedUsername()
-												+ " ] Error: ", e1);
+								} catch (Exception e1) {
+									Logger.getLogger(getClass()).error(
+											"[ " + userInfo.getLoggedUsername()
+													+ " ] Error: ", e1);
+								}
+								this.iteracoesDAO.updateServer(servidores);
+							} catch (IOException e) {
+								servidores.setStatus(e + "");
+								servidores.setTrClass("error");
+								try {
+									// Critpografando a senha
+									servidores.setPass(encodePass
+											.encode(servidores.getPass()));
+
+								} catch (Exception e1) {
+									Logger.getLogger(getClass()).error(
+											"[ " + userInfo.getLoggedUsername()
+													+ " ] Error: ", e1);
+								}
+								this.iteracoesDAO.updateServer(servidores);
 							}
-							this.iteracoesDAO.updateServer(servidores);
+						} else if (servidores.getVerify().equals("NAO")) {
+							Logger.getLogger(getClass())
+									.info("[ "
+											+ userInfo.getLoggedUsername()
+											+ " ] - O servidor "
+											+ servidores.getHostname()
+											+ " não será verificado pois o mesmo não está com verificação ativa.");
 						}
 					}
+					result.include("class", "activeServer");
+					result.include("server", list)
+							.forwardTo(HomeController.class).home("");
+
 				}
-				result.include("class", "activeServer");
-				result.include("server", list).forwardTo(HomeController.class)
-						.home("");
-
 			}
+			// desloca a tabela quando a verficação terminar.
+			Logger.getLogger(getClass()).info(
+					"[ " + userInfo.getLoggedUsername()
+							+ " ] Verificação finalizada, liberando recurso "
+							+ lockedResource.getRecurso());
+			lockDAO.removeLock(lockedResource);
 		}
-		// desloca a tabela quando a verficação terminar.
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] Verificação finalizada, liberando recurso "
-						+ lockedResource.getRecurso());
-		lockDAO.removeLock(lockedResource);
 	}
 
 	@Get("/singleServerToVerify/{id}")
@@ -941,7 +1042,7 @@ public class HomeController {
 		Servidores servidor = this.iteracoesDAO.getServerByID(id);
 
 		if (!servidor.getSO().equals("WINDOWS")) {
-			
+
 			try {
 				servidor.setPass(String.valueOf(Crypto.decode(servidor
 						.getPass())));
