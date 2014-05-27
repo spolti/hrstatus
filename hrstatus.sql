@@ -53,27 +53,24 @@ CREATE TABLE `Configurations` (
   `difference` int(11) DEFAULT NULL,
   `jndiMail` varchar(255) DEFAULT NULL,
   `mailFrom` varchar(255) DEFAULT NULL,
+  `sendNotification` bit(1) DEFAULT NULL,
   `ntpServer` varchar(255) DEFAULT NULL,
   `subject` varchar(255) DEFAULT NULL,
   `updateNtpIsActive` bit(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
 --
 -- Dumping data for table `Configurations`
 --
-
 LOCK TABLES `Configurations` WRITE;
 /*!40000 ALTER TABLE `Configurations` DISABLE KEYS */;
-INSERT INTO `Configurations` VALUES (1,'hrstatus@example.com.br',70,'java:jboss/mail/HrstatusMail','hrstatus@example.com.br','10.10.10.10','NO REPLY - Status Horario de Verao','');
+INSERT INTO `Configurations` VALUES (1,'spolti@valecard.com.br',0,'java:jboss/mail/HrstatusMail','hrstatus@example.com.br','','192.168.10.2','NO REPLY - Status Horario de Verao','');
 /*!40000 ALTER TABLE `Configurations` ENABLE KEYS */;
 UNLOCK TABLES;
-
 --
 -- Table structure for table `PassExpire`
 --
-
 DROP TABLE IF EXISTS `PassExpire`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -87,20 +84,17 @@ CREATE TABLE `PassExpire` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
+/*!40101 SET character_set_client = @saved_cs_client */;
 --
 -- Dumping data for table `PassExpire`
 --
-
 LOCK TABLES `PassExpire` WRITE;
 /*!40000 ALTER TABLE `PassExpire` DISABLE KEYS */;
 /*!40000 ALTER TABLE `PassExpire` ENABLE KEYS */;
 UNLOCK TABLES;
-
 --
 -- Table structure for table `Servidores`
 --
-
 DROP TABLE IF EXISTS `Servidores`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -122,13 +116,11 @@ CREATE TABLE `Servidores` (
   `user` varchar(255) DEFAULT NULL,
   `verify` varchar(3) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
 --
 -- Table structure for table `Users`
 --
-
 DROP TABLE IF EXISTS `Users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -147,11 +139,9 @@ CREATE TABLE `Users` (
   UNIQUE KEY `nome` (`nome`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
 --
 -- Dumping data for table `Users`
 --
-
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
 INSERT INTO `Users` VALUES ('admin','ROLE_ADMIN','true','false','admin@example.com.br','Administrador do Sistema','89794b621a313bb59eed0d9f0f4e8205');
