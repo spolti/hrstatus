@@ -80,9 +80,11 @@ public class ConfigController {
 		String jndiMail = opts.getJndiMail();
 		String ntpServer = opts.getNtpServer();
 		boolean updateNtpIsActive = opts.isUpdateNtpIsActive();
+		boolean sendNotification = opts.isSendNotification();
 		
 		Logger.getLogger(getClass()).debug("Difference time: " + diff);
 		Logger.getLogger(getClass()).debug("Sender: " + mailFrom);
+		Logger.getLogger(getClass()).debug("Send Notification: " + sendNotification);
 		Logger.getLogger(getClass()).debug("Subject: " + subject);
 		Logger.getLogger(getClass()).debug("Dests: " + dests);
 		Logger.getLogger(getClass()).debug("JndiMail: " + jndiMail);
@@ -91,6 +93,13 @@ public class ConfigController {
 		
 		result.include("difference", diff);
 		result.include("mailFrom", mailFrom);
+		
+		if (sendNotification){
+			result.include("sendNotification","ATIVO");
+		}else{
+			result.include("sendNotification","INATIVO");
+		}
+		
 		result.include("subject", subject);
 		result.include("dests", dests);
 		result.include("jndiMail", jndiMail);
@@ -139,6 +148,15 @@ public class ConfigController {
 			}else {
 				config.setMailFrom(new_value);
 			}
+		} else if (campo.equals("sendNotification")){
+			if ("ATIVO".equals(new_value.toUpperCase())){
+				config.setSendNotification(true);
+			}else if ("INATIVO".equals(new_value.toUpperCase())){
+				config.setSendNotification(false);
+			}else{
+				validator.add(new ValidationMessage("O campo Ativar Ativar Notificação Via e-mail só permite os valores ATIVO ou INATIVO", "Erro"));
+			}
+			
 		}else if (campo.equals("subject")){
 			config.setSubject(new_value);
 		}else if (campo.equals("ntpServer")){
@@ -170,8 +188,7 @@ public class ConfigController {
 
 		validator.onErrorForwardTo(ConfigController.class).configServer();
 		this.configurationDAO.updateConfig(config);
-		result.forwardTo(ConfigController.class).configServer();
-		
+		result.forwardTo(ConfigController.class).configServer();		
 	}
 	
 	@Get("/configClients")
@@ -193,8 +210,7 @@ public class ConfigController {
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /configDataBases");
 		List<BancoDados> list = this.BancoDadosDAO.listDataBases();
-		result.include("dataBase", list);
-		
+		result.include("dataBase", list);		
 	}
 
 	@Get("/configUser")
@@ -208,5 +224,4 @@ public class ConfigController {
 		List<Users> list = this.userDAO.listUser();
 		result.include("user",list);
 	}
-
 }

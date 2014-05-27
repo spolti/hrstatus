@@ -31,7 +31,10 @@ import org.apache.log4j.Logger;
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.hrstatus.dao.Configuration;
+import br.com.hrstatus.model.Configurations;
 import br.com.hrstatus.security.CriptoJbossDSPassword;
+import br.com.hrstatus.utils.MailSender;
 import br.com.hrstatus.utils.UserInfo;
 
 /*
@@ -42,10 +45,13 @@ import br.com.hrstatus.utils.UserInfo;
 public class UtilsController {
 
 	private Result result;
+	private Configuration configurationDAO;
 	UserInfo userInfo = new UserInfo();
+	MailSender send = new MailSender();
 
-	public UtilsController(Result result) {
+	public UtilsController(Result result, Configuration configurationDAO) {
 		this.result = result;
+		this.configurationDAO = configurationDAO;
 	}
 	
 	@SuppressWarnings("static-access")
@@ -56,5 +62,21 @@ public class UtilsController {
 		CriptoJbossDSPassword cript = new CriptoJbossDSPassword();
 		result.include("EncriptedPassword",cript.encode(password));
 		
+	}
+	
+	@Get("/sendMailtest")
+	public void sendMailtest(String rcpt){
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /sendMailtest/" + rcpt);
+		
+		Configurations configs = this.configurationDAO.getConfigs();
+		try {
+			String resultMail = send.sendTestMail(configs.getMailFrom(), rcpt, configs.getJndiMail());
+			result.include("info",resultMail).forwardTo(ConfigController.class).configServer();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro ao enviar email de teste: " + e);
+			result.include("errors","Erro ao enviar mensagem de teste: " + e).forwardTo(ConfigController.class).configServer();
+			
+		} 
 	}
 }

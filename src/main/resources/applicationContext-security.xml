@@ -101,6 +101,7 @@
 		<intercept-url pattern="/deleteLockByID" access="ROLE_ADMIN" />
 		<intercept-url pattern="/uploud/logo/imagem" access="ROLE_ADMIN" />
 		<intercept-url pattern="/delete/logo/imagem" access="ROLE_ADMIN" />
+		<intercept-url pattern="/sendMailtest" access="ROLE_ADMIN" />
 
 		<!-- Set the login page and what to do if login fails -->
 		<form-login login-page="/login" default-target-url="/home"

@@ -220,6 +220,13 @@ public class IteracoesDAO implements Iteracoes {
 		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] listServers() -> Select * executed.");
 		return session().createCriteria(Servidores.class).list();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Servidores> listServersVerActive() {
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] listServersVerActive() -> Select * executed.");
+		Criteria criteria = session().createCriteria(Servidores.class);
+		return criteria.add(Restrictions.eq("verify", "SIM")).list();
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<Servidores> getServersOK() {
@@ -234,7 +241,7 @@ public class IteracoesDAO implements Iteracoes {
 			return new ArrayList<Servidores>();
 		}
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public List<Servidores> getServersNOK() {
 
@@ -250,6 +257,25 @@ public class IteracoesDAO implements Iteracoes {
 			return new ArrayList<Servidores>();
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Servidores> getServersNOKVerActive() {
+
+		try {
+			Criteria criteria = session().createCriteria(Servidores.class);
+			criteria.add(Restrictions.or(Restrictions.eq("trClass", "error"),
+					Restrictions.eq("status", "NOK")));
+			criteria.add(Restrictions.eq("verify", "SIM"));
+					
+			return criteria.list();
+
+		} catch (Exception e) {
+			System.out.println(e);
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			return new ArrayList<Servidores>();
+		}
+	}
+
 
 	public int countServersOK() {
 

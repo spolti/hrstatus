@@ -54,41 +54,50 @@ public class Scheduler {
 	DateUtils dateUtils = new DateUtils();
 
 	GetServerIPAddress getIP = new GetServerIPAddress();
-	
+
 	public Scheduler() {
 	}
 
 	@Scheduled(cron = "${br.com.hrstatus.scheduler.MailScheduler.cron}")
 	public void sendMail() throws UnknownHostException {
-		Logger.getLogger(getClass())
-				.debug("[ System ] Invoking sendMail at " + new Date());
+		Logger.getLogger(getClass()).debug(
+				"[ System ] Invoking sendMail at " + new Date());
 
 		int count = this.iteracoesDAO.countServersNOK();
-		if (count > 0) {
-			Logger.getLogger(getClass())
-					.debug("[ System ] Foram encontrados "
-							+ count
-							+ " servidor(es) desatualizado(s), enviando e-mail de alerta.");
-			// Envio de e-mail
-			String mail1 = this.configurationDAO.getMailSender();
-			String Subject = this.configurationDAO.getSubject();
-			String Dests[] = this.configurationDAO.getDests().split(",");
-			String jndiMail = this.configurationDAO.getJndiMail();
-			MailSender mail = new MailSender();
-			mail.Sender(mail1, Subject, Dests, jndiMail);
-		} else {
-			Logger.getLogger(getClass()).info(
-					"[ System ] Nenhum servidor desatualizado foi encontrado.");
-		}
+		boolean sendNotification = this.configurationDAO.sendNotification();
 
+		Logger.getLogger(getClass()).debug(
+				"Notificação Ativa: " + sendNotification);
+
+		if (sendNotification) {
+
+			if (count > 0) {
+				Logger.getLogger(getClass())
+						.debug("[ System ] Foram encontrados "
+								+ count
+								+ " servidor(es) desatualizado(s), enviando e-mail de alerta.");
+				// Envio de e-mail
+				String mail1 = this.configurationDAO.getMailSender();
+				String Subject = this.configurationDAO.getSubject();
+				String Dests[] = this.configurationDAO.getDests().split(",");
+				String jndiMail = this.configurationDAO.getJndiMail();
+				MailSender mail = new MailSender();
+				mail.Sender(mail1, Subject, Dests, jndiMail);
+			} else {
+				Logger.getLogger(getClass())
+						.info("[ System ] Nenhum servidor desatualizado foi encontrado.");
+			}
+		}else {
+			Logger.getLogger(getClass()).debug("O envio de e-mail de notificação está desativado, abortando envio");
+		}
 	}
 
 	@Scheduled(cron = "${br.com.hrstatus.scheduler.NtpScheduler.cron}")
 	public void NtpUpdater() throws IOException {
 
 		Configurations config = this.configurationDAO.getConfigs();
-		Boolean isUpdateNtpIsActive = config.isUpdateNtpIsActive();
-		
+		Boolean isUpdateNtpActive = config.isUpdateNtpIsActive();
+
 		Process p = (Runtime.getRuntime().exec("which ntpdate"));
 		String stdIn = "", s = "";
 		BufferedReader stdInput = new BufferedReader(new InputStreamReader(
@@ -101,8 +110,9 @@ public class Scheduler {
 			Logger.getLogger(getClass())
 					.error("Comando ntpdate não encontrado, abortando atualização automática");
 		} else {
-			Logger.getLogger(getClass()).info("ntp ativo: " + isUpdateNtpIsActive);
-			if (isUpdateNtpIsActive){
+			Logger.getLogger(getClass())
+					.info("ntp ativo: " + isUpdateNtpActive);
+			if (isUpdateNtpActive) {
 				Logger.getLogger(getClass()).debug("Iniciando checagem NTP");
 				String ntpServer = this.configurationDAO.getNtpServerAddress();
 				Logger.getLogger(getClass()).debug(

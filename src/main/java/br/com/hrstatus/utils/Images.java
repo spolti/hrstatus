@@ -30,9 +30,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.interceptor.multipart.UploadedFile;
 import br.com.caelum.vraptor.ioc.Component;
@@ -45,6 +47,8 @@ public class Images {
 	private static final int IMG_HEIGHT_SETTINGS = 150;
 	private static final int IMG_WIDTH_HOME = 500;
 	private static final int IMG_HEIGHT_HOME = 300;
+	@Autowired
+	private HttpServletRequest request;
 
 	public Images() throws IOException {
 
@@ -87,6 +91,7 @@ public class Images {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	public File show(String VizualizationType) throws IOException {
 
 		try {
@@ -122,10 +127,19 @@ public class Images {
 			}
 
 		} catch (Exception ex) {
-				return null;
+			String imgDefault = request.getRealPath("img/hrstatus.jpg");
+			Logger.getLogger(getClass()).debug("Logo Image  " + imgDefault);
+			File file = new File(imgDefault);
+			BufferedImage originalImage = ImageIO.read(file);
+			int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB
+					: originalImage.getType();
+			BufferedImage resizeImagePng = resizeImage(originalImage, type,
+					VizualizationType);
+			ImageIO.write(resizeImagePng, "png", new File(pastaImages
+					+ "/logo_login.imagem"));
+			return new File(pastaImages + "/logo_login.imagem");
 		}
 		
-
 	}
 
 	private static BufferedImage resizeImage(BufferedImage originalImage,
@@ -151,6 +165,5 @@ public class Images {
 
 		} else
 			return null;
-
 	}
 }
