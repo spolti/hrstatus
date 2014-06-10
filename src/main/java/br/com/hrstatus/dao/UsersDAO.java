@@ -35,6 +35,7 @@ import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.hrstatus.model.PassExpire;
@@ -67,8 +68,9 @@ public class UsersDAO implements UsersInterface {
 	@SuppressWarnings("unchecked")
 	public List<Users> listUser(){
 		Logger.getLogger(getClass()).debug("listUser() -> listing users.");
-		return session().createCriteria(Users.class).list();
-		
+		Criteria criteria = session().createCriteria(Users.class);
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
 	}
 	
 	public boolean deleteUserByID(Users user) {
@@ -81,7 +83,6 @@ public class UsersDAO implements UsersInterface {
 
 			return false;
 		}
-
 	}
 	
 	public Users getUserByID(String username){
@@ -90,6 +91,7 @@ public class UsersDAO implements UsersInterface {
 				.add(Restrictions.eq("username", username)).uniqueResult();
 	}
 	
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void updateUser(Users user){
 		Logger.getLogger(getClass()).debug("updateUser() -> Atualizando usuário.");
 		session().update(user);
@@ -197,4 +199,14 @@ public class UsersDAO implements UsersInterface {
 		Logger.getLogger(getClass()).debug("saveORupdateUser() -> Saving or Update User.");
 		session().save(lastActivityTimeStamp);
 	}
+	
+	public List<Integer> getIds_access_server(String user){
+		Logger.getLogger(getClass()).debug("Id_access_server() -> Listing the id servers of the user " + user + " can access.");
+		Criteria criteria = session().createCriteria(Users.class);
+		criteria.add(Restrictions.eq("username", user));
+		ProjectionList proList = Projections.projectionList();
+		proList.add(Projections.property("access_server"));
+		return criteria.list();
+	}
+	
 }

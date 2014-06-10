@@ -32,6 +32,7 @@ import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -120,14 +121,18 @@ public class IteracoesDAO implements Iteracoes {
 
 	public Servidores getServerByID(int id) {
 		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] getServerByID -> ID server selected: " + id);
-		return (Servidores) session().createCriteria(Servidores.class)
-				.add(Restrictions.eq("id", id)).uniqueResult();
+		Criteria criteria = session().createCriteria(
+				Servidores.class);
+		criteria.add(Restrictions.eq("id", id));
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return (Servidores) criteria.uniqueResult();
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<Servidores> listServerByID(int id) {
 		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] getServerByID -> ID server selected: " + id);
 		Criteria criteria = session().createCriteria(Servidores.class);
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.add(Restrictions.eq("id", id)).list();
 	}
 
@@ -218,13 +223,18 @@ public class IteracoesDAO implements Iteracoes {
 	@SuppressWarnings("unchecked")
 	public List<Servidores> listServers() {
 		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] listServers() -> Select * executed.");
-		return session().createCriteria(Servidores.class).list();
+		Criteria criteria = session().createCriteria(Servidores.class);
+
+		criteria.addOrder(Order.asc("hostname"));
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<Servidores> listServersVerActive() {
 		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] listServersVerActive() -> Select * executed.");
 		Criteria criteria = session().createCriteria(Servidores.class);
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.add(Restrictions.eq("verify", "SIM")).list();
 	}
 
@@ -233,6 +243,7 @@ public class IteracoesDAO implements Iteracoes {
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			return criteria.add(Restrictions.eq("status", "OK")).list();
 
 		} catch (Exception e) {
@@ -249,6 +260,7 @@ public class IteracoesDAO implements Iteracoes {
 			Criteria criteria = session().createCriteria(Servidores.class);
 			criteria.add(Restrictions.or(Restrictions.eq("trClass", "error"),
 					Restrictions.eq("status", "NOK")));
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			return criteria.list();
 
 		} catch (Exception e) {
@@ -266,7 +278,7 @@ public class IteracoesDAO implements Iteracoes {
 			criteria.add(Restrictions.or(Restrictions.eq("trClass", "error"),
 					Restrictions.eq("status", "NOK")));
 			criteria.add(Restrictions.eq("verify", "SIM"));
-					
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);		
 			return criteria.list();
 
 		} catch (Exception e) {
@@ -457,6 +469,7 @@ public class IteracoesDAO implements Iteracoes {
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			return criteria.add(Restrictions.eq("SO", "LINUX")).list();
 
 		} catch (Exception e) {
@@ -472,6 +485,7 @@ public class IteracoesDAO implements Iteracoes {
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			return criteria.add(Restrictions.eq("SO", "WINDOWS")).list();
 
 		} catch (Exception e) {
@@ -487,6 +501,7 @@ public class IteracoesDAO implements Iteracoes {
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			return criteria.add(Restrictions.eq("SO", "UNIX")).list();
 
 		} catch (Exception e) {
@@ -504,6 +519,7 @@ public class IteracoesDAO implements Iteracoes {
 			criteria.add(Restrictions.ne("SO", "LINUX"));
 			criteria.add(Restrictions.ne("SO", "Windows"));
 			criteria.add(Restrictions.ne("SO", "Unix"));
+			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			return criteria.list();
 
 		} catch (Exception e) {
@@ -539,11 +555,7 @@ public class IteracoesDAO implements Iteracoes {
 
 			Criteria getHostnamesWithLogDir = session().createCriteria(
 					Servidores.class);
-			ProjectionList proList = Projections.projectionList();
-			proList.add(Projections.property("id"));
-			proList.add(Projections.property("hostname"));
-			proList.add(Projections.property("logDir"));
-			getHostnamesWithLogDir.setProjection(proList);
+			getHostnamesWithLogDir.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			getHostnamesWithLogDir.add(Restrictions.ne("logDir","")); 
 			return getHostnamesWithLogDir.list();
 
@@ -557,6 +569,21 @@ public class IteracoesDAO implements Iteracoes {
 		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] getServerByID -> hostname server selected: " + hostname);
 		return (Servidores) session().createCriteria(Servidores.class)
 				.add(Restrictions.eq("hostname", hostname)).uniqueResult();
+	}
+	
+	public int countServerWithLog() {
+
+		try {
+			Criteria criteria = session().createCriteria(Servidores.class);
+			criteria.add(Restrictions.not(Restrictions.eq("logDir","")));
+			criteria.setProjection(Projections.rowCount());
+			int count = ((Long) criteria.uniqueResult()).intValue();
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countServerWithLog -> found: " + count + ".");
+			return count;
+		} catch (Exception e) {
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			return 0;
+		}
 	}
 	
 }

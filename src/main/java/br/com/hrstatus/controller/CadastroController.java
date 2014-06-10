@@ -233,11 +233,11 @@ public class CadastroController {
 		VENDOR.add("SqlServer");
 		result.include("VENDOR", VENDOR);
 	}
-	
+
 	@SuppressWarnings("static-access")
 	@Post("/registerDataBase")
-	public void registerDataBase(BancoDados bancoDados){
-		
+	public void registerDataBase(BancoDados bancoDados) {
+
 		result.include("title", "Registrar Banco de Dados");
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
@@ -246,16 +246,16 @@ public class CadastroController {
 				"[ " + userInfo.getLoggedUsername()
 						+ " ] URI Called: /registerDataBase");
 		Crypto encodePass = new Crypto();
-		
+
 		// Regex to validade IP
 		Pattern pattern = Pattern
 				.compile("\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\z");
 		Matcher matcher = pattern.matcher(bancoDados.getIp());
-		
+
 		if (bancoDados.getIp().isEmpty()) {
 			validator.add(new ValidationMessage(
 					"O campo Ip deve ser informado", "Erro"));
-		}else if (!matcher.matches()) {
+		} else if (!matcher.matches()) {
 			validator.add(new ValidationMessage("O ip " + bancoDados.getIp()
 					+ " não é válido.", "Erro"));
 		} else if (bancoDados.getHostname().isEmpty()) {
@@ -268,16 +268,16 @@ public class CadastroController {
 			validator.add(new ValidationMessage(
 					"O campo Senha deve ser informado", "Erro"));
 		} else if (bancoDados.getPort() <= 0 || bancoDados.getPort() >= 65536) {
-			if (bancoDados.getVendor().toUpperCase().equals("MYSQL")){
+			if (bancoDados.getVendor().toUpperCase().equals("MYSQL")) {
 				bancoDados.setPort(3306);
 			}
-			if (bancoDados.getVendor().toUpperCase().equals("ORACLE")){
+			if (bancoDados.getVendor().toUpperCase().equals("ORACLE")) {
 				bancoDados.setPort(1521);
 			}
-			if (bancoDados.getVendor().toUpperCase().equals("SQLSERVER")){
+			if (bancoDados.getVendor().toUpperCase().equals("SQLSERVER")) {
 				bancoDados.setPort(1433);
 			}
-			if (bancoDados.getVendor().toUpperCase().equals("POSTGRESQL")){
+			if (bancoDados.getVendor().toUpperCase().equals("POSTGRESQL")) {
 				bancoDados.setPort(5432);
 			}
 		} else if (bancoDados.getVendor().isEmpty()) {
@@ -285,21 +285,21 @@ public class CadastroController {
 					"O campo Vendor deve ser informado", "Erro"));
 		}
 		if (bancoDados.getQueryDate().isEmpty()) {
-			if (bancoDados.getVendor().toUpperCase().equals("MYSQL")){
+			if (bancoDados.getVendor().toUpperCase().equals("MYSQL")) {
 				bancoDados.setQueryDate("SELECT NOW() AS date;");
 			}
-			if (bancoDados.getVendor().toUpperCase().equals("ORACLE")){
+			if (bancoDados.getVendor().toUpperCase().equals("ORACLE")) {
 				bancoDados.setQueryDate("select sysdate from dual");
 			}
-			if (bancoDados.getVendor().toUpperCase().equals("SQLSERVER")){
+			if (bancoDados.getVendor().toUpperCase().equals("SQLSERVER")) {
 				bancoDados.setQueryDate("sqlserver query default");
 			}
-			if (bancoDados.getVendor().toUpperCase().equals("POSTGRESQL")){
+			if (bancoDados.getVendor().toUpperCase().equals("POSTGRESQL")) {
 				bancoDados.setQueryDate("SELECT now();");
 			}
-		
+
 		}
-		
+
 		// populating SO combobox
 		ArrayList<String> VENDOR = new ArrayList<String>();
 		VENDOR.add("MySQL");
@@ -307,23 +307,23 @@ public class CadastroController {
 		VENDOR.add("PostgreSQL");
 		VENDOR.add("SqlServer");
 		result.include("VENDOR", VENDOR);
-		
+
 		validator.onErrorUsePageOf(CadastroController.class).newDataBase(
 				bancoDados);
-		
+
 		result.include("bancoDados", bancoDados);
-		
+
 		bancoDados.setVendor(bancoDados.getVendor().toUpperCase());
 		bancoDados.setStatus("NOK");
 		bancoDados.setTrClass("error");
-		
+
 		try {
 			// Critpografando a senha
 			bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 		} catch (Exception e) {
 			Logger.getLogger(getClass()).error("Error: ", e);
 		}
-		
+
 		if (this.BancoDadosDAO.insert_dataBase(bancoDados) == 0) {
 			result.include("msg", "BancoDados " + bancoDados.getHostname()
 					+ " was sucessfully registred.");
@@ -331,36 +331,40 @@ public class CadastroController {
 					"DataBase " + bancoDados.getHostname()
 							+ " was sucessfully registred.");
 			result.redirectTo(ConfigController.class).configDataBases();
-		}else {
+		} else {
 			validator.add(new ValidationMessage("DataBase "
 					+ bancoDados.getHostname()
 					+ " was not registred because already exists.", "Erro"));
 			validator.onErrorForwardTo(CadastroController.class).newDataBase(
 					bancoDados);
 		}
-		
+
 	}
 
 	@Get("/newUser")
 	public void newUser(Users user) {
 		// inserindo html tittle no result
 		result.include("title", "Registrar Usuário");
-
 		result.include("loggedUser", userInfo.getLoggedUsername());
+
+		int count = iteracoesDAO.countServerWithLog();
+		List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 
 		Logger.getLogger(getClass())
 				.info("[ " + userInfo.getLoggedUsername()
 						+ " ] URI Called: /newUser");
 		result.include("user", user);
+		result.include("count", count);
+		result.include("server", server);
 
 	}
 
 	@SuppressWarnings("static-access")
 	@Post("/registerUser")
-	public void registerUser(Users user) throws UnsupportedEncodingException, UnknownHostException {
+	public void registerUser(Users user, String[] idServer)
+			throws UnsupportedEncodingException, UnknownHostException {
 		// inserindo html tittle no result
 		result.include("title", "Registrar Usuário");
-
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
 		Logger.getLogger(getClass()).info(
@@ -368,15 +372,22 @@ public class CadastroController {
 						+ " ]URI Called: /registerUser");
 		SpringEncoder encode = new SpringEncoder();
 
+		//Pegando tamanho do vetor
+
+		
 		// expressão regular para validar email
 		Pattern p = Pattern
 				.compile("^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]{2,7}$");
 		Matcher m = p.matcher(user.getMail());
-
+		
 		if (user.getNome().isEmpty()) {
+			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+			result.include("server", server);
 			validator.add(new ValidationMessage(
 					"O campo Nome deve ser informado", "Erro"));
 		} else if (user.getUsername().isEmpty()) {
+			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+			result.include("server", server);
 			validator.add(new ValidationMessage(
 					"O campo Username deve ser informado", "Erro"));
 		} else if (user.getPassword().isEmpty()
@@ -387,36 +398,59 @@ public class CadastroController {
 			Logger.getLogger(getClass()).info(
 					"[ " + userInfo.getLoggedUsername() + " ] - Senha gerada");
 		} else if (!user.getPassword().equals(user.getConfirmPass())) {
+			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+			result.include("server", server);
 			validator.add(new ValidationMessage(
 					"As senhas informadas não são iguais.", "Erro"));
 		} else if (user.getMail().isEmpty()) {
+			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+			result.include("server", server);
 			validator.add(new ValidationMessage(
 					"O campo E-mail deve ser informado", "Erro"));
 		} else if (!m.find()) {
+			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+			result.include("server", server);
 			validator.add(new ValidationMessage(
 					"Favor informe o e-mail corretamente.", "Erro"));
 		} else if (user.getAuthority().isEmpty()) {
+			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+			result.include("server", server);
 			validator.add(new ValidationMessage(
 					"O campo Perfil deve ser informado", "Erro"));
+		} else if (idServer[0].equals("notNull")){
+			Logger.getLogger(getClass()).info("Lista de Servidores para Usuário vazio.");
+		} else if (!idServer[0].equals("notNull")){ 
+			List<Servidores> idAccessServers = new ArrayList<Servidores>();
+			for (int i=0; i< idServer.length; i++){
+				Logger.getLogger(getClass()).info("ID Servidor recebido: " + idServer[i]);
+				if (!idServer[i].equals("notNull")){
+					idAccessServers.add(this.iteracoesDAO.getServerByID(Integer.parseInt(idServer[i])));
+					//Logger.getLogger(getClass()).debug("trClass: " + idAccessServers.get(i).getTrClass());
+				}
+			}
+			user.setServer(idAccessServers);
+		
 		}
-
+		
 		validator.onErrorUsePageOf(CadastroController.class).newUser(user);
 		result.include("user", user);
 		user.setFirstLogin(true);
 
+		// Criptografando a senha e salvando usuário
+		// Criptografando senha MD5 springframework
+		user.setPassword(encode.encodePassUser(user.getPassword()));
+		this.userDAO.saveORupdateUser(user);
+				
 		// enviando e-mail para usuário informando senha e criação do usuário:
 		MailSender sendMail = new MailSender();
 		sendMail.sendCreatUserInfo(this.configurationDAO.getMailSender(),
 				user.getMail(), this.configurationDAO.getJndiMail(),
 				user.getNome(), user.getUsername(), user.getPassword());
 
-		// Criptografando a senha e salvando usuário
-		// Criptografando senha MD5 springframework
-		user.setPassword(encode.encodePassUser(user.getPassword()));
-		this.userDAO.saveORupdateUser(user);
 		Logger.getLogger(getClass()).info(
 				"[ " + userInfo.getLoggedUsername() + " ] O usuário "
 						+ user.getUsername() + " foi criado com sucesso.");
+
 		result.redirectTo(HomeController.class).home("null");
 	}
 }

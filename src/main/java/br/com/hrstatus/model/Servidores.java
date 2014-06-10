@@ -23,11 +23,19 @@ package br.com.hrstatus.model;
  * @author spolti
  */
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "Servidores")
@@ -42,8 +50,12 @@ public class Servidores {
 	@Column(name = "id")
 	@GeneratedValue
 	private int id;
-
-	@Column(name = "hostname")
+	
+	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+	@JoinTable(name = "USER_SERVER", joinColumns = { @JoinColumn(name = "id") }, inverseJoinColumns = { @JoinColumn(name = "username") })
+	private List<Users> users;
+	
+	//@Column(name = "hostname")
 	private String hostname;
 	
 	@Column(name = "ip")
@@ -88,6 +100,18 @@ public class Servidores {
 	@Column(name = "verify", length = 3)
 	private String verify;
 	
+	@Transient
+	private String selected;
+	
+		
+	public String getSelected() {
+		return selected;
+	}
+
+	public void setSelected(String selected) {
+		this.selected = selected;
+	}
+
 	public String getVerify() {
 		return verify;
 	}
@@ -215,4 +239,13 @@ public class Servidores {
 	public void setSuCommand(String suCommand) {
 		this.suCommand = suCommand;
 	}
+
+	public List<Users> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<Users> users) {
+		this.users = users;
+	}
+	
 }
