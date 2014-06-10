@@ -23,11 +23,11 @@
 
 CREATE DATABASE  IF NOT EXISTS `hrstatus` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `hrstatus`;
--- MySQL dump 10.13  Distrib 5.5.31, for Linux (x86_64)
+-- MySQL dump 10.14  Distrib 5.5.37-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: hrstatus
 -- ------------------------------------------------------
--- Server version	5.5.31
+-- Server version	5.5.37-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -60,17 +60,21 @@ CREATE TABLE `Configurations` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
 --
 -- Dumping data for table `Configurations`
 --
+
 LOCK TABLES `Configurations` WRITE;
 /*!40000 ALTER TABLE `Configurations` DISABLE KEYS */;
-INSERT INTO `Configurations` VALUES (1,'spolti@valecard.com.br',0,'java:jboss/mail/HrstatusMail','hrstatus@example.com.br','','192.168.10.2','NO REPLY - Status Horario de Verao','');
+INSERT INTO `Configurations` VALUES (1,'example@hrstatus.com.br',60,'java:jboss/mail/HrstatusMail','hrstatus@example.com.br','','1.1.1.1','NO REPLY - Status Horario de Verao','\0');
 /*!40000 ALTER TABLE `Configurations` ENABLE KEYS */;
 UNLOCK TABLES;
+
 --
 -- Table structure for table `PassExpire`
 --
+
 DROP TABLE IF EXISTS `PassExpire`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -84,17 +88,20 @@ CREATE TABLE `PassExpire` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
 --
 -- Dumping data for table `PassExpire`
 --
+
 LOCK TABLES `PassExpire` WRITE;
 /*!40000 ALTER TABLE `PassExpire` DISABLE KEYS */;
 /*!40000 ALTER TABLE `PassExpire` ENABLE KEYS */;
 UNLOCK TABLES;
+
 --
 -- Table structure for table `Servidores`
 --
+
 DROP TABLE IF EXISTS `Servidores`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -116,11 +123,48 @@ CREATE TABLE `Servidores` (
   `user` varchar(255) DEFAULT NULL,
   `verify` varchar(3) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Servidores`
+--
+
+LOCK TABLES `Servidores` WRITE;
+/*!40000 ALTER TABLE `Servidores` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Servidores` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `USER_SERVER`
+--
+
+DROP TABLE IF EXISTS `USER_SERVER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `USER_SERVER` (
+  `id` int(11) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  KEY `FK13567237F672A072` (`username`),
+  KEY `FK13567237D35D7D09` (`id`),
+  CONSTRAINT `FK13567237D35D7D09` FOREIGN KEY (`id`) REFERENCES `Servidores` (`id`),
+  CONSTRAINT `FK13567237F672A072` FOREIGN KEY (`username`) REFERENCES `Users` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `USER_SERVER`
+--
+
+LOCK TABLES `USER_SERVER` WRITE;
+/*!40000 ALTER TABLE `USER_SERVER` DISABLE KEYS */;
+/*!40000 ALTER TABLE `USER_SERVER` ENABLE KEYS */;
+UNLOCK TABLES;
+
 --
 -- Table structure for table `Users`
 --
+
 DROP TABLE IF EXISTS `Users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -139,12 +183,14 @@ CREATE TABLE `Users` (
   UNIQUE KEY `nome` (`nome`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
 --
 -- Dumping data for table `Users`
 --
+
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` VALUES ('admin','ROLE_ADMIN','true','false','admin@example.com.br','Administrador do Sistema','89794b621a313bb59eed0d9f0f4e8205');
+INSERT INTO `Users` VALUES ('admin','ROLE_ADMIN','','\0',NULL,'admin@hrstatus.com.br','Administrador do Sistema','89794b621a313bb59eed0d9f0f4e8205');
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -172,8 +218,18 @@ CREATE TABLE `bancoDados` (
   `user` varchar(255) DEFAULT NULL,
   `vendor` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `bancoDados`
+--
+
+LOCK TABLES `bancoDados` WRITE;
+/*!40000 ALTER TABLE `bancoDados` DISABLE KEYS */;
+INSERT INTO `bancoDados` VALUES (5,0,'2014-05-24 15:49:47','localhost','mysql','127.0.0.1','Sat May 24 15:49:47 BRT 2014','-5248516da351323aea160a14f217b9c4',3306,'SELECT NOW() AS date;','Sat May 24 15:49:47 BRT 2014','OK','success','root','MYSQL');
+/*!40000 ALTER TABLE `bancoDados` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `lockedResources`
@@ -187,7 +243,7 @@ CREATE TABLE `lockedResources` (
   `recurso` varchar(255) DEFAULT NULL,
   `username` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -208,7 +264,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-07-02 15:30:44
+-- Dump completed on 2014-06-10 15:07:06
 
 
 -- User Configurations
