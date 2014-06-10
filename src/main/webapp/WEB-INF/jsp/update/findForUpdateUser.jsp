@@ -39,7 +39,8 @@
 		<div class="content">
 			<div class="row">
 				<div class="span12">
-					<div class="alert alert-info">Só preencha o Password se desejar trocar o mesmo.</div>
+					<div class="alert alert-info">Só preencha o Password se
+						desejar trocar o mesmo.</div>
 					<c:if test="${not empty errors}">
 						<div class="alert">
 							<button type="button" class="close" data-dismiss="alert">×</button>
@@ -92,6 +93,18 @@
 											<c:if test="${user.authority == 'ROLE_USER'}"> selected="selected" </c:if>>User</option>
 								</select></td>
 							</tr>
+
+							<tr>
+								<td align=right>Selecione os Servidores que o usuário terá
+									permissão de extrair logs:</td>
+								<td><select name="idServer[]" size="${count}" multiple ${isDisabled}>
+										<c:forEach var="servidor" items="${server}">
+											<option value="${servidor.id}" ${servidor.selected} >${servidor.hostname}</option>
+										</c:forEach>
+										<option style="display: none" value="notNull" selected></option>
+								</select></td>
+							</tr>
+
 							<tr>
 								<td align=right></td>
 								<td align=left><button align="right" input type=submit

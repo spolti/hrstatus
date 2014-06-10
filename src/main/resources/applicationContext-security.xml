@@ -21,7 +21,7 @@
 		<intercept-url pattern="/utils/criptPassJboss/**"
 			access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/show/logo/imagem/home" access="IS_AUTHENTICATED_ANONYMOUSLY" />
-
+		
 		<!-- Restrict access to ALL other pages -->
 		<intercept-url pattern="/home" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/navbar" access="ROLE_USER,ROLE_ADMIN" />
@@ -95,8 +95,7 @@
 		<intercept-url pattern="/registerDataBase" access="ROLE_ADMIN" />
 		<intercept-url pattern="/configDataBases" access="ROLE_ADMIN" />
 		<intercept-url pattern="/updateDataBase" access="ROLE_ADMIN" />
-		<intercept-url pattern="/findForUpdateDataBase/**"
-			access="ROLE_ADMIN" />
+		<intercept-url pattern="/findForUpdateDataBase/**"	access="ROLE_ADMIN" />
 		<intercept-url pattern="/deleteDataBaseByID" access="ROLE_ADMIN" />
 		<intercept-url pattern="/deleteLockByID" access="ROLE_ADMIN" />
 		<intercept-url pattern="/uploud/logo/imagem" access="ROLE_ADMIN" />

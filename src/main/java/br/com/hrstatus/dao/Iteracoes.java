@@ -95,4 +95,6 @@ public interface Iteracoes {
 	
 	public List<Servidores> listServerByID(int id);
 	
+	public int countServerWithLog();
+	
 }

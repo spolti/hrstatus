@@ -23,12 +23,18 @@ package br.com.hrstatus.model;
  * @author spolti
  */
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 
 @Entity
 @Table(name = "Users")
@@ -58,8 +64,23 @@ public class Users{
 	
 	@Column(name = "lastLogin")
 	private String lastLogin;
-
 	
+	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+	@JoinTable(name = "USER_SERVER", joinColumns = { @JoinColumn(name = "username") }, inverseJoinColumns = { @JoinColumn(name = "id") })
+	private List<Servidores> server;
+
+	@Transient
+	private String confirmPass;
+	
+
+	public List<Servidores> getServer() {
+		return server;
+	}
+
+	public void setServer(List<Servidores> server) {
+		this.server = server;
+	}
+
 	public String getLastLogin() {
 		return lastLogin;
 	}
@@ -67,9 +88,6 @@ public class Users{
 	public void setLastLogin(String lastLogin) {
 		this.lastLogin = lastLogin;
 	}
-
-	@Transient
-	private String confirmPass;
 	
 	public String getConfirmPass() {
 		return confirmPass;

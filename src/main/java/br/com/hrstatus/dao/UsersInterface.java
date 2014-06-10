@@ -61,4 +61,6 @@ public interface UsersInterface {
 	public boolean getFirstLogin(String username);
 	
 	public void lastActivityTimeStamp(String lastActivityTimeStamp);
+	
+	public List<Integer> getIds_access_server(String user);
 }

@@ -45,9 +45,9 @@
 						<tbody>
 							<c:forEach var="servidor" items="${server}">
 								<tr>
-									<td>${servidor[0]}</td>
-									<td><a href="<c:url value='/listLogFiles/${servidor[1]}' />" value="${servidor[1]}">${servidor[1]}</a></td>
-									<td>${servidor[2]}</td>
+									<td>${servidor.id}</td>
+									<td><a href="<c:url value='/listLogFiles/${servidor.hostname}' />" value="${servidor.hostname}">${servidor.hostname}</a></td>
+									<td>${servidor.logDir}</td>
 								</tr>
 							</c:forEach>
 						</tbody>

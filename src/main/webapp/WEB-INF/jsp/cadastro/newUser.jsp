@@ -45,7 +45,8 @@
 		<div class="content">
 			<div class="row">
 				<div class="span12">
-				<div class="alert alert-info">Caso deseje que o sistema crie uma senha aleatória deixe os Password e Repita Password em branco.</div>
+					<div class="alert alert-info">Caso deseje que o sistema crie
+						uma senha aleatória deixe os Password e Repita Password em branco.</div>
 					<c:if test="${not empty errors}">
 						<div class="alert">
 							<button type="button" class="close" data-dismiss="alert">×</button>
@@ -56,7 +57,7 @@
 					</c:if>
 
 					<form method="POST" action="<c:url value='/registerUser'/>">
-						<table align=center>
+						<table align="center">
 							<br>
 							<tr>
 								<td align=right>Nome:</td>
@@ -77,7 +78,7 @@
 							<tr>
 								<td align=right>Ativo:</td>
 								<td><input type="radio" name="user.enabled" value="1" />Sim
-									<input type="radio" name="user.enabled" value="0" checked/>Não</td>
+									<input type="radio" name="user.enabled" value="0" checked />Não</td>
 							</tr>
 							<tr>
 								<td align=right>E-mail:</td>
@@ -88,13 +89,25 @@
 								<td><select name="user.authority">
 										<option value="ROLE_ADMIN">Admin</option>
 										<option value="ROLE_USER">User</option>
-								</select>
-								</td>
+								</select></td>
 							</tr>
+							<tr>
+								<td align=right>Selecione os Servidores que o usuário terá
+									permissão de extrair logs:</td>
+								<td><select name="idServer[]" size="${count}" multiple>
+										<c:forEach var="servidor" items="${server}">
+											<option value="${servidor.id}">${servidor.hostname}</option>
+										</c:forEach>
+										<option style="display: none" value="notNull" selected></option>
+								</select></td>
+							</tr>
+
 							<tr>
 								<td align=right></td>
 								<td align=right><button input type=submit value="Salvar"
 										class="btn btn-primary">Salvar</button></td>
+							</tr>
+
 						</table>
 					</form>
 				</div>
@@ -103,4 +116,3 @@
 	</div>
 </body>
 </html>
-
