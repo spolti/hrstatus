@@ -40,17 +40,17 @@ import org.apache.log4j.Logger;
 
 public class MailSender {
 
-	GetServerIPAddress getIP = new GetServerIPAddress();
+	GetServerIPAddress getIP = new GetServerIPAddress();	
 
 	public void Sender(String mailSender, String Subject, String dests[],
 			String jndiMail) throws UnknownHostException {
 
 		String url = ("" + getIP.returnIP());
-
 		try {
 
 			InitialContext ic = new InitialContext();
 			Session session = (Session) ic.lookup(jndiMail);
+			session.setDebug(false);
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(mailSender));
 			InternetAddress to[] = new InternetAddress[dests.length];
@@ -107,6 +107,7 @@ public class MailSender {
 
 			InitialContext ic = new InitialContext();
 			Session session = (Session) ic.lookup(jndiMail);
+			session.setDebug(false);
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(mailSender));
 			InternetAddress to = new InternetAddress(dest);
@@ -165,6 +166,7 @@ public class MailSender {
 
 			InitialContext ic = new InitialContext();
 			Session session = (Session) ic.lookup(jndiMail);
+			session.setDebug(false);
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(mailSender));
 			InternetAddress to = new InternetAddress(dest);
@@ -223,6 +225,7 @@ public class MailSender {
 
 		InitialContext ic = new InitialContext();
 		Session session = (Session) ic.lookup(jndiMail);
+		session.setDebug(false);
 		Message message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(mailSender));
 		InternetAddress to = new InternetAddress(dest);

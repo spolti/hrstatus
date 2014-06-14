@@ -361,7 +361,7 @@ public class CadastroController {
 
 	@SuppressWarnings("static-access")
 	@Post("/registerUser")
-	public void registerUser(Users user, String[] idServer)
+	public void registerUser(Users user, String[] idServer, boolean checkall)
 			throws UnsupportedEncodingException, UnknownHostException {
 		// inserindo html tittle no result
 		result.include("title", "Registrar Usuário");
@@ -417,6 +417,13 @@ public class CadastroController {
 			result.include("server", server);
 			validator.add(new ValidationMessage(
 					"O campo Perfil deve ser informado", "Erro"));
+		
+		}else if(checkall){
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] A opção selecione todos os servidores está marcada.");
+			List<Servidores> idAccessServers = new ArrayList<Servidores>();
+			idAccessServers = this.iteracoesDAO.listServers();
+			user.setServer(idAccessServers);
+			
 		} else if (idServer[0].equals("notNull")){
 			Logger.getLogger(getClass()).info("Lista de Servidores para Usuário vazio.");
 		} else if (!idServer[0].equals("notNull")){ 
@@ -429,23 +436,22 @@ public class CadastroController {
 				}
 			}
 			user.setServer(idAccessServers);
-		
 		}
 		
 		validator.onErrorUsePageOf(CadastroController.class).newUser(user);
 		result.include("user", user);
 		user.setFirstLogin(true);
 
-		// Criptografando a senha e salvando usuário
-		// Criptografando senha MD5 springframework
-		user.setPassword(encode.encodePassUser(user.getPassword()));
-		this.userDAO.saveORupdateUser(user);
-				
 		// enviando e-mail para usuário informando senha e criação do usuário:
 		MailSender sendMail = new MailSender();
 		sendMail.sendCreatUserInfo(this.configurationDAO.getMailSender(),
 				user.getMail(), this.configurationDAO.getJndiMail(),
 				user.getNome(), user.getUsername(), user.getPassword());
+		
+		// Criptografando a senha e salvando usuário
+		// Criptografando senha MD5 springframework
+		user.setPassword(encode.encodePassUser(user.getPassword()));
+		this.userDAO.saveORupdateUser(user);
 
 		Logger.getLogger(getClass()).info(
 				"[ " + userInfo.getLoggedUsername() + " ] O usuário "

@@ -448,6 +448,7 @@ public class UpdateController {
 	public void updateUser(Users user, String[] idServer) {
 		// inserindo html title no result
 		result.include("title", "Atualizar Usuário");
+		
 
 		String LoggedUsername = userInfo.getLoggedUsername();
 
