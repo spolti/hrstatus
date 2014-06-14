@@ -103,14 +103,16 @@
 							</tr>
 
 							<tr>
+								<td align=right>Selecionar todos os servidores:</td>
+								<td><input type="checkbox" name="checkall"></td>
+							</tr>
+							<tr>
 								<td align=right></td>
 								<td align=right><button input type=submit value="Salvar"
-										class="btn btn-primary">Salvar</button></td>
-							</tr>
-
-						</table>
+										class="btn btn-primary">Salvar</button></td></table>
 					</form>
-				</div>
+				</d
+						iv>
 			</div>
 		</div>
 	</div>

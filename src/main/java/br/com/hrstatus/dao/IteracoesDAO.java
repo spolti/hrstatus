@@ -222,9 +222,8 @@ public class IteracoesDAO implements Iteracoes {
 
 	@SuppressWarnings("unchecked")
 	public List<Servidores> listServers() {
-		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] listServers() -> Select * executed.");
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] listServers() -> Select * from Servidores executed.");
 		Criteria criteria = session().createCriteria(Servidores.class);
-
 		criteria.addOrder(Order.asc("hostname"));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
