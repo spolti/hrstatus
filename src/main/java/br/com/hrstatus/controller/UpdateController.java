@@ -445,7 +445,7 @@ public class UpdateController {
 
 	@SuppressWarnings("static-access")
 	@Post("/updateUser")
-	public void updateUser(Users user, String[] idServer) {
+	public void updateUser(Users user, String[] idServer, boolean checkall) {
 		// inserindo html title no result
 		result.include("title", "Atualizar Usuário");
 		
@@ -472,6 +472,12 @@ public class UpdateController {
 			} else if (user.getUsername().isEmpty()) {
 				validator.add(new ValidationMessage(
 						"O campo Username deve ser informado", "Erro"));
+			} else if(checkall){
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] A opção selecione todos os servidores está marcada.");
+				List<Servidores> idAccessServers = new ArrayList<Servidores>();
+				idAccessServers = this.iteracoesDAO.listServers();
+				user.setServer(idAccessServers);
+				
 			} else if (!idServer[0].equals("notNull")) {
 				List<Servidores> idAccessServers = new ArrayList<Servidores>();
 				for (int i = 0; i < idServer.length; i++) {
