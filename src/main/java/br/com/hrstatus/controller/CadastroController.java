@@ -26,7 +26,9 @@ package br.com.hrstatus.controller;
 import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -372,21 +374,22 @@ public class CadastroController {
 						+ " ]URI Called: /registerUser");
 		SpringEncoder encode = new SpringEncoder();
 
-		//Pegando tamanho do vetor
+		// Pegando tamanho do vetor
 
-		
 		// expressão regular para validar email
 		Pattern p = Pattern
 				.compile("^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]{2,7}$");
 		Matcher m = p.matcher(user.getMail());
-		
+
 		if (user.getNome().isEmpty()) {
-			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+			List<Servidores> server = this.iteracoesDAO
+					.getHostnamesWithLogDir();
 			result.include("server", server);
 			validator.add(new ValidationMessage(
 					"O campo Nome deve ser informado", "Erro"));
 		} else if (user.getUsername().isEmpty()) {
-			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+			List<Servidores> server = this.iteracoesDAO
+					.getHostnamesWithLogDir();
 			result.include("server", server);
 			validator.add(new ValidationMessage(
 					"O campo Username deve ser informado", "Erro"));
@@ -398,48 +401,77 @@ public class CadastroController {
 			Logger.getLogger(getClass()).info(
 					"[ " + userInfo.getLoggedUsername() + " ] - Senha gerada");
 		} else if (!user.getPassword().equals(user.getConfirmPass())) {
-			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+			List<Servidores> server = this.iteracoesDAO
+					.getHostnamesWithLogDir();
 			result.include("server", server);
 			validator.add(new ValidationMessage(
 					"As senhas informadas não são iguais.", "Erro"));
-		} else if (user.getMail().isEmpty()) {
-			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+		} else if (user.getPassword().equals(user.getConfirmPass())) {
+			//Verificando a complexidade de senha informada.
+			List<String> passVal = new ArrayList<String>();
+			Map<String, String> map = new HashMap<String, String>();
+			map = br.com.hrstatus.security.PasswordPolicy.verifyPassComplexity(user.getPassword());
+			Object[] valueMap = map.keySet().toArray();
+			for (int i = 0; i < valueMap.length; i++) {
+				if (map.get(valueMap[i]).equals("false")) {
+					//System.out.println(map.get(valueMap[i + 1]));
+					passVal.add(map.get(valueMap[i + 1]));
+				}
+			}
+			for (int j = 0; j < passVal.size(); j++) {
+				validator.add(new ValidationMessage(passVal.get(j), "Erro"));
+			}
+			List<Servidores> server = this.iteracoesDAO
+					.getHostnamesWithLogDir();
+			result.include("server", server);
+			
+		}else if (user.getMail().isEmpty()) {
+			List<Servidores> server = this.iteracoesDAO
+					.getHostnamesWithLogDir();
 			result.include("server", server);
 			validator.add(new ValidationMessage(
 					"O campo E-mail deve ser informado", "Erro"));
 		} else if (!m.find()) {
-			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+			List<Servidores> server = this.iteracoesDAO
+					.getHostnamesWithLogDir();
 			result.include("server", server);
 			validator.add(new ValidationMessage(
 					"Favor informe o e-mail corretamente.", "Erro"));
 		} else if (user.getAuthority().isEmpty()) {
-			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+			List<Servidores> server = this.iteracoesDAO
+					.getHostnamesWithLogDir();
 			result.include("server", server);
 			validator.add(new ValidationMessage(
 					"O campo Perfil deve ser informado", "Erro"));
-		
-		}else if(checkall){
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] A opção selecione todos os servidores está marcada.");
+
+		} else if (checkall) {
+			Logger.getLogger(getClass())
+					.debug("[ "
+							+ userInfo.getLoggedUsername()
+							+ " ] A opção selecione todos os servidores está marcada.");
 			List<Servidores> idAccessServers = new ArrayList<Servidores>();
-			idAccessServers = this.iteracoesDAO.listServers();
+			idAccessServers = this.iteracoesDAO.getHostnamesWithLogDir();
 			user.setServer(idAccessServers);
-			
-		} else if (idServer[0].equals("notNull")){
-			Logger.getLogger(getClass()).info("Lista de Servidores para Usuário vazio.");
-		} else if (!idServer[0].equals("notNull")){ 
+
+		} else if (idServer[0].equals("notNull")) {
+			Logger.getLogger(getClass()).info(
+					"Lista de Servidores para Usuário vazio.");
+		} else if (!idServer[0].equals("notNull")) {
 			List<Servidores> idAccessServers = new ArrayList<Servidores>();
-			for (int i=0; i< idServer.length; i++){
-				Logger.getLogger(getClass()).info("ID Servidor recebido: " + idServer[i]);
-				if (!idServer[i].equals("notNull")){
-					idAccessServers.add(this.iteracoesDAO.getServerByID(Integer.parseInt(idServer[i])));
-					//Logger.getLogger(getClass()).debug("trClass: " + idAccessServers.get(i).getTrClass());
+			for (int i = 0; i < idServer.length; i++) {
+				Logger.getLogger(getClass()).info(
+						"ID Servidor recebido: " + idServer[i]);
+				if (!idServer[i].equals("notNull")) {
+					idAccessServers.add(this.iteracoesDAO.getServerByID(Integer
+							.parseInt(idServer[i])));
 				}
 			}
 			user.setServer(idAccessServers);
 		}
 		
-		validator.onErrorUsePageOf(CadastroController.class).newUser(user);
 		result.include("user", user);
+		validator.onErrorUsePageOf(CadastroController.class).newUser(user);
+		
 		user.setFirstLogin(true);
 
 		// enviando e-mail para usuário informando senha e criação do usuário:
@@ -447,7 +479,7 @@ public class CadastroController {
 		sendMail.sendCreatUserInfo(this.configurationDAO.getMailSender(),
 				user.getMail(), this.configurationDAO.getJndiMail(),
 				user.getNome(), user.getUsername(), user.getPassword());
-		
+
 		// Criptografando a senha e salvando usuário
 		// Criptografando senha MD5 springframework
 		user.setPassword(encode.encodePassUser(user.getPassword()));

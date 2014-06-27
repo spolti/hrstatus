@@ -85,7 +85,7 @@ public class Scheduler {
 				mail.Sender(mail1, Subject, Dests, jndiMail);
 			} else {
 				Logger.getLogger(getClass())
-						.info("[ System ] Nenhum servidor desatualizado foi encontrado.");
+						.debug("[ System ] Nenhum servidor desatualizado foi encontrado.");
 			}
 		}else {
 			Logger.getLogger(getClass()).debug("O envio de e-mail de notificação está desativado, abortando envio");
@@ -111,7 +111,7 @@ public class Scheduler {
 					.error("Comando ntpdate não encontrado, abortando atualização automática");
 		} else {
 			Logger.getLogger(getClass())
-					.info("ntp ativo: " + isUpdateNtpActive);
+					.debug("ntp ativo: " + isUpdateNtpActive);
 			if (isUpdateNtpActive) {
 				Logger.getLogger(getClass()).debug("Iniciando checagem NTP");
 				String ntpServer = this.configurationDAO.getNtpServerAddress();
@@ -131,7 +131,7 @@ public class Scheduler {
 						"Resultado atualização ntp [ sudo " + stdIn + " -u "
 								+ ntpServer + "]: " + stdInAtualiza);
 			} else {
-				Logger.getLogger(getClass()).info(
+				Logger.getLogger(getClass()).debug(
 						"Atualização NTP automática não está ativa.");
 			}
 		}

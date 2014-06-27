@@ -24,7 +24,9 @@ package br.com.hrstatus.controller;
  */
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -498,7 +500,26 @@ public class UpdateController {
 					validator.add(new ValidationMessage(
 							"As senhas informadas não são iguais.", "Erro"));
 				}
-			} else if (user.getMail().isEmpty()) {
+			} else if (user.getPassword().equals(user.getConfirmPass())) {
+				//Verificando a complexidade de senha informada.
+				List<String> passVal = new ArrayList<String>();
+				Map<String, String> map = new HashMap<String, String>();
+				map = br.com.hrstatus.security.PasswordPolicy.verifyPassComplexity(user.getPassword());
+				Object[] valueMap = map.keySet().toArray();
+				for (int i = 0; i < valueMap.length; i++) {
+					if (map.get(valueMap[i]).equals("false")) {
+						//System.out.println(map.get(valueMap[i + 1]));
+						passVal.add(map.get(valueMap[i + 1]));
+					}
+				}
+				for (int j = 0; j < passVal.size(); j++) {
+					validator.add(new ValidationMessage(passVal.get(j), "Erro"));
+				}
+				List<Servidores> server = this.iteracoesDAO
+						.getHostnamesWithLogDir();
+				result.include("server", server);
+				
+			}else if (user.getMail().isEmpty()) {
 				validator.add(new ValidationMessage(
 						"O campo E-mail deve ser informado", "Erro"));
 			} else if (idServer[0].equals("notNull")) {
