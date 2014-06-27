@@ -34,5 +34,4 @@ public class SpringEncoder {
 		return passMD5;
 		
 	}
-
 }

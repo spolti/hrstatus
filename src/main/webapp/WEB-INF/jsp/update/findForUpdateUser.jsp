@@ -54,6 +54,8 @@
 						<table align=center>
 							<input type="hidden" name="user.firstLogin"
 								value="${user.firstLogin}" />
+							<input type="hidden" name="user.lastLogin"
+								value="${user.lastLogin}" />
 							<tr>
 								<td align=right>Username :</td>
 								<td><input name="user.username" value="${user.username}"
@@ -97,10 +99,11 @@
 							<tr>
 								<td align=right>Selecione os Servidores que o usuário terá
 									permissão de extrair logs:</td>
-								<td><select name="idServer[]" size="${count}" multiple >
+								<td><select name="idServer[]" size="${count}" multiple>
 										<c:forEach var="servidor" items="${server}">
-											<option <c:if test="${not empty isDisabled}"> style="display: none" </c:if>
-														value="${servidor.id}" ${servidor.selected} >${servidor.hostname}</option>
+											<option
+												<c:if test="${not empty isDisabled}"> style="display: none" </c:if>
+												value="${servidor.id}" ${servidor.selected}>${servidor.hostname}</option>
 										</c:forEach>
 										<option style="display: none" value="notNull" selected></option>
 								</select></td>
@@ -108,7 +111,9 @@
 
 							<tr>
 								<td align=right>Selecionar todos os servidores:</td>
-								<td><input <c:if test="${not empty isDisabled}"> disabled </c:if>type="checkbox" name="checkall"></td>
+								<td><input
+									<c:if test="${not empty isDisabled}"> disabled </c:if>
+									type="checkbox" name="checkall"></td>
 							</tr>
 
 							<tr>

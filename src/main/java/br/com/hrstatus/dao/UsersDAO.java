@@ -200,6 +200,7 @@ public class UsersDAO implements UsersInterface {
 		session().save(lastActivityTimeStamp);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Integer> getIds_access_server(String user){
 		Logger.getLogger(getClass()).debug("Id_access_server() -> Listing the id servers of the user " + user + " can access.");
 		Criteria criteria = session().createCriteria(Users.class);
@@ -208,5 +209,4 @@ public class UsersDAO implements UsersInterface {
 		proList.add(Projections.property("access_server"));
 		return criteria.list();
 	}
-	
 }
