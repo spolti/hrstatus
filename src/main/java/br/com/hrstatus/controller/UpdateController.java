@@ -421,8 +421,9 @@ public class UpdateController {
 				for (Servidores u1 : FullLogServer) {
 					for (Servidores sv : user.getServer()) {
 						if (u1.getId() == sv.getId()) {
-							Logger.getLogger(getClass()).info(
-									"Servidores com permissão: "
+							Logger.getLogger(getClass()).debug(
+									"[ " + userInfo.getLoggedUsername()
+											+ " ]Servidores com permissão: "
 											+ sv.getHostname());
 							u1.setSelected("selected");
 						}
@@ -450,7 +451,6 @@ public class UpdateController {
 	public void updateUser(Users user, String[] idServer, boolean checkall) {
 		// inserindo html title no result
 		result.include("title", "Atualizar Usuário");
-		
 
 		String LoggedUsername = userInfo.getLoggedUsername();
 
@@ -468,18 +468,21 @@ public class UpdateController {
 							+ " ] URI Called: /updateUser");
 			SpringEncoder encode = new SpringEncoder();
 
-			if (user.getNome().isEmpty()) {	
+			if (user.getNome().isEmpty()) {
 				validator.add(new ValidationMessage(
 						"O campo Nome deve ser informado", "Erro"));
 			} else if (user.getUsername().isEmpty()) {
 				validator.add(new ValidationMessage(
 						"O campo Username deve ser informado", "Erro"));
-			} else if(checkall){
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] A opção selecione todos os servidores está marcada.");
+			} else if (checkall) {
+				Logger.getLogger(getClass())
+						.debug("[ "
+								+ userInfo.getLoggedUsername()
+								+ " ] A opção selecione todos os servidores está marcada.");
 				List<Servidores> idAccessServers = new ArrayList<Servidores>();
-				idAccessServers = this.iteracoesDAO.listServers();
+				idAccessServers = this.iteracoesDAO.getHostnamesWithLogDir();
 				user.setServer(idAccessServers);
-				
+
 			} else if (!idServer[0].equals("notNull")) {
 				List<Servidores> idAccessServers = new ArrayList<Servidores>();
 				for (int i = 0; i < idServer.length; i++) {
@@ -501,25 +504,27 @@ public class UpdateController {
 							"As senhas informadas não são iguais.", "Erro"));
 				}
 			} else if (user.getPassword().equals(user.getConfirmPass())) {
-				//Verificando a complexidade de senha informada.
+				// Verificando a complexidade de senha informada.
 				List<String> passVal = new ArrayList<String>();
 				Map<String, String> map = new HashMap<String, String>();
-				map = br.com.hrstatus.security.PasswordPolicy.verifyPassComplexity(user.getPassword());
+				map = br.com.hrstatus.security.PasswordPolicy
+						.verifyPassComplexity(user.getPassword());
 				Object[] valueMap = map.keySet().toArray();
 				for (int i = 0; i < valueMap.length; i++) {
 					if (map.get(valueMap[i]).equals("false")) {
-						//System.out.println(map.get(valueMap[i + 1]));
+						// System.out.println(map.get(valueMap[i + 1]));
 						passVal.add(map.get(valueMap[i + 1]));
 					}
 				}
 				for (int j = 0; j < passVal.size(); j++) {
-					validator.add(new ValidationMessage(passVal.get(j), "Erro"));
+					validator
+							.add(new ValidationMessage(passVal.get(j), "Erro"));
 				}
 				List<Servidores> server = this.iteracoesDAO
 						.getHostnamesWithLogDir();
 				result.include("server", server);
-				
-			}else if (user.getMail().isEmpty()) {
+
+			} else if (user.getMail().isEmpty()) {
 				validator.add(new ValidationMessage(
 						"O campo E-mail deve ser informado", "Erro"));
 			} else if (idServer[0].equals("notNull")) {

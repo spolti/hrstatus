@@ -90,9 +90,13 @@ public class LogsController {
 		Users user = this.userDAO.getUserByID(userInfo.getLoggedUsername());
 
 		for (Servidores sv : user.getServer()) {
-			Logger.getLogger(getClass()).info(
-					"Servidores com permissão: " + sv.getHostname());
+
+			Logger.getLogger(getClass()).debug(
+					"[ " + userInfo.getLoggedUsername()
+							+ " ] Servidores com permissão: "
+							+ sv.getHostname());
 			server.add(sv);
+
 		}
 
 		result.include("server", server);
