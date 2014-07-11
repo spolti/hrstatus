@@ -156,7 +156,7 @@ public class ChartsController {
 			if (mysql > 0 && oracle > 0 && postgre > 0) {
 				result.include("mysql", (mysql * 100) / total);
 				result.include("oracle", (oracle * 100) / total);
-				result.include("postgre", (postgre * 100) / total);
+				result.include("postgresql", (postgre * 100) / total);
 				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
 				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Mysql: " + mysql);
 				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Oracle: " + oracle);
@@ -165,7 +165,7 @@ public class ChartsController {
 			} else if (mysql > 0) {
 				result.include("mysql", (mysql * 100) / total);
 				result.include("oracle", 0);
-				result.include("postgre", 0);
+				result.include("postgresql", 0);
 				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
 				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Mysql: " + mysql);
 				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Oracle: " + oracle);
@@ -174,7 +174,7 @@ public class ChartsController {
 			} else if (oracle > 0) {
 				result.include("mysql", 0);
 				result.include("oracle", (oracle * 100) / total);
-				result.include("postgre", 0);
+				result.include("postgresql", 0);
 				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
 				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Mysql: " + mysql);
 				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Oracle: " + oracle);
@@ -183,12 +183,11 @@ public class ChartsController {
 			} else if (postgre > 0) {
 				result.include("mysql", 0);
 				result.include("oracle", 0);
-				result.include("postgre", (postgre * 100) / total);
+				result.include("postgresql", (postgre * 100) / total);
 				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
 				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Mysql: " + mysql);
 				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Oracle: " + oracle);
 				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Postgre: " + postgre);
-
 			} 
 			
 			// Populating 2° graph (databases ok and not ok)

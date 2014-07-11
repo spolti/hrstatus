@@ -1,5 +1,84 @@
 <%@ include file="../home/navbar.jsp"%>
 
+<!--Load the AJAX API-->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+			// Load the Visualization API and the piechart package.
+     		google.load('visualization', '1.0', {'packages':['corechart']});
+			// Set a callback to run when the Google Visualization API is loaded.
+    		google.setOnLoadCallback(drawChart);
+
+	       // Callback that creates and populates a data table,
+	       // instantiates the pie chart, passes in the data and
+	       // draws it.
+	       function drawChart() {
+		        // Create the data table.
+		        var data = new google.visualization.DataTable();
+		        data.addColumn('string', 'Topping');
+		        data.addColumn('number', 'Slices');
+		        data.addRows([
+					['MySql', ${mysql}],
+					['Oracle', ${oracle}],
+					['PostgreSql', ${postgresql}]
+			     ]);
+		  // Set chart options
+		  var options = {'title':'Consolidado Total Banco de Dados',
+		                 'width':400,
+		                 'height':300,
+		                 'backgroundColor':"transparent"};
+		 // Instantiate and draw our chart, passing in some options.
+		 var chart = new google.visualization.PieChart(document.getElementById('chart_div_db'));
+		       chart.draw(data, options);
+		 }
+</script>
+
+<script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['SO', 'Time Ok', 'Time Not Ok'],
+          ['Mysql', ${dbMysqlOK}, ${dbMysqlNOK}],
+          ['Oracle',  ${dbOracleOK}, ${dbOracleNOK}],
+          ['PostgreSql', ${dbPostgreOK}, ${dbPostgreNOK}]
+        ]);
+
+        var options = {
+          title: 'Relação Servidores Atualizados/Desatualizados',
+          hAxis: {title: 'Consolidado', titleTextStyle: {color: 'red'}},
+          'backgroundColor':"transparent",
+          'width':1100,
+		  'height':250
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div_db_ok_notOk'));
+        chart.draw(data, options);
+      }
+</script>
+
+<script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'OK/Não OK'],
+          ['Banco de dados Atalizados', ${databaseOK}],
+          ['Banco de dados Desatualizados', ${databaseNOK}]
+        ]);
+
+        var options = {
+          title: 'Comparativo OK/Não Ok',
+          pieHole: 0.4,
+          'backgroundColor':"transparent",
+          'width':400,
+		  'height':300
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div_db_comparativo'));
+        chart.draw(data, options);
+      }
+</script>
+
 <div class="container">
 	<div class="content">
 		<div class="row">
@@ -10,79 +89,13 @@
 					</p>
 					<table>
 						<tr>
-							<td align="center"><canvas id="cvs"
-									!style="border: 1px solid #ccc">[No canvas support]</canvas> <script>
-								var graph1 = function() {
-								var data = [${mysql} , ${oracle}, ${postgre}];
-								var pie = new RGraph.Pie('cvs', data);
-								pie.Set('chart.labels', [ 'Mysql', 'Oracle','Postgre' ]);
-								pie.Set('chart.tooltips', [ 'Mysql', 'Oracle','Postgre']);
-								pie.Set('chart.tooltips.event', 'onmousemove');
-								pie.Set('chart.colors', [ '#EC0033', '#A0D300',
-										'#FFCD00', '#00B869', '#999999', '#FF7300',
-										'#004CB0' ]);
-								pie.Set('chart.strokestyle', 'white');
-								pie.Set('chart.linewidth', 3);
-								pie.Set('chart.shadow', true);
-								pie.Set('chart.shadow.offsetx', 2);
-								pie.Set('chart.shadow.offsety', 2);
-								pie.Set('chart.shadow.blur', 3);
-								pie.Set('chart.exploded', 7);
-		
-								for ( var i = 0; i < data.length; ++i) {
-									pie.Get('chart.labels')[i] = pie
-											.Get('chart.labels')[i]
-											+ ', ' + data[i] + '%';
-								}
-		
-								pie.Draw();
-							}
-						</script></td>
-
-							<td align="center"><canvas id="cvs1">[No canvas
-											support]</canvas> <script>
-					        var graph2 = function () 
-					        {
-					            var bar8 = new RGraph.Bar('cvs1', [${databaseOK},${databaseNOK}])
-					            bar8.Set('chart.labels', ['BD OK','BD Não OK']);
-					            //bar8.Set('chart.tooltips', function (index) {var label = bar8.Get('chart.labels')[index];return '<h2 style="text-align: center">' + label + '</h2><canvas id="tooltip_canvas" width="250" height="110"></canvas>';});
-					            bar8.Draw();
-					        }
-   					 </script></td>
+							<td align="center"><div id="chart_div_db"></div></td>
+							<td align="center"><div id="chart_div_db_comparativo"></div></td>
 						</tr>
 						<tr>
-							<td colspan="2" align="center"><canvas id="cvs2" width="900"
-									height="200">[No canvas support]</canvas> <script>
-						        var graph3 = function ()
-						        {						
-						            var bar = new RGraph.Bar('cvs2', [[${dbMysqlOK},${dbMysqlNOK}],[${dbOracleOK},${dbOracleNOK}],[${dbPostgreOK},${dbPostgreNOK}]]);
-						            bar.Set('chart.labels', ['Mysql', 'Oracle', 'Postgree']);
-						            bar.Set('chart.tooltips', ['Mysql OK', 'Mysql não OK', 'Oracle OK', 'Oracle não OK', 'Postgree OK', 'Postgree não OK']);
-						            bar.Set('chart.tooltips.event', 'onmousemove');
-						            bar.Set('chart.ymax', ${totalDB});
-						            bar.Set('chart.strokestyle', 'white');
-						            bar.Set('chart.linewidth', 2);
-						            bar.Set('chart.shadow', true);
-						            bar.Set('chart.shadow.offsetx', 0);
-						            bar.Set('chart.shadow.offsety', 0);
-						            bar.Set('chart.shadow.blur', 10);
-						            bar.Set('chart.hmargin.grouped', 2);
-						            
-						            bar.Set('chart.title', '');
-						            bar.Set('chart.gutter.bottom', 20);
-						            bar.Set('chart.gutter.left', 40);
-						            bar.Set('chart.gutter.right', 15);
-						            bar.Set('chart.colors', [
-						                                     RGraph.LinearGradient(bar, 0,225,0,0, 'white', 'rgba(255, 176, 176, 0.5)'),
-						                                     RGraph.LinearGradient(bar, 0,225,0,0, 'white', 'rgba(153, 208, 249,0.5)')
-						                                    ]); 
-						            bar.Set('chart.background.grid.autofit.numhlines', 5);
-						            bar.Set('chart.background.grid.autofit.numvlines', 3);
-						            
-						            // This draws the chart
-						            RGraph.Effects.Fade.In(bar, {'duration': 250});        
-						        }
-    </script></td>
+							<td align="center" colspan="2">
+								<div id="chart_div_db_ok_notOk"></div>
+							</td>
 						</tr>
 	</table>
 				</div>
@@ -91,12 +104,5 @@
 	</div>
 </div>
 
-<script>
-		window.onload = function() {
-			graph1();
-			graph2();
-			graph3(); 
-		}
-	</script>
 </body>
 </html>
