@@ -63,78 +63,53 @@ public class ChartsController {
 			int unix = this.iteracoesDAO.countUnix();
 			int other = this.iteracoesDAO.countOther();
 			int total = this.iteracoesDAO.countAllServers();
-			if (linux > 0 && windows > 0 && unix > 0) {
-				result.include("linux", (linux * 100) / total);
-				result.include("windows", (windows * 100) / total);
-				result.include("unix", (unix * 100) / total);
-				result.include("other", (other * 100) / total);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] linux: " + linux);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Windows: " + windows);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Unix: " + unix);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Other: " + other);
+			result.include("linux", linux);
+			result.include("windows", windows);
+			result.include("unix", unix);
+			result.include("other", other);	
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] linux: " + linux);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Windows: " + windows);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Unix: " + unix);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Other: " + other);
 
-			} else if (linux > 0) {
-				result.include("linux", (linux * 100) / total);
-				result.include("windows", 0);
-				result.include("unix", 0);
-				result.include("other", 0);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] linux: " + linux);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Windows: " + windows);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Unix: " + unix);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Other: " + other);
-
-			} else if (windows > 0) {
-				result.include("linux", 0);
-				result.include("windows", (windows * 100) / total);
-				result.include("unix", 0);
-				result.include("other", 0);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] linux: " + linux);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Windows: " + windows);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Unix: " + unix);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Other: " + other);
-
-			} else if (unix > 0) {
-				result.include("linux", 0);
-				result.include("windows", 0);
-				result.include("unix", (unix * 100) / total);
-				result.include("other", 0);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] linux: " + linux);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Windows: " + windows);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Unix: " + unix);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Other: " + other);
-
-			} else if (other > 0) {
-				result.include("linux", 0);
-				result.include("windows", 0);
-				result.include("unix", 0);
-				result.include("other", (other * 100) / total);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] linux: " + linux);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Windows: " + windows);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Unix: " + unix);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Other: " + other);
-			}
 
 			// Populating 2° graph (servers ok and not ok)
-			result.include("serversOK", this.iteracoesDAO.countServersOK());
-			result.include("serversNOK", this.iteracoesDAO.countServersNOK());
+			int serverOK = this.iteracoesDAO.countServersOK();
+			result.include("serversOK",serverOK);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Servidores OK: " + serverOK);
+			int serverNOK = this.iteracoesDAO.countServersNOK();
+			result.include("serversNOK", serverNOK);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Servidores não OK: " + serverNOK);
 
 			// Ploting 3° graph.
-			result.include("serversLinuxOK", this.iteracoesDAO.countLinuxOK());
-			result.include("serversLinuxNOK", this.iteracoesDAO.countLinuxNOK());
+			int countLinuxOK = this.iteracoesDAO.countLinuxOK();
+			result.include("serversLinuxOK", countLinuxOK);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Servidores Linux OK: " + countLinuxOK);
+			int countLinuxNOK = this.iteracoesDAO.countLinuxNOK();
+			result.include("serversLinuxNOK", countLinuxNOK);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Servidores Linux não OK: " + countLinuxNOK);
 
-			result.include("serversUnixOK", this.iteracoesDAO.countUnixOK());
-			result.include("serversUnixNOK", this.iteracoesDAO.countUnixNOK());
+			int countUnixOK = this.iteracoesDAO.countUnixOK();
+			result.include("serversUnixOK", countUnixOK);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Servidores Unix OK: " + countUnixOK);
+			int countUnixNOK = this.iteracoesDAO.countUnixNOK();
+			result.include("serversUnixNOK", countUnixNOK);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Servidores Unix não OK: " + countUnixNOK);
 
-			result.include("serversWindowsOK", this.iteracoesDAO.countWindowsOK());
-			result.include("serversWindowsNOK", this.iteracoesDAO.countWindowsNOK());
+			int countWindowsOK = this.iteracoesDAO.countWindowsOK();
+			result.include("serversWindowsOK", countWindowsOK);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Servidores Windows OK: " + countWindowsOK);
+			int countWindowsNOK = this.iteracoesDAO.countWindowsNOK();
+			result.include("serversWindowsNOK", countWindowsNOK);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Servidores Windows não OK: " + countWindowsNOK);
 
-			result.include("otherOK", this.iteracoesDAO.countOtherOK());
-			result.include("otherNOK", this.iteracoesDAO.countOtherNOK());
+			int countOtherOK = this.iteracoesDAO.countOtherOK();
+			result.include("otherOK", countOtherOK);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Outros Servidores OK: " + countOtherOK);
+			int countOtherNOK = this.iteracoesDAO.countOtherNOK();
+			result.include("otherNOK", countOtherNOK);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Outros Servidores não OK: " + countOtherNOK);
 
 			result.include("totalServer",total);
 	}
@@ -153,58 +128,44 @@ public class ChartsController {
 			int oracle = this.BancoDadosInterfaceDAO.countOracle();
 			int postgre = this.BancoDadosInterfaceDAO.countPostgre();
 			int total = this.BancoDadosInterfaceDAO.countAllDataBases();
-			if (mysql > 0 && oracle > 0 && postgre > 0) {
-				result.include("mysql", (mysql * 100) / total);
-				result.include("oracle", (oracle * 100) / total);
-				result.include("postgresql", (postgre * 100) / total);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Mysql: " + mysql);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Oracle: " + oracle);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Postgre: " + postgre);
 
-			} else if (mysql > 0) {
-				result.include("mysql", (mysql * 100) / total);
-				result.include("oracle", 0);
-				result.include("postgresql", 0);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Mysql: " + mysql);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Oracle: " + oracle);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Postgre: " + postgre);
+			result.include("mysql", (mysql * 100) / total);
+			result.include("oracle", (oracle * 100) / total);
+			result.include("postgresql", (postgre * 100) / total);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Mysql: " + mysql);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Oracle: " + oracle);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Postgre: " + postgre);
 
-			} else if (oracle > 0) {
-				result.include("mysql", 0);
-				result.include("oracle", (oracle * 100) / total);
-				result.include("postgresql", 0);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Mysql: " + mysql);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Oracle: " + oracle);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Postgre: " + postgre);
-
-			} else if (postgre > 0) {
-				result.include("mysql", 0);
-				result.include("oracle", 0);
-				result.include("postgresql", (postgre * 100) / total);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Mysql: " + mysql);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Oracle: " + oracle);
-				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Postgre: " + postgre);
-			} 
-			
 			// Populating 2° graph (databases ok and not ok)
 			int dbOK = this.BancoDadosInterfaceDAO.countDataBasesOK();
-			int dbNOK = BancoDadosInterfaceDAO.countDataBasesNOK();
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados OK: " + dbOK);
 			result.include("databaseOK", dbOK);
+			int dbNOK = BancoDadosInterfaceDAO.countDataBasesNOK();
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados Não OK: " + dbNOK);
 			result.include("databaseNOK", dbNOK);
 
 			// Ploting 3° graph.
-			result.include("dbMysqlOK", this.BancoDadosInterfaceDAO.countMySQLOK());
-			result.include("dbMysqlNOK", this.BancoDadosInterfaceDAO.countMySQLNOK());
+			int countMySQLOK = this.BancoDadosInterfaceDAO.countMySQLOK();
+			result.include("dbMysqlOK", countMySQLOK);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados MySQL OK: " + countMySQLOK);
+			int countMySQLNOK = this.BancoDadosInterfaceDAO.countMySQLNOK();
+			result.include("dbMysqlNOK", countMySQLNOK);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados MySQL Não OK: " + countMySQLNOK);
 
-			result.include("dbOracleOK", this.BancoDadosInterfaceDAO.countOracleOK());
-			result.include("dbOracleNOK", this.BancoDadosInterfaceDAO.countOracleNOK());
+			int countOracleOK = this.BancoDadosInterfaceDAO.countOracleOK();
+			result.include("dbOracleOK", countOracleOK);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados Oracle OK: " + countOracleOK);
+			int countOracleNOK = this.BancoDadosInterfaceDAO.countOracleNOK();
+			result.include("dbOracleNOK", countOracleNOK);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados Oracle Não OK: " + countOracleNOK);
 
-			result.include("dbPostgreOK", this.BancoDadosInterfaceDAO.countPostgreOK());
-			result.include("dbPostgreNOK", this.BancoDadosInterfaceDAO.countPostgreNOK());
+			int countPostgreOK = this.BancoDadosInterfaceDAO.countPostgreOK();
+			result.include("dbPostgreOK", countPostgreOK);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados PostgreSQL OK: " + countPostgreOK);
+			int countPostgreNOK = this.BancoDadosInterfaceDAO.countPostgreNOK();
+			result.include("dbPostgreNOK", countPostgreNOK);
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados PostgreSQL Não OK: " + countPostgreNOK);
 
 			result.include("totalDB",total);
 	}
