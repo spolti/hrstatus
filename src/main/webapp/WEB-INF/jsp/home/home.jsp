@@ -21,7 +21,7 @@
 								</c:otherwise> 
 							 </c:choose>
 							align="center">
-							<b>Banco de Dados</b><br>
+							<b>Banco de Dados</b><br><br>
 							<div class="row">
 
 								<div class="span3"></div>
@@ -153,7 +153,7 @@
 								</c:otherwise> 
 							 </c:choose>
 							align="center">
-							<b>Servidores</b><br>
+							<b>Servidores</b><br><br>
 							<div class="row">
 
 								<div class="span3"></div>
