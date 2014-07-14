@@ -37,6 +37,7 @@ import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.hrstatus.model.Servidores;
@@ -135,22 +136,21 @@ public class IteracoesDAO implements Iteracoes {
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.add(Restrictions.eq("id", id)).list();
 	}
-
+	
+	@Transactional(propagation = Propagation.NEVER)
 	public void updateServer(Servidores server) {
 
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] updateServer -> Retrieving parameters");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] updateServer -> Retrieving parameters");
 		
-		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Parametros recebidos para update");
-		Logger.getLogger(getClass()).debug("Server " + server.getHostname());
-		Logger.getLogger(getClass()).debug("IP: " + server.getIp());
-		Logger.getLogger(getClass()).debug("SO: " + server.getSO());
-		Logger.getLogger(getClass()).debug("Port:" + server.getPort());
-		Logger.getLogger(getClass()).debug("User: " + server.getUser());
-		Logger.getLogger(getClass()).debug("Pass: " + server.getPass());
-		Logger.getLogger(getClass()).debug("Difference: " + server.getDifference());		
-		Logger.getLogger(getClass()).debug("ID: " + server.getId());
+		Logger.getLogger(getClass()).trace("[ " + userInfo.getLoggedUsername() + " ] Parametros recebidos para update");
+		Logger.getLogger(getClass()).trace("Server " + server.getHostname());
+		Logger.getLogger(getClass()).trace("IP: " + server.getIp());
+		Logger.getLogger(getClass()).trace("SO: " + server.getSO());
+		Logger.getLogger(getClass()).trace("Port:" + server.getPort());
+		Logger.getLogger(getClass()).trace("User: " + server.getUser());
+		Logger.getLogger(getClass()).trace("Pass: " + server.getPass());
+		Logger.getLogger(getClass()).trace("Difference: " + server.getDifference());		
+		Logger.getLogger(getClass()).trace("ID: " + server.getId());
 
 		session().update(server);
 

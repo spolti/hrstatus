@@ -21,7 +21,8 @@
 								</c:otherwise> 
 							 </c:choose>
 							align="center">
-							<b>Banco de Dados</b><br><br>
+							<b>Banco de Dados</b><br>
+							<br>
 							<div class="row">
 
 								<div class="span3"></div>
@@ -111,11 +112,12 @@
 											<td>${bancoDados.serverTime}</td>
 											<td>${bancoDados.difference}</td>
 											<td>${bancoDados.status}</td>
-											<td><c:if test="${bancoDados.trClass == 'error'}">
-													<div class="find_1">
+											<c:if test="${bancoDados.trClass == 'error'}">
+												<td><div class="find_1">
 														<input type="checkbox" value="${bancoDados.id}" />
-													</div>
-												</c:if></td>
+													</div></td>
+												<td>Editar</td>
+											</c:if>
 										</tr>
 									</c:forEach>
 								</tbody>
@@ -153,7 +155,8 @@
 								</c:otherwise> 
 							 </c:choose>
 							align="center">
-							<b>Servidores</b><br><br>
+							<b>Servidores</b><br>
+							<br>
 							<div class="row">
 
 								<div class="span3"></div>
@@ -242,11 +245,14 @@
 											<td>${server.serverTime}</td>
 											<td>${server.difference}</td>
 											<td>${server.status}</td>
-											<td><c:if test="${server.trClass == 'error'}">
-													<div class="find_1">
+											<c:if test="${server.trClass == 'error'}">
+												<td><div class="find_1">
 														<input type="checkbox" value="${server.id}" />
-													</div>
-												</c:if></td>
+													</div></td>
+												<td><a
+													href="<c:url value='/findForUpdateServer/${server.id}' />"
+													title="Editar Servidor"><i class="icon-edit"> </i></a></td>
+											</c:if>
 										</tr>
 									</c:forEach>
 								</tbody>
