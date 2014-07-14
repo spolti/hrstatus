@@ -61,9 +61,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 
 	public int insert_dataBase(BancoDados dataBase) {
 
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] insert_dataBase -> Retrieving parameters");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] insert_dataBase -> Retrieving parameters");
 		Logger.getLogger(getClass()).debug("Server: " + dataBase.getHostname());
 		Logger.getLogger(getClass()).debug("IP: " + dataBase.getIp());
 		Logger.getLogger(getClass()).debug("User: " + dataBase.getUser());
@@ -74,35 +72,23 @@ public class BancoDadosDAO implements BancoDadosInterface {
 
 		try {
 
-			Criteria hostname = session()
-					.createCriteria(BancoDados.class)
-					.add(Restrictions.eq("hostname",
-							new String(dataBase.getHostname())))
-					.setProjection(Projections.property("hostname"));
+			Criteria hostname = session().createCriteria(BancoDados.class).add(Restrictions.eq("hostname",
+							new String(dataBase.getHostname()))).setProjection(Projections.property("hostname"));
 
 			if (hostname.uniqueResult() == null) {
-				Logger.getLogger(getClass()).info(
-						"[ " + userInfo.getLoggedUsername()
-								+ " ] insert_dataBase -> Banco de dados "
+				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] insert_dataBase -> Banco de dados "
 								+ dataBase.getHostname() + " não encontrado");
-				Logger.getLogger(getClass()).info(
-						"[ " + userInfo.getLoggedUsername()
-								+ " ] insert_dataBase -> Saving data");
+				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] insert_dataBase -> Saving data");
 				session().save(dataBase);
 				return 0;
 			} else {
-				Logger.getLogger(getClass()).info(
-						"[ " + userInfo.getLoggedUsername()
-								+ " ] insert_dataBase -> Servidor "
-								+ dataBase.getHostname()
-								+ " já existe, dados não inseridos.");
+				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] insert_dataBase -> Servidor "
+								+ dataBase.getHostname() + " já existe, dados não inseridos.");
 				return 1;
 			}
 
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).error(
-					"[ " + userInfo.getLoggedUsername()
-							+ " ] insert_dataBase -> Erro: " + e);
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] insert_dataBase -> Erro: " + e);
 			return 1;
 		}
 
@@ -116,8 +102,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 	
 	public BancoDados getDataBaseByID(int id) {
 		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] getDataBaseByID -> DataBase ID selected: " + id);
-		return (BancoDados) session().createCriteria(BancoDados.class)
-				.add(Restrictions.eq("id", id)).uniqueResult();
+		return (BancoDados) session().createCriteria(BancoDados.class).add(Restrictions.eq("id", id)).uniqueResult();
 	}
 	
 	public boolean deleteDataBase(BancoDados bancoDados) {
@@ -126,21 +111,17 @@ public class BancoDadosDAO implements BancoDadosInterface {
 		try {
 			session().refresh(bancoDados);
 			session().delete(bancoDados);
-			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] deleteDataBaseByID -> Data Base " + bancoDados.getHostname()
-					+ " deleted.");
+			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] deleteDataBaseByID -> Data Base " + bancoDados.getHostname() + " deleted.");
 			return true;
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] deleteDataBaseByID -> Data Base " + bancoDados.getHostname()
-					+ "Delete Operation failed.");
+			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] deleteDataBaseByID -> Data Base " + bancoDados.getHostname() + "Delete Operation failed.");
 			return false;
 		}
 	}
 	
 	public void updateDataBase(BancoDados dataBase){
 		
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] updateDataBase -> Retrieving parameters");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] updateDataBase -> Retrieving parameters");
 		Logger.getLogger(getClass()).debug("Server: " + dataBase.getHostname());
 		Logger.getLogger(getClass()).debug("IP: " + dataBase.getIp());
 		Logger.getLogger(getClass()).debug("User: " + dataBase.getUser());
@@ -208,8 +189,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 
 		try {
 			Criteria criteria = session().createCriteria(BancoDados.class);
-			criteria.add(Restrictions.or(Restrictions.eq("trClass", "error"),
-					Restrictions.eq("status", "NOK")));
+			criteria.add(Restrictions.or(Restrictions.eq("trClass", "error"),Restrictions.eq("status", "NOK")));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco De Dados não OK: " + count);
@@ -226,8 +206,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 
 		try {
 			Criteria criteria = session().createCriteria(BancoDados.class);
-			criteria.add(Restrictions.and(Restrictions.eq("vendor", "MYSQL"),
-					Restrictions.eq("status", "OK")));
+			criteria.add(Restrictions.and(Restrictions.eq("vendor", "MYSQL"), Restrictions.eq("status", "OK")));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countMySQLOK() -> " + count + " found.");
@@ -244,8 +223,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 
 		try {
 			Criteria criteria = session().createCriteria(BancoDados.class);
-			criteria.add(Restrictions.and(Restrictions.eq("vendor", "MYSQL"),
-					Restrictions.and(Restrictions.eq("trClass", "error"),
+			criteria.add(Restrictions.and(Restrictions.eq("vendor", "MYSQL"),Restrictions.and(Restrictions.eq("trClass", "error"),
 							Restrictions.eq("status", "NOK"))));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
@@ -263,8 +241,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 
 		try {
 			Criteria criteria = session().createCriteria(BancoDados.class);
-			criteria.add(Restrictions.and(Restrictions.eq("vendor", "oracle"),
-					Restrictions.eq("status", "OK")));
+			criteria.add(Restrictions.and(Restrictions.eq("vendor", "oracle"), Restrictions.eq("status", "OK")));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countOracleOK() -> " + count + " found.");
@@ -282,8 +259,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 		try {
 			Criteria criteria = session().createCriteria(BancoDados.class);
 			criteria.add(Restrictions.and(Restrictions.eq("vendor", "oracle"),
-					Restrictions.and(Restrictions.eq("trClass", "error"),
-							Restrictions.eq("status", "NOK"))));
+					Restrictions.and(Restrictions.eq("trClass", "error"), Restrictions.eq("status", "NOK"))));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countOracleNOK() -> " + count + " found.");
@@ -301,8 +277,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 
 		try {
 			Criteria criteria = session().createCriteria(BancoDados.class);
-			criteria.add(Restrictions.and(Restrictions.eq("vendor", "POSTGRESQL"),
-					Restrictions.eq("status", "OK")));
+			criteria.add(Restrictions.and(Restrictions.eq("vendor", "POSTGRESQL"), Restrictions.eq("status", "OK")));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countWindowsOK -> " + count + " found.");
@@ -320,8 +295,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 		try {
 			Criteria criteria = session().createCriteria(BancoDados.class);
 			criteria.add(Restrictions.and(Restrictions.eq("vendor", "POSTGRESQL"),
-					Restrictions.and(Restrictions.eq("trClass", "error"),
-							Restrictions.eq("status", "NOK"))));
+					Restrictions.and(Restrictions.eq("trClass", "error"), Restrictions.eq("status", "NOK"))));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countPostgreNOK() -> " + count + " found.");
@@ -352,8 +326,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 
 		try {
 			Criteria criteria = session().createCriteria(BancoDados.class);
-			criteria.add(Restrictions.or(Restrictions.eq("trClass", "error"),
-					Restrictions.eq("status", "NOK")));
+			criteria.add(Restrictions.or(Restrictions.eq("trClass", "error"), Restrictions.eq("status", "NOK")));
 			return criteria.list();
 
 		} catch (Exception e) {

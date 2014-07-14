@@ -36,9 +36,6 @@ public class GetDateOther {
 	public static String exec (String user, String host, String password, int port) throws JSchException, IOException{
 		
 		String s = "";
-
-	       
-	      //informações de usuário/host/porta para conexão
 	      
 	      //definindo a não obrigação do arquivo know_hosts
 	      java.util.Properties config = new java.util.Properties(); 
@@ -73,7 +70,6 @@ public class GetDateOther {
 	        }
 	        
 	        if(channel.isClosed()){
-	          //System.out.println("exit-status: "+channel.getExitStatus());
 	          break;
 	       }
 	      }

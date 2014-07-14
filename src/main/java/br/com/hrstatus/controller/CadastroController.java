@@ -119,9 +119,7 @@ public class CadastroController {
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] URI Called: /registerServer");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /registerServer");
 		Crypto encodePass = new Crypto();
 
 		// Regex to validade IP
@@ -130,26 +128,19 @@ public class CadastroController {
 		Matcher matcher = pattern.matcher(servidores.getIp());
 
 		if (servidores.getIp().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo Ip deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo Ip deve ser informado", "Erro"));
 		} else if (!matcher.matches()) {
-			validator.add(new ValidationMessage("O ip " + servidores.getIp()
-					+ " não é válido.", "Erro"));
+			validator.add(new ValidationMessage("O ip " + servidores.getIp() + " não é válido.", "Erro"));
 		} else if (servidores.getHostname().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo Hostname deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo Hostname deve ser informado", "Erro"));
 		} else if (servidores.getUser().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo Usuário deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo Usuário deve ser informado", "Erro"));
 		} else if (servidores.getPass().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo Senha deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo Senha deve ser informado", "Erro"));
 		} else if (servidores.getPort() <= 0 || servidores.getPort() >= 65536) {
-			validator.add(new ValidationMessage(
-					"O campo porta está incorreto ou vazio", "Erro"));
+			validator.add(new ValidationMessage("O campo porta está incorreto ou vazio", "Erro"));
 		} else if (servidores.getSO().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo SO deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo SO deve ser informado", "Erro"));
 		} else if (servidores.getLogDir().isEmpty()) {
 			servidores.setLogDir(null);
 		}
@@ -177,8 +168,7 @@ public class CadastroController {
 			result.include("SO", so);
 		}
 
-		validator.onErrorUsePageOf(CadastroController.class).newServer(
-				servidores);
+		validator.onErrorUsePageOf(CadastroController.class).newServer(servidores);
 
 		result.include("servidores", servidores);
 
@@ -198,19 +188,12 @@ public class CadastroController {
 		}
 
 		if (this.iteracoesDAO.insert_server(servidores) == 0) {
-			result.include("msg", "Server " + servidores.getHostname()
-					+ " was sucessfully registred.");
-			// result.forwardTo("/newServer");
-			Logger.getLogger(getClass()).info(
-					"Server " + servidores.getHostname()
-							+ " was sucessfully registred.");
+			result.include("msg", "Server " + servidores.getHostname() + " was sucessfully registred.");
+			Logger.getLogger(getClass()).info("Server " + servidores.getHostname() + " was sucessfully registred.");
 			result.redirectTo(ConfigController.class).configClients();
 		} else {
-			validator.add(new ValidationMessage("Server "
-					+ servidores.getHostname()
-					+ " was not registred because already exists.", "Erro"));
-			validator.onErrorForwardTo(CadastroController.class).newServer(
-					servidores);
+			validator.add(new ValidationMessage("Server " + servidores.getHostname() + " was not registred because already exists.", "Erro"));
+			validator.onErrorForwardTo(CadastroController.class).newServer(servidores);
 		}
 
 	}
@@ -222,9 +205,7 @@ public class CadastroController {
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] URI Called: /newDataBase");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /newDataBase");
 		result.include("bancoDados", bancoDados);
 
 		// populating SO combobox
@@ -244,31 +225,23 @@ public class CadastroController {
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] URI Called: /registerDataBase");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /registerDataBase");
 		Crypto encodePass = new Crypto();
 
 		// Regex to validade IP
-		Pattern pattern = Pattern
-				.compile("\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\z");
+		Pattern pattern = Pattern.compile("\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\z");
 		Matcher matcher = pattern.matcher(bancoDados.getIp());
 
 		if (bancoDados.getIp().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo Ip deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo Ip deve ser informado", "Erro"));
 		} else if (!matcher.matches()) {
-			validator.add(new ValidationMessage("O ip " + bancoDados.getIp()
-					+ " não é válido.", "Erro"));
+			validator.add(new ValidationMessage("O ip " + bancoDados.getIp() + " não é válido.", "Erro"));
 		} else if (bancoDados.getHostname().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo Hostname deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo Hostname deve ser informado", "Erro"));
 		} else if (bancoDados.getUser().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo Usuário deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo Usuário deve ser informado", "Erro"));
 		} else if (bancoDados.getPass().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo Senha deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo Senha deve ser informado", "Erro"));
 		} else if (bancoDados.getPort() <= 0 || bancoDados.getPort() >= 65536) {
 			if (bancoDados.getVendor().toUpperCase().equals("MYSQL")) {
 				bancoDados.setPort(3306);
@@ -283,8 +256,7 @@ public class CadastroController {
 				bancoDados.setPort(5432);
 			}
 		} else if (bancoDados.getVendor().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo Vendor deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo Vendor deve ser informado", "Erro"));
 		}
 		if (bancoDados.getQueryDate().isEmpty()) {
 			if (bancoDados.getVendor().toUpperCase().equals("MYSQL")) {
@@ -310,8 +282,7 @@ public class CadastroController {
 		VENDOR.add("SqlServer");
 		result.include("VENDOR", VENDOR);
 
-		validator.onErrorUsePageOf(CadastroController.class).newDataBase(
-				bancoDados);
+		validator.onErrorUsePageOf(CadastroController.class).newDataBase(bancoDados);
 
 		result.include("bancoDados", bancoDados);
 
@@ -327,20 +298,13 @@ public class CadastroController {
 		}
 
 		if (this.BancoDadosDAO.insert_dataBase(bancoDados) == 0) {
-			result.include("msg", "BancoDados " + bancoDados.getHostname()
-					+ " was sucessfully registred.");
-			Logger.getLogger(getClass()).info(
-					"DataBase " + bancoDados.getHostname()
-							+ " was sucessfully registred.");
+			result.include("msg", "BancoDados " + bancoDados.getHostname() + " was sucessfully registred.");
+			Logger.getLogger(getClass()).info("DataBase " + bancoDados.getHostname() + " was sucessfully registred.");
 			result.redirectTo(ConfigController.class).configDataBases();
 		} else {
-			validator.add(new ValidationMessage("DataBase "
-					+ bancoDados.getHostname()
-					+ " was not registred because already exists.", "Erro"));
-			validator.onErrorForwardTo(CadastroController.class).newDataBase(
-					bancoDados);
+			validator.add(new ValidationMessage("DataBase " + bancoDados.getHostname() + " was not registred because already exists.", "Erro"));
+			validator.onErrorForwardTo(CadastroController.class).newDataBase(bancoDados);
 		}
-
 	}
 
 	@Get("/newUser")
@@ -352,9 +316,7 @@ public class CadastroController {
 		int count = iteracoesDAO.countServerWithLog();
 		List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 
-		Logger.getLogger(getClass())
-				.info("[ " + userInfo.getLoggedUsername()
-						+ " ] URI Called: /newUser");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /newUser");
 		result.include("user", user);
 		result.include("count", count);
 		result.include("server", server);
@@ -369,43 +331,30 @@ public class CadastroController {
 		result.include("title", "Registrar Usuário");
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ]URI Called: /registerUser");
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ]URI Called: /registerUser");
 		SpringEncoder encode = new SpringEncoder();
 
-		// Pegando tamanho do vetor
-
 		// expressão regular para validar email
-		Pattern p = Pattern
-				.compile("^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]{2,7}$");
+		Pattern p = Pattern.compile("^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]{2,7}$");
 		Matcher m = p.matcher(user.getMail());
 
 		if (user.getNome().isEmpty()) {
-			List<Servidores> server = this.iteracoesDAO
-					.getHostnamesWithLogDir();
+			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
-			validator.add(new ValidationMessage(
-					"O campo Nome deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo Nome deve ser informado", "Erro"));
 		} else if (user.getUsername().isEmpty()) {
-			List<Servidores> server = this.iteracoesDAO
-					.getHostnamesWithLogDir();
+			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
-			validator.add(new ValidationMessage(
-					"O campo Username deve ser informado", "Erro"));
-		} else if (user.getPassword().isEmpty()
-				&& user.getConfirmPass().isEmpty()) {
+			validator.add(new ValidationMessage("O campo Username deve ser informado", "Erro"));
+		} else if (user.getPassword().isEmpty()	&& user.getConfirmPass().isEmpty()) {
 			PassGenerator gemPass = new PassGenerator();
 			String password = gemPass.gemPass();
 			user.setPassword(password);
-			Logger.getLogger(getClass()).info(
-					"[ " + userInfo.getLoggedUsername() + " ] - Senha gerada");
+			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] - Senha gerada");
 		} else if (!user.getPassword().equals(user.getConfirmPass())) {
-			List<Servidores> server = this.iteracoesDAO
-					.getHostnamesWithLogDir();
+			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
-			validator.add(new ValidationMessage(
-					"As senhas informadas não são iguais.", "Erro"));
+			validator.add(new ValidationMessage("As senhas informadas não são iguais.", "Erro"));
 		} else if (user.getPassword().equals(user.getConfirmPass())) {
 			//Verificando a complexidade de senha informada.
 			List<String> passVal = new ArrayList<String>();
@@ -421,49 +370,36 @@ public class CadastroController {
 			for (int j = 0; j < passVal.size(); j++) {
 				validator.add(new ValidationMessage(passVal.get(j), "Erro"));
 			}
-			List<Servidores> server = this.iteracoesDAO
-					.getHostnamesWithLogDir();
+			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
 			
 		}else if (user.getMail().isEmpty()) {
-			List<Servidores> server = this.iteracoesDAO
-					.getHostnamesWithLogDir();
+			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
-			validator.add(new ValidationMessage(
-					"O campo E-mail deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo E-mail deve ser informado", "Erro"));
 		} else if (!m.find()) {
-			List<Servidores> server = this.iteracoesDAO
-					.getHostnamesWithLogDir();
+			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
-			validator.add(new ValidationMessage(
-					"Favor informe o e-mail corretamente.", "Erro"));
+			validator.add(new ValidationMessage("Favor informe o e-mail corretamente.", "Erro"));
 		} else if (user.getAuthority().isEmpty()) {
-			List<Servidores> server = this.iteracoesDAO
-					.getHostnamesWithLogDir();
+			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
-			validator.add(new ValidationMessage(
-					"O campo Perfil deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo Perfil deve ser informado", "Erro"));
 
 		} else if (checkall) {
-			Logger.getLogger(getClass())
-					.debug("[ "
-							+ userInfo.getLoggedUsername()
-							+ " ] A opção selecione todos os servidores está marcada.");
+			Logger.getLogger(getClass()).debug("[ "	+ userInfo.getLoggedUsername() + " ] A opção selecione todos os servidores está marcada.");
 			List<Servidores> idAccessServers = new ArrayList<Servidores>();
 			idAccessServers = this.iteracoesDAO.getHostnamesWithLogDir();
 			user.setServer(idAccessServers);
 
 		} else if (idServer[0].equals("notNull")) {
-			Logger.getLogger(getClass()).info(
-					"Lista de Servidores para Usuário vazio.");
+			Logger.getLogger(getClass()).info("Lista de Servidores para Usuário vazio.");
 		} else if (!idServer[0].equals("notNull")) {
 			List<Servidores> idAccessServers = new ArrayList<Servidores>();
 			for (int i = 0; i < idServer.length; i++) {
-				Logger.getLogger(getClass()).info(
-						"ID Servidor recebido: " + idServer[i]);
+				Logger.getLogger(getClass()).info("ID Servidor recebido: " + idServer[i]);
 				if (!idServer[i].equals("notNull")) {
-					idAccessServers.add(this.iteracoesDAO.getServerByID(Integer
-							.parseInt(idServer[i])));
+					idAccessServers.add(this.iteracoesDAO.getServerByID(Integer.parseInt(idServer[i])));
 				}
 			}
 			user.setServer(idAccessServers);
@@ -485,9 +421,7 @@ public class CadastroController {
 		user.setPassword(encode.encodePassUser(user.getPassword()));
 		this.userDAO.saveORupdateUser(user);
 
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername() + " ] O usuário "
-						+ user.getUsername() + " foi criado com sucesso.");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] O usuário "	+ user.getUsername() + " foi criado com sucesso.");
 
 		result.redirectTo(HomeController.class).home("null");
 	}

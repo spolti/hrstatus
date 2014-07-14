@@ -39,12 +39,9 @@ public class GetDateWindows {
 		try {
 
 			if (parameter.equals("I")) {
-				Logger.getLogger(GetDateWindows.class).debug(
-						"Trying parameter -I");
-				//System.out.println("Trying parameter -I");
+				Logger.getLogger(GetDateWindows.class).debug("Trying parameter -I");
 				p = Runtime.getRuntime().exec("net time -I " + ip);
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(p.getInputStream()));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 				while ((s = reader.readLine()) != null) {
 					out += s;
 				}
@@ -64,8 +61,7 @@ public class GetDateWindows {
 				if (p.equals(null)) {
 					System.out.println("To nulooo");
 				}
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(p.getInputStream()));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 				while ((s = reader.readLine()) != null) {
 					out += s;
 				}
@@ -87,15 +83,4 @@ public class GetDateWindows {
 		}
 
 	}
-
-//	public static void main(String args[]) throws IOException {
-//		GetDateWindows get = new GetDateWindows();
-//
-//		//System.out.println(get.Exec("10.1.0.108", "I"));
-//		if (get.Exec("10.1.0.108", "I") == null){
-//			System.out.println("paremtro -I retorno nulo");
-//			System.out.println("Tentando parametro -S");
-//			System.out.println(get.Exec("10.1.0.108", "S"));
-//		}
-//	}
 }

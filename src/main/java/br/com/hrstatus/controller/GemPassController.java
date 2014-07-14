@@ -133,17 +133,14 @@ public class GemPassController {
 					this.userDAO.setExpirePasswordTime(passExpire);
 					send.sendNewPass(mailSender, dest, jndiMail, password, username);
 
-					result.redirectTo(LoginController.class)
-							.login("Se o usuário for válido uma nova senha será enviada para seu e-mail.");
+					result.redirectTo(LoginController.class).login("Se o usuário for válido uma nova senha será enviada para seu e-mail.");
 				} else {
-					result.redirectTo(LoginController.class)
-							.login("Já foi solicitado uma troca de senha para este usuário, por favor cheque seu e-mail.");
+					result.redirectTo(LoginController.class).login("Já foi solicitado uma troca de senha para este usuário, por favor cheque seu e-mail.");
 				}
 
 			} else {
 				Logger.getLogger(getClass()).info("[ Not Logged ] Usuário não encontrado");
-				result.redirectTo(LoginController.class)
-				.login("Se o usuário for válido uma nova senha será enviada para seu e-mail.");
+				result.redirectTo(LoginController.class).login("Se o usuário for válido uma nova senha será enviada para seu e-mail.");
 			}
 
 		} catch (Exception e) {

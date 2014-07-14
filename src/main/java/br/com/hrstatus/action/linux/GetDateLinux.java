@@ -86,15 +86,4 @@ public class GetDateLinux {
 		}
 		return s;
 	}
-
-//	public static void main(String args[]) throws IOException, JSchException {
-//		GetDateLinux get = new GetDateLinux();
-//
-//		String tmp = get.exec("sfssdfsdf", "sdfsdfsdfsd", "sdfsdfsdfsdf", 22);
-////		DateParser parse = new DateParser();
-////		Date data = parse.parser(tmp);
-//		
-//		System.out.println(tmp);
-//	}
-
 }

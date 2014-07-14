@@ -65,9 +65,7 @@ public class VerifySingleServer {
 			// Decripting password
 			
 			try {
-				String dateSTR = GetDateLinux.exec(
-						servidores.getUser(), servidores.getIp(),
-						servidores.getPass(), servidores.getPort());
+				String dateSTR = GetDateLinux.exec(	servidores.getUser(), servidores.getIp(),servidores.getPass(), servidores.getPort());
 				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
 				servidores.setClientTime(dateSTR);
 				// Calculating time difference
@@ -79,8 +77,7 @@ public class VerifySingleServer {
 					servidores.setDifference(servidores.getDifference() * -1);
 				}
 					
-				if (servidores.getDifference() <= this.configurationDAO
-						.getDiffirenceSecs()) {
+				if (servidores.getDifference() <= this.configurationDAO.getDiffirenceSecs()) {
 					servidores.setTrClass("success");
 					servidores.setStatus("OK");
 				} else {
@@ -89,12 +86,10 @@ public class VerifySingleServer {
 				}
 				try {
 					// Critpografando a senha
-					servidores.setPass(encodePass.encode(servidores
-							.getPass()));
+					servidores.setPass(encodePass.encode(servidores.getPass()));
 
 				} catch (Exception e1) {
-					Logger.getLogger(getClass()).error("Error: ",
-							e1);
+					Logger.getLogger(getClass()).error("Error: ",e1);
 				}
 				this.iteracoesDAO.updateServer(servidores);
 
@@ -103,12 +98,10 @@ public class VerifySingleServer {
 				servidores.setTrClass("error");
 				try {
 					// Critpografando a senha
-					servidores.setPass(encodePass.encode(servidores
-							.getPass()));
+					servidores.setPass(encodePass.encode(servidores.getPass()));
 
 				} catch (Exception e1) {
-					Logger.getLogger(getClass()).error("Error: ",
-							e1);
+					Logger.getLogger(getClass()).error("Error: ",e1);
 				}
 				this.iteracoesDAO.updateServer(servidores);
 			} catch (IOException e) {
@@ -117,12 +110,10 @@ public class VerifySingleServer {
 				try {
 
 					// Critpografando a senha
-					servidores.setPass(encodePass.encode(servidores
-							.getPass()));
+					servidores.setPass(encodePass.encode(servidores.getPass()));
 
 				} catch (Exception e1) {
-					Logger.getLogger(getClass()).error("Error: ",
-							e1);
+					Logger.getLogger(getClass()).error("Error: ",e1);
 				}
 				this.iteracoesDAO.updateServer(servidores);
 			}
@@ -139,14 +130,11 @@ public class VerifySingleServer {
 				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
 				servidores.setClientTime(dateSTR);
 				// Calculating time difference
-				servidores.setDifference(dt.diffrenceTime(
-						servidores.getServerTime(), dateSTR,
-						"WINDOWS"));
+				servidores.setDifference(dt.diffrenceTime(servidores.getServerTime(), dateSTR,"WINDOWS"));
 				if (servidores.getDifference() < 0){
 					servidores.setDifference(servidores.getDifference() * -1);
 				}
-				if (servidores.getDifference() <= this.configurationDAO
-						.getDiffirenceSecs()) {
+				if (servidores.getDifference() <= this.configurationDAO.getDiffirenceSecs()) {
 					servidores.setTrClass("success");
 					servidores.setStatus("OK");
 				} else {

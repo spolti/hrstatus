@@ -62,8 +62,7 @@ public class VerifyDataBase {
 	private Validator validator;
 	UserInfo userInfo = new UserInfo();
 
-	public VerifyDataBase(Result result, LockIntrface lockDAO,
-			BancoDadosInterface dbDAO, Configuration configurationDAO,
+	public VerifyDataBase(Result result, LockIntrface lockDAO,BancoDadosInterface dbDAO, Configuration configurationDAO,
 			Validator validator) {
 
 		this.result = result;
@@ -89,43 +88,26 @@ public class VerifyDataBase {
 		// inserindo html title no result
 		result.include("title", "Hr Status Home");
 		String LoggedUsername = userInfo.getLoggedUsername();
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] URI called: /database/startDataBaseVerification/"
-						+ value);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI called: /database/startDataBaseVerification/" + value);
 
 		// Verifica se já tem alguma verificação ocorrendo...
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername() + " ] Initializing a "
-						+ value + " verification.");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Initializing a " + value + " verification.");
 
 		if (value.equals("fullDBVerification")) {
 			lockedResource.setRecurso("fullDBVerification");
 			lockedResource.setUsername(LoggedUsername);
-			List<Lock> lockList = this.lockDAO
-					.listLockedServices("fullDBVerification");
+			List<Lock> lockList = this.lockDAO.listLockedServices("fullDBVerification");
 			if (lockList.size() != 0) {
 				for (Lock lock : lockList) {
-					Logger.getLogger(getClass()).info(
-							"[ " + userInfo.getLoggedUsername()
-									+ " ] O recurso " + value
-									+ " está locado pelo usuário "
-									+ lock.getUsername()
-									+ ", aguarde o término da mesma.");
+					Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] O recurso " + value
+									+ " está locado pelo usuário " + lock.getUsername() + ", aguarde o término da mesma.");
 					result.include("class", "activeBanco");
-					result.include(
-							"info",
-							"O recurso " + value + " está locado pelo usuário "
-									+ lock.getUsername()
-									+ ", aguarde o término da mesma")
-							.forwardTo(HomeController.class).home("");
+					result.include("info","O recurso " + value + " está locado pelo usuário " + lock.getUsername()
+									+ ", aguarde o término da mesma").forwardTo(HomeController.class).home("");
 
 				}
 			} else {
-				Logger.getLogger(getClass())
-						.info("[ "
-								+ userInfo.getLoggedUsername()
-								+ " ] O recurso fullDBVerification não está locado, locando e proseguindo");
+				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] O recurso fullDBVerification não está locado, locando e proseguindo");
 				// locar recurso.
 				lockDAO.insertLock(lockedResource);
 
@@ -136,8 +118,7 @@ public class VerifyDataBase {
 
 					// Decripting password
 					try {
-						bancoDados.setPass(String.valueOf(Crypto
-								.decode(bancoDados.getPass())));
+						bancoDados.setPass(String.valueOf(Crypto.decode(bancoDados.getPass())));
 					} catch (InvalidKeyException e) {
 						e.printStackTrace();
 					} catch (NoSuchPaddingException e) {
@@ -152,37 +133,26 @@ public class VerifyDataBase {
 
 					try {
 
-						if (bancoDados.getVendor().toUpperCase()
-								.equals("MYSQL")) {
+						if (bancoDados.getVendor().toUpperCase().equals("MYSQL")) {
 							dateSTR = runMySQL.getDate(bancoDados);
-						} else if (bancoDados.getVendor().toUpperCase()
-								.equals("POSTGRESQL")) {
+						} else if (bancoDados.getVendor().toUpperCase().equals("POSTGRESQL")) {
 							dateSTR = runPSQL.getDate(bancoDados);
-						} else if (bancoDados.getVendor().toUpperCase()
-								.equals("SQLSERVER")) {
+						} else if (bancoDados.getVendor().toUpperCase().equals("SQLSERVER")) {
 							dateSTR = runMySQL.getDate(bancoDados);
-						} else if (bancoDados.getVendor().toUpperCase()
-								.equals("ORACLE")) {
+						} else if (bancoDados.getVendor().toUpperCase().equals("ORACLE")) {
 							dateSTR = runMySQL.getDate(bancoDados);
 						}
-						Logger.getLogger(getClass()).debug(
-								"[ " + userInfo.getLoggedUsername()
-										+ " ] Hora obtida do servidor "
-										+ bancoDados.getHostname() + ": "
-										+ dateSTR);
+						Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor "
+										+ bancoDados.getHostname() + ": " + dateSTR);
 						bancoDados.setClientTime(dateSTR);
 						// Calculating time difference
-						bancoDados.setDifference((dt.diffrenceTime(
-								bancoDados.getServerTime(), dateSTR,
-								"Dont Need this, Remove!!!")));
+						bancoDados.setDifference((dt.diffrenceTime(bancoDados.getServerTime(), dateSTR,"Dont Need this, Remove!!!")));
 
 						if (bancoDados.getDifference() < 0) {
-							bancoDados.setDifference(bancoDados.getDifference()
-									* -1);
+							bancoDados.setDifference(bancoDados.getDifference() * -1);
 						}
 
-						if (bancoDados.getDifference() <= this.configurationDAO
-								.getDiffirenceSecs()) {
+						if (bancoDados.getDifference() <= this.configurationDAO.getDiffirenceSecs()) {
 							bancoDados.setTrClass("success");
 							bancoDados.setStatus("OK");
 						} else {
@@ -191,13 +161,10 @@ public class VerifyDataBase {
 						}
 						try {
 							// Critpografando a senha
-							bancoDados.setPass(encodePass.encode(bancoDados
-									.getPass()));
+							bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 
 						} catch (Exception e1) {
-							Logger.getLogger(getClass()).error(
-									"[ " + userInfo.getLoggedUsername()
-											+ " ] Error: ", e1);
+							Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ", e1);
 						}
 						this.dbDAO.updateDataBase(bancoDados);
 
@@ -206,13 +173,10 @@ public class VerifyDataBase {
 						bancoDados.setTrClass("error");
 						try {
 							// Critpografando a senha
-							bancoDados.setPass(encodePass.encode(bancoDados
-									.getPass()));
+							bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 
 						} catch (Exception e1) {
-							Logger.getLogger(getClass()).error(
-									"[ " + userInfo.getLoggedUsername()
-											+ " ] Error: ", e1);
+							Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ", e1);
 						}
 						this.dbDAO.updateDataBase(bancoDados);
 					} catch (IOException e) {
@@ -221,49 +185,32 @@ public class VerifyDataBase {
 						try {
 
 							// Critpografando a senha
-							bancoDados.setPass(encodePass.encode(bancoDados
-									.getPass()));
+							bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 
 						} catch (Exception e1) {
-							Logger.getLogger(getClass()).error(
-									"[ " + userInfo.getLoggedUsername()
-											+ " ] Error: ", e1);
+							Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername()+ " ] Error: ", e1);
 						}
-
 					}
 				}
 
 				result.include("class", "activeBanco");
-				result.include("bancoDados", listdb)
-						.forwardTo(HomeController.class).home("");
+				result.include("bancoDados", listdb).forwardTo(HomeController.class).home("");
 			}
 		} else if (value.equals("notFullDBVerification")) {
 			lockedResource.setRecurso("notFullDBVerification");
 			lockedResource.setUsername(LoggedUsername);
-			List<Lock> lockList = this.lockDAO
-					.listLockedServices("notFullDBVerification");
+			List<Lock> lockList = this.lockDAO.listLockedServices("notFullDBVerification");
 			if (lockList.size() != 0) {
 				for (Lock lock : lockList) {
-					Logger.getLogger(getClass()).info(
-							"[ " + userInfo.getLoggedUsername()
-									+ " ] O recurso " + value
-									+ " está locado pelo usuário "
-									+ lock.getUsername()
-									+ ", aguarde o término da mesma.");
+					Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] O recurso " + value
+									+ " está locado pelo usuário " + lock.getUsername() + ", aguarde o término da mesma.");
 					result.include("class", "activeBanco");
-					result.include(
-							"info",
-							"O recurso " + value + " está locado pelo usuário "
-									+ lock.getUsername()
-									+ ", aguarde o término da mesma")
-							.forwardTo(HomeController.class).home("");
+					result.include("info","O recurso " + value + " está locado pelo usuário "+ lock.getUsername()
+									+ ", aguarde o término da mesma").forwardTo(HomeController.class).home("");
 
 				}
 			} else {
-				Logger.getLogger(getClass())
-						.info("[ "
-								+ userInfo.getLoggedUsername()
-								+ " ] O recurso notFullDBVerification não está locado, locando e proseguindo");
+				Logger.getLogger(getClass()).info("[ "+ userInfo.getLoggedUsername() + " ] O recurso notFullDBVerification não está locado, locando e proseguindo");
 				// locar recurso.
 				lockDAO.insertLock(lockedResource);
 
@@ -274,8 +221,7 @@ public class VerifyDataBase {
 
 					// Decripting password
 					try {
-						bancoDados.setPass(String.valueOf(Crypto
-								.decode(bancoDados.getPass())));
+						bancoDados.setPass(String.valueOf(Crypto.decode(bancoDados.getPass())));
 					} catch (InvalidKeyException e) {
 						e.printStackTrace();
 					} catch (NoSuchPaddingException e) {
@@ -290,37 +236,26 @@ public class VerifyDataBase {
 
 					try {
 
-						if (bancoDados.getVendor().toUpperCase()
-								.equals("MYSQL")) {
+						if (bancoDados.getVendor().toUpperCase().equals("MYSQL")) {
 							dateSTR = runMySQL.getDate(bancoDados);
-						} else if (bancoDados.getVendor().toUpperCase()
-								.equals("POSTGRESQL")) {
+						} else if (bancoDados.getVendor().toUpperCase().equals("POSTGRESQL")) {
 							dateSTR = runPSQL.getDate(bancoDados);
-						} else if (bancoDados.getVendor().toUpperCase()
-								.equals("SQLSERVER")) {
+						} else if (bancoDados.getVendor().toUpperCase().equals("SQLSERVER")) {
 							dateSTR = runMySQL.getDate(bancoDados);
-						} else if (bancoDados.getVendor().toUpperCase()
-								.equals("ORACLE")) {
+						} else if (bancoDados.getVendor().toUpperCase().equals("ORACLE")) {
 							dateSTR = runMySQL.getDate(bancoDados);
 						}
-						Logger.getLogger(getClass()).debug(
-								"[ " + userInfo.getLoggedUsername()
-										+ " ] Hora obtida do servidor "
-										+ bancoDados.getHostname() + ": "
-										+ dateSTR);
+						Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor "
+										+ bancoDados.getHostname() + ": " + dateSTR);
 						bancoDados.setClientTime(dateSTR);
 						// Calculating time difference
-						bancoDados.setDifference((dt.diffrenceTime(
-								bancoDados.getServerTime(), dateSTR,
-								"Dont Need this, Remove!!!")));
+						bancoDados.setDifference((dt.diffrenceTime(bancoDados.getServerTime(), dateSTR,	"Dont Need this, Remove!!!")));
 
 						if (bancoDados.getDifference() < 0) {
-							bancoDados.setDifference(bancoDados.getDifference()
-									* -1);
+							bancoDados.setDifference(bancoDados.getDifference() * -1);
 						}
 
-						if (bancoDados.getDifference() <= this.configurationDAO
-								.getDiffirenceSecs()) {
+						if (bancoDados.getDifference() <= this.configurationDAO.getDiffirenceSecs()) {
 							bancoDados.setTrClass("success");
 							bancoDados.setStatus("OK");
 						} else {
@@ -329,13 +264,10 @@ public class VerifyDataBase {
 						}
 						try {
 							// Critpografando a senha
-							bancoDados.setPass(encodePass.encode(bancoDados
-									.getPass()));
+							bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 
 						} catch (Exception e1) {
-							Logger.getLogger(getClass()).error(
-									"[ " + userInfo.getLoggedUsername()
-											+ " ] Error: ", e1);
+							Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ", e1);
 						}
 						this.dbDAO.updateDataBase(bancoDados);
 
@@ -344,13 +276,10 @@ public class VerifyDataBase {
 						bancoDados.setTrClass("error");
 						try {
 							// Critpografando a senha
-							bancoDados.setPass(encodePass.encode(bancoDados
-									.getPass()));
+							bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 
 						} catch (Exception e1) {
-							Logger.getLogger(getClass()).error(
-									"[ " + userInfo.getLoggedUsername()
-											+ " ] Error: ", e1);
+							Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ", e1);
 						}
 						this.dbDAO.updateDataBase(bancoDados);
 					} catch (IOException e) {
@@ -359,21 +288,17 @@ public class VerifyDataBase {
 						try {
 
 							// Critpografando a senha
-							bancoDados.setPass(encodePass.encode(bancoDados
-									.getPass()));
+							bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 
 						} catch (Exception e1) {
-							Logger.getLogger(getClass()).error(
-									"[ " + userInfo.getLoggedUsername()
-											+ " ] Error: ", e1);
+							Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ", e1);
 						}
 
 					}
 				}
 
 				result.include("class", "activeBanco");
-				result.include("bancoDados", listdb)
-						.forwardTo(HomeController.class).home("");
+				result.include("bancoDados", listdb).forwardTo(HomeController.class).home("");
 			}
 		}
 		lockDAO.removeLock(lockedResource);
@@ -384,25 +309,20 @@ public class VerifyDataBase {
 		// inserindo html title no result
 		result.include("title", "Hr Status Home");
 
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] URI Called: /database/showByStatus/" + status);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /database/showByStatus/" + status);
 
 		if (status.equals("OK")) {
 			List<BancoDados> listdb = this.dbDAO.getdataBasesOK();
 			result.include("class", "activeBanco");
-			result.include("bancoDados", listdb)
-					.forwardTo(HomeController.class).home("");
+			result.include("bancoDados", listdb).forwardTo(HomeController.class).home("");
 
 		} else if (!status.equals("OK")) {
 			List<BancoDados> listdb = this.dbDAO.getdataBasesNOK();
 			result.include("class", "activeBanco");
-			result.include("bancoDados", listdb)
-					.forwardTo(HomeController.class).home("");
+			result.include("bancoDados", listdb).forwardTo(HomeController.class).home("");
 
 		} else {
 			validator.onErrorUsePageOf(HomeController.class).home("");
 		}
 	}
-
 }

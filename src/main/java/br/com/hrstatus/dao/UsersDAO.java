@@ -150,10 +150,8 @@ public class UsersDAO implements UsersInterface {
 	public void delUserHasChangedPass(String username){
 		Logger.getLogger(getClass()).debug("delUserHasChangedPass() -> deletando usuário "+username+" da tabela temporária de usuários.");
 		PassExpire passExpire = (PassExpire) session().load(PassExpire.class, username);
-		
 		session().refresh(passExpire);
-		session().delete(passExpire);
-		
+		session().delete(passExpire);	
 	}
 	
 	@SuppressWarnings("unchecked")

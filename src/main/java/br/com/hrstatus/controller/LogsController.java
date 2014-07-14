@@ -62,8 +62,7 @@ public class LogsController {
 	private HttpServletRequest request;
 	UserInfo userInfo = new UserInfo();
 
-	public LogsController(Result result, Iteracoes iteracoesDAO,
-			UsersInterface userDAO, HttpServletResponse response,
+	public LogsController(Result result, Iteracoes iteracoesDAO,UsersInterface userDAO, HttpServletResponse response,
 			HttpServletRequest request) {
 		this.result = result;
 		this.iteracoesDAO = iteracoesDAO;
@@ -80,7 +79,6 @@ public class LogsController {
 
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /selectServer");
 
-		// List<Servidores>server = this.iteracoesDAO.getHostnamesWithLogDir();
 		List<Servidores> server = new ArrayList<Servidores>();
 		// pegar os Ids dos servidores que o usuário pode acessar
 		Users user = this.userDAO.getUserByID(userInfo.getLoggedUsername());
@@ -128,8 +126,7 @@ public class LogsController {
 				e.printStackTrace();
 			}
 
-			String files = listLogs.showGetFiles(servidor.getUser(),
-					servidor.getPass(), servidor.getIp(), servidor.getPort(), servidor.getLogDir());
+			String files = listLogs.showGetFiles(servidor.getUser(),servidor.getPass(), servidor.getIp(), servidor.getPort(), servidor.getLogDir());
 			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Files found: "	+ files);
 
 			String listOfFiles[] = files.split("\n");
@@ -178,10 +175,9 @@ public class LogsController {
 	}
 
 	@Get("/tailFile/{hostname}/{file}/{numeroLinhas}")
-	public void tailFile(String hostname, String file, Integer numeroLinhas)
-			throws JSchException, IOException, Exception {
+	public void tailFile(String hostname, String file, Integer numeroLinhas) throws JSchException, IOException, Exception {
+		
 		SftpLogs listLogs = new SftpLogs();
-
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Tail of file" + file + " of " + hostname + " - " + numeroLinhas	+ " linhas. ");
 
 		result.include("title", "Tail do arquivo " + file + ". Trazendo as " + numeroLinhas + " últimas linhas.");
@@ -221,9 +217,7 @@ public class LogsController {
 		}
 
 		// TODO criar método no SFTPLogs
-		String files = listLogs.tailFile(servidor.getUser(),
-				servidor.getPass(), servidor.getIp(), servidor.getPort(),
-				servidor.getLogDir(), file, numeroLinhas);
+		String files = listLogs.tailFile(servidor.getUser(),servidor.getPass(), servidor.getIp(), servidor.getPort(),servidor.getLogDir(), file, numeroLinhas);
 		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Files found: "	+ files);
 
 		String linhasArquivo[] = files.split("\n");
@@ -234,18 +228,15 @@ public class LogsController {
 	}
 
 	@Get("/findInFile/{hostname}/{file}/{palavraBusca}")
-	public void findInFile(String hostname, String file, String palavraBusca)
-			throws JSchException, IOException, Exception {
+	public void findInFile(String hostname, String file, String palavraBusca) throws JSchException, IOException, Exception {
 		SftpLogs listLogs = new SftpLogs();
 
-		result.include("title", "Busca no arquivo " + file + ". Buscando: "
-				+ palavraBusca);
+		result.include("title", "Busca no arquivo " + file + ". Buscando: " + palavraBusca);
 		// inserindo username na home:
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /findInFile");
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Finding "
-						+ palavraBusca + " in file " + file + " of " + hostname);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Finding " + palavraBusca + " in file " + file + " of " + hostname);
 
 		if (palavraBusca == null || palavraBusca.isEmpty()) {
 			throw new Exception("Número de linhas inválido.");
