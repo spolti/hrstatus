@@ -37,8 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
@@ -80,9 +78,7 @@ public class LogsController {
 		result.include("title", "Selecione o Servidor");
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] URI Called: /selectServer");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /selectServer");
 
 		// List<Servidores>server = this.iteracoesDAO.getHostnamesWithLogDir();
 		List<Servidores> server = new ArrayList<Servidores>();
@@ -91,12 +87,8 @@ public class LogsController {
 
 		for (Servidores sv : user.getServer()) {
 
-			Logger.getLogger(getClass()).debug(
-					"[ " + userInfo.getLoggedUsername()
-							+ " ] Servidores com permissão: "
-							+ sv.getHostname());
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Servidores com permissão: " + sv.getHostname());
 			server.add(sv);
-
 		}
 
 		result.include("server", server);
@@ -110,12 +102,8 @@ public class LogsController {
 		// inserindo username na home:
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] URI Called: /listLogFiles");
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername() + " ] Listing files of "
-						+ hostname);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /listLogFiles");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Listing files of " + hostname);
 
 		boolean isAdmin = request.isUserInRole("ROLE_ADMIN");
 		Servidores servidor = this.iteracoesDAO.getServerByHostname(hostname);
@@ -125,8 +113,7 @@ public class LogsController {
 			try {
 				// setando logDir
 				result.include("logDir", servidor.getLogDir());
-				servidor.setPass(String.valueOf(Crypto.decode(servidor
-						.getPass())));
+				servidor.setPass(String.valueOf(Crypto.decode(servidor.getPass())));
 			} catch (InvalidKeyException e) {
 				e.printStackTrace();
 			} catch (NoSuchPaddingException e) {
@@ -142,11 +129,8 @@ public class LogsController {
 			}
 
 			String files = listLogs.showGetFiles(servidor.getUser(),
-					servidor.getPass(), servidor.getIp(), servidor.getPort(),
-					servidor.getLogDir());
-			Logger.getLogger(getClass()).debug(
-					"[ " + userInfo.getLoggedUsername() + " ] Files found: "
-							+ files);
+					servidor.getPass(), servidor.getIp(), servidor.getPort(), servidor.getLogDir());
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Files found: "	+ files);
 
 			String listOfFiles[] = files.split("\n");
 			result.include("hostname", servidor.getHostname());
@@ -158,15 +142,12 @@ public class LogsController {
 			// for (Servidores sv : user.getServer()) {
 
 			if (userInfo.listLogFiles(user, servidor.getId())) {
-				Logger.getLogger(getClass()).info(
-						"[ " + userInfo.getLoggedUsername()
-								+ " ] Usuário possui permissão " + hostname);
+				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Usuário possui permissão " + hostname);
 
 				try {
 					// setando logDir
 					result.include("logDir", servidor.getLogDir());
-					servidor.setPass(String.valueOf(Crypto.decode(servidor
-							.getPass())));
+					servidor.setPass(String.valueOf(Crypto.decode(servidor.getPass())));
 				} catch (InvalidKeyException e) {
 					e.printStackTrace();
 				} catch (NoSuchPaddingException e) {
@@ -181,12 +162,8 @@ public class LogsController {
 					e.printStackTrace();
 				}
 
-				String files = listLogs.showGetFiles(servidor.getUser(),
-						servidor.getPass(), servidor.getIp(),
-						servidor.getPort(), servidor.getLogDir());
-				Logger.getLogger(getClass()).debug(
-						"[ " + userInfo.getLoggedUsername()
-								+ " ] Files found: " + files);
+				String files = listLogs.showGetFiles(servidor.getUser(),servidor.getPass(), servidor.getIp(),servidor.getPort(), servidor.getLogDir());
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Files found: " + files);
 
 				String listOfFiles[] = files.split("\n");
 				result.include("hostname", servidor.getHostname());
@@ -194,9 +171,7 @@ public class LogsController {
 				result.include("listOfFiles", listOfFiles);
 
 			} else {
-				Logger.getLogger(getClass())
-						.info("[ " + userInfo.getLoggedUsername()
-								+ " ] Usuário possui não permissão " + hostname);
+				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Usuário possui não permissão " + hostname);
 				result.use(Results.http()).sendError(403);
 			}
 		}
@@ -207,22 +182,14 @@ public class LogsController {
 			throws JSchException, IOException, Exception {
 		SftpLogs listLogs = new SftpLogs();
 
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername() + " ] Tail of file" + file
-						+ " of " + hostname + " - " + numeroLinhas
-						+ " linhas. ");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Tail of file" + file + " of " + hostname + " - " + numeroLinhas	+ " linhas. ");
 
-		result.include("title", "Tail do arquivo " + file + ". Trazendo as "
-				+ numeroLinhas + " últimas linhas.");
+		result.include("title", "Tail do arquivo " + file + ". Trazendo as " + numeroLinhas + " últimas linhas.");
 		// inserindo username na home:
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] URI Called: /tailFile");
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername() + " ] Tail of file " + file
-						+ " of " + hostname);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /tailFile");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Tail of file " + file + " of " + hostname);
 
 		if (numeroLinhas == null || numeroLinhas < 0 || numeroLinhas > 1000) {
 			throw new Exception("Número de linhas inválido.");
@@ -257,9 +224,7 @@ public class LogsController {
 		String files = listLogs.tailFile(servidor.getUser(),
 				servidor.getPass(), servidor.getIp(), servidor.getPort(),
 				servidor.getLogDir(), file, numeroLinhas);
-		Logger.getLogger(getClass()).debug(
-				"[ " + userInfo.getLoggedUsername() + " ] Files found: "
-						+ files);
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Files found: "	+ files);
 
 		String linhasArquivo[] = files.split("\n");
 		result.include("hostname", servidor.getHostname());
@@ -278,11 +243,8 @@ public class LogsController {
 		// inserindo username na home:
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] URI Called: /findInFile");
-		Logger.getLogger(getClass())
-				.info("[ " + userInfo.getLoggedUsername() + " ] Finding "
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /findInFile");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Finding "
 						+ palavraBusca + " in file " + file + " of " + hostname);
 
 		if (palavraBusca == null || palavraBusca.isEmpty()) {
@@ -315,12 +277,8 @@ public class LogsController {
 		}
 
 		// TODO criar método no SFTPLog
-		String files = listLogs.findInFile(servidor.getUser(),
-				servidor.getPass(), servidor.getIp(), servidor.getPort(),
-				servidor.getLogDir(), file, palavraBusca);
-		Logger.getLogger(getClass()).debug(
-				"[ " + userInfo.getLoggedUsername() + " ] Files found: "
-						+ files);
+		String files = listLogs.findInFile(servidor.getUser(),servidor.getPass(), servidor.getIp(), servidor.getPort(),	servidor.getLogDir(), file, palavraBusca);
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Files found: "	+ files);
 
 		String findInFile[] = files.split("\n");
 		result.include("hostname", servidor.getHostname());
@@ -332,25 +290,14 @@ public class LogsController {
 	@Get("/downloadFile/{hostname}/{file}")
 	public File downloadFile(String hostname, String file) {
 
-		Logger.getLogger(getClass()).debug(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] Apagando Arquivo Temporário");
+		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Apagando Arquivo Temporário");
 		File fileDelete = new File("tempFile.log");
 		if (fileDelete.delete()) {
-			Logger.getLogger(getClass()).debug(
-					"[ " + userInfo.getLoggedUsername()
-							+ " ] Arquivo temporário removido. (tempFile.log)");
-			Logger.getLogger(getClass()).debug(
-					"[ " + userInfo.getLoggedUsername() + " ] Local Arquivo: "
-							+ fileDelete.getAbsolutePath());
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Arquivo temporário removido. (tempFile.log)");
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Local Arquivo: " + fileDelete.getAbsolutePath());
 		} else {
-			Logger.getLogger(getClass())
-					.debug("[ "
-							+ userInfo.getLoggedUsername()
-							+ " ] Arquivo temporário não encontrado. (tempFile.log)");
-			Logger.getLogger(getClass()).debug(
-					"[ " + userInfo.getLoggedUsername() + " ] Local Arquivo: "
-							+ fileDelete.getAbsolutePath());
+			Logger.getLogger(getClass()).debug("[ "	+ userInfo.getLoggedUsername() + " ] Arquivo temporário não encontrado. (tempFile.log)");
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Local Arquivo: " + fileDelete.getAbsolutePath());
 		}
 
 		SftpLogs getLogFile = new SftpLogs();
@@ -358,14 +305,9 @@ public class LogsController {
 		result.include("title", "Download");
 
 		// inserindo username na home:
-		Object LoggedObjectUser = SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal();
-		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
-		result.include("loggedUser", LoggedUsername);
+		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] URI Called: /downloadFile");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /downloadFile");
 
 		Servidores servidor = this.iteracoesDAO.getServerByHostname(hostname);
 
@@ -386,9 +328,7 @@ public class LogsController {
 		String filename = null;
 		// verificando se o filename começa com espaço
 		if (file.startsWith(" ")) {
-			Logger.getLogger(getClass()).debug(
-					"[ " + userInfo.getLoggedUsername() + " ] Arquivo " + file
-							+ " começa com espaço, removemdo.");
+			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Arquivo " + file + " começa com espaço, removemdo.");
 			String temp[] = file.split(" ");
 			filename = temp[temp.length - 1];
 		} else {
@@ -399,20 +339,12 @@ public class LogsController {
 		String rfile = servidor.getLogDir() + "/" + filename;
 
 		this.response.setContentType("application/octet-stream");
-		this.response.setHeader("Content-disposition", "attachment; filename="
-				+ filename + "");
+		this.response.setHeader("Content-disposition", "attachment; filename=" + filename + "");
 
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] Fazendo download do arquivo " + filename
-						+ " do servidor " + hostname);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Fazendo download do arquivo " + filename + " do servidor " + hostname);
 
-		String downloadResult = getLogFile
-				.getFile(servidor.getUser(), servidor.getPass(),
-						servidor.getIp(), servidor.getPort(), rfile);
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] Resultado do download: " + downloadResult);
+		String downloadResult = getLogFile.getFile(servidor.getUser(), servidor.getPass(),servidor.getIp(), servidor.getPort(), rfile);
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Resultado do download: " + downloadResult);
 		return new File("tempFile.log");
 
 	}
