@@ -47,8 +47,10 @@ public class Scheduler {
 
 	@Autowired
 	private Iteracoes iteracoesDAO;
+	
 	@Autowired
 	private Configuration configurationDAO;
+	
 	@Autowired
 	private UsersInterface userDAO;
 	DateUtils dateUtils = new DateUtils();
@@ -60,22 +62,17 @@ public class Scheduler {
 
 	@Scheduled(cron = "${br.com.hrstatus.scheduler.MailScheduler.cron}")
 	public void sendMail() throws UnknownHostException {
-		Logger.getLogger(getClass()).debug(
-				"[ System ] Invoking sendMail at " + new Date());
+		Logger.getLogger(getClass()).debug("[ System ] Invoking sendMail at " + new Date());
 
 		int count = this.iteracoesDAO.countServersNOK();
 		boolean sendNotification = this.configurationDAO.sendNotification();
 
-		Logger.getLogger(getClass()).debug(
-				"Notificação Ativa: " + sendNotification);
+		Logger.getLogger(getClass()).debug("Notificação Ativa: " + sendNotification);
 
 		if (sendNotification) {
 
 			if (count > 0) {
-				Logger.getLogger(getClass())
-						.debug("[ System ] Foram encontrados "
-								+ count
-								+ " servidor(es) desatualizado(s), enviando e-mail de alerta.");
+				Logger.getLogger(getClass()).debug("[ System ] Foram encontrados " + count + " servidor(es) desatualizado(s), enviando e-mail de alerta.");
 				// Envio de e-mail
 				String mail1 = this.configurationDAO.getMailSender();
 				String Subject = this.configurationDAO.getSubject();
@@ -84,8 +81,7 @@ public class Scheduler {
 				MailSender mail = new MailSender();
 				mail.Sender(mail1, Subject, Dests, jndiMail);
 			} else {
-				Logger.getLogger(getClass())
-						.debug("[ System ] Nenhum servidor desatualizado foi encontrado.");
+				Logger.getLogger(getClass()).debug("[ System ] Nenhum servidor desatualizado foi encontrado.");
 			}
 		}else {
 			Logger.getLogger(getClass()).debug("O envio de e-mail de notificação está desativado, abortando envio");
@@ -100,39 +96,30 @@ public class Scheduler {
 
 		Process p = (Runtime.getRuntime().exec("which ntpdate"));
 		String stdIn = "", s = "";
-		BufferedReader stdInput = new BufferedReader(new InputStreamReader(
-				p.getInputStream()));
+		BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
 		while ((s = stdInput.readLine()) != null) {
 			stdIn += s + "\n";
 		}
 
 		if (stdIn.equals("")) {
-			Logger.getLogger(getClass())
-					.error("Comando ntpdate não encontrado, abortando atualização automática");
+			Logger.getLogger(getClass()).error("Comando ntpdate não encontrado, abortando atualização automática");
 		} else {
-			Logger.getLogger(getClass())
-					.debug("ntp ativo: " + isUpdateNtpActive);
+			Logger.getLogger(getClass()).debug("ntp ativo: " + isUpdateNtpActive);
 			if (isUpdateNtpActive) {
 				Logger.getLogger(getClass()).debug("Iniciando checagem NTP");
 				String ntpServer = this.configurationDAO.getNtpServerAddress();
-				Logger.getLogger(getClass()).debug(
-						"Servidor NTP configurado: " + ntpServer);
+				Logger.getLogger(getClass()).debug("Servidor NTP configurado: " + ntpServer);
 
 				// fazer a atualização com sudo....
 				String stdInAtualiza = "";
-				Process pAtualiza = (Runtime.getRuntime().exec("sudo " + stdIn
-						+ " -u " + ntpServer));
-				BufferedReader stdInputAtualiza = new BufferedReader(
-						new InputStreamReader(pAtualiza.getInputStream()));
+				Process pAtualiza = (Runtime.getRuntime().exec("sudo " + stdIn + " -u " + ntpServer));
+				BufferedReader stdInputAtualiza = new BufferedReader(new InputStreamReader(pAtualiza.getInputStream()));
 				while ((s = stdInputAtualiza.readLine()) != null) {
 					stdInAtualiza += s + "\n";
 				}
-				Logger.getLogger(getClass()).debug(
-						"Resultado atualização ntp [ sudo " + stdIn + " -u "
-								+ ntpServer + "]: " + stdInAtualiza);
+				Logger.getLogger(getClass()).debug("Resultado atualização ntp [ sudo " + stdIn + " -u "	+ ntpServer + "]: " + stdInAtualiza);
 			} else {
-				Logger.getLogger(getClass()).debug(
-						"Atualização NTP automática não está ativa.");
+				Logger.getLogger(getClass()).debug("Atualização NTP automática não está ativa.");
 			}
 		}
 	}

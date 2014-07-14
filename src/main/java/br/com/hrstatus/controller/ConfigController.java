@@ -128,8 +128,7 @@ public class ConfigController {
 		Configurations config = this.configurationDAO.getConfigs();
 				
 		if (new_value.equals("")) {
-			validator.add(new ValidationMessage(
-					"Algum valor deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("Algum valor deve ser informado", "Erro"));
 		} else if (campo.equals("difference")) {
 			try {
 				int secs = Integer.parseInt(new_value);
@@ -143,8 +142,7 @@ public class ConfigController {
 		} else if (campo.equals("mailFrom")) {
 			
 			if (!new_value.matches(regex_mail)) {
-				validator.add(new ValidationMessage("E-mail " + new_value
-						+ " não está correto", "Erro"));
+				validator.add(new ValidationMessage("E-mail " + new_value + " não está correto", "Erro"));
 			}else {
 				config.setMailFrom(new_value);
 			}
@@ -169,8 +167,7 @@ public class ConfigController {
 			for (int i = 0; i < mail_dests.length; i++){
 				Logger.getLogger(getClass()).debug("Emails [ " + i + " ]: " + mail_dests[i]);
 				if (!mail_dests[i].matches(regex_mail)) {
-					validator.add(new ValidationMessage("E-mail " + mail_dests[i]
-							+ " não está correto", "Erro"));
+					validator.add(new ValidationMessage("E-mail " + mail_dests[i] + " não está correto", "Erro"));
 				}else{
 					config.setDests(new_value);
 				}

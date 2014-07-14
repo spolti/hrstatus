@@ -38,8 +38,6 @@ public class GetDateUnix {
 	public static String exec (String user, String host, String password, int port) throws JSchException, IOException{
 	
 		String s = "";
-	    
-	      //informações de usuário/host/porta para conexão
 	      
 	      //definindo a não obrigação do arquivo know_hosts
 	      java.util.Properties config = new java.util.Properties(); 
@@ -75,7 +73,6 @@ public class GetDateUnix {
 	        }
 	        
 	        if(channel.isClosed()){
-	          //System.out.println("exit-status: "+channel.getExitStatus());
 	          break;
 	       }
 	        
@@ -86,5 +83,4 @@ public class GetDateUnix {
       
 		return s.replaceAll("\n", "");
 	 }
-
 }

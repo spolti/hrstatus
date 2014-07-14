@@ -62,8 +62,7 @@ public class UpdateController {
 	private HttpServletRequest request;
 	UserInfo userInfo = new UserInfo();
 
-	public UpdateController(Result result, Iteracoes iteracoesDAO,
-			Validator validator, UsersInterface usersDAO,
+	public UpdateController(Result result, Iteracoes iteracoesDAO, Validator validator, UsersInterface usersDAO,
 			HttpServletRequest request, BancoDadosInterface BancoDadosDAO) {
 		this.result = result;
 		this.iteracoesDAO = iteracoesDAO;
@@ -95,14 +94,11 @@ public class UpdateController {
 		// Descriptografando senha e a jogando no formulário
 		try {
 
-			String textPass = String
-					.valueOf(decodePass.decode(server.getPass()));
+			String textPass = String.valueOf(decodePass.decode(server.getPass()));
 			server.setPass(textPass);
 
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).error(
-					"[ " + userInfo.getLoggedUsername()
-							+ " ] Erro ao descriptografar senha: ", e);
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro ao descriptografar senha: ", e);
 		}
 
 		// populating SO combobox
@@ -131,10 +127,7 @@ public class UpdateController {
 		result.include("server", server);
 
 		if (s != null) {
-			Logger.getLogger(getClass())
-					.info("[ "
-							+ userInfo.getLoggedUsername()
-							+ " ] Objeto do tipo Servidores não está vazio, atribuindo valores.");
+			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Objeto do tipo Servidores não está vazio, atribuindo valores.");
 			server = s;
 		}
 	}
@@ -149,41 +142,28 @@ public class UpdateController {
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
 		Crypto encodePass = new Crypto();
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] URI Called: /updateServer");
-		Pattern pattern = Pattern
-				.compile("\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\z");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /updateServer");
+		Pattern pattern = Pattern.compile("\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\z");
 		Matcher matcher = pattern.matcher(server.getIp());
 
 		if (server.getIp().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo Ip deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo Ip deve ser informado", "Erro"));
 		} else if (!matcher.matches()) {
-			validator.add(new ValidationMessage("O ip " + server.getIp()
-					+ " não é válido.", "Erro"));
+			validator.add(new ValidationMessage("O ip " + server.getIp() + " não é válido.", "Erro"));
 		} else if (server.getHostname().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo Hostname deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo Hostname deve ser informado", "Erro"));
 		} else if (server.getUser().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo Usuário deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo Usuário deve ser informado", "Erro"));
 		} else if (server.getPass().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo Senha deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo Senha deve ser informado", "Erro"));
 		} else if (server.getPort() <= 0 || server.getPort() >= 65536) {
-			validator.add(new ValidationMessage(
-					"O campo porta está incorreto ou vazio", "Erro"));
+			validator.add(new ValidationMessage("O campo porta está incorreto ou vazio", "Erro"));
 		} else if (server.getSO().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo SO deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo SO deve ser informado", "Erro"));
 		}
-		validator.onErrorUsePageOf(UpdateController.class).findForUpdateServer(
-				server, "");		
+		validator.onErrorUsePageOf(UpdateController.class).findForUpdateServer(server, "");		
 		
 		server.setSO(server.getSO().toUpperCase());
-		
-
 		
 		// verificar se os campos estão vazios, se não estiverem não faz nada se
 		// estiverem seta os campos com valores default
@@ -193,8 +173,7 @@ public class UpdateController {
 			server.setPass(encodePass.encode(server.getPass()));
 
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).error(
-					"[ " + userInfo.getLoggedUsername() + " ] Error: ", e);
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ", e);
 		}
 
 		this.iteracoesDAO.updateServer(server);
@@ -242,10 +221,7 @@ public class UpdateController {
 		result.include("dataBase", dataBase);
 
 		if (db != null) {
-			Logger.getLogger(getClass())
-					.info("[ "
-							+ userInfo.getLoggedUsername()
-							+ " ] Objeto do tipo BancoDados não está vazio, atribuindo valores.");
+			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Objeto do tipo BancoDados não está vazio, atribuindo valores.");
 			dataBase = db;
 		}
 	}
@@ -259,34 +235,24 @@ public class UpdateController {
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
 		Crypto encodePass = new Crypto();
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] URI Called: /updateServer");
-		Pattern pattern = Pattern
-				.compile("\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\z");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /updateServer");
+		Pattern pattern = Pattern.compile("\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\z");
 		Matcher matcher = pattern.matcher(dataBase.getIp());
 
 		if (dataBase.getIp().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo Ip deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo Ip deve ser informado", "Erro"));
 		} else if (!matcher.matches()) {
-			validator.add(new ValidationMessage("O ip " + dataBase.getIp()
-					+ " não é válido.", "Erro"));
+			validator.add(new ValidationMessage("O ip " + dataBase.getIp() + " não é válido.", "Erro"));
 		} else if (dataBase.getHostname().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo Hostname deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo Hostname deve ser informado", "Erro"));
 		} else if (dataBase.getUser().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo Usuário deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo Usuário deve ser informado", "Erro"));
 		} else if (dataBase.getPass().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo Senha deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo Senha deve ser informado", "Erro"));
 		} else if (dataBase.getPort() <= 0 || dataBase.getPort() >= 65536) {
-			validator.add(new ValidationMessage(
-					"O campo porta está incorreto ou vazio", "Erro"));
+			validator.add(new ValidationMessage("O campo porta está incorreto ou vazio", "Erro"));
 		} else if (dataBase.getVendor().isEmpty()) {
-			validator.add(new ValidationMessage(
-					"O campo SO deve ser informado", "Erro"));
+			validator.add(new ValidationMessage("O campo SO deve ser informado", "Erro"));
 		}
 		if (dataBase.getQueryDate().isEmpty()) {
 			if (dataBase.getVendor().toUpperCase().equals("MYSQL")) {
@@ -303,8 +269,7 @@ public class UpdateController {
 			}
 
 		}
-		validator.onErrorUsePageOf(UpdateController.class)
-				.findForUpdateDataBase(dataBase, "");
+		validator.onErrorUsePageOf(UpdateController.class).findForUpdateDataBase(dataBase, "");
 
 		try {
 
@@ -312,8 +277,7 @@ public class UpdateController {
 			dataBase.setPass(encodePass.encode(dataBase.getPass()));
 
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).error(
-					"[ " + userInfo.getLoggedUsername() + " ] Error: ", e);
+			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ", e);
 		}
 
 		this.BancoDadosDAO.updateDataBase(dataBase);
@@ -323,15 +287,12 @@ public class UpdateController {
 
 	@Get("/findForUpdateUser/{username}/{action}")
 	public void findForUpdateUser(Users u, String username, String action) {
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] URI Called: /findForUpdateUser");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /findForUpdateUser");
 
 		result.include("title", "Atualizar Usuário");
 
 		String LoggedUsername = userInfo.getLoggedUsername();
-		List<Servidores> FullLogServer = this.iteracoesDAO
-				.getHostnamesWithLogDir();
+		List<Servidores> FullLogServer = this.iteracoesDAO.getHostnamesWithLogDir();
 		List<Servidores> server = new ArrayList<Servidores>();
 
 		// obtendo roles do usuário:
@@ -340,17 +301,10 @@ public class UpdateController {
 
 		if (username.toUpperCase().equals("ADMIN")) {
 			if ((isAdmin) && (LoggedUsername.toUpperCase().equals("ADMIN"))) {
-				Logger.getLogger(getClass())
-						.debug("[ "
-								+ userInfo.getLoggedUsername()
-								+ " ] O Usuário Administrador alterou ou está alterando seus dados.");
+				Logger.getLogger(getClass()).debug("[ "	+ userInfo.getLoggedUsername() + " ] O Usuário Administrador alterou ou está alterando seus dados.");
 			} else {
-				Logger.getLogger(getClass())
-						.info("[ "
-								+ userInfo.getLoggedUsername()
-								+ " ] O usuário "
-								+ userInfo.getLoggedUsername()
-								+ " não tem permissão para alterar dados da conta do Administrador.");
+				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] O usuário "
+								+ userInfo.getLoggedUsername() + " não tem permissão para alterar dados da conta do Administrador.");
 				result.use(Results.http()).sendError(403);
 			}
 		}
@@ -383,10 +337,7 @@ public class UpdateController {
 			result.include("server", server);
 
 			if (user != null) {
-				Logger.getLogger(getClass())
-						.info("[ "
-								+ userInfo.getLoggedUsername()
-								+ " ] Objeto do tipo Users não está vazio, atribuindo valores.");
+				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Objeto do tipo Users não está vazio, atribuindo valores.");
 				u = user;
 			}
 		} else {
@@ -404,10 +355,8 @@ public class UpdateController {
 				for (Servidores u1 : FullLogServer) {
 					for (Servidores sv : user.getServer()) {
 						if (u1.getId() == sv.getId()) {
-							Logger.getLogger(getClass()).debug(
-									"[ " + userInfo.getLoggedUsername()
-											+ " ]Servidores com permissão: "
-											+ sv.getHostname());
+							Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername()
+											+ " ]Servidores com permissão: " + sv.getHostname());
 							u1.setSelected("selected");
 						}
 					}
@@ -417,10 +366,7 @@ public class UpdateController {
 				result.include("server", server);
 
 				if (user != null) {
-					Logger.getLogger(getClass())
-							.info("[ "
-									+ userInfo.getLoggedUsername()
-									+ " ] Objeto do tipo Users não está vazio, atribuindo valores.");
+					Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Objeto do tipo Users não está vazio, atribuindo valores.");
 					u = user;
 				}
 			} else {
@@ -456,10 +402,7 @@ public class UpdateController {
 			} else if (user.getUsername().isEmpty()) {
 				validator.add(new ValidationMessage("O campo Username deve ser informado", "Erro"));
 			} else if (checkall) {
-				Logger.getLogger(getClass())
-						.debug("[ "
-								+ userInfo.getLoggedUsername()
-								+ " ] A opção selecione todos os servidores está marcada.");
+				Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] A opção selecione todos os servidores está marcada.");
 				List<Servidores> idAccessServers = new ArrayList<Servidores>();
 				idAccessServers = this.iteracoesDAO.getHostnamesWithLogDir();
 				user.setServer(idAccessServers);
@@ -467,19 +410,15 @@ public class UpdateController {
 			} else if (!idServer[0].equals("notNull")) {
 				List<Servidores> idAccessServers = new ArrayList<Servidores>();
 				for (int i = 0; i < idServer.length; i++) {
-					Logger.getLogger(getClass()).debug(
-							"ID Servidor recebido: " + idServer[i]);
+					Logger.getLogger(getClass()).debug("ID Servidor recebido: " + idServer[i]);
 					if (!idServer[i].equals("notNull")) {
-						idAccessServers.add(this.iteracoesDAO
-								.getServerByID(Integer.parseInt(idServer[i])));
-						Logger.getLogger(getClass()).debug(
-								"ID Servidor recebido: " + idServer[i]);
+						idAccessServers.add(this.iteracoesDAO.getServerByID(Integer.parseInt(idServer[i])));
+						Logger.getLogger(getClass()).debug("ID Servidor recebido: " + idServer[i]);
 					}
 				}
 				user.setServer(idAccessServers);
 
-			} else if (!user.getPassword().isEmpty()
-					&& !user.getConfirmPass().isEmpty()) {
+			} else if (!user.getPassword().isEmpty() && !user.getConfirmPass().isEmpty()) {
 				if (!user.getPassword().equals(user.getConfirmPass())) {
 					validator.add(new ValidationMessage("As senhas informadas não são iguais.", "Erro"));
 				}
@@ -487,18 +426,15 @@ public class UpdateController {
 				// Verificando a complexidade de senha informada.
 				List<String> passVal = new ArrayList<String>();
 				Map<String, String> map = new HashMap<String, String>();
-				map = br.com.hrstatus.security.PasswordPolicy
-						.verifyPassComplexity(user.getPassword());
+				map = br.com.hrstatus.security.PasswordPolicy.verifyPassComplexity(user.getPassword());
 				Object[] valueMap = map.keySet().toArray();
 				for (int i = 0; i < valueMap.length; i++) {
 					if (map.get(valueMap[i]).equals("false")) {
-						// System.out.println(map.get(valueMap[i + 1]));
 						passVal.add(map.get(valueMap[i + 1]));
 					}
 				}
 				for (int j = 0; j < passVal.size(); j++) {
-					validator
-							.add(new ValidationMessage(passVal.get(j), "Erro"));
+					validator.add(new ValidationMessage(passVal.get(j), "Erro"));
 				}
 				List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 				result.include("server", server);
@@ -529,8 +465,7 @@ public class UpdateController {
 			} else {
 				this.usersDAO.updateUser(user);
 				if (this.usersDAO.searchUserChangePass(LoggedUsername) == 1) {
-					Logger.getLogger(getClass())
-							.info("Usuário " + LoggedUsername + " solicitou recuperação de sennha a pouco tempo, apagando registro da tabela temporária");
+					Logger.getLogger(getClass()).info("Usuário " + LoggedUsername + " solicitou recuperação de sennha a pouco tempo, apagando registro da tabela temporária");
 					this.usersDAO.delUserHasChangedPass(LoggedUsername);
 				}
 			}

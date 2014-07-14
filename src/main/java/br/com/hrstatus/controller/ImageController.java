@@ -111,7 +111,6 @@ public class ImageController {
 		String UPfileName = request.getRealPath("img/up.jpg");
 		String DOWNfileName = request.getRealPath("img/down.jpg");
 
-		
 		Logger.getLogger(getClass()).debug("FILE:  " + UPfileName);
 		
 		if (local.equals("up")){

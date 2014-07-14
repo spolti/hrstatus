@@ -19,11 +19,9 @@
 
 package br.com.hrstatus.security;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /*
  * @author spolti
@@ -55,15 +53,11 @@ public class PasswordPolicy {
 
 		if (passVar.length < minSize) {
 			result.put("PassSize", "false");
-			result.put("PassSizeMsg", "O tamanho mínimo da senha é " + minSize
-					+ " caracteres, o tamanho da senha digitada foi "
-					+ passVar.length);
+			result.put("PassSizeMsg", "O tamanho mínimo da senha é " + minSize + " caracteres, o tamanho da senha digitada foi " + passVar.length);
 
 		} else if (passVar.length > maxSize) {
 			result.put("PassSize", "false");
-			result.put("PassSizeMsg", "O tamanho máximo da senha é " + maxSize
-					+ " caracteres, o tamanho da senha digitada foi "
-					+ passVar.length);
+			result.put("PassSizeMsg", "O tamanho máximo da senha é " + maxSize + " caracteres, o tamanho da senha digitada foi " + passVar.length);
 
 		} else if ((passVar.length > minSize) && (passVar.length < maxSize)) {
 			// Começam as Demais validações
@@ -73,10 +67,7 @@ public class PasswordPolicy {
 				rep = PasswordPolicy.rep(alphabetic[i] + "", minRep);
 				if (password.contains(rep)) {
 					result.put("PassMinRep", "false");
-					result.put("PassMinRepMsg",
-							"Não é permitido repetir o mesmo caracter por mais de "
-									+ minRep + " vezes. A sentença " + rep
-									+ " está inválida.");
+					result.put("PassMinRepMsg","Não é permitido repetir o mesmo caracter por mais de " + minRep + " vezes. A sentença " + rep + " está inválida.");
 				}
 			}
 			//Próxima validação
@@ -97,26 +88,26 @@ public class PasswordPolicy {
 		}
 		return result;
 	}
-
-	public static void main(String args[]) {
-
-		List<String> passVal = new ArrayList<String>();
-		Map<String, String> map = new HashMap<String, String>();
-
-		map = verifyPassComplexity("123456789999");
-
-		Object[] valueMap = map.keySet().toArray();
-
-		for (int i = 0; i < valueMap.length; i++) {
-			if (map.get(valueMap[i]).equals("false")) {
-				//System.out.println(map.get(valueMap[i + 1]));
-				passVal.add(map.get(valueMap[i + 1]));
-			}
-		}
-
-		for (int j = 0; j < passVal.size(); j++) {
-			System.out.println(passVal.get(j));
-		}
-
-	}
+//
+//	public static void main(String args[]) {
+//
+//		List<String> passVal = new ArrayList<String>();
+//		Map<String, String> map = new HashMap<String, String>();
+//
+//		map = verifyPassComplexity("123456789999");
+//
+//		Object[] valueMap = map.keySet().toArray();
+//
+//		for (int i = 0; i < valueMap.length; i++) {
+//			if (map.get(valueMap[i]).equals("false")) {
+//				//System.out.println(map.get(valueMap[i + 1]));
+//				passVal.add(map.get(valueMap[i + 1]));
+//			}
+//		}
+//
+//		for (int j = 0; j < passVal.size(); j++) {
+//			System.out.println(passVal.get(j));
+//		}
+//
+//	}
 }

@@ -75,21 +75,16 @@ public class IteracoesDAO implements Iteracoes {
 
 		try {
 
-			Criteria hostname = session()
-					.createCriteria(Servidores.class)
-					.add(Restrictions.eq("hostname",
-							new String(server.getHostname())))
-					.setProjection(Projections.property("hostname"));
+			Criteria hostname = session().createCriteria(Servidores.class).add(Restrictions.eq("hostname",
+							new String(server.getHostname()))).setProjection(Projections.property("hostname"));
 
 			if (hostname.uniqueResult() == null) {
-				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] insert_server -> Servidor " + server.getHostname()
-								+ " não encontrado");
+				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] insert_server -> Servidor " + server.getHostname() + " não encontrado");
 				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] insert_server -> Saving data");
 				session().save(server);
 				return 0;
 			} else {
-				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] insert_server -> Servidor " + server.getHostname()
-								+ " já existe, dados não inseridos.");
+				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] insert_server -> Servidor " + server.getHostname() + " já existe, dados não inseridos.");
 				return 1;
 			}
 
@@ -106,8 +101,7 @@ public class IteracoesDAO implements Iteracoes {
 
 		try {
 
-			Criteria criteriaHostname = session().createCriteria(
-					Servidores.class);
+			Criteria criteriaHostname = session().createCriteria(Servidores.class);
 			ProjectionList proList = Projections.projectionList();
 			proList.add(Projections.property("id"));
 			proList.add(Projections.property("hostname"));
@@ -122,8 +116,7 @@ public class IteracoesDAO implements Iteracoes {
 
 	public Servidores getServerByID(int id) {
 		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] getServerByID -> ID server selected: " + id);
-		Criteria criteria = session().createCriteria(
-				Servidores.class);
+		Criteria criteria = session().createCriteria(Servidores.class);
 		criteria.add(Restrictions.eq("id", id));
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return (Servidores) criteria.uniqueResult();
@@ -158,8 +151,7 @@ public class IteracoesDAO implements Iteracoes {
 
 	public boolean deleteServerByID(Servidores server) {
 
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] deleteServerByID -> Server " + server.getHostname()
-						+ " deleted.");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] deleteServerByID -> Server " + server.getHostname() + " deleted.");
 
 		try {
 			session().refresh(server);
@@ -257,8 +249,7 @@ public class IteracoesDAO implements Iteracoes {
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.or(Restrictions.eq("trClass", "error"),
-					Restrictions.eq("status", "NOK")));
+			criteria.add(Restrictions.or(Restrictions.eq("trClass", "error"), Restrictions.eq("status", "NOK")));
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			return criteria.list();
 
@@ -274,8 +265,7 @@ public class IteracoesDAO implements Iteracoes {
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.or(Restrictions.eq("trClass", "error"),
-					Restrictions.eq("status", "NOK")));
+			criteria.add(Restrictions.or(Restrictions.eq("trClass", "error"), Restrictions.eq("status", "NOK")));
 			criteria.add(Restrictions.eq("verify", "SIM"));
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);		
 			return criteria.list();
@@ -308,8 +298,7 @@ public class IteracoesDAO implements Iteracoes {
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.or(Restrictions.eq("trClass", "error"),
-					Restrictions.eq("status", "NOK")));
+			criteria.add(Restrictions.or(Restrictions.eq("trClass", "error"), Restrictions.eq("status", "NOK")));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			return count;
@@ -325,8 +314,7 @@ public class IteracoesDAO implements Iteracoes {
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.and(Restrictions.eq("SO", "LINUX"),
-					Restrictions.eq("status", "OK")));
+			criteria.add(Restrictions.and(Restrictions.eq("SO", "LINUX"), Restrictions.eq("status", "OK")));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countLinuxOK -> " + count + " found.");
@@ -360,8 +348,7 @@ public class IteracoesDAO implements Iteracoes {
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.and(Restrictions.eq("SO", "UNIX"),
-					Restrictions.eq("status", "OK")));
+			criteria.add(Restrictions.and(Restrictions.eq("SO", "UNIX"), Restrictions.eq("status", "OK")));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countUnixOK -> " + count + " found.");
@@ -396,8 +383,7 @@ public class IteracoesDAO implements Iteracoes {
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.and(Restrictions.eq("SO", "WINDOWS"),
-					Restrictions.eq("status", "OK")));
+			criteria.add(Restrictions.and(Restrictions.eq("SO", "WINDOWS"), Restrictions.eq("status", "OK")));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countWindowsOK -> " + count + " found.");
@@ -472,7 +458,6 @@ public class IteracoesDAO implements Iteracoes {
 			return criteria.add(Restrictions.eq("SO", "LINUX")).list();
 
 		} catch (Exception e) {
-			System.out.println(e);
 			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
 			return new ArrayList<Servidores>();
 		}
@@ -552,8 +537,7 @@ public class IteracoesDAO implements Iteracoes {
 
 		try {
 
-			Criteria getHostnamesWithLogDir = session().createCriteria(
-					Servidores.class);
+			Criteria getHostnamesWithLogDir = session().createCriteria(Servidores.class);
 			getHostnamesWithLogDir.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			getHostnamesWithLogDir.add(Restrictions.ne("logDir","")); 
 			return getHostnamesWithLogDir.list();
@@ -566,8 +550,7 @@ public class IteracoesDAO implements Iteracoes {
 	
 	public Servidores getServerByHostname(String hostname) {
 		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] getServerByID -> hostname server selected: " + hostname);
-		return (Servidores) session().createCriteria(Servidores.class)
-				.add(Restrictions.eq("hostname", hostname)).uniqueResult();
+		return (Servidores) session().createCriteria(Servidores.class).add(Restrictions.eq("hostname", hostname)).uniqueResult();
 	}
 	
 	public int countServerWithLog() {
@@ -584,5 +567,4 @@ public class IteracoesDAO implements Iteracoes {
 			return 0;
 		}
 	}
-	
 }

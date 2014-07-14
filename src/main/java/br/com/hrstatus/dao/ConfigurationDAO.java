@@ -62,8 +62,7 @@ public class ConfigurationDAO implements Configuration {
 	}
 
 	public Configurations getConfigs() {
-		return (Configurations) session().createCriteria(Configurations.class)
-				.uniqueResult();
+		return (Configurations) session().createCriteria(Configurations.class).uniqueResult();
 	}
 
 	public String getMailSender() {

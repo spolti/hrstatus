@@ -36,29 +36,5 @@ public class CreateTables {
 		
 		SchemaExport se = new SchemaExport(cfg);
 		se.create(true, true);
-
-		
-//		SchemaExport se1 = new SchemaExport(cfg);
-//		se1.create(true, true);
-		
-//		cfg.addAnnotatedClass(Authorities.class);
-//		SchemaExport se1 = new SchemaExport(cfg);
-//		se1.create(true, true);
-	
-//		cfg.addAnnotatedClass(Configurations.class);
-//		SchemaExport se1 = new SchemaExport(cfg);
-//		se1.create(true, true);
-		
-//		cfg.addAnnotatedClass(PassExpire.class);
-//		SchemaExport se1 = new SchemaExport(cfg);
-//		se1.create(true, true);
-		
-//		cfg.addAnnotatedClass(Lock.class);
-//		SchemaExport se = new SchemaExport(cfg);
-//		se.create(true, true);
-		
-//		cfg.addAnnotatedClass(BancoDados.class);
-//		SchemaExport se = new SchemaExport(cfg);
-//		se.create(true, true);
 	}
 }

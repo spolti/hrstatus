@@ -30,8 +30,6 @@ public class SpringEncoder {
 	public static String encodePassUser(String secret){
 		
 		String passMD5 =  DigestUtils.md5DigestAsHex(secret.getBytes());
-		
 		return passMD5;
-		
 	}
 }

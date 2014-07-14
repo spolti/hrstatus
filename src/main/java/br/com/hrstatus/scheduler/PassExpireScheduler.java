@@ -62,7 +62,7 @@ public class PassExpireScheduler {
 				
 		for (PassExpire passExpire : list){
 			if (timeNow.compareTo(parse.parser(passExpire.getExpireTime())) > 0){
-				Logger.getLogger(getClass()).info("[ System ] Password gerado para o usuário " + passExpire.getUsername() + "expirou, aplicando senha antiga novamente.");
+				Logger.getLogger(getClass()).debug("[ System ] Password gerado para o usuário " + passExpire.getUsername() + "expirou, aplicando senha antiga novamente.");
 				Users user = this.userDAO.getUserByID(passExpire.getUsername());
 				
 				user.setPassword(passExpire.getOldPwd());
@@ -74,7 +74,7 @@ public class PassExpireScheduler {
 				this.userDAO.delUserExpireTime(passExpire);
 				
 			}else{
-				Logger.getLogger(getClass()).info("[ System ] Password gerado para o usuário " + passExpire.getUsername() + " ainda não expirou.");
+				Logger.getLogger(getClass()).debug("[ System ] Password gerado para o usuário " + passExpire.getUsername() + " ainda não expirou.");
 			}
 		}
 	}

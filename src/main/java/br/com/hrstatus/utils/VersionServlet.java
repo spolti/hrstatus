@@ -43,6 +43,5 @@ public class VersionServlet  extends HttpServlet {
 	    String version = load.getValor("version");
 	    
 	    Logger.getLogger(getClass()).info("Versão Hr Status: " + version);
-	}
-	
+	}	
 }

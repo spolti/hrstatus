@@ -43,7 +43,7 @@ public class GetServerIPAddress {
 			String jbossWebHost = 	(String) mBeanServer.getAttribute(http, "boundAddress");
 			int jbossWebPort = (Integer) mBeanServer.getAttribute(http, "boundPort");
 			url = jbossWebHost +":"+jbossWebPort;
-			Logger.getLogger(getClass()).debug("A url obtida do sistema : " + url);
+			Logger.getLogger(getClass()).debug("Url obtida do sistema : " + url);
 		} catch (Exception e) {
 			Logger.getLogger(getClass()).error(e);
 		}
