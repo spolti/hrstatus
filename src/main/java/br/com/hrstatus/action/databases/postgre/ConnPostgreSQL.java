@@ -49,10 +49,10 @@ public class ConnPostgreSQL {
 
 			if (connection != null) {
 				status = (true);
-				Logger.getLogger(ConnPostgreSQL.class).debug("[ " + userInfo.getLoggedUsername() + " ] " + status);
+				Logger.getLogger(ConnPostgreSQL.class).debug("[ " + userInfo.getLoggedUsername() + " ] PostgreSQL datbase connection status: " + status);
 			} else {
 				status = (false);
-				Logger.getLogger(ConnPostgreSQL.class).debug("[ " + userInfo.getLoggedUsername() + " ] " + status);
+				Logger.getLogger(ConnPostgreSQL.class).debug("[ " + userInfo.getLoggedUsername() + " ] PostgreSQL datbase connection status: " + status);
 			}
 			return connection;
 

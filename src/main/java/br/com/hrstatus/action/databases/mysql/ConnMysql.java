@@ -48,10 +48,10 @@ public class ConnMysql {
 
 			if (connection != null) {
 				status = (true);
-				Logger.getLogger(ConnMysql.class).debug("[ " + userInfo.getLoggedUsername() + " ] " + status);
+				Logger.getLogger(ConnMysql.class).debug("[ " + userInfo.getLoggedUsername() + " ] MySQL datbase connection status: " + status);
 			} else {
 				status = (false);
-				Logger.getLogger(ConnMysql.class).debug("[ " + userInfo.getLoggedUsername() + " ] " + status);
+				Logger.getLogger(ConnMysql.class).debug("[ " + userInfo.getLoggedUsername() + " ] MySQL datbase connection status: " + status);
 			}
 			return connection;
 	}

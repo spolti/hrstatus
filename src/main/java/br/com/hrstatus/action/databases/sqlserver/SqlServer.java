@@ -24,5 +24,5 @@ package br.com.hrstatus.action.databases.sqlserver;
  */
 
 public class SqlServer {
-
+	//Em construção, sem previsão de desenvolvimento, caso tenha interesse em contribuir fique a vontade.
 }
