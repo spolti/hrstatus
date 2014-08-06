@@ -146,7 +146,7 @@ public class IteracoesDAO implements Iteracoes {
 		Logger.getLogger(getClass()).trace("ID: " + server.getId());
 
 		session().update(server);
-
+		
 	}
 
 	public boolean deleteServerByID(Servidores server) {

@@ -83,7 +83,6 @@ public class ReportsController {
 			Logger.getLogger(getClass()).error(e.getMessage());
 		}
 		return null;
-
 	}
 
 	@Path("/reports/reportServersOK")
@@ -105,7 +104,6 @@ public class ReportsController {
 		} catch (JRException e) {
 			Logger.getLogger(getClass()).error(e.getMessage());
 		}
-
 		return null;
 	}
 
@@ -258,7 +256,6 @@ public class ReportsController {
 		} catch (JRException e) {
 			Logger.getLogger(getClass()).error(e.getMessage());
 		}
-
 		return null;
 	}
 	
@@ -281,7 +278,6 @@ public class ReportsController {
 		} catch (JRException e) {
 			Logger.getLogger(getClass()).error(e.getMessage());
 		}
-
 		return null;
 	}
 	
@@ -304,7 +300,6 @@ public class ReportsController {
 		} catch (JRException e) {
 			Logger.getLogger(getClass()).error(e.getMessage());
 		}
-
 		return null;
 	}
 	
@@ -327,7 +322,6 @@ public class ReportsController {
 		} catch (JRException e) {
 			Logger.getLogger(getClass()).error(e.getMessage());
 		}
-
 		return null;
 	}
 	
@@ -350,7 +344,6 @@ public class ReportsController {
 		} catch (JRException e) {
 			Logger.getLogger(getClass()).error(e.getMessage());
 		}
-
 		return null;
 	}
 }

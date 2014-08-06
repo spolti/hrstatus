@@ -48,10 +48,10 @@ public class ConnOracle {
 
 			if (connection != null) {
 				status = (true);
-				Logger.getLogger(ConnOracle.class).debug("[ " + userInfo.getLoggedUsername() + " ] " + status);
+				Logger.getLogger(ConnOracle.class).debug("[ " + userInfo.getLoggedUsername() + " ] Oracle datbase connection status: " + status);
 			} else {
 				status = (false);
-				Logger.getLogger(ConnOracle.class).debug("[ " + userInfo.getLoggedUsername() + " ] " + status);
+				Logger.getLogger(ConnOracle.class).debug("[ " + userInfo.getLoggedUsername() + " ] Oracle datbase connection status: " + status);
 			}
 			return connection;
 	}
