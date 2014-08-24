@@ -190,7 +190,7 @@ CREATE TABLE `Users` (
 
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` VALUES ('admin','ROLE_ADMIN','','\0',NULL,'admin@hrstatus.com.br','Administrador do Sistema','89794b621a313bb59eed0d9f0f4e8205');
+INSERT INTO `Users` VALUES ('admin','ROLE_ADMIN','true,'\0',NULL,'admin@hrstatus.com.br','Administrador do Sistema','89794b621a313bb59eed0d9f0f4e8205');
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 
