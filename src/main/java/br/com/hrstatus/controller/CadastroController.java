@@ -82,9 +82,7 @@ public class CadastroController {
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Logger.getLogger(getClass()).info(
-				"[ " + userInfo.getLoggedUsername()
-						+ " ] URI Called: /newServer");
+		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /newServer");
 		result.include("servidores", servidores);
 
 		// populating SO combobox
