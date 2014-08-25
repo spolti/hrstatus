@@ -92,8 +92,8 @@ body {
 						action="<c:url value='j_spring_security_check'/>" method="POST">
 
 						<c:if test="${not empty param.login_error}">
-							<font color="red"> Your login attempt was not successful,
-								try again.<br> <br> Reason: <c:out
+							<font color="red"> Sua tentativa de login não teve sucesso,
+								tente novamente.<br> <br> Motivo: <c:out
 									value="${SPRING_SECURITY_LAST_EXCEPTION.message}"></c:out>.
 							</font>
 						</c:if>

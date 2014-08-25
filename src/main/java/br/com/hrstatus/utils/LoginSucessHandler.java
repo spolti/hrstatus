@@ -63,6 +63,7 @@ public class LoginSucessHandler extends
     	
     	
         super.setDefaultTargetUrl("/home");
+        
         request.getSession().setMaxInactiveInterval(30*30);
         super.onAuthenticationSuccess(request, response, authentication);
     }
