@@ -1,0 +1,6 @@
+SSH_AUTH_SOCK=/tmp/ssh-OhAPI15270/agent.15270; export SSH_AUTH_SOCK;
+SSH_AGENT_PID=15271; export SSH_AGENT_PID;
+echo Agent pid 15271;
+SSH_AUTH_SOCK=/tmp/ssh-MMzDq32631/agent.32631; export SSH_AUTH_SOCK;
+SSH_AGENT_PID=32632; export SSH_AGENT_PID;
+echo Agent pid 32632;

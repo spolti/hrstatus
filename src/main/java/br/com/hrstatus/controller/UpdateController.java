@@ -379,6 +379,9 @@ public class UpdateController {
 	@Post("/updateUser")
 	public void updateUser(Users user, String[] idServer, boolean checkall) {
 		// inserindo html title no result
+		List<Servidores> FullLogServer = this.iteracoesDAO.getHostnamesWithLogDir();
+		List<Servidores> server = new ArrayList<Servidores>();
+		
 		result.include("title", "Atualizar Usuário");
 
 		String LoggedUsername = userInfo.getLoggedUsername();
@@ -391,6 +394,7 @@ public class UpdateController {
 			result.use(Results.http()).sendError(403);
 		} else {
 			result.include("loggedUser", LoggedUsername);
+			result.include("isDisabled", "disabled");
 
 			Logger.getLogger(getClass()).info(
 					"[ " + userInfo.getLoggedUsername()
@@ -416,48 +420,73 @@ public class UpdateController {
 						Logger.getLogger(getClass()).debug("ID Servidor recebido: " + idServer[i]);
 					}
 				}
-				user.setServer(idAccessServers);
+				user.setServer(idAccessServers); 
 
-			} else if (!user.getPassword().isEmpty() && !user.getConfirmPass().isEmpty()) {
-				if (!user.getPassword().equals(user.getConfirmPass())) {
+			}
+			if (!user.getPassword().isEmpty() || !user.getConfirmPass().isEmpty()) {
+				if (!user.getPassword().equals(user.getConfirmPass()) || !user.getConfirmPass().equals(user.getPassword())) {
 					validator.add(new ValidationMessage("As senhas informadas não são iguais.", "Erro"));
 				}
-			} else if (user.getPassword().equals(user.getConfirmPass())) {
-				// Verificando a complexidade de senha informada.
-				List<String> passVal = new ArrayList<String>();
-				Map<String, String> map = new HashMap<String, String>();
-				map = br.com.hrstatus.security.PasswordPolicy.verifyPassComplexity(user.getPassword());
-				Object[] valueMap = map.keySet().toArray();
-				for (int i = 0; i < valueMap.length; i++) {
-					if (map.get(valueMap[i]).equals("false")) {
-						passVal.add(map.get(valueMap[i + 1]));
-					}
-				}
-				for (int j = 0; j < passVal.size(); j++) {
-					validator.add(new ValidationMessage(passVal.get(j), "Erro"));
-				}
-				List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
-				result.include("server", server);
-
-			} else if (user.getMail().isEmpty()) {
-				validator.add(new ValidationMessage("O campo E-mail deve ser informado", "Erro"));
-			} else if (idServer[0].equals("notNull")) {
-				Logger.getLogger(getClass()).info("Lista de Servidores para Usuário vazio.");
 			}
-
+			
 			if (user.getAuthority() == null) {
 				// Obtendo role do usuário logado do banco Se a mesma vier do
 				// jsp em branco.
 				String role = this.usersDAO.getRole(LoggedUsername);
 				user.setAuthority(role);
+				if (!user.getAuthority().equals(role)){
+					Logger.getLogger(getClass()).info("Tentativa inapropriada de alterar ROLE do usuário. Setando valor anterior.");
+					user.setAuthority(role);
+				}
 			}
+			if (!user.getPassword().isEmpty() || !user.getConfirmPass().isEmpty()) {
+				if (user.getPassword().equals(user.getConfirmPass())) {
 
+					Logger.getLogger(getClass()).debug("Verificando complexidade da senha do usuário.");
+					List<String> passVal = new ArrayList<String>();
+					Map<String, String> map = new HashMap<String, String>();
+					map = br.com.hrstatus.security.PasswordPolicy.verifyPassComplexity(user.getPassword());
+					Object[] valueMap = map.keySet().toArray();
+					for (int i = 0; i < valueMap.length; i++) {
+						if (map.get(valueMap[i]).equals("false")) {
+							passVal.add(map.get(valueMap[i + 1]));
+						}
+					}
+					for (int j = 0; j < passVal.size(); j++) {
+						validator.add(new ValidationMessage(passVal.get(j),"Erro"));
+					}
+
+				}
+			}
+			
+			if (user.getMail().isEmpty()) {
+				validator.add(new ValidationMessage("O campo E-mail deve ser informado", "Erro"));
+			} 
+			
+			if (idServer[0].equals("notNull")) {
+				Logger.getLogger(getClass()).info("Lista de Servidores para Usuário vazio.");
+			}
+			
 			if (user.getPassword().isEmpty()) {
 				// pegar senha do banco e setar objeto
 				user.setPassword(this.usersDAO.getPass(user.getUsername()));
 			} else {
 				user.setPassword(encode.encodePassUser(user.getPassword()));
 			}
+			
+			for (Servidores u1 : FullLogServer) {
+				for (Servidores sv : user.getServer()) {
+					if (u1.getId() == sv.getId()) {
+						Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername()
+										+ " ]Servidores com permissão: " + sv.getHostname());
+						u1.setSelected("selected");
+					}
+				}
+				server.add(u1);
+			}
+
+			result.include("server", server);
+			
 			validator.onErrorUsePageOf(UpdateController.class).findForUpdateUser(user, "", "");
 
 			if (!user.getUsername().equals(LoggedUsername.toString()) && !(isAdmin || isUser)) {
