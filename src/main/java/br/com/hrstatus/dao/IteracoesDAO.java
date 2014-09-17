@@ -130,7 +130,7 @@ public class IteracoesDAO implements Iteracoes {
 		return criteria.add(Restrictions.eq("id", id)).list();
 	}
 	
-	@Transactional(propagation = Propagation.NEVER)
+	//@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void updateServer(Servidores server) {
 
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] updateServer -> Retrieving parameters");

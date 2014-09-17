@@ -301,7 +301,7 @@
 		<div class="modal-body">
 			<p>
 				<a href="http://www.hrstatus.com.br/hrstatus/home.html"
-					target="_blank">Hr Status</a><br>Versão: 3.4.2-1<br> <br>
+					target="_blank">Hr Status</a><br>Versão: 3.4.2-2<br> <br>
 				<br> <a href="http://www.hrstatus.com.br/hrstatus/home.html"
 					target="_blank"> <img
 					src="${pageContext.request.contextPath}/img/hrimg.JPG"></img></a><br>

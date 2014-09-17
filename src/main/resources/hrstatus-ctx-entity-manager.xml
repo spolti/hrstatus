@@ -33,7 +33,7 @@
 		class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager">
 		<property name="persistenceXmlLocations">
 			<list>
-				<value>classpath*:META-INF/hrstatus-persistence.xml</value>
+				<value>classpath*:META-INF/hr-persistence.xml</value>
 			</list>
 		</property>
 	</bean>
@@ -55,8 +55,8 @@
 		<property name="persistenceUnitName" value="pu-hr" />
 		<property name="jpaProperties">
 			<props>
-				<prop key="hibernate.show_sql">false</prop>
-				<prop key="hibernate.format_sql">false</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
 				<prop key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</prop>
 				<prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.JBossTransactionManagerLookup
