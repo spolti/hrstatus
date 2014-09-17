@@ -61,7 +61,13 @@
 								value="${server.status}" />
 							<input type="hidden" name="server.trClass"
 								value="${server.trClass}" />
-
+							<select style="visibility: hidden" name="idUser[]" multiple>
+								<c:forEach var="user" items="${userFinal}">
+									 <option  style="display: none" value="${user.username}" selected="selected"></option>
+								</c:forEach>
+							</select>
+									
+								
 							<tr>
 								<td align=right>Servder ID:</td>
 								<td><input name="server.id" value="${server.id}"

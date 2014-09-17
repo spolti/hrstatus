@@ -124,6 +124,22 @@ public class UpdateController {
 			result.include("SO", so);
 		}
 
+		List<Users> userCorrect = this.usersDAO.listUser();
+		List<Users> userFinal = new ArrayList<Users>();
+		for(Users user : userCorrect){
+			for (Users us : server.getUsers()){
+				if (user.getUsername().equals(us.getUsername())){
+					Logger.getLogger(getClass()).info("****************************************************");
+					Logger.getLogger(getClass()).info("Servidor " + server.getHostname() + " está mapeado para usuário " + user.getUsername());
+					Logger.getLogger(getClass()).info("****************************************************");
+				}
+			}
+			userFinal.add(user);
+		}
+		//server.setUsers(userFinal);
+		result.include("userFinal", userFinal);
+		
+		
 		result.include("server", server);
 
 		if (s != null) {
@@ -135,7 +151,7 @@ public class UpdateController {
 	@SuppressWarnings("static-access")
 	@Get("/updateServer")
 	@Post("/updateServer")
-	public void updateServer(Servidores server) {
+	public void updateServer(Servidores server, String[] idUser) {
 		// inserindo html title no result
 		result.include("title", "Atualizar Servidor");
 
@@ -175,9 +191,24 @@ public class UpdateController {
 		} catch (Exception e) {
 			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Error: ", e);
 		}
-
-		this.iteracoesDAO.updateServer(server);
 		
+
+		if (!idUser[0].equals("notNull")) {
+			List<Users> idUserAccessServer = new ArrayList<Users>();
+			for (int i = 0; i < idUser.length; i++) {
+				Logger.getLogger(getClass()).info("****************************************************");
+				Logger.getLogger(getClass()).info("Username recebido: " + idUser[i]);
+				if (!idUser[i].equals("notNull")) {
+					idUserAccessServer.add(this.usersDAO.getUserByID(idUser[i]));
+					Logger.getLogger(getClass()).info("Username recebido: " + idUser[i]);
+					Logger.getLogger(getClass()).info("****************************************************");
+				}
+			}
+			server.setUsers(idUserAccessServer); 
+		}
+				
+		this.iteracoesDAO.updateServer(server);
+			
 		// redirecto to /configClients
 		result.redirectTo(ConfigController.class).configClients();
 	}

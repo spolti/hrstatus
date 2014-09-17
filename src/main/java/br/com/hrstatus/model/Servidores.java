@@ -25,6 +25,7 @@ package br.com.hrstatus.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -50,11 +51,11 @@ public class Servidores {
 	@GeneratedValue
 	private int id;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	@JoinTable(name = "USER_SERVER", joinColumns = { @JoinColumn(name = "id") }, inverseJoinColumns = { @JoinColumn(name = "username") })
 	private List<Users> users;
 	
-	//@Column(name = "hostname")
+	@Column(name = "hostname")
 	private String hostname;
 	
 	@Column(name = "ip")

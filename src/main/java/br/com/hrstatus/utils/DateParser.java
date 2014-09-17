@@ -68,8 +68,12 @@ public class DateParser {
 		SimpleDateFormat formato5 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy",new Locale("pt", "BR")); // padrão segunda-feira,  4 de março de 2013 16h13min27s BRT
 		
 		SimpleDateFormat formato6 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
 		String patternFormato6 = "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}";
+		
+		//padrao Wed Mar 01 00:00:00 GMT-03:00 1950
+		SimpleDateFormat formato7 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+		
+		
 		//verificando se o Timezone é nativo AIX GRNLNDST e GRNLNDDT e GRNLNDST3, se for ignora timezone.
 		if (data.contains("GRNLNDST") || data.contains("GRNLNDDT") || data.contains("GRNLNDST3")){
 			Logger.getLogger(getClass()).debug("Padrao AIX reconhecido, ignorando timezone.");
@@ -218,6 +222,11 @@ public class DateParser {
 		}else if (data.matches(patternFormato6)){
 			Logger.getLogger(getClass()).debug("Padrão reconhecido yyy-dd-mm HH:mm:ss");
 			formatador = formato6;
+			
+		//validando padrão 7
+		}else if (data.contains("GMT+") || data.contains("GMT-")){
+			Logger.getLogger(getClass()).debug("Padrão reconhecido EEE MMM dd HH:mm:ss z yyyy");
+			formatador = formato7;
 		}
 		
 		else{
@@ -239,7 +248,7 @@ public class DateParser {
 //		DateParser test = new DateParser();
 //		//Arrumar bug da data Sab, não consegue realizar parse.
 //		//Date NewFormat = test.parser("Sat Mar 04 16:09:05 BRT 2013");
-//		Date NewFormat = test.parser("Sáb Mar 04 16:08:49 BRT 2013");
+//		Date NewFormat = test.parser("Mon Sep 15 22:27:57 GMT-03:00 2014");
 //		System.out.println("Data formadata: " + NewFormat);			
 //	}	
 }
