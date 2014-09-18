@@ -37,7 +37,6 @@ import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.hrstatus.model.Servidores;
@@ -130,11 +129,9 @@ public class IteracoesDAO implements Iteracoes {
 		return criteria.add(Restrictions.eq("id", id)).list();
 	}
 	
-	//@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void updateServer(Servidores server) {
 
 		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] updateServer -> Retrieving parameters");
-		
 		Logger.getLogger(getClass()).trace("[ " + userInfo.getLoggedUsername() + " ] Parametros recebidos para update");
 		Logger.getLogger(getClass()).trace("Server " + server.getHostname());
 		Logger.getLogger(getClass()).trace("IP: " + server.getIp());

@@ -17,17 +17,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package br.com.hrstatus.action;
 
 /*
  * @author spolti
+ * Any codes from jcraft.com
  */
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import org.apache.log4j.Logger;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
@@ -37,10 +39,31 @@ import com.jcraft.jsch.Session;
 
 public class SftpLogs {
 
+	public static class MyLogger implements com.jcraft.jsch.Logger {
+		static java.util.Hashtable name = new java.util.Hashtable();
+		static {
+			name.put(new Integer(DEBUG), "DEBUG: ");
+			name.put(new Integer(INFO), "INFO: ");
+			name.put(new Integer(WARN), "WARN: ");
+			name.put(new Integer(ERROR), "ERROR: ");
+			name.put(new Integer(FATAL), "FATAL: ");
+		}
+
+		public boolean isEnabled(int level) {
+			return true;
+		}
+
+		public void log(int level, String message) {
+			System.out.print(name.get(new Integer(level)));
+			Logger.getLogger(getClass()).debug(message);
+		}
+	}
+
 	public String showGetFiles(String user, String pass, String host, int port,
 			String remoteDir) throws JSchException, IOException {
 		String s = "";
-
+		
+		JSch.setLogger(new MyLogger());
 		// informações de usuário/host/porta para conexão
 
 		// definindo a não obrigação do arquivo know_hosts
@@ -58,6 +81,7 @@ public class SftpLogs {
 		Channel channel = session.openChannel("exec");
 		((ChannelExec) channel).setCommand("ls -sh " + remoteDir);
 		((ChannelExec) channel).setErrStream(System.err);
+
 		InputStream in = channel.getInputStream();
 
 		channel.connect();
@@ -89,8 +113,9 @@ public class SftpLogs {
 	}
 
 	public String tailFile(String user, String pass, String host, int port,
-			String remoteDir, String file, Integer numeroLinhas) throws JSchException, IOException {
-		
+			String remoteDir, String file, Integer numeroLinhas)
+			throws JSchException, IOException {
+
 		String s = "";
 
 		// informações de usuário/host/porta para conexão
@@ -108,7 +133,8 @@ public class SftpLogs {
 
 		// Exectando o comando
 		Channel channel = session.openChannel("exec");
-		((ChannelExec) channel).setCommand("tail -n " + numeroLinhas + " " + remoteDir + "/" + file);
+		((ChannelExec) channel).setCommand("tail -n " + numeroLinhas + " "
+				+ remoteDir + "/" + file);
 		((ChannelExec) channel).setErrStream(System.err);
 		InputStream in = channel.getInputStream();
 
@@ -140,10 +166,11 @@ public class SftpLogs {
 		return s;
 
 	}
-	
+
 	public String findInFile(String user, String pass, String host, int port,
-			String remoteDir, String file, String palavraBusca) throws JSchException, IOException {
-		
+			String remoteDir, String file, String palavraBusca)
+			throws JSchException, IOException {
+
 		String s = "";
 
 		// informações de usuário/host/porta para conexão
@@ -161,7 +188,8 @@ public class SftpLogs {
 
 		// Exectando o comando
 		Channel channel = session.openChannel("exec");
-		((ChannelExec) channel).setCommand("grep -i '" + palavraBusca + "' " + remoteDir + "/" + file);
+		((ChannelExec) channel).setCommand("grep -i '" + palavraBusca + "' "
+				+ remoteDir + "/" + file);
 		((ChannelExec) channel).setErrStream(System.err);
 		InputStream in = channel.getInputStream();
 
@@ -210,6 +238,7 @@ public class SftpLogs {
 			// exec 'scp -f rfile' remotely
 			String command = "scp -f " + rfile;
 			Channel channel = session.openChannel("exec");
+			((ChannelExec) channel).setErrStream(System.err);
 			((ChannelExec) channel).setCommand(command);
 
 			// get I/O streams for remote scp
@@ -291,9 +320,8 @@ public class SftpLogs {
 
 			session.disconnect();
 
-			
 		} catch (Exception e) {
-			System.out.println(e);
+			System.err.println(e);
 			return "Download não Realizado";
 		}
 		return "Download Realizado";

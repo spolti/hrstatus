@@ -131,7 +131,7 @@ public class LogsController {
 
 			String listOfFiles[] = files.split("\n");
 			result.include("hostname", servidor.getHostname());
-			result.include("qtdn", listOfFiles.length);
+			result.include("qtdn", listOfFiles.length -1);
 			result.include("listOfFiles", listOfFiles);
 
 		} else {

@@ -26,6 +26,8 @@ package br.com.hrstatus.action.linux;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.log4j.Logger;
+
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
@@ -34,6 +36,26 @@ import com.jcraft.jsch.Session;
 
 public class RunNtpDate {
 
+	public static class MyLogger implements com.jcraft.jsch.Logger {
+		static java.util.Hashtable name = new java.util.Hashtable();
+		static {
+			name.put(new Integer(DEBUG), "DEBUG: ");
+			name.put(new Integer(INFO), "INFO: ");
+			name.put(new Integer(WARN), "WARN: ");
+			name.put(new Integer(ERROR), "ERROR: ");
+			name.put(new Integer(FATAL), "FATAL: ");
+		}
+
+		public boolean isEnabled(int level) {
+			return true;
+		}
+
+		public void log(int level, String message) {
+			System.out.print(name.get(new Integer(level)));
+			Logger.getLogger(getClass()).debug(message);
+		}
+	}
+	
 	public static String exec(String user, String host, String password,
 			int port, String command) throws JSchException, IOException {
 
