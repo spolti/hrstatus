@@ -98,15 +98,16 @@ public class HomeController {
 		// do cadastro
 		// se for false não faz nade se for true redireciona para atualizar
 		// cadastro.
-		if (this.userDAO.getFirstLogin(userInfo.getLoggedUsername())) {
+		boolean isFirstLogin = this.userDAO.getFirstLogin(userInfo.getLoggedUsername());
+		if (isFirstLogin) {
 			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Primeiro login do usuário "
-							+ userInfo.getLoggedUsername() + ": " + this.userDAO.getFirstLogin(userInfo.getLoggedUsername()));
+							+ userInfo.getLoggedUsername() + ": " + isFirstLogin);
 			
 			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Redirecionando o usuário para troca de senha.");
 			result.forwardTo(UpdateController.class).findForUpdateUser(null,userInfo.getLoggedUsername(), "changePass");
 		} else {
 			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Primeiro login do usuário " + userInfo.getLoggedUsername() 
-							+ ": " + this.userDAO.getFirstLogin(userInfo.getLoggedUsername()));
+							+ ": " + isFirstLogin);
 		}
 	}
 

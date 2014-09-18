@@ -129,17 +129,15 @@ public class UpdateController {
 		for(Users user : userCorrect){
 			for (Users us : server.getUsers()){
 				if (user.getUsername().equals(us.getUsername())){
-					Logger.getLogger(getClass()).info("****************************************************");
-					Logger.getLogger(getClass()).info("Servidor " + server.getHostname() + " está mapeado para usuário " + user.getUsername());
-					Logger.getLogger(getClass()).info("****************************************************");
+					Logger.getLogger(getClass()).debug("****************************************************");
+					Logger.getLogger(getClass()).debug("Servidor " + server.getHostname() + " está mapeado para usuário " + user.getUsername());
+					Logger.getLogger(getClass()).debug("****************************************************");
 				}
 			}
 			userFinal.add(user);
 		}
-		//server.setUsers(userFinal);
+
 		result.include("userFinal", userFinal);
-		
-		
 		result.include("server", server);
 
 		if (s != null) {
@@ -196,12 +194,12 @@ public class UpdateController {
 		if (!idUser[0].equals("notNull")) {
 			List<Users> idUserAccessServer = new ArrayList<Users>();
 			for (int i = 0; i < idUser.length; i++) {
-				Logger.getLogger(getClass()).info("****************************************************");
-				Logger.getLogger(getClass()).info("Username recebido: " + idUser[i]);
+				Logger.getLogger(getClass()).debug("****************************************************");
+				Logger.getLogger(getClass()).debug("Username recebido: " + idUser[i]);
 				if (!idUser[i].equals("notNull")) {
 					idUserAccessServer.add(this.usersDAO.getUserByID(idUser[i]));
-					Logger.getLogger(getClass()).info("Username recebido: " + idUser[i]);
-					Logger.getLogger(getClass()).info("****************************************************");
+					Logger.getLogger(getClass()).debug("Username recebido: " + idUser[i]);
+					Logger.getLogger(getClass()).debug("****************************************************");
 				}
 			}
 			server.setUsers(idUserAccessServer); 
