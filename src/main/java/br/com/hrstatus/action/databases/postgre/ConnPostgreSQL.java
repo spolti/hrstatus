@@ -22,8 +22,7 @@ package br.com.hrstatus.action.databases.postgre;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import br.com.hrstatus.utils.UserInfo;
 
@@ -33,6 +32,7 @@ import br.com.hrstatus.utils.UserInfo;
 
 public class ConnPostgreSQL {
 
+	static Logger log =  Logger.getLogger(ConnPostgreSQL.class.getCanonicalName());
 	public static boolean status = false;
 	public ConnPostgreSQL() {}
 
@@ -47,12 +47,13 @@ public class ConnPostgreSQL {
 			connection = DriverManager.getConnection("jdbc:postgresql://"+serverAddress+":5432/"+database+"",username,password);
 			//connection = DriverManager.getConnection(url, username, password);
 
+			
 			if (connection != null) {
 				status = (true);
-				Logger.getLogger(ConnPostgreSQL.class).debug("[ " + userInfo.getLoggedUsername() + " ] PostgreSQL datbase connection status: " + status);
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] PostgreSQL datbase connection status: " + status);
 			} else {
 				status = (false);
-				Logger.getLogger(ConnPostgreSQL.class).debug("[ " + userInfo.getLoggedUsername() + " ] PostgreSQL datbase connection status: " + status);
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] PostgreSQL datbase connection status: " + status);
 			}
 			return connection;
 

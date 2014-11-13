@@ -17,20 +17,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.dao;
+package br.com.hrstatus.dao.impl;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.hrstatus.dao.LockIntrface;
 import br.com.hrstatus.model.Lock;
 import br.com.hrstatus.utils.UserInfo;
 
@@ -42,6 +43,8 @@ import br.com.hrstatus.utils.UserInfo;
 @Transactional
 public class LockDAO implements LockIntrface{
 
+	Logger log =  Logger.getLogger(LockDAO.class.getCanonicalName());
+	
 	private EntityManager entityManager;
 	UserInfo userInfo = new UserInfo();
 
@@ -57,13 +60,13 @@ public class LockDAO implements LockIntrface{
 	}
 
 	public void insertLock(Lock lock) {
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Gerando lock para o recurso " + lock.getRecurso()
+		log.info("[ " + userInfo.getLoggedUsername() + " ] Gerando lock para o recurso " + lock.getRecurso()
 						+ " solicitado pelo usuário " + lock.getUsername());
 		session().save(lock);
 	}
 
 	public void removeLock(Lock lock) {
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Removendo lock para o recurso " + lock.getRecurso()
+		log.info("[ " + userInfo.getLoggedUsername() + " ] Removendo lock para o recurso " + lock.getRecurso()
 						+ " solicitado pelo usuário " + lock.getUsername());
 		session().refresh(lock);
 		session().delete(lock);
@@ -71,7 +74,7 @@ public class LockDAO implements LockIntrface{
 
 	@SuppressWarnings("unchecked")
 	public List<Lock> listLockedServices(String recurso){
-		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Verificando se há algum recurso locado.");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] Verificando se há algum recurso locado.");
 		Criteria criteria = session().createCriteria(Lock.class);
 		criteria.add(Restrictions.eq("recurso", recurso));
 		return criteria.list();
@@ -79,12 +82,12 @@ public class LockDAO implements LockIntrface{
 
 	@SuppressWarnings("unchecked")
 	public List<Lock> ListAllLocks(){
-		Logger.getLogger(getClass()).debug("ListAllLocks() -> listing all locks.");
+		log.fine("ListAllLocks() -> listing all locks.");
 		return session().createCriteria(Lock.class).list();	
 	}
 	
 	public Lock getLockByID(int id) {
-		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] getLockByID -> Lock ID selected: " + id);
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getLockByID -> Lock ID selected: " + id);
 		return (Lock) session().createCriteria(Lock.class)
 				.add(Restrictions.eq("id", id)).uniqueResult();
 	}

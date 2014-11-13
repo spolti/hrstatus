@@ -19,10 +19,45 @@
 
 package br.com.hrstatus.action.databases.sqlserver;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import br.com.hrstatus.model.BancoDados;
+
 /*
  * @author spolti
  */
 
 public class SqlServer {
-	//Em construção, sem previsão de desenvolvimento, caso tenha interesse em contribuir fique a vontade.
+
+	public String getDateSqlServer(BancoDados dataBase) throws SQLException, ClassNotFoundException {
+
+		Connection conn = ConnSqlServer.getConexaoMySQL(dataBase.getIp(),dataBase.getUser(), dataBase.getPass(), dataBase.getInstance());
+		String sql = dataBase.getQueryDate();
+
+		Statement stm = conn.createStatement();
+		ResultSet rs = stm.executeQuery(sql);
+		String dt_db = null;
+
+		if (rs != null) {
+			while (rs.next()) {
+				dt_db = rs.getString("date");
+			}
+		}
+		// Formatando data.
+		// DateParser dt_parser = new DateParser();
+		// Removendo, caso exista o timestamp
+		if (dt_db.endsWith(".0")) {
+			dt_db = dt_db.replace(".", "#");
+			String dt_tmp[] = dt_db.split("#");
+			dt_db = dt_tmp[0];
+		}
+
+		stm.close();
+		conn.close();
+
+		return dt_db;
+	}
 }

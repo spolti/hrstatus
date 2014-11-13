@@ -23,7 +23,6 @@ package br.com.hrstatus.utils;
  * @author spolti
  */
 
-
 public class PropertiesLoaderImpl {
 
     private static PropertiesLoader loader = new PropertiesLoader();  
@@ -31,5 +30,4 @@ public class PropertiesLoaderImpl {
     public static String getValor(String chave){  
             return (String)loader.getValor(chave);  
     }  
-	
 }

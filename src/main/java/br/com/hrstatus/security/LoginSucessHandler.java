@@ -17,15 +17,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.utils;
+package br.com.hrstatus.security;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
@@ -33,6 +33,8 @@ import org.springframework.stereotype.Service;
 
 import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.model.Users;
+import br.com.hrstatus.utils.UserInfo;
+import br.com.hrstatus.utils.date.DateUtils;
 
 /*
  *Spring Framework 
@@ -40,13 +42,13 @@ import br.com.hrstatus.model.Users;
  */
 
 @Service
-public class LoginSucessHandler extends
-        SavedRequestAwareAuthenticationSuccessHandler {
+public class LoginSucessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+	
+	Logger log =  Logger.getLogger(LoginSucessHandler.class.getCanonicalName());
 	
 	@Autowired
 	private UsersInterface userDAO;
 	
-
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
             HttpServletResponse response, Authentication authentication)
@@ -58,10 +60,9 @@ public class LoginSucessHandler extends
     	Users user = userDAO.getUserByID(userInfo.getLoggedUsername());
     	String lastLoginTime = dt.getTime();
     	user.setLastLogin(lastLoginTime);
-    	Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Successful login at " + lastLoginTime);
+    	log.info("[ " + userInfo.getLoggedUsername() + " ] Successful login at " + lastLoginTime);
     	userDAO.updateUser(user);
-    	
-    	
+    	    	
         super.setDefaultTargetUrl("/home");
         
         request.getSession().setMaxInactiveInterval(30*30);

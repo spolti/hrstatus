@@ -22,8 +22,7 @@ package br.com.hrstatus.action.databases.oracle;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import br.com.hrstatus.utils.UserInfo;
 
@@ -33,6 +32,7 @@ import br.com.hrstatus.utils.UserInfo;
 
 public class ConnOracle {
 	
+	static Logger log =  Logger.getLogger(ConnOracle.class.getCanonicalName());
 	public static boolean status = false;
 	
 	public ConnOracle() {}
@@ -46,12 +46,13 @@ public class ConnOracle {
 			String url = "jdbc:oracle:thin:@" + serverAddress + ":" + 1521 + "/" + instance;
 			connection = DriverManager.getConnection(url, username, password);
 
+			//Verificar se está OK
 			if (connection != null) {
 				status = (true);
-				Logger.getLogger(ConnOracle.class).debug("[ " + userInfo.getLoggedUsername() + " ] Oracle datbase connection status: " + status);
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] Oracle datbase connection status: " + status);
 			} else {
 				status = (false);
-				Logger.getLogger(ConnOracle.class).debug("[ " + userInfo.getLoggedUsername() + " ] Oracle datbase connection status: " + status);
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] Oracle datbase connection status: " + status);
 			}
 			return connection;
 	}

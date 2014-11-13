@@ -1,13 +1,36 @@
+/*
+    Copyright (C) 2012  Filippe Costa Spolti
+
+	This file is part of Hrstatus.
+
+    Hrstatus is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package br.com.hrstatus.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import br.com.hrstatus.dao.Iteracoes;
+import br.com.hrstatus.dao.ServersInterface;
 import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.model.Servidores;
 import br.com.hrstatus.model.Users;
+
+/*
+ * @author spolti
+ */
 
 public class UserInfo {
 
@@ -15,7 +38,7 @@ public class UserInfo {
 	private UsersInterface userDAO;
 	
 	@Autowired
-	private Iteracoes iteracoesDAO;
+	private ServersInterface iteracoesDAO;
 	
 	
 	public String getLoggedUsername(){

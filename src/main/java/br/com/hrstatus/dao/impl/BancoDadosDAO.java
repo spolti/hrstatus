@@ -17,15 +17,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.dao;
+package br.com.hrstatus.dao.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
@@ -33,6 +33,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.model.BancoDados;
 import br.com.hrstatus.utils.UserInfo;
 
@@ -44,6 +45,8 @@ import br.com.hrstatus.utils.UserInfo;
 @Transactional
 public class BancoDadosDAO implements BancoDadosInterface {
 
+	Logger log =  Logger.getLogger(BancoDadosDAO.class.getCanonicalName());
+	
 	private EntityManager entityManager;
 	UserInfo userInfo = new UserInfo();
 
@@ -61,14 +64,14 @@ public class BancoDadosDAO implements BancoDadosInterface {
 
 	public int insert_dataBase(BancoDados dataBase) {
 
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] insert_dataBase -> Retrieving parameters");
-		Logger.getLogger(getClass()).debug("Server: " + dataBase.getHostname());
-		Logger.getLogger(getClass()).debug("IP: " + dataBase.getIp());
-		Logger.getLogger(getClass()).debug("User: " + dataBase.getUser());
-		Logger.getLogger(getClass()).debug("Pass: " + dataBase.getPass());
-		Logger.getLogger(getClass()).debug("Port: " + dataBase.getPort());
-		Logger.getLogger(getClass()).debug("VENDOR: " + dataBase.getVendor());
-		Logger.getLogger(getClass()).debug("Query: " + dataBase.getQueryDate());
+		log.info("[ " + userInfo.getLoggedUsername() + " ] insert_dataBase -> Retrieving parameters");
+		log.fine("Server: " + dataBase.getHostname());
+		log.fine("IP: " + dataBase.getIp());
+		log.fine("User: " + dataBase.getUser());
+		log.fine("Pass: " + dataBase.getPass());
+		log.fine("Port: " + dataBase.getPort());
+		log.fine("VENDOR: " + dataBase.getVendor());
+		log.fine("Query: " + dataBase.getQueryDate());
 
 		try {
 
@@ -76,19 +79,19 @@ public class BancoDadosDAO implements BancoDadosInterface {
 							new String(dataBase.getHostname()))).setProjection(Projections.property("hostname"));
 
 			if (hostname.uniqueResult() == null) {
-				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] insert_dataBase -> Banco de dados "
+				log.info("[ " + userInfo.getLoggedUsername() + " ] insert_dataBase -> Banco de dados "
 								+ dataBase.getHostname() + " não encontrado");
-				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] insert_dataBase -> Saving data");
+				log.info("[ " + userInfo.getLoggedUsername() + " ] insert_dataBase -> Saving data");
 				session().save(dataBase);
 				return 0;
 			} else {
-				Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] insert_dataBase -> Servidor "
+				log.info("[ " + userInfo.getLoggedUsername() + " ] insert_dataBase -> Servidor "
 								+ dataBase.getHostname() + " já existe, dados não inseridos.");
 				return 1;
 			}
 
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] insert_dataBase -> Erro: " + e);
+			log.severe("[ " + userInfo.getLoggedUsername() + " ] insert_dataBase -> Erro: " + e);
 			return 1;
 		}
 
@@ -96,12 +99,12 @@ public class BancoDadosDAO implements BancoDadosInterface {
 	
 	@SuppressWarnings("unchecked")
 	public List<BancoDados> listDataBases() {
-		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] listDataBases() -> Select * executed.");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] listDataBases() -> Select * executed.");
 		return session().createCriteria(BancoDados.class).list();
 	}
 	
 	public BancoDados getDataBaseByID(int id) {
-		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] getDataBaseByID -> DataBase ID selected: " + id);
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getDataBaseByID -> DataBase ID selected: " + id);
 		return (BancoDados) session().createCriteria(BancoDados.class).add(Restrictions.eq("id", id)).uniqueResult();
 	}
 	
@@ -111,24 +114,24 @@ public class BancoDadosDAO implements BancoDadosInterface {
 		try {
 			session().refresh(bancoDados);
 			session().delete(bancoDados);
-			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] deleteDataBaseByID -> Data Base " + bancoDados.getHostname() + " deleted.");
+			log.info("[ " + userInfo.getLoggedUsername() + " ] deleteDataBaseByID -> Data Base " + bancoDados.getHostname() + " deleted.");
 			return true;
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] deleteDataBaseByID -> Data Base " + bancoDados.getHostname() + "Delete Operation failed.");
+			log.info("[ " + userInfo.getLoggedUsername() + " ] deleteDataBaseByID -> Data Base " + bancoDados.getHostname() + "Delete Operation failed.");
 			return false;
 		}
 	}
 	
 	public void updateDataBase(BancoDados dataBase){
 		
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] updateDataBase -> Retrieving parameters");
-		Logger.getLogger(getClass()).debug("Server: " + dataBase.getHostname());
-		Logger.getLogger(getClass()).debug("IP: " + dataBase.getIp());
-		Logger.getLogger(getClass()).debug("User: " + dataBase.getUser());
-		Logger.getLogger(getClass()).debug("Pass: " + dataBase.getPass());
-		Logger.getLogger(getClass()).debug("Port: " + dataBase.getPort());
-		Logger.getLogger(getClass()).debug("VENDOR: " + dataBase.getVendor());
-		Logger.getLogger(getClass()).debug("Query: " + dataBase.getQueryDate());
+		log.info("[ " + userInfo.getLoggedUsername() + " ] updateDataBase -> Retrieving parameters");
+		log.fine("Server: " + dataBase.getHostname());
+		log.fine("IP: " + dataBase.getIp());
+		log.fine("User: " + dataBase.getUser());
+		log.fine("Pass: " + dataBase.getPass());
+		log.fine("Port: " + dataBase.getPort());
+		log.fine("VENDOR: " + dataBase.getVendor());
+		log.fine("Query: " + dataBase.getQueryDate());
 		
 		session().update(dataBase);
 	}
@@ -138,7 +141,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 		criteria.add(Restrictions.eq("vendor", "MYSQL"));
 		criteria.setProjection(Projections.rowCount());
 		int count = ((Long) criteria.uniqueResult()).intValue();
-		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countMysql() -> Found " + count + " Mysql Databases.");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] countMysql() -> Found " + count + " Mysql Databases.");
 		return count;
 	}
 	
@@ -147,7 +150,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 		criteria.add(Restrictions.eq("vendor", "ORACLE"));
 		criteria.setProjection(Projections.rowCount());
 		int count = ((Long) criteria.uniqueResult()).intValue();
-		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countOracle() -> Found " + count + " Oracle Databases..");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] countOracle() -> Found " + count + " Oracle Databases..");
 		return count;
 	}
 	
@@ -156,7 +159,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 		criteria.add(Restrictions.eq("vendor", "POSTGRESQL"));
 		criteria.setProjection(Projections.rowCount());
 		int count = ((Long) criteria.uniqueResult()).intValue();
-		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countPostgre() -> Found " + count + " Postgre Databases.");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] countPostgre() -> Found " + count + " Postgre Databases.");
 		return count;
 	}
 	
@@ -164,7 +167,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 		Criteria criteria = session().createCriteria(BancoDados.class);
 		criteria.setProjection(Projections.rowCount());
 		int count = ((Long) criteria.uniqueResult()).intValue();
-		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countAllDataBases() -> Found " + count + " Databases.");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] countAllDataBases() -> Found " + count + " Databases.");
 		return count;
 	}
 	
@@ -175,12 +178,12 @@ public class BancoDadosDAO implements BancoDadosInterface {
 			criteria.add(Restrictions.eq("status", "OK"));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco De Dados OK: " + count);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Banco De Dados OK: " + count);
 			return count;
 
 		} catch (Exception e) {
 			System.out.println(e);
-			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			log.severe("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
 			return 0;
 		}
 	}
@@ -192,12 +195,12 @@ public class BancoDadosDAO implements BancoDadosInterface {
 			criteria.add(Restrictions.or(Restrictions.eq("trClass", "error"),Restrictions.eq("status", "NOK")));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco De Dados não OK: " + count);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Banco De Dados não OK: " + count);
 			return count;
 
 		} catch (Exception e) {
 			System.out.println(e);
-			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			log.severe("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
 			return 0;
 		}
 	}
@@ -209,12 +212,12 @@ public class BancoDadosDAO implements BancoDadosInterface {
 			criteria.add(Restrictions.and(Restrictions.eq("vendor", "MYSQL"), Restrictions.eq("status", "OK")));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countMySQLOK() -> " + count + " found.");
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] countMySQLOK() -> " + count + " found.");
 			return count;
 
 		} catch (Exception e) {
 			System.out.println(e);
-			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			log.severe("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
 			return 0;
 		}
 	}
@@ -227,12 +230,12 @@ public class BancoDadosDAO implements BancoDadosInterface {
 							Restrictions.eq("status", "NOK"))));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countMySQLNOK() -> " + count + " found.");
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] countMySQLNOK() -> " + count + " found.");
 			return count;
 
 		} catch (Exception e) {
 			System.out.println(e);
-			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			log.severe("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
 			return 0;
 		}
 	}
@@ -244,12 +247,12 @@ public class BancoDadosDAO implements BancoDadosInterface {
 			criteria.add(Restrictions.and(Restrictions.eq("vendor", "oracle"), Restrictions.eq("status", "OK")));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countOracleOK() -> " + count + " found.");
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] countOracleOK() -> " + count + " found.");
 			return count;
 
 		} catch (Exception e) {
 			System.out.println(e);
-			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			log.severe("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
 			return 0;
 		}
 	}
@@ -262,30 +265,30 @@ public class BancoDadosDAO implements BancoDadosInterface {
 					Restrictions.and(Restrictions.eq("trClass", "error"), Restrictions.eq("status", "NOK"))));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countOracleNOK() -> " + count + " found.");
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] countOracleNOK() -> " + count + " found.");
 			return count;
 
 		} catch (Exception e) {
 			System.out.println(e);
-			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			log.severe("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
 			return 0;
 		}
 	}
 	
 	public int countPostgreOK() {
-		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countPostgreOK() -> Counting Windows Servers not OK.");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] countPostgreOK() -> Counting Windows Servers not OK.");
 
 		try {
 			Criteria criteria = session().createCriteria(BancoDados.class);
 			criteria.add(Restrictions.and(Restrictions.eq("vendor", "POSTGRESQL"), Restrictions.eq("status", "OK")));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countWindowsOK -> " + count + " found.");
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] countWindowsOK -> " + count + " found.");
 			return count;
 
 		} catch (Exception e) {
 			System.out.println(e);
-			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			log.severe("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
 			return 0;
 		}
 	}
@@ -298,11 +301,11 @@ public class BancoDadosDAO implements BancoDadosInterface {
 					Restrictions.and(Restrictions.eq("trClass", "error"), Restrictions.eq("status", "NOK"))));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] countPostgreNOK() -> " + count + " found.");
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] countPostgreNOK() -> " + count + " found.");
 			return count;
 
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).error("Erro: " + e);
+			log.severe("Erro: " + e);
 			return 0;
 		}
 	}
@@ -316,7 +319,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 
 		} catch (Exception e) {
 			System.out.println(e);
-			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			log.severe("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
 			return new ArrayList<BancoDados>();
 		}
 	}
@@ -331,14 +334,14 @@ public class BancoDadosDAO implements BancoDadosInterface {
 
 		} catch (Exception e) {
 			System.out.println(e);
-			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			log.severe("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
 			return new ArrayList<BancoDados>();
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<BancoDados> getVendorMysql() {
-		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] getvendorMysql -> Getting Mysql DataBases.");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getvendorMysql -> Getting Mysql DataBases.");
 
 		try {
 			Criteria criteria = session().createCriteria(BancoDados.class);
@@ -346,14 +349,14 @@ public class BancoDadosDAO implements BancoDadosInterface {
 
 		} catch (Exception e) {
 			System.out.println(e);
-			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			log.severe("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
 			return new ArrayList<BancoDados>();
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<BancoDados> getVendorOracle() {
-		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] getVendorOracle -> Getting Oracle DataBases.");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getVendorOracle -> Getting Oracle DataBases.");
 
 		try {
 			Criteria criteria = session().createCriteria(BancoDados.class);
@@ -361,14 +364,14 @@ public class BancoDadosDAO implements BancoDadosInterface {
 
 		} catch (Exception e) {
 			System.out.println(e);
-			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			log.severe("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
 			return new ArrayList<BancoDados>();
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<BancoDados> getVendorPostgre() {
-		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] getVendorPostgre -> Getting Postgre DataBases.");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getVendorPostgre -> Getting Postgre DataBases.");
 
 		try {
 			Criteria criteria = session().createCriteria(BancoDados.class);
@@ -376,7 +379,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 
 		} catch (Exception e) {
 			System.out.println(e);
-			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
+			log.severe("[ " + userInfo.getLoggedUsername() + " ] Erro: " + e);
 			return new ArrayList<BancoDados>();
 		}
 	}

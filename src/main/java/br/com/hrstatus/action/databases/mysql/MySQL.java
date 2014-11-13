@@ -32,7 +32,7 @@ import br.com.hrstatus.model.BancoDados;
 
 public class MySQL {
 
-	   public String getDate(BancoDados dataBase) throws SQLException, ClassNotFoundException {  
+	   public String getDateMySQL(BancoDados dataBase) throws SQLException, ClassNotFoundException {  
 		   
 		   Connection conn = ConnMysql.getConexaoMySQL(dataBase.getIp(), dataBase.getUser(), dataBase.getPass(), dataBase.getInstance());
 		   String sql = dataBase.getQueryDate();

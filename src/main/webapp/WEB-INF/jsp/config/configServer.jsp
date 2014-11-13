@@ -1,22 +1,3 @@
-<!-- 
-    Copyright (C) 2012  Filippe Costa Spolti
-
-	This file is part of Hrstatus.
-
-    Hrstatus is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- -->
-
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="../home/navbar.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -113,10 +94,10 @@
 							</tr>
 
 							<tr class="info">
-								<td>Jndi mail lookup</td>
+								<td>Mail Session</td>
 								<td>${jndiMail}</td>
 								<td><a
-									href="javascript:setParameterForUpdate('${jndiMail}','Editar Parametro Jndi mail lookup','jndiMail');"
+									href="javascript:setMailSessionParameterForUpdate('${jndiMail}','Editar Parametro Mail Session','jndiMail');"
 									title="Atualizar campo"> <i class="icon-edit"> </i></a></td>
 							</tr>
 
@@ -143,7 +124,7 @@
 											<legend>
 												<h4>
 													Enviar Logo Tela de Login
-													</h1>
+													</h4>
 											</legend>
 											<input type="file" name="imagem" />
 
@@ -166,7 +147,7 @@
 	</div>
 
 
-	<form method="GET" action="<c:url value='/updateConfig'/>"
+	<form method="POST" action="<c:url value='/updateConfig'/>"
 		onload="javascript:setParameterForUpdate()">
 		<div class="modal" id="ConfigurationTab" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true"
@@ -189,5 +170,33 @@
 			</div>
 		</div>
 	</form>
+	
+	<form method="POST" action="<c:url value='/updateConfig'/>"
+		onload="javascript:setMailSessionParameterForUpdate()">
+		<div class="modal" id="MailSessionConfigurationTab" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true"
+			style="display: none">
+			<div id="cab" class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+				<h3 id="myModalLabel"></h3>
+			</div>
+			<div id="edit-modal" class="modal-body">
+				<input type="hidden" id="campo" name="campo" value="jndiMail">
+				<p align="center"></p>
+				<div align="center">
+					Novo valor: <select name="new_value" id="mailSessions">
+										<c:forEach items="${mailSessions}" var="mailSessions">
+											<option value="<c:out value="${mailSessions}" />">${mailSessions}</option>
+										</c:forEach>
+								</select>
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				<button type="submit" class="btn btn-primary" value="Atualizar">Atualizar</button>
+			</div>
+		</div>
+	</form>
+	
 </body>
 </html>

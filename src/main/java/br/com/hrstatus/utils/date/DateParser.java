@@ -17,14 +17,13 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.utils;
+package br.com.hrstatus.utils.date;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 /*
  * @Author spolti - spolti@hrstatus.com.br
@@ -32,6 +31,8 @@ import org.apache.log4j.Logger;
 
 public class DateParser {
 
+	Logger log =  Logger.getLogger(DateParser.class.getCanonicalName());
+	
 	public Date parser (String data){
 		
 		SimpleDateFormat formatador = null;
@@ -50,7 +51,7 @@ public class DateParser {
 		 	data = data.replace("\n", "");
     	}
 		
-		Logger.getLogger(getClass()).debug("Data recebida para parse: " + data);
+		log.fine("Data recebida para parse: " + data);
 		
 		//Formatos Aceitos
 		SimpleDateFormat formato1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy"); // padrao Mon Mar 04 16:09:05 BRT 2013
@@ -76,7 +77,7 @@ public class DateParser {
 		
 		//verificando se o Timezone é nativo AIX GRNLNDST e GRNLNDDT e GRNLNDST3, se for ignora timezone.
 		if (data.contains("GRNLNDST") || data.contains("GRNLNDDT") || data.contains("GRNLNDST3")){
-			Logger.getLogger(getClass()).debug("Padrao AIX reconhecido, ignorando timezone.");
+			log.fine("Padrao AIX reconhecido, ignorando timezone.");
 			if (data.contains("GRNLNDST")){
 				data = data.replace("GRNLNDST", "");
 			}else if(data.contains("GRNLNDDT")){
@@ -87,25 +88,25 @@ public class DateParser {
 			formatador = formato3;
 
 		}else if(data.equals(null) || data.equals("") || data == ""){
-			Logger.getLogger(getClass()).error("Nenhuma data foi recebida, setando valor default.");
+			log.severe("Nenhuma data foi recebida, setando valor default.");
 			data = ("Tue Mar 01 00:00:00 BRT 1950");
 			formatador = formato1;
 		//validando primeiro padrão
 		}else if(data.matches(patternFormato1) ){
-			Logger.getLogger(getClass()).debug("Padrão reconhecido EEE MMM dd HH:mm:ss z yyyy");
+			log.fine("Padrão reconhecido EEE MMM dd HH:mm:ss z yyyy");
 			data = data.replace("BRA", "BRT");
 			formatador = formato1;
 		//validando segundo padrão	
 		}else if (data.matches(patternFormato2)){
-			Logger.getLogger(getClass()).debug("Padrão reconhecido EEE MMM dd HH:mm:ss z yyyy Locale pt_BR");
+			log.fine("Padrão reconhecido EEE MMM dd HH:mm:ss z yyyy Locale pt_BR");
 			formatador = formato2;
 		//validando terceiro padrão
 		}else if (data.matches(patternFormato3)){
-			Logger.getLogger(getClass()).debug("Padrão reconhecido EEE MMM dd HH:mm:ss yyyy ");
+			log.fine("Padrão reconhecido EEE MMM dd HH:mm:ss yyyy ");
 			formatador = formato3;
 		//validando quarto padrão
 		}else if (data.matches(patternFormato4)){
-			Logger.getLogger(getClass()).debug("Padrão reconhecido EEE MMM dd HH:mm:ss yyyy Locale pt_BR");
+			log.fine("Padrão reconhecido EEE MMM dd HH:mm:ss yyyy Locale pt_BR");
 			formatador = formato4;
 		//validando quinto padrão
 		}else if (data.toLowerCase().startsWith("domingo") || data.toLowerCase().startsWith("segunda")
@@ -114,7 +115,7 @@ public class DateParser {
 				|| data.toLowerCase().startsWith("sexta") || data.toLowerCase().startsWith("sabado")
 				|| data.toLowerCase().startsWith("sábado")) {
 			
-			Logger.getLogger(getClass()).info("Padrão reconhecido: Data completa por extenso");
+			log.info("Padrão reconhecido: Data completa por extenso");
 			
 			String dataPorExtenso[] = data.split(" ");
 			
@@ -220,18 +221,18 @@ public class DateParser {
 	
 		//validando padrão 6
 		}else if (data.matches(patternFormato6)){
-			Logger.getLogger(getClass()).debug("Padrão reconhecido yyy-dd-mm HH:mm:ss");
+			log.fine("Padrão reconhecido yyy-dd-mm HH:mm:ss");
 			formatador = formato6;
 			
 		//validando padrão 7
 		}else if (data.contains("GMT+") || data.contains("GMT-")){
-			Logger.getLogger(getClass()).debug("Padrão reconhecido EEE MMM dd HH:mm:ss z yyyy");
+			log.fine("Padrão reconhecido EEE MMM dd HH:mm:ss z yyyy");
 			formatador = formato7;
 		}
 		
 		else{
-			Logger.getLogger(getClass()).error("Nenhum padrão reconhecido");
-			Logger.getLogger(getClass()).error("Unparsable date: " + data);
+			log.severe("Nenhum padrão reconhecido");
+			log.severe("Unparsable date: " + data);
 			data = ("Tue Mar 01 00:00:00 BRT 1950");
 			formatador = formato1;
 		}

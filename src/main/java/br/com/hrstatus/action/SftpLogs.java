@@ -19,17 +19,11 @@
 
 package br.com.hrstatus.action;
 
-/*
- * @author spolti
- * Any codes from jcraft.com
- */
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
@@ -37,9 +31,19 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
+/*
+ * @author spolti
+ * Any codes from jcraft.com
+ */
+
+
 public class SftpLogs {
 
+	static Logger log =  Logger.getLogger(SftpLogs.class.getCanonicalName());
+	
+	@SuppressWarnings("unchecked")
 	public static class MyLogger implements com.jcraft.jsch.Logger {
+		@SuppressWarnings("rawtypes")
 		static java.util.Hashtable name = new java.util.Hashtable();
 		static {
 			name.put(new Integer(DEBUG), "DEBUG: ");
@@ -55,7 +59,7 @@ public class SftpLogs {
 
 		public void log(int level, String message) {
 			System.out.print(name.get(new Integer(level)));
-			Logger.getLogger(getClass()).debug(message);
+			log.fine(message);
 		}
 	}
 
@@ -274,6 +278,7 @@ public class SftpLogs {
 					filesize = filesize * 10L + (long) (buf[0] - '0');
 				}
 
+				@SuppressWarnings("unused")
 				String file = null;
 				for (int i = 0;; i++) {
 					in.read(buf, i, 1);

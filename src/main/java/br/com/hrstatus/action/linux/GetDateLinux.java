@@ -25,8 +25,7 @@ package br.com.hrstatus.action.linux;
 
 import java.io.IOException;
 import java.io.InputStream;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
@@ -36,7 +35,11 @@ import com.jcraft.jsch.Session;
 
 public class GetDateLinux {
 	
+	static Logger log =  Logger.getLogger(GetDateLinux.class.getCanonicalName());
+	
+	@SuppressWarnings("unchecked")
 	public static class MyLogger implements com.jcraft.jsch.Logger {
+		@SuppressWarnings("rawtypes")
 		static java.util.Hashtable name = new java.util.Hashtable();
 		static {
 			name.put(new Integer(DEBUG), "DEBUG: ");
@@ -52,7 +55,7 @@ public class GetDateLinux {
 
 		public void log(int level, String message) {
 			System.out.print(name.get(new Integer(level)));
-			Logger.getLogger(getClass()).debug(message);
+			log.fine(message);
 		}
 	}
 	

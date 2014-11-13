@@ -21,11 +21,10 @@ package br.com.hrstatus.utils;
 
 import java.lang.management.ManagementFactory;
 import java.net.UnknownHostException;
+import java.util.logging.Logger;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-
-import org.apache.log4j.Logger;
 
 /*
  * @author spolti
@@ -33,19 +32,21 @@ import org.apache.log4j.Logger;
 
 public class GetServerIPAddress {
 
-	public String returnIP() throws UnknownHostException {
+	Logger log =  Logger.getLogger(GetServerIPAddress.class.getCanonicalName());
+	
+	 public String returnServerAddres() throws UnknownHostException {
 
 		MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
 		String url = null;
 		try {
 
 			ObjectName http = new ObjectName("jboss.as:socket-binding-group=standard-sockets,socket-binding=http");
-			String jbossWebHost = 	(String) mBeanServer.getAttribute(http, "boundAddress");
-			int jbossWebPort = (Integer) mBeanServer.getAttribute(http, "boundPort");
-			url = jbossWebHost +":"+jbossWebPort;
-			Logger.getLogger(getClass()).debug("Url obtida do sistema : " + url);
+			String jbossHttpAddress = (String) mBeanServer.getAttribute(http,"boundAddress");
+			int jbossHttpPort = (Integer) mBeanServer.getAttribute(http,"boundPort");
+			url = jbossHttpAddress + ":" + jbossHttpPort;
+			log.fine("Url obtida do sistema : " + url);
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).error(e);
+			log.severe(e.getStackTrace().toString());
 		}
 		return url;
 	}

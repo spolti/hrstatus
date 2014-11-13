@@ -19,10 +19,6 @@
 
 package br.com.hrstatus.model;
 
-/*
- * @author spolti
- */
-
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -35,6 +31,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+/*
+ * @author spolti
+ */
 
 @Entity
 @Table(name = "Users")

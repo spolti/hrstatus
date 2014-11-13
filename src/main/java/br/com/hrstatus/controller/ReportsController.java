@@ -19,53 +19,53 @@
 
 package br.com.hrstatus.controller;
 
-/*
- * @author spolti
- */
-
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
-
-import org.apache.log4j.Logger;
-
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.hrstatus.dao.BancoDadosInterface;
-import br.com.hrstatus.dao.Iteracoes;
+import br.com.hrstatus.dao.ServersInterface;
 import br.com.hrstatus.model.BancoDados;
 import br.com.hrstatus.model.Servidores;
 import br.com.hrstatus.utils.UserInfo;
 
+/*
+ * @author spolti
+ */
+
 @Resource
 public class ReportsController {
 
-	private Iteracoes iteracoesDAO;
+	Logger log =  Logger.getLogger(ReportsController.class.getCanonicalName());
+	
+	@Autowired
+	private ServersInterface iteracoesDAO;
+	@Autowired
 	private BancoDadosInterface bancoDadosDAO;
+	@Autowired
 	private HttpServletResponse response;
 	UserInfo userInfo = new UserInfo();
 
-	public ReportsController(Iteracoes iteracoesDAO, HttpServletResponse response, BancoDadosInterface bancoDadosDAO) {
-		this.iteracoesDAO = iteracoesDAO;
-		this.response = response;
-		this.bancoDadosDAO = bancoDadosDAO;
-	}
 
 	@SuppressWarnings("all")
 	@Path("/reports/reportFull")
 	public InputStream fullReport() throws FileNotFoundException, JRException {
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportFull");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportFull");
 
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class.getResourceAsStream("/jasper/reportFull.jasper"));
 
@@ -80,7 +80,7 @@ public class ReportsController {
 			response.setHeader("Content-disposition","attachment; filename=reportFull.pdf");
 			return new ByteArrayInputStream(bytes);
 		} catch (JRException e) {
-			Logger.getLogger(getClass()).error(e.getMessage());
+			log.severe(e.getMessage());
 		}
 		return null;
 	}
@@ -88,7 +88,7 @@ public class ReportsController {
 	@Path("/reports/reportServersOK")
 	@SuppressWarnings("all")
 	public InputStream serversOK() throws FileNotFoundException, JRException {
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/serversOK");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/serversOK");
 
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class.getResourceAsStream("/jasper/reportServersOK.jasper"));
 		List<Servidores> listServers = iteracoesDAO.getServersOK();
@@ -102,7 +102,7 @@ public class ReportsController {
 			return new ByteArrayInputStream(bytes);
 
 		} catch (JRException e) {
-			Logger.getLogger(getClass()).error(e.getMessage());
+			log.severe(e.getMessage());
 		}
 		return null;
 	}
@@ -110,7 +110,7 @@ public class ReportsController {
 	@Path("/reports/reportServersNOK")
 	@SuppressWarnings("all")
 	public InputStream reportServersNOK() throws FileNotFoundException, JRException {
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportServersNOK");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportServersNOK");
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class.getResourceAsStream("/jasper/reportServersNOK.jasper"));
 		List<Servidores> listServers = iteracoesDAO.getServersNOK();
 		JasperReport jasperStream = jasperFile;
@@ -123,7 +123,7 @@ public class ReportsController {
 			return new ByteArrayInputStream(bytes);
 
 		} catch (JRException e) {
-			Logger.getLogger(getClass()).error(e.getMessage());
+			log.severe(e.getMessage());
 		}
 		return null;
 	}
@@ -131,7 +131,7 @@ public class ReportsController {
 	@Path("/reports/reportSOLinux")
 	@SuppressWarnings("all")
 	public InputStream soLinux() throws FileNotFoundException, JRException {
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportSOLinux");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportSOLinux");
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class.getResourceAsStream("/jasper/reportSOLinux.jasper"));
 		List<Servidores> listServers = iteracoesDAO.getSOLinux();
 		JasperReport jasperStream = jasperFile;
@@ -144,7 +144,7 @@ public class ReportsController {
 			return new ByteArrayInputStream(bytes);
 
 		} catch (JRException e) {
-			Logger.getLogger(getClass()).error(e.getMessage());
+			log.severe(e.getMessage());
 		}
 		return null;
 	}
@@ -152,7 +152,7 @@ public class ReportsController {
 	@Path("/reports/reportSOWindows")
 	@SuppressWarnings("all")
 	public InputStream reportSOWindows() throws FileNotFoundException, JRException {
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportSOWindows");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportSOWindows");
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class.getResourceAsStream("/jasper/reportSOWindows.jasper"));
 		List<Servidores> listServers = iteracoesDAO.getSOWindows();
 		JasperReport jasperStream = jasperFile;
@@ -165,7 +165,7 @@ public class ReportsController {
 			return new ByteArrayInputStream(bytes);
 
 		} catch (JRException e) {
-			Logger.getLogger(getClass()).error(e.getMessage());
+			log.severe(e.getMessage());
 		}
 		return null;
 	}
@@ -173,7 +173,7 @@ public class ReportsController {
 	@Path("/reports/reportSOUnix")
 	@SuppressWarnings("all")
 	public InputStream reportSOUnix() throws FileNotFoundException, JRException {
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportSOUnix");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportSOUnix");
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class.getResourceAsStream("/jasper/reportSOUnix.jasper"));
 		List<Servidores> listServers = iteracoesDAO.getSOUnix();
 		JasperReport jasperStream = jasperFile;
@@ -186,7 +186,7 @@ public class ReportsController {
 			return new ByteArrayInputStream(bytes);
 
 		} catch (JRException e) {
-			Logger.getLogger(getClass()).error(e.getMessage());
+			log.severe(e.getMessage());
 		}
 		return null;
 	}
@@ -194,7 +194,7 @@ public class ReportsController {
 	@Path("/reports/reportSOOthers")
 	@SuppressWarnings("all")
 	public InputStream reportSOOthers() throws FileNotFoundException, JRException {
-		Logger.getLogger(getClass())
+		log
 				.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportSOOthers");
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class.getResourceAsStream("/jasper/reportSOOthers.jasper"));
 
@@ -209,7 +209,7 @@ public class ReportsController {
 			return new ByteArrayInputStream(bytes);
 
 		} catch (JRException e) {
-			Logger.getLogger(getClass()).error(e.getMessage());
+			log.severe(e.getMessage());
 		}
 		return null;
 	}
@@ -217,7 +217,7 @@ public class ReportsController {
 	@Path("/reports/reportDataBaseFull")
 	@SuppressWarnings("all")
 	public InputStream reportDataBaseFull() throws FileNotFoundException, JRException {
-		Logger.getLogger(getClass())
+		log
 				.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportDataBaseFull");
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class.getResourceAsStream("/jasper/reportDataBaseFull.jasper"));
 
@@ -232,7 +232,7 @@ public class ReportsController {
 			return new ByteArrayInputStream(bytes);
 
 		} catch (JRException e) {
-			Logger.getLogger(getClass()).error(e.getMessage());
+			log.severe(e.getMessage());
 		}
 		return null;
 	}
@@ -240,7 +240,7 @@ public class ReportsController {
 	@Path("/reports/reportDataBaseOK")
 	@SuppressWarnings("all")
 	public InputStream reportDataBaseOK() throws FileNotFoundException, JRException {
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportDataBaseOK");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportDataBaseOK");
 
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class.getResourceAsStream("/jasper/reportDataBaseOK.jasper"));
 		List<BancoDados> listDataBases = this.bancoDadosDAO.getdataBasesOK();
@@ -254,7 +254,7 @@ public class ReportsController {
 			return new ByteArrayInputStream(bytes);
 
 		} catch (JRException e) {
-			Logger.getLogger(getClass()).error(e.getMessage());
+			log.severe(e.getMessage());
 		}
 		return null;
 	}
@@ -262,7 +262,7 @@ public class ReportsController {
 	@Path("/reports/reportDataBaseNOK")
 	@SuppressWarnings("all")
 	public InputStream reportDataBaseNOK() throws FileNotFoundException, JRException {
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportDataBaseNOK");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportDataBaseNOK");
 
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class.getResourceAsStream("/jasper/reportDataBaseNOK.jasper"));
 		List<BancoDados> listDataBases = this.bancoDadosDAO.getdataBasesNOK();
@@ -276,7 +276,7 @@ public class ReportsController {
 			return new ByteArrayInputStream(bytes);
 
 		} catch (JRException e) {
-			Logger.getLogger(getClass()).error(e.getMessage());
+			log.severe(e.getMessage());
 		}
 		return null;
 	}
@@ -284,7 +284,7 @@ public class ReportsController {
 	@Path("/reports/reportDataBaseMysql")
 	@SuppressWarnings("all")
 	public InputStream reportDataBaseMysql() throws FileNotFoundException, JRException {
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportDataBaseMysql");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportDataBaseMysql");
 
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class.getResourceAsStream("/jasper/reportDataBaseMysql.jasper"));
 		List<BancoDados> listDataBases = this.bancoDadosDAO.getVendorMysql();
@@ -298,7 +298,7 @@ public class ReportsController {
 			return new ByteArrayInputStream(bytes);
 
 		} catch (JRException e) {
-			Logger.getLogger(getClass()).error(e.getMessage());
+			log.severe(e.getMessage());
 		}
 		return null;
 	}
@@ -306,7 +306,7 @@ public class ReportsController {
 	@Path("/reports/reportDataBaseOracle")
 	@SuppressWarnings("all")
 	public InputStream reportDataBaseOracle() throws FileNotFoundException, JRException {
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportDataBaseOracle");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportDataBaseOracle");
 
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class.getResourceAsStream("/jasper/reportDataBaseOracle.jasper"));
 		List<BancoDados> listDataBases = this.bancoDadosDAO.getVendorOracle();
@@ -320,7 +320,7 @@ public class ReportsController {
 			return new ByteArrayInputStream(bytes);
 
 		} catch (JRException e) {
-			Logger.getLogger(getClass()).error(e.getMessage());
+			log.severe(e.getMessage());
 		}
 		return null;
 	}
@@ -328,7 +328,7 @@ public class ReportsController {
 	@Path("/reports/reportDataBasePostgre")
 	@SuppressWarnings("all")
 	public InputStream reportDataBasePostgre() throws FileNotFoundException, JRException {
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportDataBasePostgre");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportDataBasePostgre");
 
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class.getResourceAsStream("/jasper/reportDataBasePostgre.jasper"));
 		List<BancoDados> listDataBases = this.bancoDadosDAO.getVendorPostgre();
@@ -342,7 +342,7 @@ public class ReportsController {
 			return new ByteArrayInputStream(bytes);
 
 		} catch (JRException e) {
-			Logger.getLogger(getClass()).error(e.getMessage());
+			log.severe(e.getMessage());
 		}
 		return null;
 	}

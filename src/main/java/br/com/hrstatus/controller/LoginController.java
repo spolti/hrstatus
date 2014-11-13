@@ -19,11 +19,9 @@
 
 package br.com.hrstatus.controller;
 
-/*
- * @author spolti
- */
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
@@ -31,25 +29,27 @@ import br.com.caelum.vraptor.Result;
 import br.com.hrstatus.utils.PropertiesLoaderImpl;
 import br.com.hrstatus.utils.UserInfo;
 
+/*
+ * @author spolti
+ */
+
 @Resource
 public class LoginController {
 	
+	Logger log =  Logger.getLogger(LoginController.class.getCanonicalName());
+	
+	@Autowired
 	private Result result;
 
 	UserInfo userInfo = new UserInfo();
-	
-	public LoginController(Result result) {
-		this.result = result;
-	}
-	
+
 	@SuppressWarnings("static-access")
 	@Get("/login")
-	public void login(String message){
-		Logger.getLogger(getClass()).info("[ Not Logged ] URI Called: /login");
+	public void login(String message) throws Exception{
+		log.info("[ Not Logged ] URI Called: /login");
 		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
 	    String version = load.getValor("version"); 
 	    result.include("version",version);
 		result.include("info",message);
-
 	}
 }

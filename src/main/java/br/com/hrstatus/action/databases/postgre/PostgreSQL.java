@@ -32,7 +32,7 @@ import br.com.hrstatus.model.BancoDados;
 
 public class PostgreSQL {
 	
-	public String getDate(BancoDados db) throws SQLException, ClassNotFoundException { 
+	public String getDatePSQL(BancoDados db) throws SQLException, ClassNotFoundException { 
 		Connection conn = ConnPostgreSQL.getConexaoPSQL(db.getIp(), db.getInstance(), db.getUser(), db.getPass());
 		String sql = db.getQueryDate();
 		

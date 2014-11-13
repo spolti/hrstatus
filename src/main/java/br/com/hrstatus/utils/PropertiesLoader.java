@@ -19,14 +19,13 @@
 
 package br.com.hrstatus.utils;
 
-/*
- * @author spolti
- */
-
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+
+/*
+ * @author spolti
+ */
 
 public class PropertiesLoader {
 	

@@ -1,22 +1,3 @@
-<!-- 
-    Copyright (C) 2012  Filippe Costa Spolti
-
-	This file is part of Hrstatus.
-
-    Hrstatus is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- -->
-
 <%@page import="br.com.hrstatus.security.Crypto"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="../home/navbar.jsp"%>
@@ -49,16 +30,11 @@
 					<form method="POST" action="<c:url value='/updateDataBase'/>">
 						<table align=center>
 							<br>
-							<input type="hidden" name="server.lastCheck"
-								value="${dataBase.lastCheck}" />
-							<input type="hidden" name="server.clientTime"
-								value="${dataBase.clientTime}" />
-							<input type="hidden" name="server.serverTime"
-								value="${dataBase.serverTime}" />
-							<input type="hidden" name="server.status"
-								value="${dataBase.status}" />
-							<input type="hidden" name="server.trClass"
-								value="${dataBase.trClass}" />
+							<input type="hidden" name="server.lastCheck" value="${dataBase.lastCheck}" />
+							<input type="hidden" name="server.clientTime" value="${dataBase.clientTime}" />
+							<input type="hidden" name="server.serverTime" value="${dataBase.serverTime}" />
+							<input type="hidden" name="server.status" value="${dataBase.status}" />
+							<input type="hidden" name="server.trClass" value="${dataBase.trClass}" />
 
 							<tr>
 								<td align=right>Data Base ID:</td>

@@ -17,16 +17,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.dao;
+package br.com.hrstatus.dao.impl;
 
-/*
- * @author spolti
- */
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.ProjectionList;
@@ -34,13 +31,20 @@ import org.hibernate.criterion.Projections;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.model.Configurations;
 import br.com.hrstatus.utils.UserInfo;
+
+/*
+ * @author spolti
+ */
 
 @Repository
 @Transactional
 public class ConfigurationDAO implements Configuration {
 
+	Logger log =  Logger.getLogger(ConfigurationDAO.class.getCanonicalName());
+	
 	private EntityManager entityManager;
 	UserInfo userInfo = new UserInfo();
 	
@@ -57,7 +61,7 @@ public class ConfigurationDAO implements Configuration {
 
 	public void updateConfig(Configurations config) {
 
-		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] updateConfig() -> Loading configurations.");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] updateConfig() -> Loading configurations.");
 		session().saveOrUpdate(config);
 	}
 

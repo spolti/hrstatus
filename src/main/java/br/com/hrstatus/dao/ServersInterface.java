@@ -19,15 +19,15 @@
 
 package br.com.hrstatus.dao;
 
-/*
- * @author spolti
- */
-
 import java.util.List;
 
 import br.com.hrstatus.model.Servidores;
 
-public interface Iteracoes {
+/*
+ * @author spolti
+ */
+
+public interface ServersInterface {
 
 	public int insert_server(Servidores server);
 	

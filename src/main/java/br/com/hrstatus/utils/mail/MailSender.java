@@ -17,14 +17,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.utils;
-
-/*
- * @author spolti
- */
+package br.com.hrstatus.utils.mail;
 
 import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
+import java.util.logging.Logger;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -36,16 +33,22 @@ import javax.mail.internet.MimeMessage;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.apache.log4j.Logger;
+import br.com.hrstatus.utils.GetServerIPAddress;
+
+/*
+ * @author spolti
+ */
 
 public class MailSender {
 
+	Logger log =  Logger.getLogger(MailSender.class.getCanonicalName());
+	
 	GetServerIPAddress getIP = new GetServerIPAddress();	
 
 	public void Sender(String mailSender, String Subject, String dests[],
 			String jndiMail) throws UnknownHostException {
 
-		String url = ("" + getIP.returnIP());
+		String url = ("" + getIP.returnServerAddres());
 		try {
 
 			InitialContext ic = new InitialContext();
@@ -82,26 +85,26 @@ public class MailSender {
 					+ "/hs/show/emailHeader/down' height='125' width='700'/></a>"
 					+ "</div>" + "</div>" + "</body>" + "</html>";
 
-			Logger.getLogger(getClass()).debug(msg);
+			log.fine(msg);
 			message.setContent(msg, "text/html; charset=UTF-8");
 
 			try {
 				Transport.send(message);
-				Logger.getLogger(getClass()).info("----> Email enviado.");
+				log.info("----> Email enviado.");
 
 			} catch (Exception e) {
-				Logger.getLogger(getClass()).error("----> Email não enviado.");
-				Logger.getLogger(getClass()).error(e);
+				log.severe("----> Email não enviado.");
+				log.severe(e.toString());
 			}
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).error(e);
+			log.severe(e.toString());
 		}
 	}
 
 	public void sendNewPass(String mailSender, String dest, String jndiMail,
 			String pass, String username) throws UnknownHostException {
 
-		String url = ("" + getIP.returnIP());
+		String url = ("" + getIP.returnServerAddres());
 
 		try {
 
@@ -139,20 +142,20 @@ public class MailSender {
 					+ "/hs/show/emailHeader/down' height='125' width='700'/></a>"
 					+ "</div>" + "</div>" + "</body>" + "</html>";
 
-			Logger.getLogger(getClass()).debug(msg);
+			log.fine(msg);
 			message.setContent(msg, "text/html; charset=UTF-8");
 
 			try {
 				Transport.send(message);
-				Logger.getLogger(getClass()).info("----> Email enviado.");
+				log.info("----> Email enviado.");
 
 			} catch (Exception e) {
-				Logger.getLogger(getClass()).error("----> Email não enviado.");
-				Logger.getLogger(getClass()).error(e);
+				log.severe("----> Email não enviado.");
+				log.severe(e.toString());
 			}
 
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).error(e);
+			log.severe(e.toString());
 		}
 	}
 
@@ -160,7 +163,7 @@ public class MailSender {
 			String jndiMail, String name, String username, String pass)
 			throws UnsupportedEncodingException, UnknownHostException {
 
-		String url = ("" + getIP.returnIP());
+		String url = ("" + getIP.returnServerAddres());
 
 		try {
 
@@ -202,20 +205,20 @@ public class MailSender {
 					+ "/hs/show/emailHeader/down' height='125' width='700'/></a>"
 					+ "</div>" + "</div>" + "</body>" + "</html>";
 
-			Logger.getLogger(getClass()).debug(msg);
+			log.fine(msg);
 			message.setContent(msg, "text/html; charset=UTF-8");
 
 			try {
 				Transport.send(message);
-				Logger.getLogger(getClass()).info("----> Email enviado.");
+				log.info("----> Email enviado.");
 
 			} catch (Exception e) {
-				Logger.getLogger(getClass()).error("----> Email não enviado.");
-				Logger.getLogger(getClass()).error(e);
+				log.severe("----> Email não enviado.");
+				log.severe(e.toString());
 			}
 
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).error(e);
+			log.severe(e.toString());
 
 		}
 	}
@@ -233,16 +236,16 @@ public class MailSender {
 		message.setSubject("NO REPLY - E-mail de teste");
 		message.setSentDate(new java.util.Date());
 		String msg = "Teste realizado com sucesso.";
-		Logger.getLogger(getClass()).debug(msg);
+		log.fine(msg);
 		message.setContent(msg, "text/html; charset=UTF-8");
 
 		try {
 			Transport.send(message);
-			Logger.getLogger(getClass()).info("----> Email de teste enviado.");
+			log.info("----> Email de teste enviado.");
 			return "----> Email de teste enviado.";
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).error("----> Email de teste não enviado.");
-			Logger.getLogger(getClass()).error(e);
+			log.severe("----> Email de teste não enviado.");
+			log.severe(e.toString());
 			return "----> Email de teste não enviado -----> " + e;
 		}
 

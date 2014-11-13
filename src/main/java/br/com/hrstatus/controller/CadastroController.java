@@ -29,10 +29,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Post;
@@ -42,38 +43,36 @@ import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.validator.ValidationMessage;
 import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.dao.Configuration;
-import br.com.hrstatus.dao.Iteracoes;
+import br.com.hrstatus.dao.ServersInterface;
 import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.model.BancoDados;
 import br.com.hrstatus.model.Servidores;
 import br.com.hrstatus.model.Users;
 import br.com.hrstatus.security.Crypto;
 import br.com.hrstatus.security.SpringEncoder;
-import br.com.hrstatus.utils.MailSender;
 import br.com.hrstatus.utils.PassGenerator;
 import br.com.hrstatus.utils.UserInfo;
+import br.com.hrstatus.utils.mail.MailSender;
 
 @Resource
 public class CadastroController {
 
+	Logger log =  Logger.getLogger(CadastroController.class.getCanonicalName());
+	
+	@Autowired
 	private Result result;
-	private Iteracoes iteracoesDAO;
+	@Autowired
+	private ServersInterface iteracoesDAO;
+	@Autowired
 	private Validator validator;
+	@Autowired
 	private UsersInterface userDAO;
+	@Autowired
 	private Configuration configurationDAO;
+	@Autowired
 	private BancoDadosInterface BancoDadosDAO;
 	UserInfo userInfo = new UserInfo();
-
-	public CadastroController(Result result, Iteracoes iteracoesDAO,
-			Validator validator, UsersInterface userDAO,
-			Configuration configurationDAO, BancoDadosInterface BancoDadosDAO) {
-		this.result = result;
-		this.iteracoesDAO = iteracoesDAO;
-		this.validator = validator;
-		this.userDAO = userDAO;
-		this.configurationDAO = configurationDAO;
-		this.BancoDadosDAO = BancoDadosDAO;
-	}
+	
 
 	@Get("/newServer")
 	public void newServer(Servidores servidores) {
@@ -82,7 +81,7 @@ public class CadastroController {
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /newServer");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /newServer");
 		result.include("servidores", servidores);
 
 		// populating SO combobox
@@ -117,7 +116,7 @@ public class CadastroController {
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /registerServer");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /registerServer");
 		Crypto encodePass = new Crypto();
 
 		// Regex to validade IP
@@ -182,12 +181,12 @@ public class CadastroController {
 			servidores.setPass(encodePass.encode(servidores.getPass()));
 
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).error("Error: ", e);
+			log.severe("Error: " + e);	
 		}
 
 		if (this.iteracoesDAO.insert_server(servidores) == 0) {
 			result.include("msg", "Server " + servidores.getHostname() + " was sucessfully registred.");
-			Logger.getLogger(getClass()).info("Server " + servidores.getHostname() + " was sucessfully registred.");
+			log.info("Server " + servidores.getHostname() + " was sucessfully registred.");
 			result.redirectTo(ConfigController.class).configClients();
 		} else {
 			validator.add(new ValidationMessage("Server " + servidores.getHostname() + " was not registred because already exists.", "Erro"));
@@ -203,7 +202,7 @@ public class CadastroController {
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /newDataBase");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /newDataBase");
 		result.include("bancoDados", bancoDados);
 
 		// populating SO combobox
@@ -212,6 +211,7 @@ public class CadastroController {
 		VENDOR.add("ORACLE");
 		VENDOR.add("PostgreSQL");
 		VENDOR.add("SqlServer");
+		VENDOR.add("DB2");
 		result.include("VENDOR", VENDOR);
 	}
 
@@ -223,7 +223,7 @@ public class CadastroController {
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /registerDataBase");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /registerDataBase");
 		Crypto encodePass = new Crypto();
 
 		// Regex to validade IP
@@ -253,6 +253,9 @@ public class CadastroController {
 			if (bancoDados.getVendor().toUpperCase().equals("POSTGRESQL")) {
 				bancoDados.setPort(5432);
 			}
+			if (bancoDados.getVendor().toUpperCase().equals("DB2")) {
+				bancoDados.setPort(50000);
+			}
 		} else if (bancoDados.getVendor().isEmpty()) {
 			validator.add(new ValidationMessage("O campo Vendor deve ser informado", "Erro"));
 		}
@@ -264,12 +267,14 @@ public class CadastroController {
 				bancoDados.setQueryDate("select sysdate from dual");
 			}
 			if (bancoDados.getVendor().toUpperCase().equals("SQLSERVER")) {
-				bancoDados.setQueryDate("sqlserver query default");
+				bancoDados.setQueryDate("SELECT GETDATE();");
 			}
 			if (bancoDados.getVendor().toUpperCase().equals("POSTGRESQL")) {
 				bancoDados.setQueryDate("SELECT now();");
 			}
-
+			if (bancoDados.getVendor().toUpperCase().equals("BD2")) {
+				bancoDados.setQueryDate("SELECT current date FROM sysibm.sysdummy1;");
+			}
 		}
 
 		// populating SO combobox
@@ -278,6 +283,7 @@ public class CadastroController {
 		VENDOR.add("ORACLE");
 		VENDOR.add("PostgreSQL");
 		VENDOR.add("SqlServer");
+		VENDOR.add("DB2");
 		result.include("VENDOR", VENDOR);
 
 		validator.onErrorUsePageOf(CadastroController.class).newDataBase(bancoDados);
@@ -292,12 +298,12 @@ public class CadastroController {
 			// Critpografando a senha
 			bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).error("Error: ", e);
+			log.severe("Error: " + e);
 		}
 
 		if (this.BancoDadosDAO.insert_dataBase(bancoDados) == 0) {
 			result.include("msg", "BancoDados " + bancoDados.getHostname() + " was sucessfully registred.");
-			Logger.getLogger(getClass()).info("DataBase " + bancoDados.getHostname() + " was sucessfully registred.");
+			log.info("DataBase " + bancoDados.getHostname() + " was sucessfully registred.");
 			result.redirectTo(ConfigController.class).configDataBases();
 		} else {
 			validator.add(new ValidationMessage("DataBase " + bancoDados.getHostname() + " was not registred because already exists.", "Erro"));
@@ -314,7 +320,7 @@ public class CadastroController {
 		int count = iteracoesDAO.countServerWithLog();
 		List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /newUser");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /newUser");
 		result.include("user", user);
 		result.include("count", count);
 		result.include("server", server);
@@ -329,7 +335,7 @@ public class CadastroController {
 		result.include("title", "Registrar Usuário");
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ]URI Called: /registerUser");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ]URI Called: /registerUser");
 		SpringEncoder encode = new SpringEncoder();
 
 		// expressão regular para validar email
@@ -348,7 +354,7 @@ public class CadastroController {
 			PassGenerator gemPass = new PassGenerator();
 			String password = gemPass.gemPass();
 			user.setPassword(password);
-			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] - Senha gerada");
+			log.info("[ " + userInfo.getLoggedUsername() + " ] - Senha gerada");
 		} else if (!user.getPassword().equals(user.getConfirmPass())) {
 			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
@@ -385,17 +391,17 @@ public class CadastroController {
 			validator.add(new ValidationMessage("O campo Perfil deve ser informado", "Erro"));
 
 		} else if (checkall) {
-			Logger.getLogger(getClass()).debug("[ "	+ userInfo.getLoggedUsername() + " ] A opção selecione todos os servidores está marcada.");
+			log.fine("[ "	+ userInfo.getLoggedUsername() + " ] A opção selecione todos os servidores está marcada.");
 			List<Servidores> idAccessServers = new ArrayList<Servidores>();
 			idAccessServers = this.iteracoesDAO.getHostnamesWithLogDir();
 			user.setServer(idAccessServers);
 
 		} else if (idServer[0].equals("notNull")) {
-			Logger.getLogger(getClass()).info("Lista de Servidores para Usuário vazio.");
+			log.info("Lista de Servidores para Usuário vazio.");
 		} else if (!idServer[0].equals("notNull")) {
 			List<Servidores> idAccessServers = new ArrayList<Servidores>();
 			for (int i = 0; i < idServer.length; i++) {
-				Logger.getLogger(getClass()).info("ID Servidor recebido: " + idServer[i]);
+				log.info("ID Servidor recebido: " + idServer[i]);
 				if (!idServer[i].equals("notNull")) {
 					idAccessServers.add(this.iteracoesDAO.getServerByID(Integer.parseInt(idServer[i])));
 				}
@@ -419,8 +425,7 @@ public class CadastroController {
 		user.setPassword(encode.encodePassUser(user.getPassword()));
 		this.userDAO.saveORupdateUser(user);
 
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] O usuário "	+ user.getUsername() + " foi criado com sucesso.");
-
+		log.info("[ " + userInfo.getLoggedUsername() + " ] O usuário "	+ user.getUsername() + " foi criado com sucesso.");
 		result.redirectTo(HomeController.class).home("null");
 	}
 }

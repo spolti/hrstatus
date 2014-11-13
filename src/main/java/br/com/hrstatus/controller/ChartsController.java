@@ -19,13 +19,15 @@
 
 package br.com.hrstatus.controller;
 
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.hrstatus.dao.BancoDadosInterface;
-import br.com.hrstatus.dao.Iteracoes;
+import br.com.hrstatus.dao.ServersInterface;
 import br.com.hrstatus.utils.UserInfo;
 
 /*
@@ -35,25 +37,23 @@ import br.com.hrstatus.utils.UserInfo;
 @Resource
 public class ChartsController {
 	
+	Logger log =  Logger.getLogger(ChartsController.class.getCanonicalName());
+	
+	@Autowired
 	private Result result;
-	private Iteracoes iteracoesDAO;
+	@Autowired
+	private ServersInterface iteracoesDAO;
+	@Autowired
 	private BancoDadosInterface BancoDadosInterfaceDAO;
-
 	UserInfo userInfo = new UserInfo();
 
-	public ChartsController(Result result, Iteracoes iteracoesDAO, BancoDadosInterface BancoDadosInterfaceDAO) {
-		this.result = result;
-		this.iteracoesDAO = iteracoesDAO;
-		this.BancoDadosInterfaceDAO = BancoDadosInterfaceDAO;
-
-	}
 
 	@Get("/charts/servers/consolidated")
 	public void chartServidor(){
 	// inserindo html title no result
 			result.include("title", "Gráficos - Servidores");
 
-			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /charts/servers/consolidated");
+			log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /charts/servers/consolidated");
 
 			result.include("loggedUser", userInfo.getLoggedUsername());
 			// ///////////////////////////////////////
@@ -67,49 +67,49 @@ public class ChartsController {
 			result.include("windows", windows);
 			result.include("unix", unix);
 			result.include("other", other);	
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] linux: " + linux);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Windows: " + windows);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Unix: " + unix);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Other: " + other);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] linux: " + linux);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Windows: " + windows);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Unix: " + unix);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Other: " + other);
 
 
 			// Populating 2° graph (servers ok and not ok)
 			int serverOK = this.iteracoesDAO.countServersOK();
 			result.include("serversOK",serverOK);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Servidores OK: " + serverOK);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Servidores OK: " + serverOK);
 			int serverNOK = this.iteracoesDAO.countServersNOK();
 			result.include("serversNOK", serverNOK);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Servidores não OK: " + serverNOK);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Servidores não OK: " + serverNOK);
 
 			// Ploting 3° graph.
 			int countLinuxOK = this.iteracoesDAO.countLinuxOK();
 			result.include("serversLinuxOK", countLinuxOK);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Servidores Linux OK: " + countLinuxOK);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Servidores Linux OK: " + countLinuxOK);
 			int countLinuxNOK = this.iteracoesDAO.countLinuxNOK();
 			result.include("serversLinuxNOK", countLinuxNOK);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Servidores Linux não OK: " + countLinuxNOK);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Servidores Linux não OK: " + countLinuxNOK);
 
 			int countUnixOK = this.iteracoesDAO.countUnixOK();
 			result.include("serversUnixOK", countUnixOK);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Servidores Unix OK: " + countUnixOK);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Servidores Unix OK: " + countUnixOK);
 			int countUnixNOK = this.iteracoesDAO.countUnixNOK();
 			result.include("serversUnixNOK", countUnixNOK);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Servidores Unix não OK: " + countUnixNOK);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Servidores Unix não OK: " + countUnixNOK);
 
 			int countWindowsOK = this.iteracoesDAO.countWindowsOK();
 			result.include("serversWindowsOK", countWindowsOK);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Servidores Windows OK: " + countWindowsOK);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Servidores Windows OK: " + countWindowsOK);
 			int countWindowsNOK = this.iteracoesDAO.countWindowsNOK();
 			result.include("serversWindowsNOK", countWindowsNOK);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Servidores Windows não OK: " + countWindowsNOK);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Servidores Windows não OK: " + countWindowsNOK);
 
 			int countOtherOK = this.iteracoesDAO.countOtherOK();
 			result.include("otherOK", countOtherOK);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Outros Servidores OK: " + countOtherOK);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Outros Servidores OK: " + countOtherOK);
 			int countOtherNOK = this.iteracoesDAO.countOtherNOK();
 			result.include("otherNOK", countOtherNOK);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Outros Servidores não OK: " + countOtherNOK);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Outros Servidores não OK: " + countOtherNOK);
 
 			result.include("totalServer",total);
 	}
@@ -119,7 +119,7 @@ public class ChartsController {
 	// inserindo html title no result
 			result.include("title", "Gráficos - Banco de Dados");
 
-			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /charts/servers/consolidated");
+			log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /charts/servers/consolidated");
 
 			result.include("loggedUser", userInfo.getLoggedUsername());
 			// ///////////////////////////////////////
@@ -132,40 +132,40 @@ public class ChartsController {
 			result.include("mysql", (mysql * 100) / total);
 			result.include("oracle", (oracle * 100) / total);
 			result.include("postgresql", (postgre * 100) / total);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Mysql: " + mysql);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Oracle: " + oracle);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Postgre: " + postgre);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Mysql: " + mysql);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Oracle: " + oracle);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Postgre: " + postgre);
 
 			// Populating 2° graph (databases ok and not ok)
 			int dbOK = this.BancoDadosInterfaceDAO.countDataBasesOK();
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados OK: " + dbOK);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados OK: " + dbOK);
 			result.include("databaseOK", dbOK);
 			int dbNOK = BancoDadosInterfaceDAO.countDataBasesNOK();
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados Não OK: " + dbNOK);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados Não OK: " + dbNOK);
 			result.include("databaseNOK", dbNOK);
 
 			// Ploting 3° graph.
 			int countMySQLOK = this.BancoDadosInterfaceDAO.countMySQLOK();
 			result.include("dbMysqlOK", countMySQLOK);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados MySQL OK: " + countMySQLOK);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados MySQL OK: " + countMySQLOK);
 			int countMySQLNOK = this.BancoDadosInterfaceDAO.countMySQLNOK();
 			result.include("dbMysqlNOK", countMySQLNOK);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados MySQL Não OK: " + countMySQLNOK);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados MySQL Não OK: " + countMySQLNOK);
 
 			int countOracleOK = this.BancoDadosInterfaceDAO.countOracleOK();
 			result.include("dbOracleOK", countOracleOK);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados Oracle OK: " + countOracleOK);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados Oracle OK: " + countOracleOK);
 			int countOracleNOK = this.BancoDadosInterfaceDAO.countOracleNOK();
 			result.include("dbOracleNOK", countOracleNOK);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados Oracle Não OK: " + countOracleNOK);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados Oracle Não OK: " + countOracleNOK);
 
 			int countPostgreOK = this.BancoDadosInterfaceDAO.countPostgreOK();
 			result.include("dbPostgreOK", countPostgreOK);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados PostgreSQL OK: " + countPostgreOK);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados PostgreSQL OK: " + countPostgreOK);
 			int countPostgreNOK = this.BancoDadosInterfaceDAO.countPostgreNOK();
 			result.include("dbPostgreNOK", countPostgreNOK);
-			Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados PostgreSQL Não OK: " + countPostgreNOK);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Banco de Dados PostgreSQL Não OK: " + countPostgreNOK);
 
 			result.include("totalDB",total);
 	}

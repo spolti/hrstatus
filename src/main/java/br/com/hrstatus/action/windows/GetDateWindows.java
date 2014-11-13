@@ -19,27 +19,29 @@
 
 package br.com.hrstatus.action.windows;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.logging.Logger;
+
 /*
  * @author spolti
  */
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import org.apache.log4j.Logger;
-
 public class GetDateWindows {
 
+	static Logger log =  Logger.getLogger(GetDateWindows.class.getCanonicalName());
+	
 	public static String Exec(String ip, String parameter) throws IOException {
 
 		Process p = null;
 		String out = null;
 		String s = null;
+		
 		try {
 
 			if (parameter.equals("I")) {
-				Logger.getLogger(GetDateWindows.class).debug("Trying parameter -I");
+				log.fine("Trying parameter -I");
 				p = Runtime.getRuntime().exec("net time -I " + ip);
 				BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 				while ((s = reader.readLine()) != null) {
@@ -54,12 +56,10 @@ public class GetDateWindows {
 				}
 
 			} else if (parameter.equals("S")) {
-				Logger.getLogger(GetDateWindows.class).debug(
-						"Trying parameter -S");
-				//System.out.println("Trying parameter -S");
+				log.fine("Trying parameter -S");
 				p = Runtime.getRuntime().exec("net time -S " + ip);
 				if (p.equals(null)) {
-					System.out.println("To nulooo");
+					log.fine("Null pointer at this point...");
 				}
 				BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 				while ((s = reader.readLine()) != null) {
@@ -78,7 +78,7 @@ public class GetDateWindows {
 			return out;
 			
 		} catch (Exception ex) {
-			Logger.getLogger(GetDateWindows.class).error(ex);
+			log.severe(ex.toString());
 			return "";
 		}
 

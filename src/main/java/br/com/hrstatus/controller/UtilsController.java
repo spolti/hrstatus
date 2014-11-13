@@ -21,12 +21,13 @@ package br.com.hrstatus.controller;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Logger;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
@@ -34,8 +35,8 @@ import br.com.caelum.vraptor.Result;
 import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.model.Configurations;
 import br.com.hrstatus.security.CriptoJbossDSPassword;
-import br.com.hrstatus.utils.MailSender;
 import br.com.hrstatus.utils.UserInfo;
+import br.com.hrstatus.utils.mail.MailSender;
 
 /*
  * @author spolti
@@ -44,20 +45,19 @@ import br.com.hrstatus.utils.UserInfo;
 @Resource
 public class UtilsController {
 
+	Logger log =  Logger.getLogger(UtilsController.class.getCanonicalName());
+	
+	@Autowired
 	private Result result;
+	@Autowired
 	private Configuration configurationDAO;
 	UserInfo userInfo = new UserInfo();
 	MailSender send = new MailSender();
-
-	public UtilsController(Result result, Configuration configurationDAO) {
-		this.result = result;
-		this.configurationDAO = configurationDAO;
-	}
 	
 	@SuppressWarnings("static-access")
 	@Get("/utils/criptPassJboss/{password}")
 	public void criptPassJboss (String password) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException{
-		Logger.getLogger(getClass()).info("[ Not Logged ] URI Called: /utils/criptPassJboss/");
+		log.info("[ Not Logged ] URI Called: /utils/criptPassJboss/");
 		
 		CriptoJbossDSPassword cript = new CriptoJbossDSPassword();
 		result.include("EncriptedPassword",cript.encode(password));
@@ -65,8 +65,8 @@ public class UtilsController {
 	}
 	
 	@Get("/sendMailtest")
-	public void sendMailtest(String rcpt){
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /sendMailtest/" + rcpt);
+	public void sendMailtest(String rcpt) throws Exception{
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /sendMailtest/" + rcpt);
 		
 		Configurations configs = this.configurationDAO.getConfigs();
 		try {
@@ -74,7 +74,7 @@ public class UtilsController {
 			result.include("info",resultMail).forwardTo(ConfigController.class).configServer();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			Logger.getLogger(getClass()).error("[ " + userInfo.getLoggedUsername() + " ] Erro ao enviar email de teste: " + e);
+			log.severe("[ " + userInfo.getLoggedUsername() + " ] Erro ao enviar email de teste: " + e);
 			result.include("errors","Erro ao enviar mensagem de teste: " + e).forwardTo(ConfigController.class).configServer();
 			
 		} 

@@ -19,14 +19,11 @@
 
 package br.com.hrstatus.controller;
 
-/*
- * @author spolti
- */
-
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Post;
@@ -38,25 +35,30 @@ import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.model.PassExpire;
 import br.com.hrstatus.model.Users;
 import br.com.hrstatus.security.SpringEncoder;
-import br.com.hrstatus.utils.DateParser;
-import br.com.hrstatus.utils.DateUtils;
-import br.com.hrstatus.utils.MailSender;
 import br.com.hrstatus.utils.PassGenerator;
+import br.com.hrstatus.utils.StartupSingletonVerifications;
 import br.com.hrstatus.utils.UserInfo;
+import br.com.hrstatus.utils.date.DateParser;
+import br.com.hrstatus.utils.date.DateUtils;
+import br.com.hrstatus.utils.mail.MailSender;
+
+/*
+ * @author spolti
+ */
 
 @Resource
 public class GemPassController {
 
+	Logger log =  Logger.getLogger(StartupSingletonVerifications.class.getCanonicalName());
+	
+	@Autowired
 	private UsersInterface userDAO;
+	@Autowired
 	private Configuration configurationDAO;
+	@Autowired
 	private Result result;
 	UserInfo userInfo = new UserInfo();
 
-	public GemPassController(Result result, Configuration configurationDAO, UsersInterface userDAO) {
-		this.result = result;
-		this.userDAO = userDAO;
-		this.configurationDAO = configurationDAO;
-	}
 
 	@Get("/atualizarCadastro/{username}")
 	public void atualizarCadastro(String username) {
@@ -65,12 +67,12 @@ public class GemPassController {
 		
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Usuário logado: " + userInfo.getLoggedUsername());
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] Usuário logado: " + userInfo.getLoggedUsername());
 
 		if (!username.equals(userInfo.getLoggedUsername().toString())) {
 			result.use(Results.http()).sendError(403);
 		} else {
-			Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] validação de usuário OK");
+			log.info("[ " + userInfo.getLoggedUsername() + " ] validação de usuário OK");
 			result.redirectTo(UpdateController.class).findForUpdateUser(null, userInfo.getLoggedUsername(),"changePass");
 		}
 	}
@@ -79,8 +81,8 @@ public class GemPassController {
 	@Post("/requestNewPass")
 	public void requestNewPass(String username) {
 		
-		Logger.getLogger(getClass()).info("[ Not Logged ] URI Called: /requestNewPass");
-		Logger.getLogger(getClass()).info("[ Not Logged ] Username recebido: " + username);
+		log.info("[ Not Logged ] URI Called: /requestNewPass");
+		log.info("[ Not Logged ] Username recebido: " + username);
 		SpringEncoder encode = new SpringEncoder();
 		String password = "";
 		PassExpire passExpire = new PassExpire();
@@ -88,7 +90,7 @@ public class GemPassController {
 			// Verificando se o usuário existe
 			if (this.userDAO.searchUser(username) == 1) {
 				Users user = this.userDAO.getUserByID(username);
-				Logger.getLogger(getClass()).info("[ Not Logged ] usuário encontrado");
+				log.info("[ Not Logged ] usuário encontrado");
 				PassGenerator gemPass = new PassGenerator();
 				String mailSender = this.configurationDAO.getMailSender();
 				String jndiMail = this.configurationDAO.getJndiMail();
@@ -139,12 +141,12 @@ public class GemPassController {
 				}
 
 			} else {
-				Logger.getLogger(getClass()).info("[ Not Logged ] Usuário não encontrado");
+				log.info("[ Not Logged ] Usuário não encontrado");
 				result.redirectTo(LoginController.class).login("Se o usuário for válido uma nova senha será enviada para seu e-mail.");
 			}
 
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).error(e);
+			log.severe(e.toString());
 		}
 	}
 }

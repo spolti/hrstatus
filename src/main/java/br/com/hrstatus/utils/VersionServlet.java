@@ -19,19 +19,20 @@
 
 package br.com.hrstatus.utils;
 
+import java.io.IOException;
+import java.util.logging.Logger;
+
+import javax.servlet.http.HttpServlet;
+
 /*
  * @author spolti
  */
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServlet;
-
-import org.apache.log4j.Logger;
-
 @SuppressWarnings("static-access")
 public class VersionServlet  extends HttpServlet {
 
+	Logger log =  Logger.getLogger(VersionServlet.class.getCanonicalName());
+	
 	private static final long serialVersionUID = 1L;
 
 	public VersionServlet() throws IOException {
@@ -41,7 +42,6 @@ public class VersionServlet  extends HttpServlet {
 	private void loadVersionServlet() throws IOException {
 		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
 	    String version = load.getValor("version");
-	    
-	    Logger.getLogger(getClass()).info("Versão Hr Status: " + version);
+	    log.info("Versão Hr Status: " + version);
 	}	
 }

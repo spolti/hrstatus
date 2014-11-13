@@ -19,14 +19,14 @@
 
 package br.com.hrstatus.dao;
 
-/*
- * @author spolti
- */
-
 import java.util.List;
 
 import br.com.hrstatus.model.PassExpire;
 import br.com.hrstatus.model.Users;
+
+/*
+ * @author spolti
+ */
 
 public interface UsersInterface {
 

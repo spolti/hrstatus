@@ -19,10 +19,6 @@
 
 package br.com.hrstatus.security;
 
-/*
- * @author spolti
- */
-
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -32,6 +28,10 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
+
+/*
+ * @author spolti
+ */
 
 public class Crypto {
 
