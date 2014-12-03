@@ -88,10 +88,10 @@
 								<tr>
 								<c:choose>
 									<c:when test="${(fn:startsWith(file, 'd ')) == false}">
-										<td><a href="<c:url value='/downloadFile/${hostname}/${file}' />" value="${file}">${file}</a></td>
+										<td><a href="<c:url value='/downloadFileSubdir/${hostname}/${file}${logDir}' />" value="${file}">${file}</a></td>
 									</c:when>
 									<c:otherwise>
-										<td><a href="<c:url value='/listLogFiles/${hostname}/subdir/${file}' />" value="${file}">${file}</a></td>
+										<td><a href="<c:url value='/listLogFiles/${hostname}/subdir/${logDir}/${file}' />" value="c/${file}">${file}</a></td>
 									</c:otherwise>
 								</c:choose>									
 								<td>

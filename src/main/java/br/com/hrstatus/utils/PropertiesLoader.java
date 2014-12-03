@@ -33,6 +33,7 @@ public class PropertiesLoader {
     private String version = "/version.properties";  
   
     protected PropertiesLoader(){  
+    	
             props = new Properties();  
             InputStream in = this.getClass().getResourceAsStream(version);  
             try{  

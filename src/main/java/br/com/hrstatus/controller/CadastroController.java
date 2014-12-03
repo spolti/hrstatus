@@ -71,12 +71,14 @@ public class CadastroController {
 	private Configuration configurationDAO;
 	@Autowired
 	private BancoDadosInterface BancoDadosDAO;
-	UserInfo userInfo = new UserInfo();
+	private UserInfo userInfo = new UserInfo();
+	private Crypto encodePass = new Crypto();
 	
 
 	@Get("/newServer")
 	public void newServer(Servidores servidores) {
-		// inserindo html tittle no result
+		
+		// Inserting HTML title in the result
 		result.include("title", "Registrar Servidor");
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
@@ -111,17 +113,16 @@ public class CadastroController {
 	@SuppressWarnings("static-access")
 	@Post("/registerServer")
 	public void registerServer(Servidores servidores) {
-		// inserindo html tittle no result
+
+		// Inserting HTML title in the result
 		result.include("title", "Registrar Servidor");
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /registerServer");
-		Crypto encodePass = new Crypto();
-
-		// Regex to validade IP
-		Pattern pattern = Pattern
-				.compile("\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\z");
+		
+		// Regex to validade the IP
+		Pattern pattern = Pattern.compile("\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\z");
 		Matcher matcher = pattern.matcher(servidores.getIp());
 
 		if (servidores.getIp().isEmpty()) {
@@ -173,11 +174,9 @@ public class CadastroController {
 		servidores.setStatus("Servidor ainda não foi verificado.");
 		servidores.setTrClass("error");
 
-		// result.redirectTo(HomeController.class).home("null");
 
 		try {
-
-			// Critpografando a senha
+			// Encrypting the password
 			servidores.setPass(encodePass.encode(servidores.getPass()));
 
 		} catch (Exception e) {
@@ -197,7 +196,8 @@ public class CadastroController {
 
 	@Get("/newDataBase")
 	public void newDataBase(BancoDados bancoDados) {
-		// inserindo html tittle no result
+
+		// Inserting HTML title in the result
 		result.include("title", "Registrar Banco de Dados");
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
@@ -218,13 +218,13 @@ public class CadastroController {
 	@SuppressWarnings("static-access")
 	@Post("/registerDataBase")
 	public void registerDataBase(BancoDados bancoDados) {
-
+		
+		// Inserting HTML title in the result
 		result.include("title", "Registrar Banco de Dados");
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /registerDataBase");
-		Crypto encodePass = new Crypto();
 
 		// Regex to validade IP
 		Pattern pattern = Pattern.compile("\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\z");
@@ -295,7 +295,7 @@ public class CadastroController {
 		bancoDados.setTrClass("error");
 
 		try {
-			// Critpografando a senha
+			// CEncrypting the password
 			bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 		} catch (Exception e) {
 			log.severe("Error: " + e);
@@ -306,14 +306,15 @@ public class CadastroController {
 			log.info("DataBase " + bancoDados.getHostname() + " was sucessfully registred.");
 			result.redirectTo(ConfigController.class).configDataBases();
 		} else {
-			validator.add(new ValidationMessage("DataBase " + bancoDados.getHostname() + " was not registred because already exists.", "Erro"));
+			validator.add(new ValidationMessage("DataBase " + bancoDados.getHostname() + " was not registred because it already exists.", "Erro"));
 			validator.onErrorForwardTo(CadastroController.class).newDataBase(bancoDados);
 		}
 	}
 
 	@Get("/newUser")
 	public void newUser(Users user) {
-		// inserindo html tittle no result
+
+		// Inserting HTML title in the result
 		result.include("title", "Registrar Usuário");
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
@@ -329,16 +330,16 @@ public class CadastroController {
 
 	@SuppressWarnings("static-access")
 	@Post("/registerUser")
-	public void registerUser(Users user, String[] idServer, boolean checkall)
-			throws UnsupportedEncodingException, UnknownHostException {
-		// inserindo html tittle no result
+	public void registerUser(Users user, String[] idServer, boolean checkall) throws UnsupportedEncodingException, UnknownHostException {
+
+		// Inserting HTML title in the result
 		result.include("title", "Registrar Usuário");
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
 		log.fine("[ " + userInfo.getLoggedUsername() + " ]URI Called: /registerUser");
 		SpringEncoder encode = new SpringEncoder();
 
-		// expressão regular para validar email
+		// Regex to e-mail validation
 		Pattern p = Pattern.compile("^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]{2,7}$");
 		Matcher m = p.matcher(user.getMail());
 
@@ -360,14 +361,14 @@ public class CadastroController {
 			result.include("server", server);
 			validator.add(new ValidationMessage("As senhas informadas não são iguais.", "Erro"));
 		} else if (user.getPassword().equals(user.getConfirmPass())) {
-			//Verificando a complexidade de senha informada.
+			
+			//Verifying the password complexity
 			List<String> passVal = new ArrayList<String>();
 			Map<String, String> map = new HashMap<String, String>();
 			map = br.com.hrstatus.security.PasswordPolicy.verifyPassComplexity(user.getPassword());
 			Object[] valueMap = map.keySet().toArray();
 			for (int i = 0; i < valueMap.length; i++) {
 				if (map.get(valueMap[i]).equals("false")) {
-					//System.out.println(map.get(valueMap[i + 1]));
 					passVal.add(map.get(valueMap[i + 1]));
 				}
 			}
@@ -391,17 +392,17 @@ public class CadastroController {
 			validator.add(new ValidationMessage("O campo Perfil deve ser informado", "Erro"));
 
 		} else if (checkall) {
-			log.fine("[ "	+ userInfo.getLoggedUsername() + " ] A opção selecione todos os servidores está marcada.");
+			log.fine("[ "	+ userInfo.getLoggedUsername() + " ] The option \"select all servers\" is checked.");
 			List<Servidores> idAccessServers = new ArrayList<Servidores>();
 			idAccessServers = this.iteracoesDAO.getHostnamesWithLogDir();
 			user.setServer(idAccessServers);
 
 		} else if (idServer[0].equals("notNull")) {
-			log.info("Lista de Servidores para Usuário vazio.");
+			log.info("[ " + userInfo.getLoggedUsername() + " ] Empty server list for this user.");
 		} else if (!idServer[0].equals("notNull")) {
 			List<Servidores> idAccessServers = new ArrayList<Servidores>();
 			for (int i = 0; i < idServer.length; i++) {
-				log.info("ID Servidor recebido: " + idServer[i]);
+				log.info("Server ID received: " + idServer[i]);
 				if (!idServer[i].equals("notNull")) {
 					idAccessServers.add(this.iteracoesDAO.getServerByID(Integer.parseInt(idServer[i])));
 				}
@@ -414,18 +415,18 @@ public class CadastroController {
 		
 		user.setFirstLogin(true);
 
-		// enviando e-mail para usuário informando senha e criação do usuário:
+		// Sending a e-mail to the user to notify about the user creation.
 		MailSender sendMail = new MailSender();
 		sendMail.sendCreatUserInfo(this.configurationDAO.getMailSender(),
 				user.getMail(), this.configurationDAO.getJndiMail(),
 				user.getNome(), user.getUsername(), user.getPassword());
 
-		// Criptografando a senha e salvando usuário
-		// Criptografando senha MD5 springframework
+		// Encrypting the password and save the new user
+		// Encrypting the password using the MD5 module of springframework
 		user.setPassword(encode.encodePassUser(user.getPassword()));
 		this.userDAO.saveORupdateUser(user);
 
-		log.info("[ " + userInfo.getLoggedUsername() + " ] O usuário "	+ user.getUsername() + " foi criado com sucesso.");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] The user " + user.getUsername() + " was succesfully created.");
 		result.redirectTo(HomeController.class).home("null");
 	}
 }

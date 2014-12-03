@@ -56,7 +56,6 @@ public class ImageController {
 	@Autowired
 	private HttpServletRequest request;
 	UserInfo userInfo = new UserInfo();
-	
 
 	
 	@Post("/uploud/logo/imagem")
@@ -65,13 +64,13 @@ public class ImageController {
 		validator.onErrorRedirectTo(ConfigController.class).configServer();
 		
 		if (!imagem.getContentType().startsWith("image")){
-				validator.add(new ValidationMessage("O arquivo enviado não é uma imagem.", "Erro"));
+				validator.add(new ValidationMessage("The sended file is not a Image valid format.", "Erro"));
 		} else{
 			try{
 				images.save(imagem);
 				result.forwardTo(ConfigController.class).configServer();
 			}catch(Exception e){
-				validator.add(new ValidationMessage("Erro inesperado: " + e, "Erro"));
+				validator.add(new ValidationMessage("Unexpected error: " + e, "Erro"));
 				
 			}
 
@@ -98,7 +97,7 @@ public class ImageController {
 				return images.show("home");
 			}
 	  }catch (javax.imageio.IIOException ex){
-		  log.fine("Imagem não encontrada ou ainda não configurada");		
+		  log.fine("Login page image not found or not configured yet.");		
 	  }
 	  return null;
 	}

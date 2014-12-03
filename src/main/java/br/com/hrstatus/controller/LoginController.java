@@ -27,7 +27,6 @@ import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.hrstatus.utils.PropertiesLoaderImpl;
-import br.com.hrstatus.utils.UserInfo;
 
 /*
  * @author spolti
@@ -40,14 +39,15 @@ public class LoginController {
 	
 	@Autowired
 	private Result result;
-
-	UserInfo userInfo = new UserInfo();
-
+	private PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+	
 	@SuppressWarnings("static-access")
 	@Get("/login")
 	public void login(String message) throws Exception{
+		
 		log.info("[ Not Logged ] URI Called: /login");
-		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		
+		// Loading HrStatus version information from property file
 	    String version = load.getValor("version"); 
 	    result.include("version",version);
 		result.include("info",message);

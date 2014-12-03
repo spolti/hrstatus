@@ -35,8 +35,8 @@ import com.jcraft.jsch.Session;
 
 public class GetDateUnix {
 
-	static Logger log =  Logger.getLogger(GetDateUnix.class.getCanonicalName());
-	
+	static Logger log = Logger.getLogger(GetDateUnix.class.getCanonicalName());
+
 	@SuppressWarnings("unchecked")
 	public static class MyLogger implements com.jcraft.jsch.Logger {
 		@SuppressWarnings("rawtypes")
@@ -58,53 +58,52 @@ public class GetDateUnix {
 			log.fine(message);
 		}
 	}
-	
-	public static String exec (String user, String host, String password, int port) throws JSchException, IOException{
-	
-		String s = "";
-	      
-	      //definindo a não obrigação do arquivo know_hosts
-	      java.util.Properties config = new java.util.Properties(); 
-	      config.put("StrictHostKeyChecking", "no");
-	      
-	      //Criando a sessao e conectando no servidor
-	      JSch jsch=new JSch();
-	      Session session=jsch.getSession(user, host, port);
-	      session.setConfig(config);
-	      session.setPassword(password);
-	      session.connect(10000);
 
-	      //Exectando o comando
-	      
-	      Channel channel=session.openChannel("exec");
-	      ((ChannelExec)channel).setCommand("/bin/date");
-	      ((ChannelExec)channel).setErrStream(System.err);
-	      InputStream in=channel.getInputStream();
-	      
-	      channel.connect();
-	         
-	      byte[] tmp=new byte[1024];
-	      boolean test = true;
-	      while(test == true){
-	    	 
-	        while(in.available()>0){
-	        	
-	          int i=in.read(tmp, 0, 1024);
-	          if(i<0){
-	        	  break;
-	          }
-	         s += (new String(tmp, 0, i));
-	        }
-	        
-	        if(channel.isClosed()){
-	          break;
-	       }
-	        
-	      }
-	    
-	      channel.disconnect();
-	      session.disconnect();
-      
+	public static String exec(String user, String host, String password, int port) throws JSchException, IOException {
+
+		String s = "";
+
+		// Disabling host key check
+		java.util.Properties config = new java.util.Properties();
+		config.put("StrictHostKeyChecking", "no");
+
+		// Creating the server session and connecting
+		JSch jsch = new JSch();
+		Session session = jsch.getSession(user, host, port);
+		session.setConfig(config);
+		session.setPassword(password);
+		session.connect(10000);
+
+		// Executing the command
+		Channel channel = session.openChannel("exec");
+		((ChannelExec) channel).setCommand("/bin/date");
+		((ChannelExec) channel).setErrStream(System.err);
+		InputStream in = channel.getInputStream();
+
+		channel.connect();
+
+		byte[] tmp = new byte[1024];
+		boolean test = true;
+		while (test == true) {
+
+			while (in.available() > 0) {
+
+				int i = in.read(tmp, 0, 1024);
+				if (i < 0) {
+					break;
+				}
+				s += (new String(tmp, 0, i));
+			}
+
+			if (channel.isClosed()) {
+				break;
+			}
+
+		}
+
+		channel.disconnect();
+		session.disconnect();
+
 		return s.replaceAll("\n", "");
-	 }
+	}
 }

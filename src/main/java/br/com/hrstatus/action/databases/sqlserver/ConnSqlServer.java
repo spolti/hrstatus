@@ -46,13 +46,11 @@ public class ConnSqlServer {
 			Class.forName(driver);
 			connection = DriverManager.getConnection(url, username, password);
 		} catch (Exception e) {
-			log.severe("Erro ao conectar no banco de dados: " + e.getMessage());
+			log.severe("Error connecting to the database: " + e.getMessage());
 			e.printStackTrace();
 		}
 
-		/*
-		 * Testa se a conexão foi obtida com sucesso
-		*/
+		//Testing if the connection was successfully obtained.
 		if (connection != null) {
 			status = (true);
 			log.fine("[ " + userInfo.getLoggedUsername() + " ] SqlServer datbase connection status: " + status);

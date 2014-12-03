@@ -63,18 +63,18 @@ public class GetDateOther {
 		
 		String s = "";
 	      
-	      //definindo a não obrigação do arquivo know_hosts
+		  //Disabling host key check
 	      java.util.Properties config = new java.util.Properties(); 
 	      config.put("StrictHostKeyChecking", "no");
 	      
-	      //Criando a sessao e conectando no servidor
+	      //Creating the server session and connecting
 	      JSch jsch=new JSch();
 	      Session session=jsch.getSession(user, host, port);
 	      session.setConfig(config);
 	      session.setPassword(password);
 	      session.connect();
 
-	      //Exectando o comando
+	      //Executing the command
 	      Channel channel=session.openChannel("exec");
 	      ((ChannelExec)channel).setCommand("date");
 	      ((ChannelExec)channel).setErrStream(System.err);

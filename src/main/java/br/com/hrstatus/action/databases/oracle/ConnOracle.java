@@ -46,7 +46,7 @@ public class ConnOracle {
 			String url = "jdbc:oracle:thin:@" + serverAddress + ":" + 1521 + "/" + instance;
 			connection = DriverManager.getConnection(url, username, password);
 
-			//Verificar se está OK
+			//Testing if the connection was successfully obtained.
 			if (connection != null) {
 				status = (true);
 				log.fine("[ " + userInfo.getLoggedUsername() + " ] Oracle datbase connection status: " + status);

@@ -85,12 +85,11 @@ public class DbNotFullVerification {
 	public void startNotFullDataBaseVerification() throws ClassNotFoundException, SQLException{
 		String dateSTR = null;
 
-		// inserindo html title no result
+		// Inserting HTML title in the result
 		result.include("title", "Hr Status Home");
 		String LoggedUsername = userInfo.getLoggedUsername();
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI called: /database/startDataBaseVerification/notFullDBVerification");
 
-		// Verifica se já tem alguma verificação ocorrendo...
 		log.info("[ " + userInfo.getLoggedUsername() + " ] Initializing a notFullDBVerification verification.");
 		
 		lockedResource.setRecurso("notFullDBVerification");
@@ -98,15 +97,15 @@ public class DbNotFullVerification {
 		List<Lock> lockList = this.lockDAO.listLockedServices("notFullDBVerification");
 		if (lockList.size() != 0) {
 			for (Lock lock : lockList) {
-				log.info("[ " + userInfo.getLoggedUsername() + " ] O recurso notFullDBVerification está locado pelo usuário " + lock.getUsername() + ", aguarde o término da mesma.");
+				log.info("[ " + userInfo.getLoggedUsername() + " ] The resource notFullDBVerification is locked by the user " + lock.getUsername());
 				result.include("class", "activeBanco");
 				result.include("info","O recurso notFullDBVerification está locado pelo usuário "+ lock.getUsername()
 								+ ", aguarde o término da mesma").forwardTo(HomeController.class).home("");
 
 			}
 		} else {
-			log.info("[ "+ userInfo.getLoggedUsername() + " ] O recurso notFullDBVerification não está locado, locando e proseguindo");
-			// locar recurso.
+			log.info("[ "+ userInfo.getLoggedUsername() + " ] The resource notFullDBVerification is not locked, locking and continuing");
+			// locking resource
 			lockDAO.insertLock(lockedResource);
 
 			List<BancoDados> listdb = this.dbDAO.getdataBasesNOK();
@@ -114,7 +113,7 @@ public class DbNotFullVerification {
 				bancoDados.setServerTime(dt.getTime());
 				bancoDados.setLastCheck(bancoDados.getServerTime());
 
-				// Decripting password
+				// Decrypting password
 				try {
 					bancoDados.setPass(String.valueOf(Crypto.decode(bancoDados.getPass())));
 				} catch (InvalidKeyException e) {
@@ -140,8 +139,7 @@ public class DbNotFullVerification {
 					} else if (bancoDados.getVendor().toUpperCase().equals("ORACLE")) {
 						dateSTR = runOracle.getDateOracle(bancoDados);
 					}
-					log.fine("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor "
-									+ bancoDados.getHostname() + ": " + dateSTR);
+					log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from the server " + bancoDados.getHostname() + ": " + dateSTR);
 					bancoDados.setClientTime(dateSTR);
 					// Calculating time difference
 					bancoDados.setDifference((dt.diffrenceTime(bancoDados.getServerTime(), dateSTR,	"Dont Need this, Remove!!!")));
@@ -158,7 +156,7 @@ public class DbNotFullVerification {
 						bancoDados.setStatus("não OK");
 					}
 					try {
-						// Critpografando a senha
+						// Encrypting the password
 						bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 
 					} catch (Exception e1) {
@@ -170,7 +168,7 @@ public class DbNotFullVerification {
 					bancoDados.setStatus(e + "");
 					bancoDados.setTrClass("error");
 					try {
-						// Critpografando a senha
+						// Encrypting the password
 						bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 
 					} catch (Exception e1) {
@@ -182,7 +180,7 @@ public class DbNotFullVerification {
 					bancoDados.setTrClass("error");
 					try {
 
-						// Critpografando a senha
+						// Encrypting the password
 						bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 
 					} catch (Exception e1) {

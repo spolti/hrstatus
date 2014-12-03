@@ -44,7 +44,7 @@ public class GetServerIPAddress {
 			String jbossHttpAddress = (String) mBeanServer.getAttribute(http,"boundAddress");
 			int jbossHttpPort = (Integer) mBeanServer.getAttribute(http,"boundPort");
 			url = jbossHttpAddress + ":" + jbossHttpPort;
-			log.fine("Url obtida do sistema : " + url);
+			log.fine("Url obtained from the system: " + url);
 		} catch (Exception e) {
 			log.severe(e.getStackTrace().toString());
 		}

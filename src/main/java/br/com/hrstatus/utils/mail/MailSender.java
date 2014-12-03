@@ -45,8 +45,7 @@ public class MailSender {
 	
 	GetServerIPAddress getIP = new GetServerIPAddress();	
 
-	public void Sender(String mailSender, String Subject, String dests[],
-			String jndiMail) throws UnknownHostException {
+	public void Sender(String mailSender, String Subject, String dests[], String jndiMail) throws UnknownHostException {
 
 		String url = ("" + getIP.returnServerAddres());
 		try {
@@ -90,10 +89,10 @@ public class MailSender {
 
 			try {
 				Transport.send(message);
-				log.info("----> Email enviado.");
+				log.info("----> Email sent.");
 
 			} catch (Exception e) {
-				log.severe("----> Email não enviado.");
+				log.severe("----> Email not sent.");
 				log.severe(e.toString());
 			}
 		} catch (Exception e) {
@@ -101,8 +100,7 @@ public class MailSender {
 		}
 	}
 
-	public void sendNewPass(String mailSender, String dest, String jndiMail,
-			String pass, String username) throws UnknownHostException {
+	public void sendNewPass(String mailSender, String dest, String jndiMail, String pass, String username) throws UnknownHostException {
 
 		String url = ("" + getIP.returnServerAddres());
 
@@ -147,10 +145,10 @@ public class MailSender {
 
 			try {
 				Transport.send(message);
-				log.info("----> Email enviado.");
+				log.info("----> Email sent.");
 
 			} catch (Exception e) {
-				log.severe("----> Email não enviado.");
+				log.severe("----> Email not sent.");
 				log.severe(e.toString());
 			}
 
@@ -159,8 +157,7 @@ public class MailSender {
 		}
 	}
 
-	public void sendCreatUserInfo(String mailSender, String dest,
-			String jndiMail, String name, String username, String pass)
+	public void sendCreatUserInfo(String mailSender, String dest, String jndiMail, String name, String username, String pass)
 			throws UnsupportedEncodingException, UnknownHostException {
 
 		String url = ("" + getIP.returnServerAddres());
@@ -210,10 +207,10 @@ public class MailSender {
 
 			try {
 				Transport.send(message);
-				log.info("----> Email enviado.");
+				log.info("----> Email sent");
 
 			} catch (Exception e) {
-				log.severe("----> Email não enviado.");
+				log.severe("----> Email not sent");
 				log.severe(e.toString());
 			}
 
@@ -223,8 +220,7 @@ public class MailSender {
 		}
 	}
 		
-	public String sendTestMail(String mailSender,  String dest,
-			String jndiMail) throws UnknownHostException, NamingException, AddressException, MessagingException {
+	public String sendTestMail(String mailSender,  String dest, String jndiMail) throws UnknownHostException, NamingException, AddressException, MessagingException {
 
 		InitialContext ic = new InitialContext();
 		Session session = (Session) ic.lookup(jndiMail);
@@ -241,12 +237,12 @@ public class MailSender {
 
 		try {
 			Transport.send(message);
-			log.info("----> Email de teste enviado.");
-			return "----> Email de teste enviado.";
+			log.info("----> Test email sent");
+			return "----> Test email sent.";
 		} catch (Exception e) {
-			log.severe("----> Email de teste não enviado.");
+			log.severe("----> Test email not sent");
 			log.severe(e.toString());
-			return "----> Email de teste não enviado -----> " + e;
+			return "----> Test email no sent -----> " + e;
 		}
 
 	}

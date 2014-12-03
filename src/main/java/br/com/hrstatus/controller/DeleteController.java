@@ -57,23 +57,18 @@ public class DeleteController {
 	private LockIntrface lockDAO;
 	UserInfo userInfo = new UserInfo();
 
-	public DeleteController(Result result, ServersInterface iteracoesDAO, UsersInterface usersDAO, BancoDadosInterface BancoDadosDAO, LockIntrface lockDAO) {
-		this.result = result;
-		this.iteracoesDAO = iteracoesDAO;
-		this.usersDAO = usersDAO;
-		this.BancoDadosDAO = BancoDadosDAO;
-		this.lockDAO = lockDAO;
-	}
-
+	
 	@Delete("/deleteServerByID")
 	public void deleteServerByID(String id_server) {
-		//inserindo html title no result
+
+		// Inserting HTML title in the result
 		result.include("title","Deletar Servidor");
 
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /deleteServerByID");
 		int id = Integer.parseInt(id_server);
 		Servidores server = this.iteracoesDAO.getServerByID(id);
-		// Setando ID
+		
+		// Setting server ID to delete
 		server.setId(id);
 		this.iteracoesDAO.deleteServerByID(server);
 		result.redirectTo(HomeController.class).home("");
@@ -81,9 +76,12 @@ public class DeleteController {
 	
 	@Delete("/deleteDataBaseByID")
 	public void deleteDataBaseByID(String id_dataBase) {
-		//inserindo html title no result
+
+		// Inserting HTML title in the result
 		result.include("title","Deletar Banco de Dados");
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /deleteDataBaseByID");
+		
+		// Setting database ID to delete
 		int id = Integer.parseInt(id_dataBase);
 		BancoDados dataBase = this.BancoDadosDAO.getDataBaseByID(id);
 		this.BancoDadosDAO.deleteDataBase(dataBase);
@@ -92,11 +90,12 @@ public class DeleteController {
 
 	@Delete("/deleteUserByID")
 	public void deleteUserByID(String username) {
-		//inserindo html title no result
+
+		// Inserting HTML title in the result
 		result.include("title","Deletar Usuário");
 		
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /deleteUserByID");
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] Usuário recebido para deleção: " + username);
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] Received user  to be deleted: " + username);
 		
 		Users user = this.usersDAO.getUserByID(username);
 		
@@ -104,7 +103,7 @@ public class DeleteController {
 			result.include("Error", "Você não pode deletar você mesmo.");
 			result.redirectTo(ConfigController.class).configUser();
 		}else{
-			//Setando username
+			// Setting the username to be deleted
 			user.setUsername(username);
 			this.usersDAO.deleteUserByID(user);
 			result.redirectTo(HomeController.class).home("");
@@ -113,9 +112,11 @@ public class DeleteController {
 	
 	@Delete("/deleteLockByID")
 	public void deleteLockByID(String id_lock){
+		
+		// Inserting HTML title in the result
 		result.include("title","Deletar Lock");
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /deleteLockByID");
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] Lock id para deleção: " + id_lock);
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] Lock id to be deleted: " + id_lock);
 		Lock lock = this.lockDAO.getLockByID(Integer.parseInt(id_lock));
 		this.lockDAO.removeLock(lock);
 		result.redirectTo(HomeController.class).home("");

@@ -64,18 +64,20 @@ public class MainScheduler {
 
 	@Scheduled(cron = "${br.com.hrstatus.scheduler.MailScheduler.cron}")
 	public void sendMail() throws UnknownHostException {
-		log.fine("[ System ] Invoking sendMail at " + new Date());
+		
+		log.fine("[ System ] Invoking sendMail() at " + new Date());
 
 		int count = this.iteracoesDAO.countServersNOK();
 		boolean sendNotification = this.configurationDAO.sendNotification();
 
-		log.fine("Notificação Ativa: " + sendNotification);
+		log.fine("[ System ] Notification through email is active? -> " + sendNotification);
 
 		if (sendNotification) {
 
 			if (count > 0) {
-				log.fine("[ System ] Foram encontrados " + count + " servidor(es) desatualizado(s), enviando e-mail de alerta.");
-				// Envio de e-mail
+				
+				log.fine("[ System ] Was found " + count + " servers outdated, sending notification email");
+				
 				String mail1 = this.configurationDAO.getMailSender();
 				String Subject = this.configurationDAO.getSubject();
 				String Dests[] = this.configurationDAO.getDests().split(",");
@@ -83,10 +85,10 @@ public class MainScheduler {
 				MailSender mail = new MailSender();
 				mail.Sender(mail1, Subject, Dests, jndiMail);
 			} else {
-				log.fine("[ System ] Nenhum servidor desatualizado foi encontrado.");
+				log.fine("[ System ] No server outdated was found");
 			}
 		}else {
-			log.fine("O envio de e-mail de notificação está desativado, abortando envio");
+			log.fine("Sending notification e-mail is disabled, aborting shipping");
 		}
 	}
 
@@ -104,7 +106,7 @@ public class MainScheduler {
 		}
 
 		if (stdIn.equals("")) {
-			log.severe("Comando ntpdate não encontrado, abortando atualização automática");
+			log.severe("ntpdate command not found, aborting the automated update");
 		} else {
 			log.finest("ntp ativo: " + isUpdateNtpActive);
 			if (isUpdateNtpActive) {
@@ -112,16 +114,16 @@ public class MainScheduler {
 				String ntpServer = this.configurationDAO.getNtpServerAddress();
 				log.fine("Servidor NTP configurado: " + ntpServer);
 
-				// fazer a atualização com sudo....
+				// Doing the update with sudo
 				String stdInAtualiza = "";
 				Process pAtualiza = (Runtime.getRuntime().exec("sudo " + stdIn + " -u " + ntpServer));
 				BufferedReader stdInputAtualiza = new BufferedReader(new InputStreamReader(pAtualiza.getInputStream()));
 				while ((s = stdInputAtualiza.readLine()) != null) {
 					stdInAtualiza += s + "\n";
 				}
-				log.fine("Resultado atualização ntp [ sudo " + stdIn + " -u "	+ ntpServer + "]: " + stdInAtualiza);
+				log.fine("Result of ntp update [ sudo " + stdIn + " -u " + ntpServer + "]: " + stdInAtualiza);
 			} else {
-				log.fine("Atualização NTP automática não está ativa.");
+				log.fine("NTP Update automatic is not active");
 			}
 		}
 	}

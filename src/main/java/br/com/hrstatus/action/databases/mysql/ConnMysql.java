@@ -44,7 +44,7 @@ public class ConnMysql {
 			String url = "jdbc:mysql://" + serverAddress + "/" + instance;
 			connection = DriverManager.getConnection(url, username, password);
 
-			//testar ve se está OK
+			//Testing if the connection was successfully obtained.
 			if (connection != null) {
 				status = (true);
 				log.fine("[ " + userInfo.getLoggedUsername() + " ] MySQL datbase connection status: " + status);

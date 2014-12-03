@@ -40,8 +40,9 @@ public class VersionServlet  extends HttpServlet {
 	}
 	
 	private void loadVersionServlet() throws IOException {
+		
 		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
 	    String version = load.getValor("version");
-	    log.info("Versão Hr Status: " + version);
+	    log.info("[ System ] Hr Status version: " + version);
 	}	
 }

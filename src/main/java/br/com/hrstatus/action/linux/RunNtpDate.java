@@ -35,8 +35,8 @@ import com.jcraft.jsch.Session;
 
 public class RunNtpDate {
 
-	static Logger log =  Logger.getLogger(RunNtpDate.class.getCanonicalName());
-	
+	static Logger log = Logger.getLogger(RunNtpDate.class.getCanonicalName());
+
 	@SuppressWarnings("unchecked")
 	public static class MyLogger implements com.jcraft.jsch.Logger {
 		@SuppressWarnings("rawtypes")
@@ -58,26 +58,22 @@ public class RunNtpDate {
 			log.fine(message);
 		}
 	}
-	
-	public static String exec(String user, String host, String password,
-			int port, String command) throws JSchException, IOException {
+
+	public static String exec(String user, String host, String password, int port, String command) throws JSchException, IOException {
 
 		String s = "";
-
-		// informações de usuário/host/porta para conexão
-
-		// definindo a não obrigação do arquivo know_hosts
+		// Disabling host key check
 		java.util.Properties config = new java.util.Properties();
 		config.put("StrictHostKeyChecking", "no");
 
-		// Criando a sessao e conectando no servidor
+		// Creating the server session and connecting
 		JSch jsch = new JSch();
 		Session session = jsch.getSession(user, host, port);
 		session.setConfig(config);
 		session.setPassword(password);
 		session.connect(10000);
 
-		// Exectando o comando
+		// Executing the command
 		Channel channel = session.openChannel("exec");
 		((ChannelExec) channel).setCommand(command);
 		((ChannelExec) channel).setErrStream(System.err);
@@ -98,15 +94,15 @@ public class RunNtpDate {
 				s += (new String(tmp, 0, i));
 			}
 
-			if (channel.isClosed()) {	
-				
+			if (channel.isClosed()) {
+
 				break;
 			}
 		}
 		channel.disconnect();
 		session.disconnect();
 
-		while (s.endsWith(" ")){
+		while (s.endsWith(" ")) {
 			s = s.substring(0, -1);
 		}
 

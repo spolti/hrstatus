@@ -45,17 +45,16 @@ public class LockController {
 	@Autowired
 	private LockIntrface lockDAO;
 	UserInfo userInfo = new UserInfo();
-	
+	List<Lock> listLocks;
 	
 	@Get("/listLocks")
 	public void listLocks (){
 		
-		// inserindo html title no result
+		// Inserting HTML title in the result
 		result.include("title", "Locked Resources");
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /listLocks");
 		result.include("loggedUser", userInfo.getLoggedUsername());
-		List<Lock> listLocks = this.lockDAO.ListAllLocks();
-		result.include("locks", listLocks);
-		
+		listLocks = this.lockDAO.ListAllLocks();
+		result.include("locks", listLocks);	
 	}
 }

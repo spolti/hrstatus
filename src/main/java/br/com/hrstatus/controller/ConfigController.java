@@ -60,7 +60,7 @@ public class ConfigController {
 	@Autowired
 	private Validator validator;
 	@Autowired
-	private UsersInterface userDAO;
+	private UsersInterface userDAO;	
 	@Autowired
 	private BancoDadosInterface BancoDadosDAO;
 	UserInfo userInfo = new UserInfo();
@@ -68,12 +68,14 @@ public class ConfigController {
 
 	@Get("/configServer")
 	public void configServer() throws Exception {
-		//inserindo html title no result
+		
+		// Inserting HTML title in the result
 		result.include("title","Configurar Servidor");
 		
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /configServer");
+		
 		Configurations opts = this.configurationDAO.getConfigs();
 		int diff = opts.getDifference();;
 		String mailFrom = opts.getMailFrom();
@@ -112,7 +114,7 @@ public class ConfigController {
 		
 		for (int i = 0; i < mailSessions.size(); i++){
 			mailSessionstemp.add(mailSessions.get(i).replace("%x3a", ":"));
-			log.fine("********Mail Session disponíveis: [" + i + "] - " + mailSessionstemp.get(i));	
+			log.fine("********Mail Sessions available: [" + i + "] - " + mailSessionstemp.get(i));	
 		}
 		
 		result.include("mailSessions", mailSessionstemp);
@@ -126,16 +128,16 @@ public class ConfigController {
 	
 	@Post("/updateConfig")
 	public void updateConfig(String new_value, String campo) throws Exception{
-		//inserindo html title no result
+
+		// Inserting HTML title in the result
 		result.include("title","Configurar Servidor");
 		
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /updateConfig");
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] Valor recebido [" + campo + ": " + new_value + "].");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] Value received [" + campo + ": " + new_value + "].");
 		
-		String regex_mail = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+		String regex_mail = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 		
 		Configurations config = this.configurationDAO.getConfigs();
 				
@@ -180,7 +182,7 @@ public class ConfigController {
 			String [] mail_dests = new_value.split(",");
 			
 			for (int i = 0; i < mail_dests.length; i++){
-				log.fine("Emails [ " + i + " ]: " + mail_dests[i]);
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] RCPT TO Emails: [ " + i + " ]: " + mail_dests[i]);
 				if (!mail_dests[i].matches(regex_mail)) {
 					validator.add(new ValidationMessage("E-mail " + mail_dests[i] + " não está correto", "Erro"));
 				}else{
@@ -205,10 +207,10 @@ public class ConfigController {
 	
 	@Get("/configClients")
 	public void configClients() {
-		//inserindo html title no result
+		
+		// Inserting HTML title in the result
 		result.include("title","Configurar Clientes");
 		result.include("loggedUser", userInfo.getLoggedUsername());
-		
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /configClients");
 		List<Servidores> list = this.iteracoesDAO.listServers();
 		result.include("server", list);
@@ -216,7 +218,8 @@ public class ConfigController {
 	
 	@Get("/configDataBases")
 	public void configDataBases() {
-		//inserindo html title no result
+		
+		// Inserting HTML title in the result
 		result.include("title","Configurar Banco de Dados");
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /configDataBases");
@@ -226,11 +229,10 @@ public class ConfigController {
 
 	@Get("/configUser")
 	public void configUser() {
-		//inserindo html title no result
+		
+		// Inserting HTML title in the result
 		result.include("title","Configurar Usuário");
-		
 		result.include("loggedUser", userInfo.getLoggedUsername());
-		
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /configUser");
 		List<Users> list = this.userDAO.listUser();
 		result.include("user",list);

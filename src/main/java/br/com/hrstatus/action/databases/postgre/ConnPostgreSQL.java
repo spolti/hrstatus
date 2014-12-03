@@ -45,9 +45,8 @@ public class ConnPostgreSQL {
 			String driver = "org.postgresql.Driver";
 			Class.forName(driver);
 			connection = DriverManager.getConnection("jdbc:postgresql://"+serverAddress+":5432/"+database+"",username,password);
-			//connection = DriverManager.getConnection(url, username, password);
 
-			
+			//Testing if the connection was successfully obtained.
 			if (connection != null) {
 				status = (true);
 				log.fine("[ " + userInfo.getLoggedUsername() + " ] PostgreSQL datbase connection status: " + status);
@@ -58,14 +57,12 @@ public class ConnPostgreSQL {
 			return connection;
 
 		} catch (ClassNotFoundException e) {
-			//System.out.println("O driver expecificado nao foi encontrado.");
-			System.out.println(e.fillInStackTrace());
-			System.out.println(e.getMessage());
+			log.severe(e.fillInStackTrace().toString());
+			log.severe(""+e.getMessage().toString());
 			return null;
 		} catch (SQLException e) {
-			//System.out.println("Nao foi possivel conectar ao Banco de Dados." + e);
-			System.out.println(e.fillInStackTrace());
-			System.out.println(e.getMessage());
+			log.severe(e.fillInStackTrace().toString());
+			log.severe(e.getMessage().toString());
 			return null;
 		}
 	}

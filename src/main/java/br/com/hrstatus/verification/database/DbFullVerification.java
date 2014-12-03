@@ -71,8 +71,8 @@ public class DbFullVerification {
 	private Configuration configurationDAO;
 	@Autowired
 	private Validator validator;
-	UserInfo userInfo = new UserInfo();
-	DateUtils dt = new DateUtils();
+	private UserInfo userInfo = new UserInfo();
+	private DateUtils dt = new DateUtils();
 	private Lock lockedResource = new Lock();
 	private Crypto encodePass = new Crypto();
 	private MySQL runMySQL = new MySQL();
@@ -99,15 +99,16 @@ public class DbFullVerification {
 		List<Lock> lockList = this.lockDAO.listLockedServices("fullDBVerification");
 		if (lockList.size() != 0) {
 			for (Lock lock : lockList) {
-				log.info("[ " + userInfo.getLoggedUsername() + " ] O recurso fullDBVerification está locado pelo usuário " + lock.getUsername() + ", aguarde o término da mesma.");
+				log.info("[ " + userInfo.getLoggedUsername() + " ] The resource fullDBVerification is locked by the user " + lock.getUsername());
 				result.include("class", "activeBanco");
 				result.include("info","O recurso fullDBVerification está locado pelo usuário " + lock.getUsername()
 								+ ", aguarde o término da mesma").forwardTo(HomeController.class).home("");
 
 			}
 		} else {
+			
 			log.info("[ " + userInfo.getLoggedUsername() + " ] O recurso fullDBVerification não está locado, locando e proseguindo");
-			// locar recurso.
+			// locking resource
 			lockDAO.insertLock(lockedResource);
 
 			List<BancoDados> listdb = this.dbDAO.listDataBases();
@@ -115,9 +116,8 @@ public class DbFullVerification {
 				bancoDados.setServerTime(dt.getTime());
 				bancoDados.setLastCheck(bancoDados.getServerTime());
 
-				// Decripting password
+				// Decrypting password
 			    bancoDados.setPass(String.valueOf(Crypto.decode(bancoDados.getPass())));
-	
 
 				try {
 
@@ -147,7 +147,7 @@ public class DbFullVerification {
 						bancoDados.setStatus("não OK");
 					}
 					try {
-						// Critpografando a senha
+						// Encrypting the password
 						bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 
 					} catch (Exception e1) {
@@ -159,10 +159,11 @@ public class DbFullVerification {
 					bancoDados.setStatus(e + "");
 					bancoDados.setTrClass("error");
 					try {
-						// Critpografando a senha
+						// Encrypting the password
 						bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 
 					} catch (Exception e1) {
+						
 						log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e1);
 					}
 					this.dbDAO.updateDataBase(bancoDados);
@@ -171,10 +172,11 @@ public class DbFullVerification {
 					bancoDados.setTrClass("error");
 					try {
 
-						// Critpografando a senha
+						// Encrypting the password
 						bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 
 					} catch (Exception e1) {
+						
 						log.severe("[ " + userInfo.getLoggedUsername()+ " ] Error: " + e1);
 					}
 				} catch (ClassNotFoundException e) {

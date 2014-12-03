@@ -46,7 +46,7 @@ public class LockDAO implements LockIntrface{
 	Logger log =  Logger.getLogger(LockDAO.class.getCanonicalName());
 	
 	private EntityManager entityManager;
-	UserInfo userInfo = new UserInfo();
+	private UserInfo userInfo = new UserInfo();
 
 	public LockDAO() {}
 
@@ -60,21 +60,22 @@ public class LockDAO implements LockIntrface{
 	}
 
 	public void insertLock(Lock lock) {
-		log.info("[ " + userInfo.getLoggedUsername() + " ] Gerando lock para o recurso " + lock.getRecurso()
-						+ " solicitado pelo usuário " + lock.getUsername());
+		
+		log.info("[ " + userInfo.getLoggedUsername() + " ] Generating lock to resource " + lock.getRecurso()  + " requested by the user " + lock.getUsername());
 		session().save(lock);
 	}
 
 	public void removeLock(Lock lock) {
-		log.info("[ " + userInfo.getLoggedUsername() + " ] Removendo lock para o recurso " + lock.getRecurso()
-						+ " solicitado pelo usuário " + lock.getUsername());
+		
+		log.info("[ " + userInfo.getLoggedUsername() + " ] Removing the lock for tor the resource  " + lock.getRecurso() + " requested by the user " + lock.getUsername());
 		session().refresh(lock);
 		session().delete(lock);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Lock> listLockedServices(String recurso){
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] Verificando se há algum recurso locado.");
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] Verifying if any resource is locked.");
 		Criteria criteria = session().createCriteria(Lock.class);
 		criteria.add(Restrictions.eq("recurso", recurso));
 		return criteria.list();
@@ -82,13 +83,14 @@ public class LockDAO implements LockIntrface{
 
 	@SuppressWarnings("unchecked")
 	public List<Lock> ListAllLocks(){
-		log.fine("ListAllLocks() -> listing all locks.");
+		
+		log.fine("ListAllLocks().");
 		return session().createCriteria(Lock.class).list();	
 	}
 	
 	public Lock getLockByID(int id) {
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] getLockByID -> Lock ID selected: " + id);
-		return (Lock) session().createCriteria(Lock.class)
-				.add(Restrictions.eq("id", id)).uniqueResult();
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getLockByID(int " + id + ")");
+		return (Lock) session().createCriteria(Lock.class).add(Restrictions.eq("id", id)).uniqueResult();
 	}
 }

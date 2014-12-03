@@ -33,7 +33,7 @@ import javax.ejb.Startup;
 
 /*
  * @author spolti
- * Classes executeCommand e secureClose retiradas de:
+ * Classes executeCommand e secureClose retrieved from:
  * http://www.devmedia.com.br/executando-shell-scripts-utilizando-java/26494
  */
 
@@ -45,14 +45,14 @@ public class StartupSingletonVerifications {
 	static StartupSingletonVerifications shell = new StartupSingletonVerifications();
 	
 	private enum binaries {
-		//ntpdate: utilizado para atualizar a data/hora dos servidores, local e remoto
-		//net: utilizado para obter a data/hora de servidores Windows.
+		//ntpdate: used to update the date/time from Unix like servers, local and remote
+		//net: used to obtain date/time from Windows server
 		ntpdate, net
 	}
 	
 	@PostConstruct
 	public void verifyBinaries() {
-		String message = "Verificando binários necessários para execução do HrStatus...";
+		String message = "Checking binaries required for the execution of HrStatus...";
 		String result = null;
 		log.info(message);
 		
@@ -60,17 +60,17 @@ public class StartupSingletonVerifications {
         	result = shell.executeCommand("type " + bin.name() + ";  echo $?");
         	
         	if (result.equals("0")){
-        		log.info("Binário " + bin.name() + ": OK");
+        		log.info("Binary " + bin.name() + ": OK");
         	}else {
-        		log.warning("Binário " + bin.name() + ": Não encontrado, isto pode causar mal funcionamento de algumas funcionaliades do HrStatus.");
+        		log.warning("Binary " + bin.name() + ": Not found, this can cause strange behavior of some functionalities of HrStatus.");
         	}
         }
 	}
 	
 	/*
 	 * Returna 0 ou 1
-	 * 0 -> Binário encontrado
-	 * 1 -> Binário não encontrado
+	 * 0 -> Binary found
+	 * 1 -> Binary not found
 	 */
     public String executeCommand(final String command) {
         
@@ -95,7 +95,7 @@ public class StartupSingletonVerifications {
             }
             
         } catch (IOException ioe) {
-            log.severe("Erro ao executar comando shell" + ioe.getMessage());
+            log.severe("Error executing shell command: " + ioe.getMessage());
         } finally {
             secureClose(br);
         }
@@ -110,7 +110,7 @@ public class StartupSingletonVerifications {
                 resource.close();
             }
         } catch (IOException ex) {
-            log.severe("Erro = " + ex.getMessage());
+            log.severe("Error: " + ex.getMessage());
         }
     }
 }

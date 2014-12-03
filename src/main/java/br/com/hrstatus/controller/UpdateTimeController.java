@@ -50,7 +50,7 @@ import com.jcraft.jsch.JSchException;
  * @author spolti
  */
 
-//Erros comuns
+//Known issues
 //ERROR [stderr] (Connect thread 10.11.152.76 session) sudo: no tty present and no askpass program specified
 
 @Resource
@@ -75,17 +75,17 @@ public class UpdateTimeController {
 	UserInfo userInfo = new UserInfo();
 	
 
-	@Get("updateTimeSelectedClients/{ids}")
+	@Get("/updateTimeSelectedClients/{ids}")
 	public void updateTimeSelectedClients(String ids) throws JSchException, IOException {
 		
+		// Inserting HTML title in the result
+		result.include("title", "Home");
+		// Inserting the Logged username in the home page
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		
-		result.include("title", "Home");
-		
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /updateTimeSelectedClients");
-
 		String servidores[] = ids.split(",");
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] Tentando atualizar data/hora do servidor(es): " + ids);
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] Trying to update the time/date in the servers: " + ids);
 		
 		for (int i = 0; i < servidores.length; i++) {
 			id = Integer.parseInt(servidores[i]);
@@ -93,7 +93,8 @@ public class UpdateTimeController {
 
 			if (servidor.getSO().equals("LINUX") || servidor.getSO().equals("UNIX") || servidor.getSO().equals("OUTRO")){
 				command = (servidor.getSuCommand() + " " + this.configurationDAO.getNtpServerAddress());
-				//descriptografando a senha:
+				
+				// Decrypting the password
 				try {
 					servidor.setPass(String.valueOf(Crypto.decode(servidor.getPass())));
 				} catch (InvalidKeyException e) {
@@ -108,22 +109,22 @@ public class UpdateTimeController {
 					e.printStackTrace();
 				}
 				
-				log.info("[ " + userInfo.getLoggedUsername() + " ] Tentando atualizar data [command: " + command + "] no servidor " + servidor.getHostname());
+				log.info("[ " + userInfo.getLoggedUsername() + " ] Trying to update the date [command: " + command + "] in the server " + servidor.getHostname());
 				resultCommand = RunNtpDate.exec(servidor.getUser(), servidor.getIp(), servidor.getPass(), servidor.getPort(), command);
 
 				if (resultCommand.equals("")){
-					validator.add(new ValidationMessage(servidor.getHostname() + ": Não foi possível executar a atualização automática, provavelmente erro na execução do comando utilizado.", "Erro"));
+					validator.add(new ValidationMessage(servidor.getHostname() + ": It was not possible execute the automatically update probably due to an error during the command execution.", "Erro"));
 				
 				}else{
-					//Está com erro somente para fazer append nas informações do resultado na página.
+					// this step have an error to append the result in the home page where the result is shown
 					validator.add(new ValidationMessage(servidor.getHostname() + ": " + resultCommand, "Erro"));
-					//chamando a re-verificação individual de servidor passando objeto.
+					//Calling the individual verification of the server passswed as parameter
 					runVerify.runSingleVerification(servidor);				
 					log.fine("[ " + userInfo.getLoggedUsername() + " ] " + resultCommand);
 				}
 
 			}else if (servidor.getSO().equals("WINDOWS")){
-				log.info("[ " + userInfo.getLoggedUsername() + " ] Servidores Windows não são suportados para esta opção.");
+				log.info("[ " + userInfo.getLoggedUsername() + " ] This option does not support Windows servers. If you want to use this opetion, please use Unix like.. :0 gotcha, i'm kidding :)");
 				validator.add(new ValidationMessage("Servidores Windows não são suportados para esta opção.", "Erro"));
 			}
 		}
@@ -133,17 +134,20 @@ public class UpdateTimeController {
 
 	@Get("/updateTimeAllClients")
 	public void updateTimeAllClients() throws JSchException, IOException {
+		
 		result.include("title", "Home");
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /updateTimeAllClients");
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] Tentando atualizar data/hora de todos os servidores desatualizados.");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] Trying to update all outdated servers.");
 		String ntpAddress = configurationDAO.getNtpServerAddress();
-		//buscar todos os servidores não OK.
+		
+		//Listing all outdated servers
 		List<Servidores> tempServer = this.iteracoesDAO.getServersNOK();
 		for (Servidores servidor : tempServer){
-			log.info("[ " + userInfo.getLoggedUsername() + " ] Servidor recebido para atualização: " + servidor.getHostname());
+			log.info("[ " + userInfo.getLoggedUsername() + " ] Server received to update: " + servidor.getHostname());
 			if (servidor.getSO().equals("LINUX") || servidor.getSO().equals("UNIX") || servidor.getSO().equals("OUTRO")){
 				command = (servidor.getSuCommand() + " " + ntpAddress);
-				//descriptografando a senha:
+				
+				//Decrypting the password
 				try {
 					servidor.setPass(String.valueOf(Crypto.decode(servidor.getPass())));
 				} catch (InvalidKeyException e) {
@@ -158,23 +162,24 @@ public class UpdateTimeController {
 					e.printStackTrace();
 				}
 				
-				log.info("[ " + userInfo.getLoggedUsername() + " ] Tentando atualizar data [command: " + command + "] no servidor " + servidor.getHostname());
+				log.info("[ " + userInfo.getLoggedUsername() + " ] Trying to update the date [command: " + command + "] in the server " + servidor.getHostname());
 				resultCommand = RunNtpDate.exec(servidor.getUser(), servidor.getIp(), servidor.getPass(), servidor.getPort(), command);
 
 				if (resultCommand.equals("")){
-					log.info("[ " + userInfo.getLoggedUsername() + " ] " + servidor.getHostname() + ": Não foi possível executar a atualização automática, provavelmente erro na execução do comando utilizado.");
+					log.info("[ " + userInfo.getLoggedUsername() + " ] " + servidor.getHostname() + ": It was not possible execute the automatically update probably due to an error during the command execution.");
 					validator.add(new ValidationMessage(servidor.getHostname() + ": Não foi possível executar a atualização automática, provavelmente erro na execução do comando utilizado.", "Erro"));
 				}else{
-					//Está com erro somente para fazer append nas informações do resultado na página.
+					
 					log.info("[ " + userInfo.getLoggedUsername() + " ] " + servidor.getHostname() + ": " + resultCommand);	
 					validator.add(new ValidationMessage(servidor.getHostname() + ": " + resultCommand, "Erro"));
-					//chamando a re-verificação individual de servidor passando objeto.
+					
+					// Calling the individual verification of the server passswed as parameter
 					runVerify.runSingleVerification(servidor);				
 					log.fine("[ " + userInfo.getLoggedUsername() + " ] " + resultCommand);
 				}
 
 			}else if (servidor.getSO().equals("WINDOWS")){
-				log.info("[ " + userInfo.getLoggedUsername() + " ] Servidores Windows não são suportados para esta opção.");
+				log.info("[ " + userInfo.getLoggedUsername() + " ] This option does not support Windows servers. If you want to use this opetion, please use Unix like.. :0 gotcha, i'm kidding :)");
 				validator.add(new ValidationMessage("Servidores Windows não são suportados para esta opção.", "Erro"));
 			}
 		}

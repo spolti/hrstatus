@@ -48,35 +48,37 @@ public class PassExpireScheduler {
 	
 	@Autowired
 	private UsersInterface userDAO;
+	private DateUtils time = new DateUtils();
+	private DateParser parse = new DateParser();
 
-	public PassExpireScheduler() {
-	}
+	public PassExpireScheduler() {}
 
 	@Scheduled(cron = "0 0/5 * * * *" ) //5 in 5 minutes
 	public void passExpire() throws ParseException, JSchException, IOException {
-		log.fine("[ System ] Invoking passExpire at " + new Date());
+		
+		log.fine("[ System ] Invoking passExpire() at " + new Date());
 		
 		List<PassExpire> list = this.userDAO.getExpireTime();
 		
-		DateUtils time = new DateUtils();
-		DateParser parse = new DateParser();
 		Date timeNow = parse.parser(time.getTime());
 				
 		for (PassExpire passExpire : list){
 			if (timeNow.compareTo(parse.parser(passExpire.getExpireTime())) > 0){
-				log.fine("[ System ] Password gerado para o usuário " + passExpire.getUsername() + "expirou, aplicando senha antiga novamente.");
+				
+				log.fine("[ System ] Temporary password generated to " + passExpire.getUsername() + "expired, Rolling the password back..");
 				Users user = this.userDAO.getUserByID(passExpire.getUsername());
 				
 				user.setPassword(passExpire.getOldPwd());
 				user.setFirstLogin(false);
-				//Salvando novo usuário.
+				
+				// Saving the changes
 				this.userDAO.updateUser(user);
 				
-				//Removendo usuário da tabela temporária
+				// Removing the user from temporary table
 				this.userDAO.delUserExpireTime(passExpire);
 				
 			}else{
-				log.fine("[ System ] Password gerado para o usuário " + passExpire.getUsername() + " ainda não expirou.");
+				log.fine("[ System ] The password generated for the user " + passExpire.getUsername() + " not expire yet.");
 			}
 		}
 	}

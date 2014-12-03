@@ -61,12 +61,14 @@ public class VerifySingleServer {
 	private ServersInterface serversDAO;
 	@Autowired
 	private Configuration configurationDAO;
-	UserInfo userInfo = new UserInfo();
-	DateUtils getTime = new DateUtils();
+	private UserInfo userInfo = new UserInfo();
+	private DateUtils dt = new DateUtils();	
 	private Crypto encodePass = new Crypto();
 	
 	@Get("/singleServerToVerify/{id}")
 	public void singleServerToVerify(int id) throws JSchException, IOException {
+		
+		// Inserting HTML title in the result
 		result.include("title", "Home");
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /singleServerToVerify/" + id);
@@ -98,9 +100,7 @@ public class VerifySingleServer {
 	
 	@SuppressWarnings("static-access")
 	public void runSingleVerification(Servidores servidores) throws JSchException, IOException{
-		
-		DateUtils dt = new DateUtils();	
-		
+				
 		if (servidores.getSO().equals("LINUX")) {
 			servidores.setServerTime(dt.getTime());
 			servidores.setLastCheck(servidores.getServerTime());
@@ -108,7 +108,7 @@ public class VerifySingleServer {
 			
 			try {
 				String dateSTR = GetDateLinux.exec(	servidores.getUser(), servidores.getIp(),servidores.getPass(), servidores.getPort());
-				log.fine("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from server " + servidores.getHostname() + ": " + dateSTR);
 				servidores.setClientTime(dateSTR);
 				// Calculating time difference
 				servidores.setDifference(dt.diffrenceTime(servidores.getServerTime(), dateSTR,"LINUX"));
@@ -125,7 +125,7 @@ public class VerifySingleServer {
 					servidores.setStatus("não OK");
 				}
 				try {
-					// Critpografando a senha
+					// Encrypting the password
 					servidores.setPass(encodePass.encode(servidores.getPass()));
 
 				} catch (Exception e1) {
@@ -137,7 +137,7 @@ public class VerifySingleServer {
 				servidores.setStatus(e + "");
 				servidores.setTrClass("error");
 				try {
-					// Critpografando a senha
+					// Encrypting the password
 					servidores.setPass(encodePass.encode(servidores.getPass()));
 
 				} catch (Exception e1) {
@@ -149,7 +149,7 @@ public class VerifySingleServer {
 				servidores.setTrClass("error");
 				
 				try {
-					// Critpografando a senha
+					// Encrypting the password
 					servidores.setPass(encodePass.encode(servidores.getPass()));
 
 				} catch (Exception e1) {
@@ -164,10 +164,10 @@ public class VerifySingleServer {
 			try {
 				String dateSTR = GetDateWindows.Exec(servidores.getIp(),"I");
 				if (dateSTR == null || dateSTR == ""){
-					log.fine("Parametro net time -I retornou nulo, tentando o parametro S");
+					log.fine("[ " + userInfo.getLoggedUsername() + " ] net time paratmereter -I returned null, trying the paratemeter -S");
 					dateSTR = GetDateWindows.Exec(servidores.getIp(),"S");
 				}
-				log.fine("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from server " + servidores.getHostname() + ": " + dateSTR);
 				servidores.setClientTime(dateSTR);
 				// Calculating time difference
 				servidores.setDifference(dt.diffrenceTime(servidores.getServerTime(), dateSTR,"WINDOWS"));

@@ -59,9 +59,9 @@ public class Images {
 		log.fine("Local Imagens: " + pastaImages);
 
 		if (pastaImages.isDirectory()) {
-			log.fine("O diretório destino " + pastaImages + " existe.");
+			log.fine("Final directory " + pastaImages + " exists.");
 		} else {
-			log.fine("O diretório destino " + pastaImages + " não existe, criando.");
+			log.fine("The final directory" + pastaImages + " don't exists, creating it.");
 			pastaImages.mkdir();
 		}
 	}
@@ -73,13 +73,13 @@ public class Images {
 			IOUtils.copy(imagem.getFile(), new FileOutputStream(destino));
 			log.info("Imagem salva em " + destino);
 		} catch (IOException e) {
-			throw new RuntimeException("Erro ao copiar imagem", e);
+			throw new RuntimeException("Error copying the file", e);
 		}
 	}
 
 	public void delete() {
 
-		log.info("Removendo imagem de logo.");
+		log.info("Removing the logo image");
 		File logo = new File(pastaImages, "logo.imagem");
 		File logo_home = new File(pastaImages, "logo_login.imagem");
 		File logo_settings = new File(pastaImages, "logo_resized.imagem");
@@ -107,6 +107,7 @@ public class Images {
 				return new File(pastaImages + "/logo_resized.imagem");
 
 			} else {
+				
 				log.fine("Resizing original Image to login page vizualization.");
 				BufferedImage originalImage = ImageIO.read(new File(pastaImages	+ "/logo.imagem"));
 				int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
@@ -116,6 +117,7 @@ public class Images {
 			}
 
 		} catch (Exception ex) {
+			
 			String imgDefault = request.getRealPath("img/hrstatus.jpg");
 			log.fine("Logo Image  " + imgDefault);
 			File file = new File(imgDefault);
@@ -131,6 +133,7 @@ public class Images {
 	private static BufferedImage resizeImage(BufferedImage originalImage, int type, String target) {
 
 		if (target.equals("settings")) {
+			
 			BufferedImage resizedImage = new BufferedImage(IMG_WIDTH_SETTINGS, IMG_HEIGHT_SETTINGS, type);
 			Graphics2D g = resizedImage.createGraphics();
 			g.drawImage(originalImage, 0, 0, IMG_WIDTH_SETTINGS, IMG_HEIGHT_SETTINGS, null);
@@ -138,6 +141,7 @@ public class Images {
 			return resizedImage;
 
 		} else if (target.equals("home")) {
+			
 			BufferedImage resizedImage = new BufferedImage(IMG_WIDTH_HOME, IMG_HEIGHT_HOME, type);
 			Graphics2D g = resizedImage.createGraphics();
 			g.drawImage(originalImage, 0, 0, IMG_WIDTH_HOME, IMG_HEIGHT_HOME,null);

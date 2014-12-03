@@ -55,11 +55,12 @@ public class ShowDataBaseByStatus {
 	private Validator validator;
 	UserInfo userInfo = new UserInfo();
 
+	
 	@Get("/database/showByStatus/{status}")
 	public void showByStatus(String status) {
-		// inserindo html title no result
+	
+		// Inserting HTML title in the result
 		result.include("title", "Hr Status Home");
-
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /database/showByStatus/" + status);
 
 		if (status.equals("OK")) {

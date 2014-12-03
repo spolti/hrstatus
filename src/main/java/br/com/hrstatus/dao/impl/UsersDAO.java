@@ -37,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.model.PassExpire;
 import br.com.hrstatus.model.Users;
+import br.com.hrstatus.utils.UserInfo;
 
 /*
  * @author spolti
@@ -49,6 +50,7 @@ public class UsersDAO implements UsersInterface {
 	Logger log =  Logger.getLogger(UsersDAO.class.getCanonicalName());
 	
 	private EntityManager entityManager;
+	private UserInfo userInfo = new UserInfo();
 
 	public UsersDAO() {
 
@@ -64,21 +66,26 @@ public class UsersDAO implements UsersInterface {
 	}
 	
 	public void saveORupdateUser(Users user){
-		log.fine("saveORupdateUser() -> Saving or Update User.");
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] saveORupdateUser(Users user)[" + user.getUsername() +"]");
 		session().save(user);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<Users> listUser(){
-		log.fine("listUser() -> listing users.");
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] listUser()");
 		Criteria criteria = session().createCriteria(Users.class);
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
 	
 	public boolean deleteUserByID(Users user) {
-		log.fine("deleteUserByID() -> Deletando usuário.");
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] deleteUserByID(Users user)[" + user.getUsername() +"]");
+		
 		try {
+			
 			session().refresh(user);
 			session().delete(user);
 			return true;
@@ -89,19 +96,22 @@ public class UsersDAO implements UsersInterface {
 	}
 	
 	public Users getUserByID(String username){
-		log.fine("getUserByID() -> Obtendo dados do usuário " + username);
-		return (Users) session().createCriteria(Users.class)
-				.add(Restrictions.eq("username", username)).uniqueResult();
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getUserByID(String username)[" + username +"]");
+		return (Users) session().createCriteria(Users.class).add(Restrictions.eq("username", username)).uniqueResult();
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void updateUser(Users user){
-		log.fine("updateUser() -> Atualizando usuário.");
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] deleteUserByID(Users user)[" + user.getUsername() +"]");
 		session().update(user);
 	}
 	
 	public String getPass(String username){
-		log.fine("getPass() -> Buscando senha do usuário " + username);
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getPass(String user)[" + username +"]");
+		
 		Criteria criteria = session().createCriteria(Users.class);
 		criteria.add(Restrictions.eq("username", username));
 		ProjectionList proList = Projections.projectionList();
@@ -111,7 +121,8 @@ public class UsersDAO implements UsersInterface {
 	}
 	
 	public int searchUser(String username){
-		log.fine("searchUser() -> Buscando usuário " + username);
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] searchUser(String username)[" + username +"]");
 		Criteria criteria = session().createCriteria(Users.class);
 		criteria.add(Restrictions.eq("username", username));
 		criteria.setProjection(Projections.rowCount());
@@ -120,7 +131,8 @@ public class UsersDAO implements UsersInterface {
 	}
 	
 	public String getMail (String username){
-		log.fine("getMail() -> Obtendo email do usuário " + username);
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getMail(String username)[" + username +"]");
 		Criteria criteria = session().createCriteria(Users.class);
 		criteria.add(Restrictions.eq("username", username));
 		ProjectionList proList = Projections.projectionList();
@@ -130,12 +142,14 @@ public class UsersDAO implements UsersInterface {
 	}
 	
 	public void setExpirePasswordTime(PassExpire passExpire){
-		log.fine("saveORupdateUser() -> Saving or Update User.");
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] setExpirePasswordTime((PassExpire passExpire)");
 		session().save(passExpire);
 	}
 	
 	public int searchUserChangePass(String username){
-		log.fine("searchUserChangePass() -> Verificando usuário para gerar nova senha.");
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] searchUserChangePass(String username)[" + username +"]");
 		Criteria criteria = session().createCriteria(PassExpire.class);
 		criteria.add(Restrictions.eq("username", username));
 		criteria.setProjection(Projections.rowCount());
@@ -144,14 +158,16 @@ public class UsersDAO implements UsersInterface {
 	}
 	
 	public Object getUniqUser(String username){
-		log.fine("getUniqUser() -> populando objeto para deleção do usuário " + username);
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getUniqUser(String username)[" + username +"]");
 		Criteria criteria = session().createCriteria(PassExpire.class);
 		criteria.add(Restrictions.eq("username", username));
 		return criteria.uniqueResult();
 	}
 	
 	public void delUserHasChangedPass(String username){
-		log.fine("delUserHasChangedPass() -> deletando usuário "+username+" da tabela temporária de usuários.");
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] delUserHasChangedPass() -> Deleting the user "+username+" from temporary user table.");
 		PassExpire passExpire = (PassExpire) session().load(PassExpire.class, username);
 		session().refresh(passExpire);
 		session().delete(passExpire);	
@@ -159,20 +175,23 @@ public class UsersDAO implements UsersInterface {
 	
 	@SuppressWarnings("unchecked")
 	public List<PassExpire> getExpireTime(){
-		log.fine("getExpireTime() -> Buscando valores da tabela de novas senhas.");
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getExpireTime()");
 		Criteria criteria = session().createCriteria(PassExpire.class);
 		return criteria.list();
 	}
 	
 	public void delUserExpireTime(PassExpire passExpire){
-		log.fine("delUserExpireTime() -> Deletando usuário " + passExpire.getUsername() + " da tabela temporária.");
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] delUserExpireTime() -> Deleting the user " + passExpire.getUsername() + " from the temporary table.");
 		session().refresh(passExpire);
 		session().delete(passExpire);
 	
 	}
 	
 	public String getRole(String user){
-		log.fine("getRole() -> Obtendo role do usuário " + user);
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getUniqUser(String user)[" + user +"]");
 		Criteria criteria = session().createCriteria(Users.class);
 		criteria.add(Restrictions.eq("username", user));
 		ProjectionList proList = Projections.projectionList();
@@ -182,7 +201,8 @@ public class UsersDAO implements UsersInterface {
 	}
 	
 	public boolean getFirstLogin(String username){
-		log.fine("getFirstLogin() -> Verificando se é o primeiro login para o usuário " + username);
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getFirstLogin(String username)[" + username +"]");
 		Criteria criteria = session().createCriteria(Users.class);
 		criteria.add(Restrictions.eq("username", username));
 		ProjectionList proList = Projections.projectionList();
@@ -192,18 +212,21 @@ public class UsersDAO implements UsersInterface {
 	}
 	
 	public void setLastLoginTime(String timeStamp){
-		log.fine("saveORupdateUser() -> Saving or Update User.");
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] setLastLoginTime()");
 		session().save(timeStamp);
 	}
 	
 	public void lastActivityTimeStamp(String lastActivityTimeStamp){
-		log.fine("saveORupdateUser() -> Saving or Update User.");
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] lastActivityTimeStamp()");
 		session().save(lastActivityTimeStamp);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<Integer> getIds_access_server(String user){
-		log.fine("Id_access_server() -> Listing the id servers of the user " + user + " can access.");
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getIds_access_server() -> Listing the id servers of the user " + user + " can access.");
 		Criteria criteria = session().createCriteria(Users.class);
 		criteria.add(Restrictions.eq("username", user));
 		ProjectionList proList = Projections.projectionList();

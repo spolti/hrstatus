@@ -53,30 +53,27 @@ public class UtilsController {
 	private Configuration configurationDAO;
 	UserInfo userInfo = new UserInfo();
 	MailSender send = new MailSender();
+	private CriptoJbossDSPassword cript = new CriptoJbossDSPassword();
 	
 	@SuppressWarnings("static-access")
 	@Get("/utils/criptPassJboss/{password}")
 	public void criptPassJboss (String password) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException{
+		
 		log.info("[ Not Logged ] URI Called: /utils/criptPassJboss/");
-		
-		CriptoJbossDSPassword cript = new CriptoJbossDSPassword();
 		result.include("EncriptedPassword",cript.encode(password));
-		
 	}
 	
 	@Get("/sendMailtest")
 	public void sendMailtest(String rcpt) throws Exception{
-		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /sendMailtest/" + rcpt);
 		
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /sendMailtest/" + rcpt);
 		Configurations configs = this.configurationDAO.getConfigs();
 		try {
 			String resultMail = send.sendTestMail(configs.getMailFrom(), rcpt, configs.getJndiMail());
 			result.include("info",resultMail).forwardTo(ConfigController.class).configServer();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			log.severe("[ " + userInfo.getLoggedUsername() + " ] Erro ao enviar email de teste: " + e);
+			log.severe("[ " + userInfo.getLoggedUsername() + " ] Error by sending the test email: " + e);
 			result.include("errors","Erro ao enviar mensagem de teste: " + e).forwardTo(ConfigController.class).configServer();
-			
 		} 
 	}
 }

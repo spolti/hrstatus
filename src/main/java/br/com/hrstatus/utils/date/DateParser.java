@@ -38,46 +38,41 @@ public class DateParser {
 		SimpleDateFormat formatador = null;
 		Date date1 = null;
 
-		//Removendo acentos caso exista - Função depreciada
-//		Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-//    	String nfdNormalizedString = Normalizer.normalize(data, Normalizer.Form.NFD); 
-//    	data = pattern.matcher(nfdNormalizedString).replaceAll("");
-    	
 		
     	if (!data.equals(null) || !data.equals("") || data != "") {
-    		// Substituindo espaços duplicados
+    		// replacing spaces
     		data = data.replace("  ", " ");
-		 	// 	Substituindo quebra de linhas
+		 	
 		 	data = data.replace("\n", "");
     	}
 		
-		log.fine("Data recebida para parse: " + data);
+		log.fine("Date received to parse: " + data);
 		
-		//Formatos Aceitos
-		SimpleDateFormat formato1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy"); // padrao Mon Mar 04 16:09:05 BRT 2013
+		//supported formats
+		SimpleDateFormat formato1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy"); // pattern Mon Mar 04 16:09:05 BRT 2013
 		String patternFormato1 = "(Sun|Mon|Tue|Wed|Thu|Fri|Sat)\\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s\\d{1,}\\s\\d{2}:\\d{2}:\\d{2}\\s(BRA|[A-Z]{3,})\\s\\d{4}";
 		
-		SimpleDateFormat formato2 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy",new Locale("pt", "BR")); // Seg Mar 04 16:09:05 BRT 2013
+		SimpleDateFormat formato2 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy",new Locale("pt", "BR")); // pattern Seg Mar 04 16:09:05 BRT 2013
 		String patternFormato2 = "(Dom|Seg|Ter|Qua|Qui|Sex|Sáb)\\s(Jan|Fev|Mar|Abr|Mai|Jun|Jul|Ago|Set|Out|Nov|Dez)\\s\\d{1,}\\s\\d{2}:\\d{2}:\\d{2}\\s([A-Z]{3,})\\s\\d{4}";
 		
-		SimpleDateFormat formato3 = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy"); // padrao Mon Mar 04 16:08:49 2013
+		SimpleDateFormat formato3 = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy"); // patern Mon Mar 04 16:08:49 2013
 		String patternFormato3 = "(Sun|Mon|Tue|Wed|Thu|Fri|Sat)\\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s\\d{1,}\\s\\d{2}:\\d{2}:\\d{2}\\s\\d{4}";
 		
-		SimpleDateFormat formato4 = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy",new Locale("pt", "BR")); // padrao Seg Mar 04 16:08:49 2013
+		SimpleDateFormat formato4 = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy",new Locale("pt", "BR")); // pattern  Seg Mar 04 16:08:49 2013
 		String patternFormato4 = "(Dom|Seg|Ter|Qua|Qui|Sex|Sab)\\s(Jan|Fev|Mar|Abr|Mai|Jun|Jul|Ago|Set|Out|Nov|Dez)\\s\\d{1,}\\s\\d{2}:\\d{2}:\\d{2}\\s\\d{4}";
 		
-		SimpleDateFormat formato5 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy",new Locale("pt", "BR")); // padrão segunda-feira,  4 de março de 2013 16h13min27s BRT
+		SimpleDateFormat formato5 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy",new Locale("pt", "BR")); // pattern segunda-feira,  4 de março de 2013 16h13min27s BRT
 		
 		SimpleDateFormat formato6 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String patternFormato6 = "\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}";
 		
-		//padrao Wed Mar 01 00:00:00 GMT-03:00 1950
+		//pattern Wed Mar 01 00:00:00 GMT-03:00 1950
 		SimpleDateFormat formato7 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
 		
 		
-		//verificando se o Timezone é nativo AIX GRNLNDST e GRNLNDDT e GRNLNDST3, se for ignora timezone.
+		//Verifying if the native timezone is AIX GRNLNDST e GRNLNDDT e GRNLNDST3, if so it is ignored.
 		if (data.contains("GRNLNDST") || data.contains("GRNLNDDT") || data.contains("GRNLNDST3")){
-			log.fine("Padrao AIX reconhecido, ignorando timezone.");
+			log.fine("AIX pattern recognized, ignoring the timezone.");
 			if (data.contains("GRNLNDST")){
 				data = data.replace("GRNLNDST", "");
 			}else if(data.contains("GRNLNDDT")){
@@ -88,38 +83,38 @@ public class DateParser {
 			formatador = formato3;
 
 		}else if(data.equals(null) || data.equals("") || data == ""){
-			log.severe("Nenhuma data foi recebida, setando valor default.");
+			log.severe("No date has been received, setting the default value.");
 			data = ("Tue Mar 01 00:00:00 BRT 1950");
 			formatador = formato1;
-		//validando primeiro padrão
+		// validating first pattern
 		}else if(data.matches(patternFormato1) ){
-			log.fine("Padrão reconhecido EEE MMM dd HH:mm:ss z yyyy");
+			log.fine("pattern recognized EEE MMM dd HH:mm:ss z yyyy");
 			data = data.replace("BRA", "BRT");
 			formatador = formato1;
-		//validando segundo padrão	
+		// validating second pattern	
 		}else if (data.matches(patternFormato2)){
-			log.fine("Padrão reconhecido EEE MMM dd HH:mm:ss z yyyy Locale pt_BR");
+			log.fine("pattern recognized EEE MMM dd HH:mm:ss z yyyy Locale pt_BR");
 			formatador = formato2;
-		//validando terceiro padrão
+		// validating third pattern
 		}else if (data.matches(patternFormato3)){
-			log.fine("Padrão reconhecido EEE MMM dd HH:mm:ss yyyy ");
+			log.fine("pattern recognized EEE MMM dd HH:mm:ss yyyy ");
 			formatador = formato3;
-		//validando quarto padrão
+		// validating fourth pattern
 		}else if (data.matches(patternFormato4)){
-			log.fine("Padrão reconhecido EEE MMM dd HH:mm:ss yyyy Locale pt_BR");
+			log.fine("pattern recognized EEE MMM dd HH:mm:ss yyyy Locale pt_BR");
 			formatador = formato4;
-		//validando quinto padrão
+		// validating fifth pattern
 		}else if (data.toLowerCase().startsWith("domingo") || data.toLowerCase().startsWith("segunda")
 				|| data.toLowerCase().startsWith("terça") || data.toLowerCase().startsWith("terca")
 				|| data.toLowerCase().startsWith("quarta") || data.toLowerCase().startsWith("quinta")
 				|| data.toLowerCase().startsWith("sexta") || data.toLowerCase().startsWith("sabado")
 				|| data.toLowerCase().startsWith("sábado")) {
 			
-			log.info("Padrão reconhecido: Data completa por extenso");
+			log.info("pattern recognized: Data completa por extenso");
 			
 			String dataPorExtenso[] = data.split(" ");
 			
-			//Obtendo dia da semana
+			//Rretrieving day of week
 			String diaSemana = null;
 			if (dataPorExtenso[0].endsWith(",")){
 				dataPorExtenso[0] = dataPorExtenso[0].substring(0,dataPorExtenso[0].length() -1); 
@@ -158,10 +153,10 @@ public class DateParser {
 				diaSemana = "Sab";
 			}
 			
-			//Obtendo dia do mês
+			//Rretrieving day of month
 			String diaMes = dataPorExtenso[1];
 			
-			//obtendo mes do ano
+			//Rretrieving month of year
 			String mesAno = null;
 			String mesAnoVal = dataPorExtenso[3].toLowerCase();
 			
@@ -193,45 +188,45 @@ public class DateParser {
 				mesAno = "Dez";
 			}
 			
-			//obtendo hora
+			//Rretrieving hour
 			String[] horaTemp = dataPorExtenso[6].split("h");
 			String hora = horaTemp[0];
 			
-			//obtendo minuto
+			//Rretrieving minute
 			String[] minF = dataPorExtenso[6].split("min");
 			String minTemp[] = minF[0].split("h");
 			String min = minTemp[1];
 			
-			//obtendo segundo
+			//Rretrieving second
 			String seg = minF[1].replace("s", "");
 			
-			//concatenando a hora completa
+			//concatenating full hour
 			String horaFinal = hora + ":" + min + ":" + seg;
 			
-			//Obtendo ano
+			//Rretrieving year
 			String ano = dataPorExtenso[5];
 			
-			//obtendo Locale
+			//Rretrieving Locale
 			String locale = dataPorExtenso[7];
 			
-			//Concatenando data no padrão EEE MMM dd HH:mm:ss yyyy Locale pt_BR"
+			//concatenating pattern EEE MMM dd HH:mm:ss yyyy Locale pt_BR"
 			String dataFinal = diaSemana + " " + mesAno + " " + diaMes + " " + horaFinal + " " + locale + " " + ano;
 			data = dataFinal;
 			formatador = formato5;
 	
-		//validando padrão 6
+		// validating pattern 6
 		}else if (data.matches(patternFormato6)){
-			log.fine("Padrão reconhecido yyy-dd-mm HH:mm:ss");
+			log.fine("pattern recognized yyy-dd-mm HH:mm:ss");
 			formatador = formato6;
 			
-		//validando padrão 7
+		// validating pattern 7
 		}else if (data.contains("GMT+") || data.contains("GMT-")){
-			log.fine("Padrão reconhecido EEE MMM dd HH:mm:ss z yyyy");
+			log.fine("pattern recognized EEE MMM dd HH:mm:ss z yyyy");
 			formatador = formato7;
 		}
 		
 		else{
-			log.severe("Nenhum padrão reconhecido");
+			log.severe("No pattern recognized.");
 			log.severe("Unparsable date: " + data);
 			data = ("Tue Mar 01 00:00:00 BRT 1950");
 			formatador = formato1;
@@ -242,14 +237,5 @@ public class DateParser {
 			e.printStackTrace();
 		}
 		return date1;
-	}
-	
-//	public static void main(String args[]){
-//		
-//		DateParser test = new DateParser();
-//		//Arrumar bug da data Sab, não consegue realizar parse.
-//		//Date NewFormat = test.parser("Sat Mar 04 16:09:05 BRT 2013");
-//		Date NewFormat = test.parser("Mon Sep 15 22:27:57 GMT-03:00 2014");
-//		System.out.println("Data formadata: " + NewFormat);			
-//	}	
+	}	
 }

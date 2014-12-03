@@ -41,14 +41,14 @@ public class GetDateWindows {
 		try {
 
 			if (parameter.equals("I")) {
-				log.fine("Trying parameter -I");
+				log.fine("Trying the parameter -I");
 				p = Runtime.getRuntime().exec("net time -I " + ip);
 				BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 				while ((s = reader.readLine()) != null) {
 					out += s;
 				}
 
-				// i dont know why, but the net time command returns null before
+				// I don't know why, but the net time command returns null before
 				// the date, like this: nullTer Mar ......
 				if (out.startsWith("n")) {
 					String temp = out.substring(4, out.length());
@@ -56,7 +56,7 @@ public class GetDateWindows {
 				}
 
 			} else if (parameter.equals("S")) {
-				log.fine("Trying parameter -S");
+				log.fine("Trying also the parameter -S");
 				p = Runtime.getRuntime().exec("net time -S " + ip);
 				if (p.equals(null)) {
 					log.fine("Null pointer at this point...");
@@ -66,8 +66,6 @@ public class GetDateWindows {
 					out += s;
 				}
 
-				// i dont know why, but the net time command returns null before
-				// the date, like this: nullTer Mar ......
 				if (out.startsWith("n")) {
 					String temp = out.substring(4, out.length());
 					out = temp;

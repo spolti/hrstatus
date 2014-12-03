@@ -77,13 +77,13 @@ public class FullVerification {
 	@SuppressWarnings("static-access")
 	@Get("/home/startVerification/full")
 	public void startFullVerification() throws InterruptedException, JSchException {
-		// inserindo html title no result
+		
+		// Inserting HTML title in the result
 		result.include("title", "Hr Status Home");
 		String LoggedUsername = userInfo.getLoggedUsername();
 
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI called: /home/startVerification/full");
 
-		// Verifica se já tem alguma verificação ocorrendo...
 		log.info("[ " + userInfo.getLoggedUsername() + " ] Initializing a full verification.");
 
 		lockedResource.setRecurso("verificationFull");
@@ -91,20 +91,18 @@ public class FullVerification {
 		List<Lock> lockList = this.lockDAO.listLockedServices("verificationFull");
 		if (lockList.size() != 0) {
 			for (Lock lock : lockList) {
-				log.info("[ " + userInfo.getLoggedUsername() + " ] O recurso verificationFull está locado pelo usuário "
-								+ lock.getUsername() + ", aguarde o término da mesma");
+				log.info("[ " + userInfo.getLoggedUsername() + " ] The resource verificationFull is locked by the user " + lock.getUsername());
 				result.include("class", "activeServer");
 				result.include("info", "O recurso verificationFull está locado pelo usuário " + lock.getUsername()
 								+ ", aguarde o término da mesma").forwardTo(HomeController.class).home("");
 
 			}
 		} else {
-			log.info("[ " + userInfo.getLoggedUsername() + " ] O recurso verificationFull não está locado, locando e proseguindo");
+			log.info("[ " + userInfo.getLoggedUsername() + " ] The resource verificationFull is not locked, locking and continuing.");
 
 			List<Servidores> list = this.serversDAO.listServersVerActive();
 			if (list.size() <= 0) {
-				log.info("[ " + userInfo.getLoggedUsername()
-								+ " ] Nenhum servidor encontrado ou não há servidores com verficação ativa");
+				log.info("[ " + userInfo.getLoggedUsername() + " ] No server found or no servers with active check.");
 				result.include("info","Nenhum servidor encontrado ou não há servidores com verficação ativa").forwardTo(HomeController.class).home("");
 
 			} else {
@@ -115,7 +113,7 @@ public class FullVerification {
 					if (servidores.getSO().equals("LINUX") && servidores.getVerify().equals("SIM")) {
 						servidores.setServerTime(dt.getTime());
 						servidores.setLastCheck(servidores.getServerTime());
-						// Decripting password
+						// Decrypting password
 						try {
 							servidores.setPass(String.valueOf(Crypto.decode(servidores.getPass())));
 						} catch (InvalidKeyException e) {
@@ -132,8 +130,7 @@ public class FullVerification {
 
 						try {
 							String dateSTR = GetDateLinux.exec(servidores.getUser(), servidores.getIp(), servidores.getPass(), servidores.getPort());
-							log.severe("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor "
-											+ servidores.getHostname() + ": " + dateSTR);
+							log.fine("[ " + userInfo.getLoggedUsername() + " ] Time recieved from the server " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
 							servidores.setDifference(dt.diffrenceTime(servidores.getServerTime(), dateSTR, "LINUX"));
@@ -150,7 +147,7 @@ public class FullVerification {
 								servidores.setStatus("não OK");
 							}
 							try {
-								// Critpografando a senha
+								// Encrypting the password
 								servidores.setPass(encodePass.encode(servidores.getPass()));
 
 							} catch (Exception e1) {
@@ -162,7 +159,7 @@ public class FullVerification {
 							servidores.setStatus(e + "");
 							servidores.setTrClass("error");
 							try {
-								// Critpografando a senha
+								// Encrypting the password
 								servidores.setPass(encodePass.encode(servidores.getPass()));
 
 							} catch (Exception e1) {
@@ -174,7 +171,7 @@ public class FullVerification {
 							servidores.setTrClass("error");
 							try {
 
-								// Critpografando a senha
+								// Encrypting the password
 								servidores.setPass(encodePass.encode(servidores.getPass()));
 
 							} catch (Exception e1) {
@@ -184,14 +181,13 @@ public class FullVerification {
 						}
 
 					} else if (servidores.getVerify().equals("NAO")) {
-						log.info("[ " + userInfo.getLoggedUsername() + " ] - O servidor "
-										+ servidores.getHostname() + " não será verificado pois o mesmo não está com verificação ativa.");
+						log.info("[ " + userInfo.getLoggedUsername()	+ " ] - The server " + servidores.getHostname()	+ " has the verification inactive, it will not be verified.");
 					}
 
 					if (servidores.getSO().equals("UNIX") && servidores.getVerify().equals("SIM")) {
 						servidores.setServerTime(dt.getTime());
 						servidores.setLastCheck(servidores.getServerTime());
-						// Decripting password
+						// Decrypting password
 						try {
 							servidores.setPass(String.valueOf(Crypto.decode(servidores.getPass())));
 						} catch (InvalidKeyException e) {
@@ -207,8 +203,7 @@ public class FullVerification {
 						}
 						try {
 							String dateSTR = GetDateUnix.exec(servidores.getUser(), servidores.getIp(),	servidores.getPass(), servidores.getPort());
-							log.severe("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor "
-											+ servidores.getHostname() + ": " + dateSTR);
+							log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from the server " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
 							servidores.setDifference(dt.diffrenceTime(servidores.getServerTime(), dateSTR, "UNIX"));
@@ -225,7 +220,7 @@ public class FullVerification {
 							}
 							try {
 
-								// Critpografando a senha
+								// Encrypting the password
 								servidores.setPass(encodePass.encode(servidores.getPass()));
 
 							} catch (Exception e) {
@@ -237,7 +232,7 @@ public class FullVerification {
 							servidores.setTrClass("error");
 							try {
 
-								// Critpografando a senha
+								// Encrypting the password
 								servidores.setPass(encodePass.encode(servidores.getPass()));
 
 							} catch (Exception e1) {
@@ -249,7 +244,7 @@ public class FullVerification {
 							servidores.setTrClass("error");
 							try {
 
-								// Critpografando a senha
+								// Encrypting the password
 								servidores.setPass(encodePass.encode(servidores.getPass()));
 
 							} catch (Exception e1) {
@@ -259,8 +254,7 @@ public class FullVerification {
 						}
 
 					} else if (servidores.getVerify().equals("NAO")) {
-						log.info("[ " + userInfo.getLoggedUsername() + " ] - O servidor "
-										+ servidores.getHostname() + " não será verificado pois o mesmo não está com verificação ativa.");
+						log.info("[ " + userInfo.getLoggedUsername()	+ " ] - The server " + servidores.getHostname()	+ " has the verification inactive, it will not be verified.");
 					}
 
 					// if Windows
@@ -271,11 +265,10 @@ public class FullVerification {
 
 							String dateSTR = GetDateWindows.Exec(servidores.getIp(), "I");
 							if (dateSTR == null || dateSTR == "") {
-								log.severe("Parametro net time -I retornou nulo, tentando o parametro S");
+								log.fine("The net time -I parameter returuns null, trying the parameter -S");
 								dateSTR = GetDateWindows.Exec(servidores.getIp(), "S");
 							}
-							log.severe("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor "
-											+ servidores.getHostname() + ": " + dateSTR);
+							log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from the server " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
 							servidores.setDifference(dt.diffrenceTime(servidores.getServerTime(), dateSTR, "WINDOWS"));
@@ -303,15 +296,14 @@ public class FullVerification {
 						}
 
 					} else if (servidores.getVerify().equals("NAO")) {
-						log.info("[ " + userInfo.getLoggedUsername() + " ] - O servidor "
-										+ servidores.getHostname() + " não será verificado pois o mesmo não está com verificação ativa.");
+						log.info("[ " + userInfo.getLoggedUsername()	+ " ] - The server " + servidores.getHostname()	+ " has the verification inactive, it will not be verified.");
 					}
 
 					// if Others
 					if (servidores.getSO().equals("OUTRO") && servidores.getVerify().equals("SIM")) {
 						servidores.setServerTime(dt.getTime());
 						servidores.setLastCheck(servidores.getServerTime());
-						// Decripting password
+						// Decrypting password
 						try {
 							servidores.setPass(String.valueOf(Crypto.decode(servidores.getPass())));
 						} catch (InvalidKeyException e) {
@@ -327,14 +319,17 @@ public class FullVerification {
 						}
 						try {
 							String dateSTR = GetDateOther.exec(servidores.getUser(), servidores.getIp(), servidores.getPass(), servidores.getPort());
-							log.severe("Hora obtida do servidor " + servidores.getHostname() + ": " + dateSTR);
+							log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from the server " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
 							servidores.setDifference(dt.diffrenceTime(servidores.getServerTime(), dateSTR,"OUTRO"));
 
+							// What is this doing here????????
 							PropertiesLoaderImpl load = new PropertiesLoaderImpl();
 							String version = load.getValor("version");
 							result.include("version", version);
+							///////////////////////////////////
+							
 							if (servidores.getDifference() < 0) {
 								servidores.setDifference(servidores.getDifference() * -1);
 							}
@@ -347,7 +342,7 @@ public class FullVerification {
 							}
 							try {
 
-								// Critpografando a senha
+								// Encrypting the password
 								servidores.setPass(encodePass.encode(servidores.getPass()));
 
 							} catch (Exception e) {
@@ -381,8 +376,7 @@ public class FullVerification {
 						}
 
 					} else if (servidores.getVerify().equals("NAO")) {
-						log.info("[ " + userInfo.getLoggedUsername() + " ] - O servidor "
-										+ servidores.getHostname() + " não será verificado pois o mesmo não está com verificação ativa.");
+						log.info("[ " + userInfo.getLoggedUsername()	+ " ] - The server " + servidores.getHostname()	+ " has the verification inactive, it will not be verified.");
 					}
 
 				}
@@ -391,9 +385,8 @@ public class FullVerification {
 				result.include("class", "activeServer");
 			}
 		}
-		// desloca a tabela quando a verficação terminar.
-		log.info("[ " + userInfo.getLoggedUsername() + " ] Verificação finalizada, liberando recurso "
-						+ lockedResource.getRecurso());
+		// releasing the resource.
+		log.info("[ " + userInfo.getLoggedUsername() + " ] Verification finished, releasing the resource " + lockedResource.getRecurso());
 		lockDAO.removeLock(lockedResource);
 	}
 }

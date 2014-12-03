@@ -43,10 +43,10 @@ public class LogoutListener implements ApplicationListener<SessionDestroyedEvent
         try{
     	 SecurityContext securityContext = (SecurityContext) event.getSecurityContexts();
     	 UserDetails ud = (UserDetails) securityContext.getAuthentication().getPrincipal();
-         log.info("Sessão expirou ou foi realizado logout para o usuário " + ud.getUsername());
+         log.info("Session expires or the user " + ud.getUsername() + "logouts");
          
     	}catch (Exception e){
-    		 log.fine("Não existe usuário na sessão");
+    		 log.fine("There is no user in the session.");
     	}
     }
 }

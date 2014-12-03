@@ -46,12 +46,13 @@ public class ConnDB2 {
 			String url = "jdbc:mysql://" + serverAddress + "/" + instance;
 			connection = DriverManager.getConnection(url, username, password);
 
+			//Testing if the connection was successfully obtained.
 			if (connection != null) {
 				status = (true);
-				Logger.getLogger(ConnDB2.class).debug("[ " + userInfo.getLoggedUsername() + " ] MySQL datbase connection status: " + status);
+				Logger.getLogger(ConnDB2.class).debug("[ " + userInfo.getLoggedUsername() + " ] DB2 datbase connection status: " + status);
 			} else {
 				status = (false);
-				Logger.getLogger(ConnDB2.class).debug("[ " + userInfo.getLoggedUsername() + " ] MySQL datbase connection status: " + status);
+				Logger.getLogger(ConnDB2.class).debug("[ " + userInfo.getLoggedUsername() + " ] DB2 datbase connection status: " + status);
 			}
 			return connection;
 	}

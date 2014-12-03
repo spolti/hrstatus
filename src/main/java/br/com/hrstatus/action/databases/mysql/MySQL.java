@@ -46,9 +46,8 @@ public class MySQL {
             	   dt_db  = rs.getString("date");
                }
            }
-           //Formatando data.
-           //DateParser dt_parser = new DateParser();
-           //Removendo, caso exista o timestamp
+
+           //Removing timestamp
            if (dt_db.endsWith(".0")){
         	   dt_db = dt_db.replace(".","#");
         	   String dt_tmp[] = dt_db.split("#");

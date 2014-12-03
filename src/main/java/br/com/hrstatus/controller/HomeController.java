@@ -55,27 +55,24 @@ public class HomeController {
 	
 	@Get("/home")
 	public void home(String verification) {
-		// inserindo html title no result
+		
+		// Inserting HTML title in the result
 		result.include("title", "Hr Status Home");
 
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /home");
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		// ///////////////////////////////////////////////////////
-		// Verificando se é o primeiro login do usuário após troca de senha ou
-		// do cadastro
-		// se for false não faz nade se for true redireciona para atualizar
-		// cadastro.
+		// Verifying if is the first login after the password change or after the user registration
 		boolean isFirstLogin = this.userDAO.getFirstLogin(userInfo.getLoggedUsername());
 		if (isFirstLogin) {
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] Primeiro login do usuário "
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] First login of "
 							+ userInfo.getLoggedUsername() + ": " + isFirstLogin);
 			
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] Redirecionando o usuário para troca de senha.");
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Redirecting the user to the password change page");
 			result.forwardTo(UpdateController.class).findForUpdateUser(null,userInfo.getLoggedUsername(), "changePass");
 		} else {
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] Primeiro login do usuário " + userInfo.getLoggedUsername() 
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] First login of " + userInfo.getLoggedUsername() 
 							+ ": " + isFirstLogin);
 		}
 	}
@@ -91,7 +88,8 @@ public class HomeController {
 
 	@Get("/home/showByStatus/{status}")
 	public void showByStatus(String status) {
-		// inserindo html title no result
+		
+		// Inserting HTML title in the result
 		result.include("title", "Hr Status Home");
 
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /home/showByStatus/" + status);

@@ -61,15 +61,21 @@ public class ConfigurationDAO implements Configuration {
 
 	public void updateConfig(Configurations config) {
 
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] updateConfig() -> Loading configurations.");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] updateConfig(Configurations config)");
 		session().saveOrUpdate(config);
 	}
 
 	public Configurations getConfigs() {
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getConfigs()");
+		
 		return (Configurations) session().createCriteria(Configurations.class).uniqueResult();
 	}
 
 	public String getMailSender() {
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getMailSender()");
+		
 		Criteria mailFrom = session().createCriteria(Configurations.class);
 		ProjectionList proList = Projections.projectionList();
 		proList.add(Projections.property("mailFrom"));
@@ -78,6 +84,9 @@ public class ConfigurationDAO implements Configuration {
 	}
 	
 	public boolean sendNotification() {
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] sendNotification()");
+		
 		Criteria sendNotification = session().createCriteria(Configurations.class);
 		ProjectionList proList = Projections.projectionList();
 		proList.add(Projections.property("sendNotification"));
@@ -86,6 +95,9 @@ public class ConfigurationDAO implements Configuration {
 	}
 
 	public String getSubject() {
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getSubject()");
+		
 		Criteria subject = session().createCriteria(Configurations.class);
 		ProjectionList proList = Projections.projectionList();
 		proList.add(Projections.property("subject"));
@@ -94,6 +106,9 @@ public class ConfigurationDAO implements Configuration {
 	}
 
 	public String getDests() {
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getDests()");
+		
 		Criteria subject = session().createCriteria(Configurations.class);
 		ProjectionList proList = Projections.projectionList();
 		proList.add(Projections.property("dests"));
@@ -102,6 +117,9 @@ public class ConfigurationDAO implements Configuration {
 	}
 
 	public String getJndiMail() {
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getJndiMail()");
+		
 		Criteria subject = session().createCriteria(Configurations.class);
 		ProjectionList proList = Projections.projectionList();
 		proList.add(Projections.property("jndiMail"));
@@ -110,6 +128,9 @@ public class ConfigurationDAO implements Configuration {
 	}
 
 	public int getDiffirenceSecs() {
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getDiffirenceSecs()");
+		
 		Criteria difference = session().createCriteria(Configurations.class);
 		ProjectionList proList = Projections.projectionList();
 		proList.add(Projections.property("difference"));
@@ -119,6 +140,9 @@ public class ConfigurationDAO implements Configuration {
 	}
 
 	public String getNtpServerAddress() {
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getNtpServerAddress()");
+		
 		Criteria ntpServer = session().createCriteria(Configurations.class);
 		ProjectionList proList = Projections.projectionList();
 		proList.add(Projections.property("ntpServer"));

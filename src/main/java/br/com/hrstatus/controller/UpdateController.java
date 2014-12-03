@@ -70,36 +70,39 @@ public class UpdateController {
 	@Autowired
 	private HttpServletRequest request;
 	UserInfo userInfo = new UserInfo();
-
+	Crypto passUtil = new Crypto();
+	
+	
 	@SuppressWarnings("static-access")
 	@Get("/findForUpdateServer/{serverID}")
 	public void findForUpdateServer(Servidores s, String serverID) {
-		// inserindo html title no result
+		
+		// Inserting HTML title in the result
 		result.include("title", "Atualizar Servidor");
-
+		// Inserting the Logged username in the home page
 		result.include("loggedUser", userInfo.getLoggedUsername());
-
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /findForUpdateServer");
-		Crypto decodePass = new Crypto();
+		
+		//The server ID is integer.
 		int id = Integer.parseInt(serverID);
+		
 		log.info("[ " + userInfo.getLoggedUsername() + " ] Server id selected for update: " + id);
-
 		Servidores server = this.iteracoesDAO.getServerByID(id);
 
-		// Setando ID
+		// setting the server ID
 		server.setId(id);
 
-		// Descriptografando senha e a jogando no formulário
+		// Decrypting  the password and putting it in the form
 		try {
 
-			String textPass = String.valueOf(decodePass.decode(server.getPass()));
+			String textPass = String.valueOf(passUtil.decode(server.getPass()));
 			server.setPass(textPass);
 
 		} catch (Exception e) {
-			log.severe("[ " + userInfo.getLoggedUsername() + " ] Erro ao descriptografar senha: " + e);
+			log.severe("[ " + userInfo.getLoggedUsername() + " ] Error to decrypting the password:  " + e);
 		}
 
-		// populating SO combobox
+		// populating OS combobox
 		List<Servidores> so = this.iteracoesDAO.getListOfSO();
 		int size = so.size();
 		if ((size < 1) || (size < 4)) {
@@ -127,9 +130,9 @@ public class UpdateController {
 		for(Users user : userCorrect){
 			for (Users us : server.getUsers()){
 				if (user.getUsername().equals(us.getUsername())){
-					log.fine("****************************************************");
-					log.fine("Servidor " + server.getHostname() + " está mapeado para usuário " + user.getUsername());
-					log.fine("****************************************************");
+					log.fine("*************************************************************************");
+					log.fine("Server " + server.getHostname() + " is mapped for the user " + user.getUsername());
+					log.fine("*************************************************************************");
 				}
 			}
 			userFinal.add(user);
@@ -139,7 +142,7 @@ public class UpdateController {
 		result.include("server", server);
 
 		if (s != null) {
-			log.info("[ " + userInfo.getLoggedUsername() + " ] Objeto do tipo Servidores não está vazio, atribuindo valores.");
+			log.info("[ " + userInfo.getLoggedUsername() + " ] Server Object is not empty, atributing its values.");
 			server = s;
 		}
 	}
@@ -147,13 +150,13 @@ public class UpdateController {
 	@SuppressWarnings("static-access")
 	@Post("/updateServer")
 	public void updateServer(Servidores server, String[] idUser, String OSserver) {
-		// inserindo html title no result
-		
-		result.include("title", "Atualizar Servidor");
 
+		// Inserting HTML title in the result
+		result.include("title", "Atualizar Servidor");
+		// Inserting the Logged username in the home page
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Crypto encodePass = new Crypto();
+		
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /updateServer");
 		Pattern pattern = Pattern.compile("\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\z");
 		Matcher matcher = pattern.matcher(server.getIp());
@@ -178,8 +181,8 @@ public class UpdateController {
 		server.setSO(OSserver.toUpperCase());
 		
 		try {
-			// Critpografando a senha
-			server.setPass(encodePass.encode(server.getPass()));
+			// Encrypting the password
+			server.setPass(passUtil.encode(server.getPass()));
 
 		} catch (Exception e) {
 			log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e);
@@ -190,10 +193,10 @@ public class UpdateController {
 			List<Users> idUserAccessServer = new ArrayList<Users>();
 			for (int i = 0; i < idUser.length; i++) {
 				log.fine("****************************************************");
-				log.fine("Username recebido: " + idUser[i]);
+				log.fine("Received Username: " + idUser[i]);
 				if (!idUser[i].equals("notNull")) {
 					idUserAccessServer.add(this.usersDAO.getUserByID(idUser[i]));
-					log.fine("Username recebido: " + idUser[i]);
+					log.fine("Received Username: " + idUser[i]);
 					log.fine("****************************************************");
 				}
 			}
@@ -209,29 +212,30 @@ public class UpdateController {
 	@SuppressWarnings("static-access")
 	@Get("/findForUpdateDataBase/{dataBaseID}")
 	public void findForUpdateDataBase(BancoDados db, String dataBaseID) {
-		// inserindo html title no result
+		
+		// Inserting HTML title in the result
 		result.include("title", "Atualizar Banco de Dados");
-
+		// Inserting the Logged username in the home page
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /findForUpdateDataBase");
-		Crypto decodePass = new Crypto();
+		
 		int id = Integer.parseInt(dataBaseID);
 		log.info("[ " + userInfo.getLoggedUsername() + " ] DataBase id selected for update: " + id);
 
 		BancoDados dataBase = this.BancoDadosDAO.getDataBaseByID(id);
 
-		// Setando ID
+		// Setting the database ID
 		dataBase.setId(id);
 
-		// Descriptografando senha e a jogando no formulário
+		//  Decrypting  the password and putting it in the form
 		try {
 
-			String textPass = String.valueOf(decodePass.decode(dataBase.getPass()));
+			String textPass = String.valueOf(passUtil.decode(dataBase.getPass()));
 			dataBase.setPass(textPass);
 
 		} catch (Exception e) {
-			log.severe("[ " + userInfo.getLoggedUsername() + " ] Erro ao descriptografar senha: " + e);
+			log.severe("[ " + userInfo.getLoggedUsername() + " ] Error to decrypting the password: " + e);
 		}
 
 		// populating SO combobox
@@ -242,11 +246,10 @@ public class UpdateController {
 		VENDOR.add("SqlServer");
 		VENDOR.add("DB2");
 		result.include("VENDOR", VENDOR);
-
 		result.include("dataBase", dataBase);
 
 		if (db != null) {
-			log.info("[ " + userInfo.getLoggedUsername() + " ] Objeto do tipo BancoDados não está vazio, atribuindo valores.");
+			log.info("[ " + userInfo.getLoggedUsername() + " ] Database Object is not empty, atributing its values.");
 			dataBase = db;
 		}
 	}
@@ -255,11 +258,11 @@ public class UpdateController {
 	@Post("/updateDataBase")
 	public void updateDataBase(BancoDados dataBase) {
 
+		// Inserting HTML title in the result
 		result.include("title", "Atualizar Banco de Dados");
-
+		// Inserting the Logged username in the home page
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		Crypto encodePass = new Crypto();
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /updateServer");
 		Pattern pattern = Pattern.compile("\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\z");
 		Matcher matcher = pattern.matcher(dataBase.getIp());
@@ -279,6 +282,7 @@ public class UpdateController {
 		} else if (dataBase.getVendor().isEmpty()) {
 			validator.add(new ValidationMessage("O campo SO deve ser informado", "Erro"));
 		}
+		
 		if (dataBase.getQueryDate().isEmpty()) {
 			if (dataBase.getVendor().toUpperCase().equals("MYSQL")) {
 				dataBase.setQueryDate("SELECT NOW() AS date;");
@@ -301,8 +305,8 @@ public class UpdateController {
 
 		try {
 
-			// Critpografando a senha
-			dataBase.setPass(encodePass.encode(dataBase.getPass()));
+			// Encrypting the password
+			dataBase.setPass(passUtil.encode(dataBase.getPass()));
 
 		} catch (Exception e) {
 			log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e);
@@ -315,8 +319,9 @@ public class UpdateController {
 
 	@Get("/findForUpdateUser/{username}/{action}")
 	public void findForUpdateUser(Users u, String username, String action) {
+		
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /findForUpdateUser");
-
+		// Inserting HTML title in the result
 		result.include("title", "Atualizar Usuário");
 
 		String LoggedUsername = userInfo.getLoggedUsername();
@@ -329,10 +334,10 @@ public class UpdateController {
 
 		if (username.toUpperCase().equals("ADMIN")) {
 			if ((isAdmin) && (LoggedUsername.toUpperCase().equals("ADMIN"))) {
-				log.fine("[ "	+ userInfo.getLoggedUsername() + " ] O Usuário Administrador alterou ou está alterando seus dados.");
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] The user admin id editing himself.");
 			} else {
-				log.info("[ " + userInfo.getLoggedUsername() + " ] O usuário "
-								+ userInfo.getLoggedUsername() + " não tem permissão para alterar dados da conta do Administrador.");
+				log.info("[ " + userInfo.getLoggedUsername() + " ] The user " + userInfo.getLoggedUsername() + " does not have permissions to change the Administrator account. it will be reported to the Admins.");
+				// implementar a funcionalidade de se alguém que não seja o próprio admin tentar alterar os dados do admin.
 				result.use(Results.http()).sendError(403);
 			}
 		}
@@ -340,13 +345,13 @@ public class UpdateController {
 		if (!username.equals(LoggedUsername.toString()) && (isUser)) {
 			result.use(Results.http()).sendError(403);
 		} else if (action.equals("changePass")) {
-			log.info("[ " + userInfo.getLoggedUsername() + " ] validação de usuário OK");
+			log.info("[ " + userInfo.getLoggedUsername() + " ] User validation OK");
+			
 			result.include("loggedUser", LoggedUsername);
-
 			log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /changePass");
 
 			Users user = this.usersDAO.getUserByID(username);
-			// setando username
+			// setting the username
 			user.setUsername(username);
 			user.setFirstLogin(false);
 			result.include("isDisabled", "disabled");
@@ -355,7 +360,7 @@ public class UpdateController {
 			for (Servidores u1 : FullLogServer) {
 				for (Servidores sv : user.getServer()) {
 					if (u1.getId() == sv.getId()) {
-						log.info("Servidores com permissão: "	+ sv.getHostname());
+						log.info("The user " + user + " have permission the read the logs of the server "	+ sv.getHostname());
 						u1.setSelected("selected");
 					}
 				}
@@ -365,7 +370,7 @@ public class UpdateController {
 			result.include("server", server);
 
 			if (user != null) {
-				log.info("[ " + userInfo.getLoggedUsername() + " ] Objeto do tipo Users não está vazio, atribuindo valores.");
+				log.info("[ " + userInfo.getLoggedUsername() + " ] User Object is not empty, atributing its values.");
 				u = user;
 			}
 		} else {
@@ -375,7 +380,7 @@ public class UpdateController {
 				log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /findForUpdateUser");
 
 				Users user = this.usersDAO.getUserByID(username);
-				// setando username
+				// setting the username
 				user.setUsername(username);
 
 				result.include("user", user);
@@ -383,8 +388,7 @@ public class UpdateController {
 				for (Servidores u1 : FullLogServer) {
 					for (Servidores sv : user.getServer()) {
 						if (u1.getId() == sv.getId()) {
-							log.fine("[ " + userInfo.getLoggedUsername()
-											+ " ]Servidores com permissão: " + sv.getHostname());
+							log.info("The user " + user + " have permission the read the logs of the server "	+ sv.getHostname());
 							u1.setSelected("selected");
 						}
 					}
@@ -394,7 +398,7 @@ public class UpdateController {
 				result.include("server", server);
 
 				if (user != null) {
-					log.info("[ " + userInfo.getLoggedUsername() + " ] Objeto do tipo Users não está vazio, atribuindo valores.");
+					log.info("[ " + userInfo.getLoggedUsername() + " ] User Object is not empty, atributing its values.");
 					u = user;
 				}
 			} else {
@@ -406,21 +410,20 @@ public class UpdateController {
 	@SuppressWarnings("static-access")
 	@Post("/updateUser")
 	public void updateUser(Users user, String[] idServer, boolean checkall) {
-		// inserindo html title no result
+	
+		// Inserting HTML title in the result
 		List<Servidores> FullLogServer = this.iteracoesDAO.getHostnamesWithLogDir();
 		List<Servidores> server = new ArrayList<Servidores>();
 		result.include("title", "Atualizar Usuário");
 
-		String LoggedUsername = userInfo.getLoggedUsername();
-
-		// obtendo roles do usuário:
+		// Obtaining the user roles
 		boolean isAdmin = request.isUserInRole("ROLE_ADMIN");
 		boolean isUser = request.isUserInRole("ROLE_USER");
 
-		if (!user.getUsername().equals(LoggedUsername.toString()) && (isUser)) {
+		if (!user.getUsername().equals(userInfo.getLoggedUsername().toString()) && (isUser)) {
 			result.use(Results.http()).sendError(403);
 		} else {
-			result.include("loggedUser", LoggedUsername);
+			result.include("loggedUser", userInfo.getLoggedUsername());
 			result.include("isDisabled", "disabled");
 
 			log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /updateUser");
@@ -431,7 +434,7 @@ public class UpdateController {
 			} else if (user.getUsername().isEmpty()) {
 				validator.add(new ValidationMessage("O campo Username deve ser informado", "Erro"));
 			} else if (checkall) {
-				log.fine("[ " + userInfo.getLoggedUsername() + " ] A opção selecione todos os servidores está marcada.");
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] The checkbox select all server is checked.");
 				List<Servidores> idAccessServers = new ArrayList<Servidores>();
 				idAccessServers = this.iteracoesDAO.getHostnamesWithLogDir();
 				user.setServer(idAccessServers);
@@ -441,7 +444,7 @@ public class UpdateController {
 				for (int i = 0; i < idServer.length; i++) {
 					if (!idServer[i].equals("notNull")) {
 						idAccessServers.add(this.iteracoesDAO.getServerByID(Integer.parseInt(idServer[i])));
-						log.fine("ID Servidor recebido: " + idServer[i]);
+						log.fine("Server ID received: " + idServer[i]);
 					}
 				}
 				user.setServer(idAccessServers); 
@@ -454,19 +457,18 @@ public class UpdateController {
 			}
 			
 			if (user.getAuthority() == null) {
-				// Obtendo role do usuário logado do banco Se a mesma vier do
-				// jsp em branco.
-				String role = this.usersDAO.getRole(LoggedUsername);
+				// Obtaining the role of t he logged user from database if it come blank from the form
+				String role = this.usersDAO.getRole(userInfo.getLoggedUsername());
 				user.setAuthority(role);
 				if (!user.getAuthority().equals(role)){
-					log.info("Tentativa inapropriada de alterar ROLE do usuário. Setando valor anterior.");
+					log.info("[ " + userInfo.getLoggedUsername() + " ] Unauthorized way to change the user ROLE. Rolling back the original value.");
 					user.setAuthority(role);
 				}
 			}
 			if (!user.getPassword().isEmpty() || !user.getConfirmPass().isEmpty()) {
 				if (user.getPassword().equals(user.getConfirmPass())) {
 
-					log.fine("Verificando complexidade da senha do usuário.");
+					log.fine("[ " + userInfo.getLoggedUsername() + " ] Verifying the user password complexity.");
 					List<String> passVal = new ArrayList<String>();
 					Map<String, String> map = new HashMap<String, String>();
 					map = br.com.hrstatus.security.PasswordPolicy.verifyPassComplexity(user.getPassword());
@@ -488,11 +490,10 @@ public class UpdateController {
 			} 
 			
 			if (idServer[0].indexOf("notNull") >= 0) {
-				log.info("Lista de Servidores para Usuário vazio.");
+				log.info("[ " + userInfo.getLoggedUsername() + " ] The server list for the user is empty.");
 			}
 			
 			if (user.getPassword().isEmpty()) {
-				// pegar senha do banco e setar objeto
 				user.setPassword(this.usersDAO.getPass(user.getUsername()));
 			} else {
 				user.setPassword(encode.encodePassUser(user.getPassword()));
@@ -502,8 +503,7 @@ public class UpdateController {
 			for (Servidores u1 : FullLogServer) {
 				for (Servidores sv : returnOnValidtion.getServer()) {
 					if (u1.getId() == sv.getId()) {
-						log.fine("[ " + userInfo.getLoggedUsername()
-										+ " ]Servidores com permissão: " + sv.getHostname());
+						log.fine("[ " + userInfo.getLoggedUsername() + " ] The user have permissions to read the logs from " + sv.getHostname());
 						u1.setSelected("selected");
 					}
 				}
@@ -511,16 +511,15 @@ public class UpdateController {
 			}
 
 			result.include("server", server);
-			
 			validator.onErrorUsePageOf(UpdateController.class).findForUpdateUser(user, "", "");
 
-			if (!user.getUsername().equals(LoggedUsername.toString()) && !(isAdmin || isUser)) {
+			if (!user.getUsername().equals(userInfo.getLoggedUsername().toString()) && !(isAdmin || isUser)) {
 				result.use(Results.http()).sendError(403);
 			} else {
 				this.usersDAO.updateUser(user);
-				if (this.usersDAO.searchUserChangePass(LoggedUsername) == 1) {
-					log.info("Usuário " + LoggedUsername + " solicitou recuperação de sennha a pouco tempo, apagando registro da tabela temporária");
-					this.usersDAO.delUserHasChangedPass(LoggedUsername);
+				if (this.usersDAO.searchUserChangePass(userInfo.getLoggedUsername()) == 1) {
+					log.info("The user " + userInfo.getLoggedUsername() + " requested the change of the password does little time. Please wait.");
+					this.usersDAO.delUserHasChangedPass(userInfo.getLoggedUsername());
 				}
 			}
 
