@@ -17,11 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.utils;
-
-/*
- * @author spolti
- */
+package br.com.hrstatus.utils.date;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -29,6 +25,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 import com.jcraft.jsch.JSchException;
+
+/*
+ * @author spolti
+ */
 
 public class DateUtils {
 	

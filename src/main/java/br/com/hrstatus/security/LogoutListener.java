@@ -17,33 +17,36 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.utils;
+package br.com.hrstatus.security;
 
-/*
- *Spring Framework 
- *Customization, rewrite LoginSuccessHandler
- */
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.session.SessionDestroyedEvent;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+/*
+ *Spring Framework 
+ *Customization, rewrite LoginSuccessHandler
+ */
+
 @Component
 public class LogoutListener implements ApplicationListener<SessionDestroyedEvent> {
 
+	Logger log =  Logger.getLogger(LogoutListener.class.getCanonicalName());
+	
     public void onApplicationEvent(SessionDestroyedEvent event)
     {
     	
-    	try{
-    	 SecurityContext securityContext = (SecurityContext) event.getSecurityContext();
+        try{
+    	 SecurityContext securityContext = (SecurityContext) event.getSecurityContexts();
     	 UserDetails ud = (UserDetails) securityContext.getAuthentication().getPrincipal();
-         Logger.getLogger(getClass()).info("Sessão expirou ou foi realizado logout para o usuário " + ud.getUsername());
+         log.info("Session expires or the user " + ud.getUsername() + "logouts");
          
     	}catch (Exception e){
-    		 Logger.getLogger(getClass()).debug("Não existe usuário na sessão");
+    		 log.fine("There is no user in the session.");
     	}
     }
 }

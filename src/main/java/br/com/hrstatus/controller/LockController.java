@@ -19,13 +19,10 @@
 
 package br.com.hrstatus.controller;
 
-/*
- * @author spolti
- */
-
 import java.util.List;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
@@ -34,27 +31,30 @@ import br.com.hrstatus.dao.LockIntrface;
 import br.com.hrstatus.model.Lock;
 import br.com.hrstatus.utils.UserInfo;
 
+/*
+ * @author spolti
+ */
+
 @Resource
 public class LockController {
 
+	Logger log =  Logger.getLogger(LockController.class.getCanonicalName());
+	
+	@Autowired
 	private Result result;
+	@Autowired
 	private LockIntrface lockDAO;
 	UserInfo userInfo = new UserInfo();
-	
-	public LockController (Result result, LockIntrface lockDAO ){
-		this.result = result;
-		this.lockDAO = lockDAO;
-	}
+	List<Lock> listLocks;
 	
 	@Get("/listLocks")
 	public void listLocks (){
 		
-		// inserindo html title no result
+		// Inserting HTML title in the result
 		result.include("title", "Locked Resources");
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /listLocks");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /listLocks");
 		result.include("loggedUser", userInfo.getLoggedUsername());
-		List<Lock> listLocks = this.lockDAO.ListAllLocks();
-		result.include("locks", listLocks);
-		
+		listLocks = this.lockDAO.ListAllLocks();
+		result.include("locks", listLocks);	
 	}
 }

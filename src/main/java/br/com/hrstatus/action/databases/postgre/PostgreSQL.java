@@ -32,7 +32,7 @@ import br.com.hrstatus.model.BancoDados;
 
 public class PostgreSQL {
 	
-	public String getDate(BancoDados db) throws SQLException, ClassNotFoundException { 
+	public String getDatePSQL(BancoDados db) throws SQLException, ClassNotFoundException { 
 		Connection conn = ConnPostgreSQL.getConexaoPSQL(db.getIp(), db.getInstance(), db.getUser(), db.getPass());
 		String sql = db.getQueryDate();
 		
@@ -45,9 +45,8 @@ public class PostgreSQL {
          	   dt_db  = rs.getString(1);
             }
         }
-		//Formatando data.
-        //DateParser dt_parser = new DateParser();
-        //Removendo, caso exista o timestamp
+
+        //Removing timestamp
         if (dt_db.contains(".")){
      	   dt_db = dt_db.replace(".","#");
      	   String dt_tmp[] = dt_db.split("#");

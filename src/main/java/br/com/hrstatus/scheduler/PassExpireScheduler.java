@@ -19,16 +19,12 @@
 
 package br.com.hrstatus.scheduler;
 
-/*
- * @author spolti
- */
-
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -36,45 +32,53 @@ import org.springframework.stereotype.Service;
 import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.model.PassExpire;
 import br.com.hrstatus.model.Users;
-import br.com.hrstatus.utils.DateParser;
-import br.com.hrstatus.utils.DateUtils;
+import br.com.hrstatus.utils.date.DateParser;
+import br.com.hrstatus.utils.date.DateUtils;
 
 import com.jcraft.jsch.JSchException;
+
+/*
+ * @author spolti
+ */
 
 @Service
 public class PassExpireScheduler {
 
+	Logger log =  Logger.getLogger(PassExpireScheduler.class.getCanonicalName());
+	
 	@Autowired
 	private UsersInterface userDAO;
+	private DateUtils time = new DateUtils();
+	private DateParser parse = new DateParser();
 
-	public PassExpireScheduler() {
-	}
+	public PassExpireScheduler() {}
 
 	@Scheduled(cron = "0 0/5 * * * *" ) //5 in 5 minutes
 	public void passExpire() throws ParseException, JSchException, IOException {
-		Logger.getLogger(getClass()).debug("[ System ] Invoking passExpire at " + new Date());
+		
+		log.fine("[ System ] Invoking passExpire() at " + new Date());
 		
 		List<PassExpire> list = this.userDAO.getExpireTime();
 		
-		DateUtils time = new DateUtils();
-		DateParser parse = new DateParser();
 		Date timeNow = parse.parser(time.getTime());
 				
 		for (PassExpire passExpire : list){
 			if (timeNow.compareTo(parse.parser(passExpire.getExpireTime())) > 0){
-				Logger.getLogger(getClass()).debug("[ System ] Password gerado para o usuário " + passExpire.getUsername() + "expirou, aplicando senha antiga novamente.");
+				
+				log.fine("[ System ] Temporary password generated to " + passExpire.getUsername() + "expired, Rolling the password back..");
 				Users user = this.userDAO.getUserByID(passExpire.getUsername());
 				
 				user.setPassword(passExpire.getOldPwd());
 				user.setFirstLogin(false);
-				//Salvando novo usuário.
+				
+				// Saving the changes
 				this.userDAO.updateUser(user);
 				
-				//Removendo usuário da tabela temporária
+				// Removing the user from temporary table
 				this.userDAO.delUserExpireTime(passExpire);
 				
 			}else{
-				Logger.getLogger(getClass()).debug("[ System ] Password gerado para o usuário " + passExpire.getUsername() + " ainda não expirou.");
+				log.fine("[ System ] The password generated for the user " + passExpire.getUsername() + " not expire yet.");
 			}
 		}
 	}

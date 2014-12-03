@@ -19,12 +19,12 @@
 
 package br.com.hrstatus.dao;
 
+import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
+
 /*
  * @author spolti
  */
-
-import org.hibernate.cfg.AnnotationConfiguration;
-import org.hibernate.tool.hbm2ddl.SchemaExport;
 
 @SuppressWarnings("deprecation")
 public class CreateTables {

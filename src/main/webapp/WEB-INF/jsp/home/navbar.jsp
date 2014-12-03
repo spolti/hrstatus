@@ -89,6 +89,17 @@
 		$('#ConfigurationTab').modal('show');
 	}
 </script>
+
+<script language="JavaScript">
+	function setMailSessionParameterForUpdate(valor1, parametro, campo) {
+		$('#cab > h3').text(parametro);
+		$('#edit-modal > p').text("Valor atual: " + valor1);
+		$('#edit-modal > p').val(
+				"Novo valor: <input type='text' name='new_value' />");
+		$('#campo').val(campo);
+		$('#MailSessionConfigurationTab').modal('show');
+	}
+</script>
 </head>
 <body onload="Tempo()">
 	<script src="http://code.jquery.com/jquery-latest.js"></script>
@@ -145,16 +156,11 @@
 						<i class="icon-list"> </i> Menu <span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">
-						<a href="<c:url value="/configServer"/>" data-toggle="modal"><i
-							class="icon-wrench"> </i> Sistema</a>
-						<a href="<c:url value="/listLocks"/>" data-toggle="modal"><i
-							class="icon-lock"> </i> Lock de Recursos</a>
-						<a href="<c:url value="/configClients"/>" data-toggle="modal"><i
-							class="icon-hdd"> </i> Servidores</a>
-						<a href="<c:url value="/configDataBases"/>" data-toggle="modal"><i
-							class="icon-book"> </i> Banco de Dados </a>
-						<a href="<c:url value="/configUser"/>" data-toggle="modal"><i
-							class="icon-user"> </i> Usuários</a>
+						<a href="<c:url value="/configServer"/>" data-toggle="modal"><i class="icon-wrench"> </i> Sistema</a>
+						<a href="<c:url value="/listLocks"/>" data-toggle="modal"><i class="icon-lock"> </i> Lock de Recursos</a>
+						<a href="<c:url value="/configClients"/>" data-toggle="modal"><i class="icon-hdd"> </i> Servidores</a>
+						<a href="<c:url value="/configDataBases"/>" data-toggle="modal"><i class="icon-book"> </i> Banco de Dados </a>
+						<a href="<c:url value="/configUser"/>" data-toggle="modal"><i class="icon-user"> </i> Usuários</a>
 						<li class="dropdown-submenu"><a tabindex="-1" href="#"><i
 								class="icon-folder-open"> </i> Relatórios</a>
 							<ul class="dropdown-menu">

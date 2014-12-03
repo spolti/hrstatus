@@ -19,59 +19,63 @@
 
 package br.com.hrstatus.controller;
 
-/*
- * @author spolti
- */
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Get;
+import br.com.caelum.vraptor.Post;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.validator.ValidationMessage;
 import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.dao.Configuration;
-import br.com.hrstatus.dao.Iteracoes;
+import br.com.hrstatus.dao.ServersInterface;
 import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.model.BancoDados;
 import br.com.hrstatus.model.Configurations;
 import br.com.hrstatus.model.Servidores;
 import br.com.hrstatus.model.Users;
 import br.com.hrstatus.utils.UserInfo;
+import br.com.hrstatus.utils.mail.GetAvailableMailSession;
+
+/*
+ * @author spolti
+ */
 
 @Resource
 public class ConfigController {
 
+	Logger log =  Logger.getLogger(ConfigController.class.getCanonicalName());
+	
+	@Autowired
 	private Result result;
-	private Iteracoes iteracoesDAO;
+	@Autowired
+	private ServersInterface iteracoesDAO;
+	@Autowired
 	private Configuration configurationDAO;
+	@Autowired
 	private Validator validator;
-	private UsersInterface userDAO;
+	@Autowired
+	private UsersInterface userDAO;	
+	@Autowired
 	private BancoDadosInterface BancoDadosDAO;
 	UserInfo userInfo = new UserInfo();
 
-	public ConfigController(Result result, Iteracoes iteracoesDAO,
-			Configuration configurationDAO, Validator validator, UsersInterface userDAO, BancoDadosInterface BancoDadosDAO) {
-		this.result = result;
-		this.iteracoesDAO = iteracoesDAO;
-		this.configurationDAO = configurationDAO;
-		this.validator = validator;
-		this.userDAO = userDAO;
-		this.BancoDadosDAO = BancoDadosDAO;
-	}
 
 	@Get("/configServer")
-	public void configServer() {
-		//inserindo html title no result
+	public void configServer() throws Exception {
+		
+		// Inserting HTML title in the result
 		result.include("title","Configurar Servidor");
 		
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /configServer");
-		//List<Configurations> opts = this.configurationDAO.getConfigs();
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /configServer");
+		
 		Configurations opts = this.configurationDAO.getConfigs();
 		int diff = opts.getDifference();;
 		String mailFrom = opts.getMailFrom();
@@ -81,15 +85,18 @@ public class ConfigController {
 		String ntpServer = opts.getNtpServer();
 		boolean updateNtpIsActive = opts.isUpdateNtpIsActive();
 		boolean sendNotification = opts.isSendNotification();
-		
-		Logger.getLogger(getClass()).debug("Difference time: " + diff);
-		Logger.getLogger(getClass()).debug("Sender: " + mailFrom);
-		Logger.getLogger(getClass()).debug("Send Notification: " + sendNotification);
-		Logger.getLogger(getClass()).debug("Subject: " + subject);
-		Logger.getLogger(getClass()).debug("Dests: " + dests);
-		Logger.getLogger(getClass()).debug("JndiMail: " + jndiMail);
-		Logger.getLogger(getClass()).debug("NtpServer: " + ntpServer);
-		Logger.getLogger(getClass()).debug("updateNtpIsActive: " + updateNtpIsActive);
+		GetAvailableMailSession getMS = new GetAvailableMailSession();
+		ArrayList<String> mailSessions = getMS.listAllMailSessions();
+		ArrayList<String> mailSessionstemp = new ArrayList<String>();
+			
+		log.fine("Difference time: " + diff);
+		log.fine("Sender: " + mailFrom);
+		log.fine("Send Notification: " + sendNotification);
+		log.fine("Subject: " + subject);
+		log.fine("Dests: " + dests);
+		log.fine("JndiMail: " + jndiMail);
+		log.fine("NtpServer: " + ntpServer);
+		log.fine("updateNtpIsActive: " + updateNtpIsActive);
 		
 		result.include("difference", diff);
 		result.include("mailFrom", mailFrom);
@@ -105,6 +112,13 @@ public class ConfigController {
 		result.include("jndiMail", jndiMail);
 		result.include("ntpServer",ntpServer);
 		
+		for (int i = 0; i < mailSessions.size(); i++){
+			mailSessionstemp.add(mailSessions.get(i).replace("%x3a", ":"));
+			log.fine("********Mail Sessions available: [" + i + "] - " + mailSessionstemp.get(i));	
+		}
+		
+		result.include("mailSessions", mailSessionstemp);
+		
 		if (updateNtpIsActive){
 			result.include("updateNtpIsActive","ATIVO");
 		}else{
@@ -112,18 +126,18 @@ public class ConfigController {
 		}
 	}
 	
-	@Get("/updateConfig")
-	public void updateConfig(String new_value, String campo){
-		//inserindo html title no result
+	@Post("/updateConfig")
+	public void updateConfig(String new_value, String campo) throws Exception{
+
+		// Inserting HTML title in the result
 		result.include("title","Configurar Servidor");
 		
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /updateConfig");
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] Valor recebido " + campo + " " + new_value);
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /updateConfig");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] Value received [" + campo + ": " + new_value + "].");
 		
-		String regex_mail = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+		String regex_mail = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 		
 		Configurations config = this.configurationDAO.getConfigs();
 				
@@ -160,12 +174,15 @@ public class ConfigController {
 		}else if (campo.equals("ntpServer")){
 			config.setNtpServer(new_value);
 		}else if (campo.equals("jndiMail")){
+			if (new_value.contains("%x3a")){
+				new_value.replace("%x3a", ":");
+			}
 			config.setJndiMail(new_value);
 		}else if(campo.equals("dests")){
 			String [] mail_dests = new_value.split(",");
 			
 			for (int i = 0; i < mail_dests.length; i++){
-				Logger.getLogger(getClass()).debug("Emails [ " + i + " ]: " + mail_dests[i]);
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] RCPT TO Emails: [ " + i + " ]: " + mail_dests[i]);
 				if (!mail_dests[i].matches(regex_mail)) {
 					validator.add(new ValidationMessage("E-mail " + mail_dests[i] + " não está correto", "Erro"));
 				}else{
@@ -190,34 +207,33 @@ public class ConfigController {
 	
 	@Get("/configClients")
 	public void configClients() {
-		//inserindo html title no result
+		
+		// Inserting HTML title in the result
 		result.include("title","Configurar Clientes");
-		
 		result.include("loggedUser", userInfo.getLoggedUsername());
-		
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /configClients");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /configClients");
 		List<Servidores> list = this.iteracoesDAO.listServers();
 		result.include("server", list);
 	}
 	
 	@Get("/configDataBases")
 	public void configDataBases() {
-		//inserindo html title no result
+		
+		// Inserting HTML title in the result
 		result.include("title","Configurar Banco de Dados");
 		result.include("loggedUser", userInfo.getLoggedUsername());
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /configDataBases");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /configDataBases");
 		List<BancoDados> list = this.BancoDadosDAO.listDataBases();
 		result.include("dataBase", list);		
 	}
 
 	@Get("/configUser")
 	public void configUser() {
-		//inserindo html title no result
+		
+		// Inserting HTML title in the result
 		result.include("title","Configurar Usuário");
-		
 		result.include("loggedUser", userInfo.getLoggedUsername());
-		
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /configUser");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /configUser");
 		List<Users> list = this.userDAO.listUser();
 		result.include("user",list);
 	}

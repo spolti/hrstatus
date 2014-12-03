@@ -22,8 +22,7 @@ package br.com.hrstatus.action.databases.postgre;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import br.com.hrstatus.utils.UserInfo;
 
@@ -33,6 +32,7 @@ import br.com.hrstatus.utils.UserInfo;
 
 public class ConnPostgreSQL {
 
+	static Logger log =  Logger.getLogger(ConnPostgreSQL.class.getCanonicalName());
 	public static boolean status = false;
 	public ConnPostgreSQL() {}
 
@@ -45,26 +45,24 @@ public class ConnPostgreSQL {
 			String driver = "org.postgresql.Driver";
 			Class.forName(driver);
 			connection = DriverManager.getConnection("jdbc:postgresql://"+serverAddress+":5432/"+database+"",username,password);
-			//connection = DriverManager.getConnection(url, username, password);
 
+			//Testing if the connection was successfully obtained.
 			if (connection != null) {
 				status = (true);
-				Logger.getLogger(ConnPostgreSQL.class).debug("[ " + userInfo.getLoggedUsername() + " ] PostgreSQL datbase connection status: " + status);
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] PostgreSQL datbase connection status: " + status);
 			} else {
 				status = (false);
-				Logger.getLogger(ConnPostgreSQL.class).debug("[ " + userInfo.getLoggedUsername() + " ] PostgreSQL datbase connection status: " + status);
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] PostgreSQL datbase connection status: " + status);
 			}
 			return connection;
 
 		} catch (ClassNotFoundException e) {
-			//System.out.println("O driver expecificado nao foi encontrado.");
-			System.out.println(e.fillInStackTrace());
-			System.out.println(e.getMessage());
+			log.severe(e.fillInStackTrace().toString());
+			log.severe(""+e.getMessage().toString());
 			return null;
 		} catch (SQLException e) {
-			//System.out.println("Nao foi possivel conectar ao Banco de Dados." + e);
-			System.out.println(e.fillInStackTrace());
-			System.out.println(e.getMessage());
+			log.severe(e.fillInStackTrace().toString());
+			log.severe(e.getMessage().toString());
 			return null;
 		}
 	}

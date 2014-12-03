@@ -19,11 +19,11 @@
 
 package br.com.hrstatus.dao;
 
+import br.com.hrstatus.model.Configurations;
+
 /*
  * @author spolti
  */
-
-import br.com.hrstatus.model.Configurations;
 
 public interface Configuration {
 

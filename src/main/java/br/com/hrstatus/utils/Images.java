@@ -19,29 +19,31 @@
 
 package br.com.hrstatus.utils;
 
-/*
- *  @author spolti
- */
-
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.interceptor.multipart.UploadedFile;
 import br.com.caelum.vraptor.ioc.Component;
 
+/*
+ *  @author spolti
+ */
+
 @Component
 public class Images {
 
+	Logger log =  Logger.getLogger(Images.class.getCanonicalName());
+	
 	private File pastaImages;
 	private static final int IMG_WIDTH_SETTINGS = 350;
 	private static final int IMG_HEIGHT_SETTINGS = 150;
@@ -54,12 +56,12 @@ public class Images {
 
 		String caminhoImagens = (System.getProperty("jboss.server.base.dir") + "/images");
 		pastaImages = new File(caminhoImagens);
-		Logger.getLogger(Images.class).debug("Local Imagens: " + pastaImages);
+		log.fine("Local Imagens: " + pastaImages);
 
 		if (pastaImages.isDirectory()) {
-			Logger.getLogger(Images.class).debug("O diretório destino " + pastaImages + " existe.");
+			log.fine("Final directory " + pastaImages + " exists.");
 		} else {
-			Logger.getLogger(Images.class).debug("O diretório destino " + pastaImages + " não existe, criando.");
+			log.fine("The final directory" + pastaImages + " don't exists, creating it.");
 			pastaImages.mkdir();
 		}
 	}
@@ -69,15 +71,15 @@ public class Images {
 		File destino = new File(pastaImages, "logo.imagem");
 		try {
 			IOUtils.copy(imagem.getFile(), new FileOutputStream(destino));
-			Logger.getLogger(Images.class).info("Imagem salva em " + destino);
+			log.info("Imagem salva em " + destino);
 		} catch (IOException e) {
-			throw new RuntimeException("Erro ao copiar imagem", e);
+			throw new RuntimeException("Error copying the file", e);
 		}
 	}
 
 	public void delete() {
 
-		Logger.getLogger(Images.class).info("Removendo imagem de logo.");
+		log.info("Removing the logo image");
 		File logo = new File(pastaImages, "logo.imagem");
 		File logo_home = new File(pastaImages, "logo_login.imagem");
 		File logo_settings = new File(pastaImages, "logo_resized.imagem");
@@ -100,13 +102,13 @@ public class Images {
 				BufferedImage resizeImagePng = resizeImage(originalImage, type,	"settings");
 				ImageIO.write(resizeImagePng, "png", new File(pastaImages + "/logo_resized.imagem"));
 
-				Logger.getLogger(Images.class).debug("Resizing oringinal Image to previous vizualization.");
+				log.fine("Resizing oringinal Image to previous vizualization.");
 
 				return new File(pastaImages + "/logo_resized.imagem");
 
 			} else {
-				Logger.getLogger(Images.class).debug(
-						"Resizing original Image to login page vizualization.");
+				
+				log.fine("Resizing original Image to login page vizualization.");
 				BufferedImage originalImage = ImageIO.read(new File(pastaImages	+ "/logo.imagem"));
 				int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
 				BufferedImage resizeImagePng = resizeImage(originalImage, type,	"home");
@@ -115,8 +117,9 @@ public class Images {
 			}
 
 		} catch (Exception ex) {
+			
 			String imgDefault = request.getRealPath("img/hrstatus.jpg");
-			Logger.getLogger(getClass()).debug("Logo Image  " + imgDefault);
+			log.fine("Logo Image  " + imgDefault);
 			File file = new File(imgDefault);
 			BufferedImage originalImage = ImageIO.read(file);
 			int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
@@ -130,6 +133,7 @@ public class Images {
 	private static BufferedImage resizeImage(BufferedImage originalImage, int type, String target) {
 
 		if (target.equals("settings")) {
+			
 			BufferedImage resizedImage = new BufferedImage(IMG_WIDTH_SETTINGS, IMG_HEIGHT_SETTINGS, type);
 			Graphics2D g = resizedImage.createGraphics();
 			g.drawImage(originalImage, 0, 0, IMG_WIDTH_SETTINGS, IMG_HEIGHT_SETTINGS, null);
@@ -137,6 +141,7 @@ public class Images {
 			return resizedImage;
 
 		} else if (target.equals("home")) {
+			
 			BufferedImage resizedImage = new BufferedImage(IMG_WIDTH_HOME, IMG_HEIGHT_HOME, type);
 			Graphics2D g = resizedImage.createGraphics();
 			g.drawImage(originalImage, 0, 0, IMG_WIDTH_HOME, IMG_HEIGHT_HOME,null);

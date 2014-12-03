@@ -19,17 +19,15 @@
 
 package br.com.hrstatus.controller;
 
-/*
- * @author spolti
- */
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Delete;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.hrstatus.dao.BancoDadosInterface;
-import br.com.hrstatus.dao.Iteracoes;
+import br.com.hrstatus.dao.ServersInterface;
 import br.com.hrstatus.dao.LockIntrface;
 import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.model.BancoDados;
@@ -38,33 +36,39 @@ import br.com.hrstatus.model.Servidores;
 import br.com.hrstatus.model.Users;
 import br.com.hrstatus.utils.UserInfo;
 
+/*
+ * @author spolti
+ */
+
 @Resource
 public class DeleteController {
 
+	Logger log =  Logger.getLogger(DeleteController.class.getCanonicalName());
+	
+	@Autowired
 	private Result result;
-	private Iteracoes iteracoesDAO;
+	@Autowired
+	private ServersInterface iteracoesDAO;
+	@Autowired
 	private UsersInterface usersDAO;
+	@Autowired
 	private BancoDadosInterface BancoDadosDAO;
+	@Autowired
 	private LockIntrface lockDAO;
 	UserInfo userInfo = new UserInfo();
 
-	public DeleteController(Result result, Iteracoes iteracoesDAO, UsersInterface usersDAO, BancoDadosInterface BancoDadosDAO, LockIntrface lockDAO) {
-		this.result = result;
-		this.iteracoesDAO = iteracoesDAO;
-		this.usersDAO = usersDAO;
-		this.BancoDadosDAO = BancoDadosDAO;
-		this.lockDAO = lockDAO;
-	}
-
+	
 	@Delete("/deleteServerByID")
 	public void deleteServerByID(String id_server) {
-		//inserindo html title no result
+
+		// Inserting HTML title in the result
 		result.include("title","Deletar Servidor");
 
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /deleteServerByID");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /deleteServerByID");
 		int id = Integer.parseInt(id_server);
 		Servidores server = this.iteracoesDAO.getServerByID(id);
-		// Setando ID
+		
+		// Setting server ID to delete
 		server.setId(id);
 		this.iteracoesDAO.deleteServerByID(server);
 		result.redirectTo(HomeController.class).home("");
@@ -72,9 +76,12 @@ public class DeleteController {
 	
 	@Delete("/deleteDataBaseByID")
 	public void deleteDataBaseByID(String id_dataBase) {
-		//inserindo html title no result
+
+		// Inserting HTML title in the result
 		result.include("title","Deletar Banco de Dados");
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /deleteDataBaseByID");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /deleteDataBaseByID");
+		
+		// Setting database ID to delete
 		int id = Integer.parseInt(id_dataBase);
 		BancoDados dataBase = this.BancoDadosDAO.getDataBaseByID(id);
 		this.BancoDadosDAO.deleteDataBase(dataBase);
@@ -83,11 +90,12 @@ public class DeleteController {
 
 	@Delete("/deleteUserByID")
 	public void deleteUserByID(String username) {
-		//inserindo html title no result
+
+		// Inserting HTML title in the result
 		result.include("title","Deletar Usuário");
 		
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /deleteUserByID");
-		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Usuário recebido para deleção: " + username);
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /deleteUserByID");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] Received user  to be deleted: " + username);
 		
 		Users user = this.usersDAO.getUserByID(username);
 		
@@ -95,7 +103,7 @@ public class DeleteController {
 			result.include("Error", "Você não pode deletar você mesmo.");
 			result.redirectTo(ConfigController.class).configUser();
 		}else{
-			//Setando username
+			// Setting the username to be deleted
 			user.setUsername(username);
 			this.usersDAO.deleteUserByID(user);
 			result.redirectTo(HomeController.class).home("");
@@ -104,9 +112,11 @@ public class DeleteController {
 	
 	@Delete("/deleteLockByID")
 	public void deleteLockByID(String id_lock){
+		
+		// Inserting HTML title in the result
 		result.include("title","Deletar Lock");
-		Logger.getLogger(getClass()).info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /deleteLockByID");
-		Logger.getLogger(getClass()).debug("[ " + userInfo.getLoggedUsername() + " ] Lock id para deleção: " + id_lock);
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /deleteLockByID");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] Lock id to be deleted: " + id_lock);
 		Lock lock = this.lockDAO.getLockByID(Integer.parseInt(id_lock));
 		this.lockDAO.removeLock(lock);
 		result.redirectTo(HomeController.class).home("");

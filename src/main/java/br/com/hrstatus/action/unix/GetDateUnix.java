@@ -19,14 +19,9 @@
 
 package br.com.hrstatus.action.unix;
 
-/*
- * @author spolti
- */
-
 import java.io.IOException;
 import java.io.InputStream;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
@@ -34,9 +29,17 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
+/*
+ * @author spolti
+ */
+
 public class GetDateUnix {
 
+	static Logger log = Logger.getLogger(GetDateUnix.class.getCanonicalName());
+
+	@SuppressWarnings("unchecked")
 	public static class MyLogger implements com.jcraft.jsch.Logger {
+		@SuppressWarnings("rawtypes")
 		static java.util.Hashtable name = new java.util.Hashtable();
 		static {
 			name.put(new Integer(DEBUG), "DEBUG: ");
@@ -52,56 +55,55 @@ public class GetDateUnix {
 
 		public void log(int level, String message) {
 			System.out.print(name.get(new Integer(level)));
-			Logger.getLogger(getClass()).debug(message);
+			log.fine(message);
 		}
 	}
-	
-	public static String exec (String user, String host, String password, int port) throws JSchException, IOException{
-	
-		String s = "";
-	      
-	      //definindo a não obrigação do arquivo know_hosts
-	      java.util.Properties config = new java.util.Properties(); 
-	      config.put("StrictHostKeyChecking", "no");
-	      
-	      //Criando a sessao e conectando no servidor
-	      JSch jsch=new JSch();
-	      Session session=jsch.getSession(user, host, port);
-	      session.setConfig(config);
-	      session.setPassword(password);
-	      session.connect(10000);
 
-	      //Exectando o comando
-	      
-	      Channel channel=session.openChannel("exec");
-	      ((ChannelExec)channel).setCommand("/bin/date");
-	      ((ChannelExec)channel).setErrStream(System.err);
-	      InputStream in=channel.getInputStream();
-	      
-	      channel.connect();
-	         
-	      byte[] tmp=new byte[1024];
-	      boolean test = true;
-	      while(test == true){
-	    	 
-	        while(in.available()>0){
-	        	
-	          int i=in.read(tmp, 0, 1024);
-	          if(i<0){
-	        	  break;
-	          }
-	         s += (new String(tmp, 0, i));
-	        }
-	        
-	        if(channel.isClosed()){
-	          break;
-	       }
-	        
-	      }
-	    
-	      channel.disconnect();
-	      session.disconnect();
-      
+	public static String exec(String user, String host, String password, int port) throws JSchException, IOException {
+
+		String s = "";
+
+		// Disabling host key check
+		java.util.Properties config = new java.util.Properties();
+		config.put("StrictHostKeyChecking", "no");
+
+		// Creating the server session and connecting
+		JSch jsch = new JSch();
+		Session session = jsch.getSession(user, host, port);
+		session.setConfig(config);
+		session.setPassword(password);
+		session.connect(10000);
+
+		// Executing the command
+		Channel channel = session.openChannel("exec");
+		((ChannelExec) channel).setCommand("/bin/date");
+		((ChannelExec) channel).setErrStream(System.err);
+		InputStream in = channel.getInputStream();
+
+		channel.connect();
+
+		byte[] tmp = new byte[1024];
+		boolean test = true;
+		while (test == true) {
+
+			while (in.available() > 0) {
+
+				int i = in.read(tmp, 0, 1024);
+				if (i < 0) {
+					break;
+				}
+				s += (new String(tmp, 0, i));
+			}
+
+			if (channel.isClosed()) {
+				break;
+			}
+
+		}
+
+		channel.disconnect();
+		session.disconnect();
+
 		return s.replaceAll("\n", "");
-	 }
+	}
 }

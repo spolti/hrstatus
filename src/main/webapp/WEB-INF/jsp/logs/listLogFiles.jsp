@@ -1,23 +1,5 @@
-<!-- 
-    Copyright (C) 2012  Filippe Costa Spolti
-
-	This file is part of Hrstatus.
-
-    Hrstatus is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- -->
-
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ include file="../home/navbar.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -102,23 +84,46 @@
 							</tr>
 						</thead>
 						<tbody>
-							<c:forEach begin="1" var="file" varStatus="status" items="${listOfFiles}">
+							<c:forEach begin="0" var="file" varStatus="status" items="${listOfFiles}">
 								<tr>
-									<td><a href="<c:url value='/downloadFile/${hostname}/${file}' />" value="${file}">${file}</a></td>
-									<td>
-										<div style="display: inline">
-											Linhas: 
-											<input type="text" name="numLinhas" style="margin-bottom: 0px;" id="file${status.index}" onkeypress="return numbersonly(this,event)"/>
+								<c:choose>
+									<c:when test="${(fn:startsWith(file, 'd ')) == false}">
+										<td><a href="<c:url value='/downloadFile/${hostname}/${file}' />" value="${file}">${file}</a></td>
+									</c:when>
+									<c:otherwise>
+										<td><a href="<c:url value='/listLogFiles/${hostname}/subdir/${file}' />" value="${file}">${file}</a></td>
+									</c:otherwise>
+								</c:choose>									
+								<td>
+								<c:choose>
+									<c:when test="${(fn:startsWith(file, 'd ')) == false}">
+										<div style="display: inline"> 
+											<input type="text" name="numLinhas" placeholder="Quantidade de linhas" style="margin-bottom: 0px;" id="file${status.index}" onkeypress="return numbersonly(this,event)"/>
 											<input type="image" src="../img/tail.png" name="image" width="20" height="20" onclick="callTail('${file}', 'file${status.index}')"/>
 										</div>
+									</c:when>
+									<c:otherwise>
+										<div style="display: inline"> 
+											Diretório
+										</div>
+									</c:otherwise>
+									</c:choose>
 									</td>
 									<td>
+									<c:choose>
+									<c:when test="${(fn:startsWith(file, 'd ')) == false}">
 										<div style="display: inline">
-											Buscar: 
-											<input type="text" name="palavraBusca" style="margin-bottom: 0px;" id="findfile${status.index}"/>
+											<input type="text" name="palavraBusca" placeholder="Valor Desejado" style="margin-bottom: 0px;" id="findfile${status.index}"/>
 											<input type="image" src="../img/search.png" name="image" width="20" height="20" onclick="findInFile('${file}', 'findfile${status.index}')"/>
 										</div>
-									</td>
+									</c:when>
+									<c:otherwise>
+										<div style="display: inline"> 
+											---
+										</div>
+									</c:otherwise>
+								</c:choose>
+								</td>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -129,5 +134,3 @@
 	</div>
 </body>
 </html>
-
-

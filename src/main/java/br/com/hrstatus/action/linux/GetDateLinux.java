@@ -25,8 +25,7 @@ package br.com.hrstatus.action.linux;
 
 import java.io.IOException;
 import java.io.InputStream;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
@@ -35,8 +34,12 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 public class GetDateLinux {
-	
+
+	static Logger log = Logger.getLogger(GetDateLinux.class.getCanonicalName());
+
+	@SuppressWarnings("unchecked")
 	public static class MyLogger implements com.jcraft.jsch.Logger {
+		@SuppressWarnings("rawtypes")
 		static java.util.Hashtable name = new java.util.Hashtable();
 		static {
 			name.put(new Integer(DEBUG), "DEBUG: ");
@@ -52,29 +55,25 @@ public class GetDateLinux {
 
 		public void log(int level, String message) {
 			System.out.print(name.get(new Integer(level)));
-			Logger.getLogger(getClass()).debug(message);
+			log.fine(message);
 		}
 	}
-	
-	public static String exec(String user, String host, String password,
-			int port) throws JSchException, IOException {
+
+	public static String exec(String user, String host, String password, int port) throws JSchException, IOException {
 
 		String s = "";
-
-		// informações de usuário/host/porta para conexão
-
-		// definindo a não obrigação do arquivo know_hosts
+		// Disabling host key check
 		java.util.Properties config = new java.util.Properties();
 		config.put("StrictHostKeyChecking", "no");
 
-		// Criando a sessao e conectando no servidor
+		// Creating the server session and connecting
 		JSch jsch = new JSch();
 		Session session = jsch.getSession(user, host, port);
 		session.setConfig(config);
 		session.setPassword(password);
 		session.connect(10000);
 
-		// Exectando o comando
+		// Executing the command
 		Channel channel = session.openChannel("exec");
 		((ChannelExec) channel).setCommand("date");
 		((ChannelExec) channel).setErrStream(System.err);
@@ -103,7 +102,7 @@ public class GetDateLinux {
 		channel.disconnect();
 		session.disconnect();
 
-		while (s.endsWith(" ")){
+		while (s.endsWith(" ")) {
 			s = s.substring(0, -1);
 		}
 		return s;

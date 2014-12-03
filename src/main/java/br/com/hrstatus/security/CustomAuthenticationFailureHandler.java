@@ -1,4 +1,4 @@
-package br.com.hrstatus.utils;
+package br.com.hrstatus.security;
 
 import java.io.IOException;
 

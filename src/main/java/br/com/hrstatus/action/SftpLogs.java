@@ -19,17 +19,11 @@
 
 package br.com.hrstatus.action;
 
-/*
- * @author spolti
- * Any codes from jcraft.com
- */
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
@@ -37,9 +31,19 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
+/*
+ * @author spolti
+ * Any codes from jcraft.com
+ */
+
+
 public class SftpLogs {
 
+	static Logger log =  Logger.getLogger(SftpLogs.class.getCanonicalName());
+	
+	@SuppressWarnings("unchecked")
 	public static class MyLogger implements com.jcraft.jsch.Logger {
+		@SuppressWarnings("rawtypes")
 		static java.util.Hashtable name = new java.util.Hashtable();
 		static {
 			name.put(new Integer(DEBUG), "DEBUG: ");
@@ -55,31 +59,31 @@ public class SftpLogs {
 
 		public void log(int level, String message) {
 			System.out.print(name.get(new Integer(level)));
-			Logger.getLogger(getClass()).debug(message);
+			log.fine(message);
 		}
 	}
 
-	public String showGetFiles(String user, String pass, String host, int port,
-			String remoteDir) throws JSchException, IOException {
-		String s = "";
+	public String showGetFiles(String user, String pass, String host, int port, String remoteDir) throws JSchException, IOException {
 		
+		String s = "";
 		JSch.setLogger(new MyLogger());
-		// informações de usuário/host/porta para conexão
 
-		// definindo a não obrigação do arquivo know_hosts
+		// Disabling host key check
 		java.util.Properties config = new java.util.Properties();
 		config.put("StrictHostKeyChecking", "no");
 
-		// Criando a sessao e conectando no servidor
+		// Creating the server session and connecting
 		JSch jsch = new JSch();
 		Session session = jsch.getSession(user, host, port);
 		session.setConfig(config);
 		session.setPassword(pass);
 		session.connect(10000);
 
-		// Exectando o comando
+		// Executing the command
+		String command = "ls -lh "+ remoteDir +" | awk '{print $1,$5,$9}' | grep -v total |  cut -c  1,12- | sed 's/^-//;s/ 4.0K//;s/4.0K//;s/^l//;s/^ //g'";
+		System.out.println(command);
 		Channel channel = session.openChannel("exec");
-		((ChannelExec) channel).setCommand("ls -sh " + remoteDir);
+		((ChannelExec) channel).setCommand(command);
 		((ChannelExec) channel).setErrStream(System.err);
 
 		InputStream in = channel.getInputStream();
@@ -112,29 +116,24 @@ public class SftpLogs {
 		return s;
 	}
 
-	public String tailFile(String user, String pass, String host, int port,
-			String remoteDir, String file, Integer numeroLinhas)
-			throws JSchException, IOException {
+	public String tailFile(String user, String pass, String host, int port,	String remoteDir, String file, Integer numeroLinhas) throws JSchException, IOException {
 
 		String s = "";
 
-		// informações de usuário/host/porta para conexão
-
-		// definindo a não obrigação do arquivo know_hosts
+		// Disabling host key check
 		java.util.Properties config = new java.util.Properties();
 		config.put("StrictHostKeyChecking", "no");
 
-		// Criando a sessao e conectando no servidor
+		// Creating the server session and connecting
 		JSch jsch = new JSch();
 		Session session = jsch.getSession(user, host, port);
 		session.setConfig(config);
 		session.setPassword(pass);
 		session.connect(10000);
 
-		// Exectando o comando
+		// Executing the command
 		Channel channel = session.openChannel("exec");
-		((ChannelExec) channel).setCommand("tail -n " + numeroLinhas + " "
-				+ remoteDir + "/" + file);
+		((ChannelExec) channel).setCommand("tail -n " + numeroLinhas + " " + remoteDir + "/" + file);
 		((ChannelExec) channel).setErrStream(System.err);
 		InputStream in = channel.getInputStream();
 
@@ -167,29 +166,24 @@ public class SftpLogs {
 
 	}
 
-	public String findInFile(String user, String pass, String host, int port,
-			String remoteDir, String file, String palavraBusca)
-			throws JSchException, IOException {
+	public String findInFile(String user, String pass, String host, int port, String remoteDir, String file, String palavraBusca) throws JSchException, IOException {
 
 		String s = "";
 
-		// informações de usuário/host/porta para conexão
-
-		// definindo a não obrigação do arquivo know_hosts
+		// Disabling host key check
 		java.util.Properties config = new java.util.Properties();
 		config.put("StrictHostKeyChecking", "no");
 
-		// Criando a sessao e conectando no servidor
+		// Creating the server session and connecting
 		JSch jsch = new JSch();
 		Session session = jsch.getSession(user, host, port);
 		session.setConfig(config);
 		session.setPassword(pass);
 		session.connect(10000);
 
-		// Exectando o comando
+		// Executing the command
 		Channel channel = session.openChannel("exec");
-		((ChannelExec) channel).setCommand("grep -i '" + palavraBusca + "' "
-				+ remoteDir + "/" + file);
+		((ChannelExec) channel).setCommand("grep -i '" + palavraBusca + "' " + remoteDir + "/" + file);
 		((ChannelExec) channel).setErrStream(System.err);
 		InputStream in = channel.getInputStream();
 
@@ -222,11 +216,11 @@ public class SftpLogs {
 
 	}
 
-	public String getFile(String user, String pass, String host, int port,
-			String rfile) {
+	public String getFile(String user, String pass, String host, int port, String rfile) {
+		
 		FileOutputStream fos = null;
 		try {
-			// definindo a não obrigação do arquivo know_hosts
+			// Disabling host key check
 			java.util.Properties config = new java.util.Properties();
 			config.put("StrictHostKeyChecking", "no");
 			JSch jsch = new JSch();
@@ -274,6 +268,7 @@ public class SftpLogs {
 					filesize = filesize * 10L + (long) (buf[0] - '0');
 				}
 
+				@SuppressWarnings("unused")
 				String file = null;
 				for (int i = 0;; i++) {
 					in.read(buf, i, 1);
@@ -322,9 +317,9 @@ public class SftpLogs {
 
 		} catch (Exception e) {
 			System.err.println(e);
-			return "Download não Realizado";
+			return "Download unrealized";
 		}
-		return "Download Realizado";
+		return "Download realized.";
 	}
 
 	static int checkAck(InputStream in) throws IOException {

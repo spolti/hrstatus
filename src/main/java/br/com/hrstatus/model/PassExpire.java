@@ -19,15 +19,14 @@
 
 package br.com.hrstatus.model;
 
-/*
- * @author spolti
- */
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/*
+ * @author spolti
+ */
 
 @Entity
 @Table(name = "PassExpire")

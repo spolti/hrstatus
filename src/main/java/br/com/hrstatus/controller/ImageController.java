@@ -22,10 +22,11 @@ package br.com.hrstatus.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Post;
@@ -44,34 +45,32 @@ import br.com.hrstatus.utils.UserInfo;
 @Resource
 public class ImageController {
 	
+	Logger log =  Logger.getLogger(ImageController.class.getCanonicalName());
+	
+	@Autowired
 	private Result result;
+	@Autowired
 	private Validator validator;
-	private final Images images;
+	@Autowired
+	Images images;
+	@Autowired
 	private HttpServletRequest request;
-	
 	UserInfo userInfo = new UserInfo();
-	
-	public ImageController(Result result, Validator validator, Images images,HttpServletRequest request) {
-		
-		this.result = result;
-		this.validator = validator;
-		this.images = images;
-		this.request = request;
-	}
+
 	
 	@Post("/uploud/logo/imagem")
-	 public void upload(final UploadedFile imagem){
+	 public void upload(final UploadedFile imagem) throws Exception{
 
 		validator.onErrorRedirectTo(ConfigController.class).configServer();
 		
 		if (!imagem.getContentType().startsWith("image")){
-				validator.add(new ValidationMessage("O arquivo enviado não é uma imagem.", "Erro"));
+				validator.add(new ValidationMessage("The sended file is not a Image valid format.", "Erro"));
 		} else{
 			try{
 				images.save(imagem);
 				result.forwardTo(ConfigController.class).configServer();
 			}catch(Exception e){
-				validator.add(new ValidationMessage("Erro inesperado: " + e, "Erro"));
+				validator.add(new ValidationMessage("Unexpected error: " + e, "Erro"));
 				
 			}
 
@@ -81,7 +80,7 @@ public class ImageController {
 	}
 	
 	@Get("/delete/logo/imagem")
-	public void delete(){
+	public void delete() throws Exception{
 		
 		images.delete();
 		result.forwardTo(ConfigController.class).configServer();
@@ -98,8 +97,7 @@ public class ImageController {
 				return images.show("home");
 			}
 	  }catch (javax.imageio.IIOException ex){
-		  Logger.getLogger(getClass()).debug("Imagem não encontrada ou ainda não configurada");
-		
+		  log.fine("Login page image not found or not configured yet.");		
 	  }
 	  return null;
 	}
@@ -111,7 +109,7 @@ public class ImageController {
 		String UPfileName = request.getRealPath("img/up.jpg");
 		String DOWNfileName = request.getRealPath("img/down.jpg");
 
-		Logger.getLogger(getClass()).debug("FILE:  " + UPfileName);
+		log.fine("FILE:  " + UPfileName);
 		
 		if (local.equals("up")){
 			File file = new File(UPfileName);

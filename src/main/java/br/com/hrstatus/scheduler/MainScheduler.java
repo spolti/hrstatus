@@ -19,61 +19,65 @@
 
 package br.com.hrstatus.scheduler;
 
-/*
- * @author spolti
- */
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.UnknownHostException;
 import java.util.Date;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import br.com.hrstatus.dao.Configuration;
-import br.com.hrstatus.dao.Iteracoes;
+import br.com.hrstatus.dao.ServersInterface;
 import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.model.Configurations;
-import br.com.hrstatus.utils.DateUtils;
 import br.com.hrstatus.utils.GetServerIPAddress;
-import br.com.hrstatus.utils.MailSender;
+import br.com.hrstatus.utils.date.DateUtils;
+import br.com.hrstatus.utils.mail.MailSender;
+
+/*
+ * @author spolti
+ */
 
 @Service
-public class Scheduler {
+public class MainScheduler {
 
+	Logger log =  Logger.getLogger(MainScheduler.class.getCanonicalName());
+	
 	@Autowired
-	private Iteracoes iteracoesDAO;
+	private ServersInterface iteracoesDAO;
 	
 	@Autowired
 	private Configuration configurationDAO;
 	
 	@Autowired
 	private UsersInterface userDAO;
+	
 	DateUtils dateUtils = new DateUtils();
-
 	GetServerIPAddress getIP = new GetServerIPAddress();
 
-	public Scheduler() {
+	public MainScheduler() {
 	}
 
 	@Scheduled(cron = "${br.com.hrstatus.scheduler.MailScheduler.cron}")
 	public void sendMail() throws UnknownHostException {
-		Logger.getLogger(getClass()).debug("[ System ] Invoking sendMail at " + new Date());
+		
+		log.fine("[ System ] Invoking sendMail() at " + new Date());
 
 		int count = this.iteracoesDAO.countServersNOK();
 		boolean sendNotification = this.configurationDAO.sendNotification();
 
-		Logger.getLogger(getClass()).debug("Notificação Ativa: " + sendNotification);
+		log.fine("[ System ] Notification through email is active? -> " + sendNotification);
 
 		if (sendNotification) {
 
 			if (count > 0) {
-				Logger.getLogger(getClass()).debug("[ System ] Foram encontrados " + count + " servidor(es) desatualizado(s), enviando e-mail de alerta.");
-				// Envio de e-mail
+				
+				log.fine("[ System ] Was found " + count + " servers outdated, sending notification email");
+				
 				String mail1 = this.configurationDAO.getMailSender();
 				String Subject = this.configurationDAO.getSubject();
 				String Dests[] = this.configurationDAO.getDests().split(",");
@@ -81,10 +85,10 @@ public class Scheduler {
 				MailSender mail = new MailSender();
 				mail.Sender(mail1, Subject, Dests, jndiMail);
 			} else {
-				Logger.getLogger(getClass()).debug("[ System ] Nenhum servidor desatualizado foi encontrado.");
+				log.fine("[ System ] No server outdated was found");
 			}
 		}else {
-			Logger.getLogger(getClass()).debug("O envio de e-mail de notificação está desativado, abortando envio");
+			log.fine("Sending notification e-mail is disabled, aborting shipping");
 		}
 	}
 
@@ -102,24 +106,24 @@ public class Scheduler {
 		}
 
 		if (stdIn.equals("")) {
-			Logger.getLogger(getClass()).error("Comando ntpdate não encontrado, abortando atualização automática");
+			log.severe("ntpdate command not found, aborting the automated update");
 		} else {
-			Logger.getLogger(getClass()).debug("ntp ativo: " + isUpdateNtpActive);
+			log.finest("ntp ativo: " + isUpdateNtpActive);
 			if (isUpdateNtpActive) {
-				Logger.getLogger(getClass()).debug("Iniciando checagem NTP");
+				log.fine("Iniciando checagem NTP");
 				String ntpServer = this.configurationDAO.getNtpServerAddress();
-				Logger.getLogger(getClass()).debug("Servidor NTP configurado: " + ntpServer);
+				log.fine("Servidor NTP configurado: " + ntpServer);
 
-				// fazer a atualização com sudo....
+				// Doing the update with sudo
 				String stdInAtualiza = "";
 				Process pAtualiza = (Runtime.getRuntime().exec("sudo " + stdIn + " -u " + ntpServer));
 				BufferedReader stdInputAtualiza = new BufferedReader(new InputStreamReader(pAtualiza.getInputStream()));
 				while ((s = stdInputAtualiza.readLine()) != null) {
 					stdInAtualiza += s + "\n";
 				}
-				Logger.getLogger(getClass()).debug("Resultado atualização ntp [ sudo " + stdIn + " -u "	+ ntpServer + "]: " + stdInAtualiza);
+				log.fine("Result of ntp update [ sudo " + stdIn + " -u " + ntpServer + "]: " + stdInAtualiza);
 			} else {
-				Logger.getLogger(getClass()).debug("Atualização NTP automática não está ativa.");
+				log.fine("NTP Update automatic is not active");
 			}
 		}
 	}

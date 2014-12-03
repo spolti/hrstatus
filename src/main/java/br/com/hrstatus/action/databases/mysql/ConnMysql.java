@@ -22,8 +22,7 @@ package br.com.hrstatus.action.databases.mysql;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import br.com.hrstatus.utils.UserInfo;
 
@@ -33,10 +32,9 @@ import br.com.hrstatus.utils.UserInfo;
 
 public class ConnMysql {
 
+	static Logger log =  Logger.getLogger(ConnMysql.class.getCanonicalName());
 	public static boolean status = false;
 	
-	public ConnMysql() {}
-
 	public static Connection getConexaoMySQL(String serverAddress, String username, String password, String instance) throws ClassNotFoundException, SQLException {
 
 		UserInfo userInfo = new UserInfo();
@@ -46,12 +44,13 @@ public class ConnMysql {
 			String url = "jdbc:mysql://" + serverAddress + "/" + instance;
 			connection = DriverManager.getConnection(url, username, password);
 
+			//Testing if the connection was successfully obtained.
 			if (connection != null) {
 				status = (true);
-				Logger.getLogger(ConnMysql.class).debug("[ " + userInfo.getLoggedUsername() + " ] MySQL datbase connection status: " + status);
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] MySQL datbase connection status: " + status);
 			} else {
 				status = (false);
-				Logger.getLogger(ConnMysql.class).debug("[ " + userInfo.getLoggedUsername() + " ] MySQL datbase connection status: " + status);
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] MySQL datbase connection status: " + status);
 			}
 			return connection;
 	}
