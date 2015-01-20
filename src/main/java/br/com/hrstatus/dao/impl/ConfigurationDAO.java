@@ -67,8 +67,7 @@ public class ConfigurationDAO implements Configuration {
 
 	public Configurations getConfigs() {
 		
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] getConfigs()");
-		
+		log.fine("Invoking getConfigs()");
 		return (Configurations) session().createCriteria(Configurations.class).uniqueResult();
 	}
 
@@ -85,7 +84,7 @@ public class ConfigurationDAO implements Configuration {
 	
 	public boolean sendNotification() {
 		
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] sendNotification()");
+		log.fine("Invoking sendNotification() database query,");
 		
 		Criteria sendNotification = session().createCriteria(Configurations.class);
 		ProjectionList proList = Projections.projectionList();

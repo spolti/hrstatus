@@ -272,8 +272,8 @@ public class CadastroController {
 			if (bancoDados.getVendor().toUpperCase().equals("POSTGRESQL")) {
 				bancoDados.setQueryDate("SELECT now();");
 			}
-			if (bancoDados.getVendor().toUpperCase().equals("BD2")) {
-				bancoDados.setQueryDate("SELECT current date FROM sysibm.sysdummy1;");
+			if (bancoDados.getVendor().toUpperCase().equals("DB2")) {
+				bancoDados.setQueryDate("select VARCHAR_FORMAT(CURRENT_TIMESTAMP, 'YYYY-MM-DD HH24:MM:SS') FROM SYSIBM.SYSDUMMY1");
 			}
 		}
 

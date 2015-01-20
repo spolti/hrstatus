@@ -66,14 +66,14 @@
 												href="<c:url value='/database/showByStatus/NOK' />">
 													Listar Banco de Dados Desatualizados </a></li>
 
-											<li>
+											<!--  li>
 												<div id="dynamicURL">
 													<a href="montadodinamicamente"> Atualizar Selecionados</a>
 												</div>
 											</li>
 
 											<li><a href="<c:url value='/updateTimeAllClients' />">
-													Atualizar todos </a></li>
+													Atualizar todos </a></li>-->
 
 										</ul>
 									</div>
@@ -104,7 +104,7 @@
 											</c:if>
 											<c:if test="${bancoDados.trClass == 'error'}">
 												<td><a
-													href="<c:url value='/singleServerToVerify/${bancoDados.id}' />">${bancoDados.hostname}</a></td>
+													href="<c:url value='/database/verifySingleDB/${bancoDados.id}' />">${bancoDados.hostname}</a></td>
 											</c:if>
 											<td>${bancoDados.ip}</td>
 											<td>${bancoDados.vendor}</td>
@@ -112,11 +112,13 @@
 											<td>${bancoDados.serverTime}</td>
 											<td>${bancoDados.difference}</td>
 											<td>${bancoDados.status}</td>
-											<c:if test="${bancoDados.trClass == 'error'}">
+											<c:if test="${bancoDados.trClass == 'error'}">																							
 												<td><div class="find_1">
 														<input type="checkbox" value="${bancoDados.id}" />
 													</div></td>
-												<td>Editar</td>
+												<td><a
+													href="<c:url value='/findForUpdateDataBase/${bancoDados.id}' />"
+													title="Editar Servidor"><i class="icon-edit"> </i></a></td>
 											</c:if>
 										</tr>
 									</c:forEach>

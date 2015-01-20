@@ -33,6 +33,8 @@ public interface BancoDadosInterface {
 	
 	public List<BancoDados> listDataBases();
 	
+	public List<BancoDados> listDataBaseByID(int id);
+	
 	public BancoDados getDataBaseByID(int id);
 	
 	public boolean deleteDataBase(BancoDados bancoDados);

@@ -41,15 +41,15 @@
 			<version>2.4.3</version>
 		</dependency>
 
-	   <!-- EJB-3 -->
+		<!-- EJB-3 -->
 		<dependency>
 			<groupId>org.jboss.spec.javax.ejb</groupId>
 			<artifactId>jboss-ejb-api_3.1_spec</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- Javax -->
-	    <dependency>
+		<dependency>
 			<groupId>org.jboss.spec.javax.annotation</groupId>
 			<artifactId>jboss-annotations-api_1.1_spec</artifactId>
 			<scope>provided</scope>
@@ -189,11 +189,10 @@
 			<version>5.1.21</version>
 		</dependency>
 
-    	<!-- Mail -->
+		<!-- Mail -->
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
-			<version>1.4.4</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -246,13 +245,13 @@
 			<version>2.0.4</version>
 		</dependency>
 
-		<!-- Servlet API -->
 		<dependency>
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
 			<version>0.1.48</version>
 		</dependency>
 
+		<!-- Servlet API -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
@@ -313,6 +312,19 @@
 			<version>11.2.0.3</version>
 		</dependency>
 
+		<!-- DB2 - comment it if you do not have the libs in your maven repository, 
+			steps to add it in your repo are in the docs. -->
+		<dependency>
+			<groupId>com.ibm.db2.jcc</groupId>
+			<artifactId>db2jcc</artifactId>
+			<version>3.8.47</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ibm.db2.jcc</groupId>
+			<artifactId>db2jcc_license_cu</artifactId>
+			<version>3.8.47</version>
+		</dependency>
+
 		<!-- Testes unitários -->
 		<dependency>
 			<groupId>org.testng</groupId>
@@ -343,6 +355,12 @@
 				<groupId>org.wildfly.plugins</groupId>
 				<artifactId>wildfly-maven-plugin</artifactId>
 				<version>1.0.1.Final</version>
+				<configuration>
+					<hostname>10.96.33.125</hostname>
+					<port>8081</port>
+					<username>admin</username>
+					<password>admin</password>
+				</configuration>
 			</plugin>
 		</plugins>
 

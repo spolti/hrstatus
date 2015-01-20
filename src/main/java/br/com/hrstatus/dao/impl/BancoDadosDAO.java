@@ -103,6 +103,12 @@ public class BancoDadosDAO implements BancoDadosInterface {
 		return session().createCriteria(BancoDados.class).list();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<BancoDados> listDataBaseByID(int id) {
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getDataBaseByID -> DataBase ID selected: " + id);
+		return session().createCriteria(BancoDados.class).add(Restrictions.eq("id", id)).list();
+	}
+	
 	public BancoDados getDataBaseByID(int id) {
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] getDataBaseByID -> DataBase ID selected: " + id);
 		return (BancoDados) session().createCriteria(BancoDados.class).add(Restrictions.eq("id", id)).uniqueResult();
@@ -208,10 +214,10 @@ public class BancoDadosDAO implements BancoDadosInterface {
 		
 		try {
 			Criteria criteria = session().createCriteria(BancoDados.class);
-			criteria.add(Restrictions.or(Restrictions.eq("trClass", "Errorr"),Restrictions.eq("status", "NOK")));
+			criteria.add(Restrictions.or(Restrictions.eq("trClass", "Error"),Restrictions.eq("status", "NOK")));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] Data Bases not OK: " + count);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Data Bases not NOK: " + count);
 			return count;
 
 		} catch (Exception e) {
@@ -360,7 +366,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 
 		try {
 			Criteria criteria = session().createCriteria(BancoDados.class);
-			criteria.add(Restrictions.or(Restrictions.eq("trClass", "Errorr"), Restrictions.eq("status", "NOK")));
+			criteria.add(Restrictions.or(Restrictions.eq("trClass", "Error"), Restrictions.eq("status", "NOK")));
 			return criteria.list();
 
 		} catch (Exception e) {

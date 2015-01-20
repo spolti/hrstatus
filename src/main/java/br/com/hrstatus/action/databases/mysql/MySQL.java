@@ -23,6 +23,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Logger;
 
 import br.com.hrstatus.model.BancoDados;
 
@@ -32,9 +33,11 @@ import br.com.hrstatus.model.BancoDados;
 
 public class MySQL {
 
+	static Logger log =  Logger.getLogger(MySQL.class.getCanonicalName());
+	
 	   public String getDateMySQL(BancoDados dataBase) throws SQLException, ClassNotFoundException {  
 		   
-		   Connection conn = ConnMysql.getConexaoMySQL(dataBase.getIp(), dataBase.getUser(), dataBase.getPass(), dataBase.getInstance());
+		   Connection conn = ConnMysql.getConexaoMySQL(dataBase.getIp(), dataBase.getPort(), dataBase.getUser(), dataBase.getPass(), dataBase.getInstance());
 		   String sql = dataBase.getQueryDate();
 		   
 		   Statement stm = conn.createStatement();
@@ -56,6 +59,8 @@ public class MySQL {
            
 		   stm.close();
 		   conn.close();
+		   
+		   log.fine("Date obtained from MysqlDatabase: " + dt_db);
 		   
 		   return dt_db;
 	   }

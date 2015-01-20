@@ -23,7 +23,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 import br.com.hrstatus.utils.UserInfo;
 
@@ -33,26 +33,27 @@ import br.com.hrstatus.utils.UserInfo;
 
 public class ConnDB2 {
 
+	static Logger log = Logger.getLogger(ConnDB2.class.getCanonicalName());
 	public static boolean status = false;
-	
-	public ConnDB2() {}
 
-	public static Connection getConexaoMySQL(String serverAddress, String username, String password, String instance) throws ClassNotFoundException, SQLException {
+	public static Connection getConexaoDB2(String serverAddress, int port, String username, String password, String instance) throws ClassNotFoundException, SQLException {
 
 		UserInfo userInfo = new UserInfo();
 		Connection connection = null;
-			String driver = "com.mysql.jdbc.Driver";
+			String driver = "com.ibm.db2.jcc.DB2Driver";
 			Class.forName(driver);
-			String url = "jdbc:mysql://" + serverAddress + "/" + instance;
+			String url = "jdbc:db2://" + serverAddress + ":" + port + "/" + instance;
+			log.fine("DB2 URL connection: " + url);
+			
 			connection = DriverManager.getConnection(url, username, password);
 
 			//Testing if the connection was successfully obtained.
 			if (connection != null) {
 				status = (true);
-				Logger.getLogger(ConnDB2.class).debug("[ " + userInfo.getLoggedUsername() + " ] DB2 datbase connection status: " + status);
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] DB2 datbase connection status: " + status);
 			} else {
 				status = (false);
-				Logger.getLogger(ConnDB2.class).debug("[ " + userInfo.getLoggedUsername() + " ] DB2 datbase connection status: " + status);
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] DB2 datbase connection status: " + status);
 			}
 			return connection;
 	}

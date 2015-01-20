@@ -19,6 +19,7 @@
 
 package br.com.hrstatus.controller;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;

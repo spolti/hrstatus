@@ -36,6 +36,7 @@ import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
+import br.com.hrstatus.action.databases.db2.DB2;
 import br.com.hrstatus.action.databases.mysql.MySQL;
 import br.com.hrstatus.action.databases.oracle.Oracle;
 import br.com.hrstatus.action.databases.postgre.PostgreSQL;
@@ -79,6 +80,7 @@ public class DbNotFullVerification {
 	private PostgreSQL runPSQL = new PostgreSQL();
 	private SqlServer runSqlServer = new SqlServer();
 	private Oracle runOracle = new Oracle();
+	private DB2 runDB2 = new DB2();
 	
 	@SuppressWarnings("static-access")
 	@Get("/database/startDataBaseVerification/notFullDBVerification")
@@ -138,7 +140,10 @@ public class DbNotFullVerification {
 						dateSTR = runSqlServer.getDateSqlServer(bancoDados);
 					} else if (bancoDados.getVendor().toUpperCase().equals("ORACLE")) {
 						dateSTR = runOracle.getDateOracle(bancoDados);
+					} else if (bancoDados.getVendor().toUpperCase().equals("DB2")) {
+						dateSTR = runDB2.getDate(bancoDados);
 					}
+					
 					log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from the server " + bancoDados.getHostname() + ": " + dateSTR);
 					bancoDados.setClientTime(dateSTR);
 					// Calculating time difference

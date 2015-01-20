@@ -337,7 +337,7 @@ public class UpdateController {
 				log.fine("[ " + userInfo.getLoggedUsername() + " ] The user admin id editing himself.");
 			} else {
 				log.info("[ " + userInfo.getLoggedUsername() + " ] The user " + userInfo.getLoggedUsername() + " does not have permissions to change the Administrator account. it will be reported to the Admins.");
-				// implementar a funcionalidade de se alguém que não seja o próprio admin tentar alterar os dados do admin.
+				// implementar a funcionalidade de se alguém que não seja o próprio admin tentar alterar os dados do admin uma notificação é enviada para os administradores.
 				result.use(Results.http()).sendError(403);
 			}
 		}
