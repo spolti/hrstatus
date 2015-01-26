@@ -20,7 +20,6 @@
 package br.com.hrstatus.action.databases.db2;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -53,14 +52,6 @@ public class DB2 {
 				
 			}
 		}
-
-		// Removing timestamp
-//		if (dt_db.endsWith(".0")) {
-//			dt_db = dt_db.replace(".", "#"); select TIMESTAMP_FORMAT(CURRENT_TIMESTAMP) FROM SYSIBM.SYSDUMMY1
-
-//			String dt_tmp[] = dt_db.split("#");
-//			dt_db = dt_tmp[0];
-//		}
 
 		stm.close();
 		conn.close();

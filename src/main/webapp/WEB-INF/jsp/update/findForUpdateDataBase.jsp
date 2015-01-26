@@ -57,6 +57,11 @@
 									value="${dataBase.instance}" /></td>
 							</tr>
 							<tr>
+								<td align=right>Nome do Banco:</td>
+								<td><input type="text" name="dataBase.db_name"
+									value="${dataBase.db_name}" /></td>
+							</tr>
+							<tr>
 								<td align=right>Usuário:</td>
 								<td><input type="text" name="dataBase.user"
 									value="${dataBase.user}" /></td>

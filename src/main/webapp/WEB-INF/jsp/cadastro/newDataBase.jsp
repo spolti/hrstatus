@@ -58,6 +58,10 @@
 								<td><input type="text" name="bancoDados.instance" /></td>
 							</tr>
 							<tr>
+								<td align=right>Nome do Banco:</td>
+								<td><input type="text" name="bancoDados.db_name" /></td>
+							</tr>
+							<tr>
 								<td align=right>Usuário:</td>
 								<td><input type="text" name="bancoDados.user" /></td>
 							</tr>
@@ -80,7 +84,6 @@
 											<option value="<c:out value="${VENDOR}" />">${VENDOR}</option>
 										</c:forEach>
 								</select></td>
-
 							</tr>
 
 							<tr>

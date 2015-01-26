@@ -46,7 +46,7 @@ public class StartupSingletonVerifications {
 	
 	private enum binaries {
 		//ntpdate: used to update the date/time from Unix like servers, local and remote
-		//net: used to obtain date/time from Windows server
+		//net (samba-common package): used to obtain date/time from Windows server
 		ntpdate, net
 	}
 	
@@ -62,7 +62,7 @@ public class StartupSingletonVerifications {
         	if (result.equals("0")){
         		log.info("Binary " + bin.name() + ": OK");
         	}else {
-        		log.warning("Binary " + bin.name() + ": Not found, this can cause strange behavior of some functionalities of HrStatus.");
+        		log.warning(" (If net bin: samba-common package) Binary " + bin.name() + ": Not found, this can cause strange behavior of some functionalities of HrStatus.");
         	}
         }
 	}
