@@ -40,21 +40,21 @@ public class ConnDB2 {
 
 		UserInfo userInfo = new UserInfo();
 		Connection connection = null;
-			String driver = "com.ibm.db2.jcc.DB2Driver";
-			Class.forName(driver);
-			String url = "jdbc:db2://" + serverAddress + ":" + port + "/" + instance;
-			log.fine("DB2 URL connection: " + url);
-			
-			connection = DriverManager.getConnection(url, username, password);
+		String driver = "com.ibm.db2.jcc.DB2Driver";
+		Class.forName(driver);
+		String url = "jdbc:db2://" + serverAddress + ":" + port + "/" + instance;
+		log.fine("DB2 URL connection: " + url);
 
-			//Testing if the connection was successfully obtained.
-			if (connection != null) {
-				status = (true);
-				log.fine("[ " + userInfo.getLoggedUsername() + " ] DB2 datbase connection status: " + status);
-			} else {
-				status = (false);
-				log.fine("[ " + userInfo.getLoggedUsername() + " ] DB2 datbase connection status: " + status);
-			}
-			return connection;
+		connection = DriverManager.getConnection(url, username, password);
+
+		// Testing if the connection was successfully obtained.
+		if (connection != null) {
+			status = (true);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] DB2 datbase connection status: " + status);
+		} else {
+			status = (false);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] DB2 datbase connection status: " + status);
+		}
+		return connection;
 	}
 }

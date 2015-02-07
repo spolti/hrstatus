@@ -60,7 +60,7 @@ public class LoginSucessHandler extends SavedRequestAwareAuthenticationSuccessHa
     	Users user = userDAO.getUserByID(userInfo.getLoggedUsername());
     	String lastLoginTime = dt.getTime();
     	user.setLastLogin(lastLoginTime);
-    	log.info("[ " + userInfo.getLoggedUsername() + " ] Successful login at " + lastLoginTime);
+    	log.info("[ " + userInfo.getLoggedUsername() + " ] Successful login at " + lastLoginTime + " from " + sourceAddress(request));
     	userDAO.updateUser(user);
     	    	
         super.setDefaultTargetUrl("/home");
@@ -68,4 +68,11 @@ public class LoginSucessHandler extends SavedRequestAwareAuthenticationSuccessHa
         request.getSession().setMaxInactiveInterval(30*30);
         super.onAuthenticationSuccess(request, response, authentication);
     }
+    
+    public String sourceAddress(HttpServletRequest request){
+    	
+    	String IP = request.getRemoteAddr();
+     	return IP;
+    }
+
 }

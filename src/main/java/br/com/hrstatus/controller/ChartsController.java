@@ -127,15 +127,21 @@ public class ChartsController {
 		int mysql = this.BancoDadosInterfaceDAO.countMysql();
 		int oracle = this.BancoDadosInterfaceDAO.countOracle();
 		int postgre = this.BancoDadosInterfaceDAO.countPostgre();
+		int sqlserver = this.BancoDadosInterfaceDAO.countSqlServer();
+		int db2 = this.BancoDadosInterfaceDAO.countDB2();
 		int total = this.BancoDadosInterfaceDAO.countAllDataBases();
 
 		result.include("mysql", (mysql * 100) / total);
 		result.include("oracle", (oracle * 100) / total);
 		result.include("postgresql", (postgre * 100) / total);
+		result.include("sqlserver", (sqlserver * 100) / total);
+		result.include("db2", (db2 * 100) / total);
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] Mysql: " + mysql);
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] Oracle: " + oracle);
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] Postgre: " + postgre);
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] SqlServer: " + sqlserver);
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] DB2: " + db2);
 
 		// Populating 2° graph (databases ok and not ok)
 		int dbOK = this.BancoDadosInterfaceDAO.countDataBasesOK();
@@ -166,6 +172,20 @@ public class ChartsController {
 		int countPostgreNOK = this.BancoDadosInterfaceDAO.countPostgreNOK();
 		result.include("dbPostgreNOK", countPostgreNOK);
 		log.fine("[ " + userInfo.getLoggedUsername()  + " ] Databases PostgreSQL not OK: " + countPostgreNOK);
+		
+		int countSqlServerOK = this.BancoDadosInterfaceDAO.countSqlServerOK();
+		result.include("dbSqlServerOK", countSqlServerOK);
+		log.fine("[ " + userInfo.getLoggedUsername()  + " ] Databases SqlServer OK: " + countSqlServerOK);
+		int countSqlServerNOK = this.BancoDadosInterfaceDAO.countSqlServerNOK();
+		result.include("dbSqlServerNOK", countSqlServerNOK);
+		log.fine("[ " + userInfo.getLoggedUsername()  + " ] Databases SqlServer not OK: " + countSqlServerNOK);
+		
+		int countDB2OK = this.BancoDadosInterfaceDAO.countDB2OK();
+		result.include("dbDB2OK", countDB2OK);
+		log.fine("[ " + userInfo.getLoggedUsername()  + " ] Databases DB2 OK: " + countDB2OK);
+		int countDB2NOK = this.BancoDadosInterfaceDAO.countDB2NOK();
+		result.include("dbDB2NOK", countDB2NOK);
+		log.fine("[ " + userInfo.getLoggedUsername()  + " ] Databases DB2 not OK: " + countDB2NOK);
 
 		result.include("totalDB", total);
 	}

@@ -47,6 +47,10 @@ public interface BancoDadosInterface {
 
 	public int countPostgre();
 	
+	public int countSqlServer();
+	
+	public int countDB2();
+	
 	public int countAllDataBases();
 	
 	public int countDataBasesOK();
@@ -64,6 +68,14 @@ public interface BancoDadosInterface {
 	public int countPostgreOK();
 	
 	public int countPostgreNOK();
+	
+	public int countSqlServerOK();
+	
+	public int countSqlServerNOK();
+	
+	public int countDB2OK();
+	
+	public int countDB2NOK();
 	
 	public List<BancoDados> getdataBasesOK();
 	

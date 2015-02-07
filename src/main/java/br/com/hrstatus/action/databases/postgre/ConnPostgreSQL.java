@@ -32,38 +32,32 @@ import br.com.hrstatus.utils.UserInfo;
 
 public class ConnPostgreSQL {
 
-	static Logger log =  Logger.getLogger(ConnPostgreSQL.class.getCanonicalName());
+	static Logger log = Logger.getLogger(ConnPostgreSQL.class
+			.getCanonicalName());
 	public static boolean status = false;
-	public ConnPostgreSQL() {}
 
-	public static Connection getConexaoPSQL(String serverAddress, String database, String username, String password) {
+	public ConnPostgreSQL() {
+	}
+
+	public static Connection getConexaoPSQL(String serverAddress,int port, String database, String username, String password) throws ClassNotFoundException, SQLException {
 
 		UserInfo userInfo = new UserInfo();
 		Connection connection = null;
+		String driver = "org.postgresql.Driver";
+		Class.forName(driver);
+		String url = ("jdbc:postgresql://" + serverAddress + ":" + port + "/" + database);
+		connection = DriverManager.getConnection(url, username, password);
+		log.fine("POstgreSQL URL connection: " + url);
 
-		try {
-			String driver = "org.postgresql.Driver";
-			Class.forName(driver);
-			connection = DriverManager.getConnection("jdbc:postgresql://"+serverAddress+":5432/"+database+"",username,password);
-
-			//Testing if the connection was successfully obtained.
-			if (connection != null) {
-				status = (true);
-				log.fine("[ " + userInfo.getLoggedUsername() + " ] PostgreSQL datbase connection status: " + status);
-			} else {
-				status = (false);
-				log.fine("[ " + userInfo.getLoggedUsername() + " ] PostgreSQL datbase connection status: " + status);
-			}
-			return connection;
-
-		} catch (ClassNotFoundException e) {
-			log.severe(e.fillInStackTrace().toString());
-			log.severe(""+e.getMessage().toString());
-			return null;
-		} catch (SQLException e) {
-			log.severe(e.fillInStackTrace().toString());
-			log.severe(e.getMessage().toString());
-			return null;
+		// Testing if the connection was successfully obtained.
+		if (connection != null) {
+			status = (true);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] PostgreSQL datbase connection status: " + status);
+		} else {
+			status = (false);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] PostgreSQL datbase connection status: " + status);
 		}
+		return connection;
+
 	}
 }

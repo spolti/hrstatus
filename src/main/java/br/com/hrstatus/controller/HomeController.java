@@ -66,14 +66,11 @@ public class HomeController {
 		// Verifying if is the first login after the password change or after the user registration
 		boolean isFirstLogin = this.userDAO.getFirstLogin(userInfo.getLoggedUsername());
 		if (isFirstLogin) {
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] First login of "
-							+ userInfo.getLoggedUsername() + ": " + isFirstLogin);
-			
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] First login of " + userInfo.getLoggedUsername() + ": " + isFirstLogin);
 			log.fine("[ " + userInfo.getLoggedUsername() + " ] Redirecting the user to the password change page");
 			result.forwardTo(UpdateController.class).findForUpdateUser(null,userInfo.getLoggedUsername(), "changePass");
 		} else {
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] First login of " + userInfo.getLoggedUsername() 
-							+ ": " + isFirstLogin);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] First login of " + userInfo.getLoggedUsername() + ": " + isFirstLogin);
 		}
 	}
 
