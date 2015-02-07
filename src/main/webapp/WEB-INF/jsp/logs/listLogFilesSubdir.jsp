@@ -9,6 +9,12 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Configuração Clientes</title>
 	<script src="http://code.jquery.com/jquery-latest.js" > </script>
+	<link href="${pageContext.request.contextPath}/css/bootstrap.css"
+		rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link
+		href="${pageContext.request.contextPath}/css/bootstrap-responsive.css"
+		rel="stylesheet">
 	<script>
 		function callTail(fileName, divName){
 			nm = fileName.trim().split(" ");
@@ -99,7 +105,7 @@
 									<c:when test="${(fn:startsWith(file, 'd ')) == false}">
 										<div style="display: inline"> 
 											<input type="text" name="numLinhas" placeholder="Quantidade de linhas" style="margin-bottom: 0px;" id="file${status.index}" onkeypress="return numbersonly(this,event)"/>
-											<input type="image" src="../img/tail.png" name="image" width="20" height="20" onclick="callTail('${file}', 'file${status.index}')"/>
+											<input type="image" src="../img/tail.png" name="image" width="14" height="14" onclick="callTail('${file}', 'file${status.index}')"/>
 										</div>
 									</c:when>
 									<c:otherwise>
@@ -114,7 +120,7 @@
 									<c:when test="${(fn:startsWith(file, 'd ')) == false}">
 										<div style="display: inline">
 											<input type="text" name="palavraBusca" placeholder="Valor Desejado" style="margin-bottom: 0px;" id="findfile${status.index}"/>
-											<input type="image" src="../img/search.png" name="image" width="20" height="20" onclick="findInFile('${file}', 'findfile${status.index}')"/>
+											<input type="image" src="../img/search.png" name="image" width="14" height="14" onclick="findInFile('${file}', 'findfile${status.index}')"/>
 										</div>
 									</c:when>
 									<c:otherwise>

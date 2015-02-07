@@ -176,7 +176,7 @@ public class UsersDAO implements UsersInterface {
 	@SuppressWarnings("unchecked")
 	public List<PassExpire> getExpireTime(){
 		
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] getExpireTime()");
+		log.fine("Invoking getExpireTime()");
 		Criteria criteria = session().createCriteria(PassExpire.class);
 		return criteria.list();
 	}

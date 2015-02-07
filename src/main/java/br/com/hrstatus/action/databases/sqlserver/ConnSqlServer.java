@@ -34,19 +34,20 @@ public class ConnSqlServer {
 	static Logger log = Logger.getLogger(ConnSqlServer.class.getCanonicalName());
 	public static boolean status = false;
 
-	public static Connection getConexaoMySQL(String serverAddress, String username, String password, String instance) {
+	public static Connection getConexaoSqlServer(String serverAddress, int port, String username, String password, String db_name, String instance) {
 
 		UserInfo userInfo = new UserInfo();
 		Connection connection = null;
-		String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-	
-		String url = "jdbc:sqlserver://" + serverAddress + ";databaseName=" + instance;
+		String driver = "net.sourceforge.jtds.jdbc.Driver";
+		String url = "jdbc:jtds:sqlserver://" + serverAddress + ":" + port + "/" + db_name + ";instance=" + instance;
+		
+		log.fine("SQLServer URL connection: " + url);
 		
 		try {
 			Class.forName(driver);
 			connection = DriverManager.getConnection(url, username, password);
 		} catch (Exception e) {
-			log.severe("Error connecting to the database: " + e.getMessage());
+			log.severe("Error connecting to the SQLServer database: " + e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -59,5 +60,5 @@ public class ConnSqlServer {
 			log.severe("[ " + userInfo.getLoggedUsername() + " ] SqlServer datbase connection status: " + status);
 		}
 		return connection;
-	}
+	}	
 }

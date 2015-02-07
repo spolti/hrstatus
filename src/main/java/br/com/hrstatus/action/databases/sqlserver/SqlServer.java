@@ -34,7 +34,7 @@ public class SqlServer {
 
 	public String getDateSqlServer(BancoDados dataBase) throws SQLException, ClassNotFoundException {
 
-		Connection conn = ConnSqlServer.getConexaoMySQL(dataBase.getIp(),dataBase.getUser(), dataBase.getPass(), dataBase.getInstance());
+		Connection conn = ConnSqlServer.getConexaoSqlServer(dataBase.getIp(), dataBase.getPort(), dataBase.getUser(), dataBase.getPass(), dataBase.getInstance(), dataBase.getDb_name());
 		String sql = dataBase.getQueryDate();
 
 		Statement stm = conn.createStatement();
@@ -43,12 +43,12 @@ public class SqlServer {
 
 		if (rs != null) {
 			while (rs.next()) {
-				dt_db = rs.getString("date");
+				dt_db = rs.getString(1);
 			}
 		}
 
 		// Removing the timestamp
-		if (dt_db.endsWith(".0")) {
+		if (dt_db.contains(".")) {
 			dt_db = dt_db.replace(".", "#");
 			String dt_tmp[] = dt_db.split("#");
 			dt_db = dt_tmp[0];

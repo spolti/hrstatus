@@ -22,18 +22,17 @@
 		<intercept-url pattern="/requestNewPass/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/utils/criptPassJboss/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/show/logo/imagem/home" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<intercept-url pattern="/show/emailHeader/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 
 		<!-- Restrict access to ALL other pages -->
 		<intercept-url pattern="/home" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/navbar" access="ROLE_USER,ROLE_ADMIN" />
-		<intercept-url pattern="/configServer" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/home/showByStatus/**" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/home/startVerification/**" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/findForUpdateUser/**" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/updateUser" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/selectServer" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/listLogFiles/**" access="ROLE_USER,ROLE_ADMIN" />
-		<intercept-url pattern="/downloadFile/**" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/verifySingleServer/runSingleVerification" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/updateTimeSelectedClients/**" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/updateTimeAllClients" access="ROLE_USER,ROLE_ADMIN" />
@@ -45,6 +44,11 @@
 		<intercept-url pattern="/charts/servers/consolidated" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/charts/database/consolidated" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/listLocks" access="ROLE_USER,ROLE_ADMIN" />
+		<intercept-url pattern="/show/logo/imagem/settings" access="ROLE_USER,ROLE_ADMIN" />
+		<intercept-url pattern="/downloadFile/**" access="ROLE_USER,ROLE_ADMIN" />
+		<intercept-url pattern="/downloadFileSubdir/**" access="ROLE_USER,ROLE_ADMIN" />
+		<intercept-url pattern="/atualizarCadastro/**" access="ROLE_USER,ROLE_ADMIN" />
+		<intercept-url pattern="/database/verifySingleDB/**" access="ROLE_USER,ROLE_ADMIN" />
 
 		<!-- Reports -->
 		<intercept-url pattern="/reports/reportFull" access="ROLE_USER,ROLE_ADMIN" />
@@ -60,8 +64,7 @@
 		<intercept-url pattern="/reports/reportDataBaseMysql" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/reports/reportDataBaseOracle" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/reports/reportDataBasePostgre" access="ROLE_USER,ROLE_ADMIN" />
-		<intercept-url pattern="/show/logo/imagem/settings" access="ROLE_USER,ROLE_ADMIN" />
-
+		
 		<!-- Admin Pages -->
 		<intercept-url pattern="/updateServer" access="ROLE_ADMIN" />
 		<intercept-url pattern="/deleteServerByID" access="ROLE_ADMIN" />
@@ -69,6 +72,7 @@
 		<intercept-url pattern="/findForUpdateServer/**" access="ROLE_ADMIN" />
 		<intercept-url pattern="/configClients" access="ROLE_ADMIN" />
 		<intercept-url pattern="/configUser" access="ROLE_ADMIN" />
+		<intercept-url pattern="/configServer" access="ROLE_ADMIN" />
 		<intercept-url pattern="/updateConfig" access="ROLE_ADMIN" />
 		<intercept-url pattern="/newServer" access="ROLE_ADMIN" />
 		<intercept-url pattern="/registerServer" access="ROLE_ADMIN" />
@@ -87,15 +91,9 @@
 
 		<!-- Set the login page and what to do if login fails -->
 		<form-login login-page="/login" default-target-url="/home" />
-			<!--authentication-failure-url="/login?login_error=1" />--> 
-
-		<!-- Set logout configs> <logout logout-success-url="/login" /> <logout 
-			success-handler-ref="CustomLogoutSuccessHandler" /> <logout logout-url="/logout" 
-			/ -->
-
 
 		<session-management>
-			<concurrency-control max-sessions="999" />
+			<concurrency-control max-sessions="10" />
 		</session-management>
 
 		<logout logout-success-url="/login" />

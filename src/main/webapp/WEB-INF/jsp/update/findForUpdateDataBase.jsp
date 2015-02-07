@@ -30,11 +30,11 @@
 					<form method="POST" action="<c:url value='/updateDataBase'/>">
 						<table align=center>
 							<br>
-							<input type="hidden" name="server.lastCheck" value="${dataBase.lastCheck}" />
-							<input type="hidden" name="server.clientTime" value="${dataBase.clientTime}" />
-							<input type="hidden" name="server.serverTime" value="${dataBase.serverTime}" />
-							<input type="hidden" name="server.status" value="${dataBase.status}" />
-							<input type="hidden" name="server.trClass" value="${dataBase.trClass}" />
+							<input type="hidden" name="dataBase.lastCheck" value="${dataBase.lastCheck}" />
+							<input type="hidden" name="dataBase.clientTime" value="${dataBase.clientTime}" />
+							<input type="hidden" name="dataBase.serverTime" value="${dataBase.serverTime}" />
+							<input type="hidden" name="dataBase.status" value="${dataBase.status}" />
+							<input type="hidden" name="dataBase.trClass" value="${dataBase.trClass}" />
 
 							<tr>
 								<td align=right>Data Base ID:</td>
@@ -55,6 +55,11 @@
 								<td align=right>Instancia:</td>
 								<td><input type="text" name="dataBase.instance"
 									value="${dataBase.instance}" /></td>
+							</tr>
+							<tr>
+								<td align=right>Nome do Banco:</td>
+								<td><input type="text" name="dataBase.db_name"
+									value="${dataBase.db_name}" /></td>
 							</tr>
 							<tr>
 								<td align=right>Usuário:</td>
@@ -78,9 +83,10 @@
 							</tr>
 							<tr>
 								<td align=right>Banco de Dados:</td>
-								<td><select name="dataBase.VENDOR" id="dataBase.VENDOR">
+								<td><select name="dataBaseVENDOR" id="dataBase.vendor">
 										<c:forEach items="${VENDOR}" var="VENDOR">
-											<option value="<c:out value="${VENDOR}" />">${VENDOR}</option>
+											<option value="<c:out value="${VENDOR}" />"
+											<c:if test="${VENDOR == dataBase.vendor}" > selected="selected" </c:if>>${VENDOR}</option>
 										</c:forEach>
 								</select></td>
 

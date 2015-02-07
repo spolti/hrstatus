@@ -67,7 +67,7 @@
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"
 					aria-hidden="true">×</button>
-				<h3 id="myModalLabel">Deseja o lock abaixo?</h3>
+				<h3 id="myModalLabel">Deseja remover o lock abaixo?</h3>
 			</div>
 			<div id="delete-modal" class="modal-body">
 				<input type="hidden" id="id_server" name="id_lock">

@@ -33,7 +33,7 @@ import br.com.hrstatus.model.BancoDados;
 public class Oracle {
 	   public String getDateOracle(BancoDados dataBase) throws SQLException, ClassNotFoundException {  
 		   
-		   Connection conn = ConnOracle.getConexaoOracle(dataBase.getIp(), dataBase.getUser(), dataBase.getPass(), dataBase.getInstance());
+		   Connection conn = ConnOracle.getConexaoOracle(dataBase.getIp(), dataBase.getPort(), dataBase.getUser(), dataBase.getPass(), dataBase.getInstance());
 		   String sql = dataBase.getQueryDate();
 		   
 		   Statement stm = conn.createStatement();

@@ -37,13 +37,16 @@ public class ConnOracle {
 	
 	public ConnOracle() {}
 
-	public static Connection getConexaoOracle(String serverAddress, String username, String password, String instance) throws ClassNotFoundException, SQLException {
+	public static Connection getConexaoOracle(String serverAddress, int port, String username, String password, String instance) throws ClassNotFoundException, SQLException {
 
 		UserInfo userInfo = new UserInfo();
 		Connection connection = null;
 			String driver = "oracle.jdbc.driver.OracleDriver";
 			Class.forName(driver);
-			String url = "jdbc:oracle:thin:@" + serverAddress + ":" + 1521 + "/" + instance;
+			String url = "jdbc:oracle:thin:@" + serverAddress + ":" + port + "/" + instance;
+			
+			log.fine("Oracle connection url: " + url);
+			
 			connection = DriverManager.getConnection(url, username, password);
 
 			//Testing if the connection was successfully obtained.

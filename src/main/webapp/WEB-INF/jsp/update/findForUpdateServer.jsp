@@ -107,7 +107,7 @@
 							</tr>
 							<tr>
 								<td align=right></td>
-								<td align=left><button align="right" input type=submit
+								<td align=right><button align="right" input type=submit
 										value="Salvar" class="btn btn-primary">Salvar</button></td>
 						</table>
 					</form>

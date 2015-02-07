@@ -19,7 +19,9 @@
 		        data.addRows([
 					['MySql', ${mysql}],
 					['Oracle', ${oracle}],
-					['PostgreSql', ${postgresql}]
+					['PostgreSql', ${postgresql}],
+					['SqlServer', ${sqlserver}],
+					['DB2', ${db2}]
 			     ]);
 		  // Set chart options
 		  var options = {'title':'Consolidado Total Banco de Dados',
@@ -40,7 +42,9 @@
           ['SO', 'Time Ok', 'Time Not Ok'],
           ['Mysql', ${dbMysqlOK}, ${dbMysqlNOK}],
           ['Oracle',  ${dbOracleOK}, ${dbOracleNOK}],
-          ['PostgreSql', ${dbPostgreOK}, ${dbPostgreNOK}]
+          ['PostgreSql', ${dbPostgreOK}, ${dbPostgreNOK}],
+          ['SqlServer', ${dbSqlServerOK}, ${dbSqlServerNOK}],
+          ['DB2', ${dbDB2OK}, ${dbDB2NOK}]
         ]);
 
         var options = {

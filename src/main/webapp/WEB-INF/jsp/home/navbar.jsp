@@ -307,7 +307,7 @@
 		<div class="modal-body">
 			<p>
 				<a href="http://www.hrstatus.com.br/hrstatus/home.html"
-					target="_blank">Hr Status</a><br>Versão: 3.4.2-2<br> <br>
+					target="_blank">Hr Status</a><br>Versão: 4.0-BETA<br> <br>
 				<br> <a href="http://www.hrstatus.com.br/hrstatus/home.html"
 					target="_blank"> <img
 					src="${pageContext.request.contextPath}/img/hrimg.JPG"></img></a><br>
@@ -317,6 +317,9 @@
 				<br> Para reportar bugs: <a
 					href="https://github.com/spolti/hrstatus/issues/new"
 					target="_blank"> Registrar Issue </a>
+				<br> Documentação: <a
+					href="<c:url value="/doc/DocumentacaoHrStatus.pdf"/>"
+					target="_blank"> Vizualizar </a>
 			</p>
 		</div>
 		<div class="modal-footer">

@@ -328,7 +328,7 @@ public class ServersDAO implements ServersInterface {
 
 	public int countServersNOK() {
 		
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] countServersNOK()");
+		log.fine("Invoking countServersNOK()");
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);

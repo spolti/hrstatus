@@ -33,6 +33,8 @@ public interface BancoDadosInterface {
 	
 	public List<BancoDados> listDataBases();
 	
+	public List<BancoDados> listDataBaseByID(int id);
+	
 	public BancoDados getDataBaseByID(int id);
 	
 	public boolean deleteDataBase(BancoDados bancoDados);
@@ -44,6 +46,10 @@ public interface BancoDadosInterface {
 	public int countOracle();
 
 	public int countPostgre();
+	
+	public int countSqlServer();
+	
+	public int countDB2();
 	
 	public int countAllDataBases();
 	
@@ -62,6 +68,14 @@ public interface BancoDadosInterface {
 	public int countPostgreOK();
 	
 	public int countPostgreNOK();
+	
+	public int countSqlServerOK();
+	
+	public int countSqlServerNOK();
+	
+	public int countDB2OK();
+	
+	public int countDB2NOK();
 	
 	public List<BancoDados> getdataBasesOK();
 	

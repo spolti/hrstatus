@@ -23,6 +23,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Logger;
 
 import br.com.hrstatus.model.BancoDados;
 
@@ -32,31 +33,29 @@ import br.com.hrstatus.model.BancoDados;
 
 public class DB2 {
 
-	   public String getDate(BancoDados dataBase) throws SQLException, ClassNotFoundException {  
-		   
-		   Connection conn = ConnDB2.getConexaoMySQL(dataBase.getIp(), dataBase.getUser(), dataBase.getPass(), dataBase.getInstance());
-		   String sql = dataBase.getQueryDate();
-		   
-		   Statement stm = conn.createStatement();
-		   ResultSet rs = stm.executeQuery(sql);
-		   String dt_db = null;
-		   
-           if(rs != null) {  
-               while(rs.next()) {  
-            	   dt_db  = rs.getString("date");
-               }
-           }
+	static Logger log = Logger.getLogger(DB2.class.getCanonicalName());
 
-           //Removing timestamp
-           if (dt_db.endsWith(".0")){
-        	   dt_db = dt_db.replace(".","#");
-        	   String dt_tmp[] = dt_db.split("#");
-        	   dt_db = dt_tmp[0];
-           }
-           
-		   stm.close();
-		   conn.close();
-		   
-		   return dt_db;
-	   }
+	public String getDate(BancoDados dataBase) throws SQLException,	ClassNotFoundException {
+
+		Connection conn = ConnDB2.getConexaoDB2(dataBase.getIp(), dataBase.getPort(), dataBase.getUser(), dataBase.getPass(), dataBase.getInstance());
+		String sql = dataBase.getQueryDate();
+
+		log.fine("DB2 Query: " + sql);
+		
+		Statement stm = conn.createStatement();
+		ResultSet rs = stm.executeQuery(sql);
+		String dt_db = null;
+		
+		if (rs != null) {
+			while (rs.next()) {
+				dt_db = rs.getString(1);
+				
+			}
+		}
+
+		stm.close();
+		conn.close();
+
+		return dt_db;
+	}
 }
