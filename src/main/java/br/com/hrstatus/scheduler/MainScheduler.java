@@ -87,7 +87,7 @@ public class MainScheduler {
 			} else {
 				log.fine("[ System ] No server outdated was found");
 			}
-		}else {
+		} else {
 			log.fine("Sending notification e-mail is disabled, aborting shipping");
 		}
 	}
@@ -107,6 +107,7 @@ public class MainScheduler {
 
 		if (stdIn.equals("")) {
 			log.severe("ntpdate command not found, aborting the automated update");
+			
 		} else {
 			log.finest("ntp ativo: " + isUpdateNtpActive);
 			if (isUpdateNtpActive) {

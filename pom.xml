@@ -54,6 +54,12 @@
 			<artifactId>jboss-annotations-api_1.1_spec</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>javax.interceptor</groupId>
+			<artifactId>javax.interceptor-api</artifactId>
+			<version>1.2-b06</version>
+		</dependency>
+
 
 		<!-- Vraptor -->
 		<dependency>
@@ -321,16 +327,9 @@
 
 		<!-- DB2 - comment it if you don't have the libs in your maven repository, 
 			steps to add it in your repo are in the docs. -->
-		<!--dependency>
-			<groupId>com.ibm.db2.jcc</groupId>
-			<artifactId>db2jcc</artifactId>
-			<version>3.8.47</version>
-		</dependency>
-		<dependency>
-			<groupId>com.ibm.db2.jcc</groupId>
-			<artifactId>db2jcc_license_cu</artifactId>
-			<version>3.8.47</version>
-		</dependency-->
+		<!--dependency> <groupId>com.ibm.db2.jcc</groupId> <artifactId>db2jcc</artifactId> 
+			<version>3.8.47</version> </dependency> <dependency> <groupId>com.ibm.db2.jcc</groupId> 
+			<artifactId>db2jcc_license_cu</artifactId> <version>3.8.47</version> </dependency -->
 
 		<!-- Testes unitários -->
 		<dependency>
