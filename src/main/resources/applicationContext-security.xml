@@ -2,16 +2,17 @@
 <beans:beans xmlns="http://www.springframework.org/schema/security"
 	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd" >
 
 
 	<global-method-security secured-annotations="enabled">
 	</global-method-security>
 
-	<http auto-config="true">
 
+	<http auto-config="true">
 		<form-login login-page="/login"
 			authentication-success-handler-ref="loginSucessHandler"
+			authentication-failure-handler-ref="customAuthenticationFailureHandler"
 			authentication-failure-url="/login?login_error=1" />
 			
 		<!-- Don't set any role restrictions on login.jsp -->

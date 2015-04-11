@@ -17,33 +17,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 package br.com.hrstatus.dao;
 
-import br.com.hrstatus.model.Configurations;
+import br.com.hrstatus.model.InstallationProcess;
 
 /*
  * @author spolti
  */
 
-public interface Configuration {
+public interface InstallProcessInterface {
 
-	public void updateConfig(Configurations config);
+	public boolean freshInstall();
 	
-	public void saveConfigNotLogged(Configurations config);
-	
-	public Configurations getConfigs();
-	
-	public String getMailSender();
-	
-	public String getSubject();
-	
-	public String getDests();
-	
-	public String getJndiMail();
-	
-	public int getDiffirenceSecs();
-	
-	public String getNtpServerAddress();
-	
-	public boolean sendNotification();
+	public void saveInstallationProcess (InstallationProcess ipi);
 }

@@ -64,6 +64,12 @@ public class ConfigurationDAO implements Configuration {
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] updateConfig(Configurations config)");
 		session().saveOrUpdate(config);
 	}
+	
+	public void saveConfigNotLogged(Configurations config) {
+
+		log.fine("[ System ] updateConfig(Configurations config)");
+		session().save(config);
+	}
 
 	public Configurations getConfigs() {
 		
