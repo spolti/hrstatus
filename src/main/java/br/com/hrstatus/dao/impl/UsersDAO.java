@@ -71,6 +71,12 @@ public class UsersDAO implements UsersInterface {
 		session().save(user);
 	}
 	
+	public void saveORupdateUserNotLogged(Users user){
+		
+		log.fine("[ System ] saveORupdateUser(Users user)[" + user.getUsername() +"]");
+		session().save(user);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Users> listUser(){
 		

@@ -40,6 +40,8 @@ public interface UsersInterface {
 	
 	public void updateUser(Users user);
 	
+	public void saveORupdateUserNotLogged(Users user);
+	
 	public String getPass(String username);
 	
 	public int searchUser(String username);

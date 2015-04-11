@@ -74,5 +74,4 @@ public class LoginSucessHandler extends SavedRequestAwareAuthenticationSuccessHa
     	String IP = request.getRemoteAddr();
      	return IP;
     }
-
 }
