@@ -259,5 +259,5 @@ UNLOCK TABLES;
 
 -- Dump completed on 2015-02-07  1:34:47-- User Configurations
 CREATE USER hrstatus@localhost IDENTIFIED BY 'P@ssw0rd';
-GRANT SELECT,INSERT,UPDATE,DELETE ON hrstatus.* TO 'hrstatus'@'localhost' WITH GRANT OPTION;
+GRANT CREATE, ALTER, SELECT,INSERT,UPDATE,DELETE ON hrstatus.* TO 'hrstatus'@'localhost' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
