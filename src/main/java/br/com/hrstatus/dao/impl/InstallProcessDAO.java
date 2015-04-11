@@ -75,17 +75,13 @@ public class InstallProcessDAO implements InstallProcessInterface {
 			String temp = freshInstall.uniqueResult().toString();
 
 			if (new Boolean(temp)) {
-				log.fine("[ System ] TRUEEEEEEEEEEEEEEEEEEEEEEEEEe");
 				result = true;
 			} else if (!new Boolean(temp)) { 
-				log.fine("[ System ]FALSEEEEEEEEEEEEEEEEEEEEEEEEE");
 				result = false;
 			}
 		} catch (java.lang.NullPointerException NPE) {
-			log.fine("[ System ] TRUEEEEEEEEEEEEEEEEEEEEEEEEEe");
 			result = true;
 		}
-
 		return result;
 	}
 	
