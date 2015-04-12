@@ -38,7 +38,11 @@ public interface UsersInterface {
 	
 	public Users getUserByID(String username);
 	
+	public Users getUserByIDNotLogged(String username);
+	
 	public void updateUser(Users user);
+	
+	public void updateUserNotLogged(Users user);
 	
 	public void saveORupdateUserNotLogged(Users user);
 	
@@ -46,11 +50,19 @@ public interface UsersInterface {
 	
 	public int searchUser(String username);
 	
+	public int searchUserNotLogged(String username);
+	
 	public String getMail (String username);
+	
+	public String getMailNotLogged(String username);
 	
 	public void setExpirePasswordTime(PassExpire passExpire);
 	
+	public void setExpirePasswordTimeNotLogged(PassExpire passExpire);
+	
 	public int searchUserChangePass(String username);
+	
+	public int searchUserChangePassNotLogged(String username);
 	
 	public List<PassExpire> getExpireTime();
 	

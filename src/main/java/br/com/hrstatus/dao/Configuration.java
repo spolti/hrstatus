@@ -35,11 +35,15 @@ public interface Configuration {
 	
 	public String getMailSender();
 	
+	public String getMailSenderNotLogged();
+	
 	public String getSubject();
 	
 	public String getDests();
 	
 	public String getJndiMail();
+	
+	public String getJndiMailNotLogged();
 	
 	public int getDiffirenceSecs();
 	

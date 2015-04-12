@@ -100,7 +100,7 @@ public class MailSender {
 		}
 	}
 
-	public void sendNewPass(String mailSender, String dest, String jndiMail, String pass, String username) throws UnknownHostException {
+	public String sendNewPass(String mailSender, String dest, String jndiMail, String pass, String username) throws UnknownHostException {
 
 		String url = ("" + getIP.returnServerAddres());
 
@@ -146,14 +146,17 @@ public class MailSender {
 			try {
 				Transport.send(message);
 				log.info("----> Email sent.");
+				return "----> Email sent";
 
 			} catch (Exception e) {
 				log.severe("----> Email not sent.");
 				log.severe(e.toString());
+				return "----> Email not sent";
 			}
 
 		} catch (Exception e) {
 			log.severe(e.toString());
+			return "----> Email not sent";
 		}
 	}
 

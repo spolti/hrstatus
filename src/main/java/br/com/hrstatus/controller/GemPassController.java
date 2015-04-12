@@ -36,7 +36,6 @@ import br.com.hrstatus.model.PassExpire;
 import br.com.hrstatus.model.Users;
 import br.com.hrstatus.security.SpringEncoder;
 import br.com.hrstatus.utils.PassGenerator;
-import br.com.hrstatus.utils.StartupSingletonVerifications;
 import br.com.hrstatus.utils.UserInfo;
 import br.com.hrstatus.utils.date.DateParser;
 import br.com.hrstatus.utils.date.DateUtils;
@@ -49,7 +48,7 @@ import br.com.hrstatus.utils.mail.MailSender;
 @Resource
 public class GemPassController {
 
-	Logger log =  Logger.getLogger(StartupSingletonVerifications.class.getCanonicalName());
+	Logger log =  Logger.getLogger(GemPassController.class.getCanonicalName());
 	
 	@Autowired
 	private UsersInterface userDAO;
@@ -82,22 +81,23 @@ public class GemPassController {
 
 	@SuppressWarnings("static-access")
 	@Post("/requestNewPass")
-	public void requestNewPass(String username) {
+	public void requestNewPass(String username) throws Exception {
 		
 		log.info("[ Not Logged ] URI Called: /requestNewPass");
 		log.info("[ Not Logged ] Username recebido: " + username);
 		SpringEncoder encode = new SpringEncoder();
 		String password = "";
 		PassExpire passExpire = new PassExpire();
+		String email_result = null;
 		try {
 			// Verifying if the user exists
-			if (this.userDAO.searchUser(username) == 1) {
-				Users user = this.userDAO.getUserByID(username);
+			if (this.userDAO.searchUserNotLogged(username) == 1) {
+				Users user = this.userDAO.getUserByIDNotLogged(username);
 				log.info("[ Not Logged ] User found.");
 				PassGenerator gemPass = new PassGenerator();
-				String mailSender = this.configurationDAO.getMailSender();
-				String jndiMail = this.configurationDAO.getJndiMail();
-				String dest = this.userDAO.getMail(username);
+				String mailSender = this.configurationDAO.getMailSenderNotLogged();
+				String jndiMail = this.configurationDAO.getJndiMailNotLogged();
+				String dest = this.userDAO.getMailNotLogged(username);
 				MailSender send = new MailSender();
 				password = gemPass.gemPass();
 				
@@ -124,24 +124,26 @@ public class GemPassController {
 				user.setPassword(newPwd);
 				passExpire.setNewPwd(newPwd);
 
-				if (this.userDAO.searchUserChangePass(username) != 1) {
+				if (this.userDAO.searchUserChangePassNotLogged(username) != 1) {
 					user.setFirstLogin(true);
-					this.userDAO.updateUser(user);
-					this.userDAO.setExpirePasswordTime(passExpire);
-					send.sendNewPass(mailSender, dest, jndiMail, password, username);
+					this.userDAO.updateUserNotLogged(user);
+					this.userDAO.setExpirePasswordTimeNotLogged(passExpire);
+				
+					email_result = send.sendNewPass(mailSender, dest, jndiMail, password, username);
 
-					result.redirectTo(LoginController.class).login("Se o usuário for válido uma nova senha será enviada para seu e-mail.");
+					result.redirectTo(LoginController.class).login("Se o usuário for válido uma nova senha será enviada para seu e-mail. " + email_result);
 				} else {
-					result.redirectTo(LoginController.class).login("Já foi solicitado uma troca de senha para este usuário, por favor cheque seu e-mail.");
+					result.redirectTo(LoginController.class).login("Já foi solicitado uma troca de senha para este usuário, por favor cheque seu e-mail." +  email_result);
 				}
 
 			} else {
 				log.info("[ Not Logged ] User not Found.");
-				result.redirectTo(LoginController.class).login("Se o usuário for válido uma nova senha será enviada para seu e-mail.");
+				result.redirectTo(LoginController.class).login("Se o usuário for válido uma nova senha será enviada para seu e-mail.";
 			}
 
 		} catch (Exception e) {
-			log.severe(e.toString());
+			e.printStackTrace();
+			result.redirectTo(LoginController.class).login("Se o usuário for válido uma nova senha será enviada para seu e-mail. " + email_result);
 		}
 	}
 }

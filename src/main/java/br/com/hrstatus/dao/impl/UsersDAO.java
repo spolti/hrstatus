@@ -101,16 +101,30 @@ public class UsersDAO implements UsersInterface {
 		}
 	}
 	
-	public Users getUserByID(String username){
+	public Users getUserByID(String username) {
 		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] getUserByID(String username)[" + username +"]");
 		return (Users) session().createCriteria(Users.class).add(Restrictions.eq("username", username)).uniqueResult();
 	}
 	
+	public Users getUserByIDNotLogged(String username) {
+		
+		log.fine("[System ] getUserByID(String username)[" + username +"]");
+		return (Users) session().createCriteria(Users.class).add(Restrictions.eq("username", username)).uniqueResult();
+	}
+	
+	
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void updateUser(Users user){
+	public void updateUser(Users user) {
 		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] deleteUserByID(Users user)[" + user.getUsername() +"]");
+		session().update(user);
+	}
+	
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void updateUserNotLogged(Users user) {
+		
+		log.fine("[ System ] deleteUserByID(Users user)[" + user.getUsername() +"]");
 		session().update(user);
 	}
 	
@@ -136,7 +150,17 @@ public class UsersDAO implements UsersInterface {
 		return count;
 	}
 	
-	public String getMail (String username){
+	public int searchUserNotLogged(String username) {
+		
+		log.fine("[ System ] searchUser(String username)[" + username +"]");
+		Criteria criteria = session().createCriteria(Users.class);
+		criteria.add(Restrictions.eq("username", username));
+		criteria.setProjection(Projections.rowCount());
+		int count = ((Long) criteria.uniqueResult()).intValue();
+		return count;
+	}
+	
+	public String getMail(String username) {
 		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] getMail(String username)[" + username +"]");
 		Criteria criteria = session().createCriteria(Users.class);
@@ -147,13 +171,30 @@ public class UsersDAO implements UsersInterface {
 		return criteria.uniqueResult().toString();
 	}
 	
-	public void setExpirePasswordTime(PassExpire passExpire){
+	public String getMailNotLogged(String username) {
+		
+		log.fine("[ System ] getMail(String username)[" + username +"]");
+		Criteria criteria = session().createCriteria(Users.class);
+		criteria.add(Restrictions.eq("username", username));
+		ProjectionList proList = Projections.projectionList();
+		proList.add(Projections.property("mail"));
+		criteria.setProjection(proList);
+		return criteria.uniqueResult().toString();
+	}
+	
+	public void setExpirePasswordTime(PassExpire passExpire) {
 		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] setExpirePasswordTime((PassExpire passExpire)");
 		session().save(passExpire);
 	}
 	
-	public int searchUserChangePass(String username){
+	public void setExpirePasswordTimeNotLogged(PassExpire passExpire) {
+		
+		log.fine("[ System ] setExpirePasswordTime((PassExpire passExpire)");
+		session().save(passExpire);
+	}
+	
+	public int searchUserChangePass(String username) {
 		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] searchUserChangePass(String username)[" + username +"]");
 		Criteria criteria = session().createCriteria(PassExpire.class);
@@ -163,7 +204,17 @@ public class UsersDAO implements UsersInterface {
 		return count;
 	}
 	
-	public Object getUniqUser(String username){
+	public int searchUserChangePassNotLogged(String username) {
+		
+		log.fine("[ System ] searchUserChangePass(String username)[" + username +"]");
+		Criteria criteria = session().createCriteria(PassExpire.class);
+		criteria.add(Restrictions.eq("username", username));
+		criteria.setProjection(Projections.rowCount());
+		int count = ((Long) criteria.uniqueResult()).intValue();
+		return count;
+	}
+	
+	public Object getUniqUser(String username) {
 		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] getUniqUser(String username)[" + username +"]");
 		Criteria criteria = session().createCriteria(PassExpire.class);
@@ -171,7 +222,7 @@ public class UsersDAO implements UsersInterface {
 		return criteria.uniqueResult();
 	}
 	
-	public void delUserHasChangedPass(String username){
+	public void delUserHasChangedPass(String username) {
 		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] delUserHasChangedPass() -> Deleting the user "+username+" from temporary user table.");
 		PassExpire passExpire = (PassExpire) session().load(PassExpire.class, username);
@@ -180,14 +231,14 @@ public class UsersDAO implements UsersInterface {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PassExpire> getExpireTime(){
+	public List<PassExpire> getExpireTime() {
 		
 		log.fine("Invoking getExpireTime()");
 		Criteria criteria = session().createCriteria(PassExpire.class);
 		return criteria.list();
 	}
 	
-	public void delUserExpireTime(PassExpire passExpire){
+	public void delUserExpireTime(PassExpire passExpire) {
 		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] delUserExpireTime() -> Deleting the user " + passExpire.getUsername() + " from the temporary table.");
 		session().refresh(passExpire);
@@ -195,7 +246,7 @@ public class UsersDAO implements UsersInterface {
 	
 	}
 	
-	public String getRole(String user){
+	public String getRole(String user) {
 		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] getUniqUser(String user)[" + user +"]");
 		Criteria criteria = session().createCriteria(Users.class);
@@ -217,20 +268,20 @@ public class UsersDAO implements UsersInterface {
 		return (Boolean) criteria.uniqueResult();
 	}
 	
-	public void setLastLoginTime(String timeStamp){
+	public void setLastLoginTime(String timeStamp) {
 		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] setLastLoginTime()");
 		session().save(timeStamp);
 	}
 	
-	public void lastActivityTimeStamp(String lastActivityTimeStamp){
+	public void lastActivityTimeStamp(String lastActivityTimeStamp) {
 		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] lastActivityTimeStamp()");
 		session().save(lastActivityTimeStamp);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Integer> getIds_access_server(String user){
+	public List<Integer> getIds_access_server(String user) {
 		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] getIds_access_server() -> Listing the id servers of the user " + user + " can access.");
 		Criteria criteria = session().createCriteria(Users.class);

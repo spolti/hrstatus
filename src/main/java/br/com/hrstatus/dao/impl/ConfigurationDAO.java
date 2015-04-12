@@ -88,6 +88,17 @@ public class ConfigurationDAO implements Configuration {
 		return (String) mailFrom.uniqueResult();
 	}
 	
+	public String getMailSenderNotLogged() {
+		
+		log.fine("[ System ] getMailSender()");
+		
+		Criteria mailFrom = session().createCriteria(Configurations.class);
+		ProjectionList proList = Projections.projectionList();
+		proList.add(Projections.property("mailFrom"));
+		mailFrom.setProjection(proList);
+		return (String) mailFrom.uniqueResult();
+	}
+	
 	public boolean sendNotification() {
 		
 		log.fine("Invoking sendNotification() database query,");
@@ -124,6 +135,17 @@ public class ConfigurationDAO implements Configuration {
 	public String getJndiMail() {
 		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] getJndiMail()");
+		
+		Criteria subject = session().createCriteria(Configurations.class);
+		ProjectionList proList = Projections.projectionList();
+		proList.add(Projections.property("jndiMail"));
+		subject.setProjection(proList);
+		return (String) subject.uniqueResult();
+	}
+	
+	public String getJndiMailNotLogged() {
+		
+		log.fine("[ System ] getJndiMail()");
 		
 		Criteria subject = session().createCriteria(Configurations.class);
 		ProjectionList proList = Projections.projectionList();

@@ -130,18 +130,22 @@ public class ChartsController {
 		int sqlserver = this.BancoDadosInterfaceDAO.countSqlServer();
 		int db2 = this.BancoDadosInterfaceDAO.countDB2();
 		int total = this.BancoDadosInterfaceDAO.countAllDataBases();
-
-		result.include("mysql", (mysql * 100) / total);
-		result.include("oracle", (oracle * 100) / total);
-		result.include("postgresql", (postgre * 100) / total);
-		result.include("sqlserver", (sqlserver * 100) / total);
-		result.include("db2", (db2 * 100) / total);
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] Mysql: " + mysql);
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] Oracle: " + oracle);
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] Postgre: " + postgre);
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] SqlServer: " + sqlserver);
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] DB2: " + db2);
+		
+		if (total > 0) {
+			result.include("mysql", (mysql * 100) / total);
+			result.include("oracle", (oracle * 100) / total);
+			result.include("postgresql", (postgre * 100) / total);
+			result.include("sqlserver", (sqlserver * 100) / total);
+			result.include("db2", (db2 * 100) / total);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Mysql: " + mysql);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Oracle: " + oracle);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Postgre: " + postgre);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] SqlServer: " + sqlserver);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] DB2: " + db2);
+		} else {
+			result.include("error", "Não há banco de dados cadastrados no HrStatus");
+		}
 
 		// Populating 2° graph (databases ok and not ok)
 		int dbOK = this.BancoDadosInterfaceDAO.countDataBasesOK();
