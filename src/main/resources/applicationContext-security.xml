@@ -90,6 +90,9 @@
 		<intercept-url pattern="/delete/logo/imagem" access="ROLE_ADMIN" />
 		<intercept-url pattern="/sendMailtest" access="ROLE_ADMIN" />
 
+		<!-- Rest URI -->
+		<intercept-url pattern="/rest/**" access="ROLE_ADMIN,ROLE_REST" />
+
 		<!-- Set the login page and what to do if login fails -->
 		<form-login login-page="/login" default-target-url="/home" />
 

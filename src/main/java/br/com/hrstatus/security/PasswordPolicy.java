@@ -19,9 +19,11 @@
 
 package br.com.hrstatus.security;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /*
  * @author spolti
@@ -88,26 +90,26 @@ public class PasswordPolicy {
 		}
 		return result;
 	}
-//
-//	public static void main(String args[]) {
-//
-//		List<String> passVal = new ArrayList<String>();
-//		Map<String, String> map = new HashMap<String, String>();
-//
-//		map = verifyPassComplexity("123456789999");
-//
-//		Object[] valueMap = map.keySet().toArray();
-//
-//		for (int i = 0; i < valueMap.length; i++) {
-//			if (map.get(valueMap[i]).equals("false")) {
-//				//System.out.println(map.get(valueMap[i + 1]));
-//				passVal.add(map.get(valueMap[i + 1]));
-//			}
-//		}
-//
-//		for (int j = 0; j < passVal.size(); j++) {
-//			System.out.println(passVal.get(j));
-//		}
-//
-//	}
+
+	public static void main(String args[]) {
+
+		List<String> passVal = new ArrayList<String>();
+		Map<String, String> map = new HashMap<String, String>();
+
+		map = verifyPassComplexity("123456789");
+
+		Object[] valueMap = map.keySet().toArray();
+
+		for (int i = 0; i < valueMap.length; i++) {
+			if (map.get(valueMap[i]).equals("false")) {
+				//System.out.println(map.get(valueMap[i + 1]));
+				passVal.add(map.get(valueMap[i + 1]));
+			}
+		}
+
+		for (int j = 0; j < passVal.size(); j++) {
+			System.out.println(passVal.get(j));
+		}
+
+	}
 }
