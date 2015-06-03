@@ -66,13 +66,13 @@ public class PassExpireScheduler {
 			if (timeNow.compareTo(parse.parser(passExpire.getExpireTime())) > 0){
 				
 				log.fine("[ System ] Temporary password generated to " + passExpire.getUsername() + "expired, Rolling the password back..");
-				Users user = this.userDAO.getUserByID(passExpire.getUsername());
+				Users user = this.userDAO.getUserByIDNotLogged(passExpire.getUsername());
 				
 				user.setPassword(passExpire.getOldPwd());
 				user.setFirstLogin(false);
 				
 				// Saving the changes
-				this.userDAO.updateUser(user);
+				this.userDAO.updateUserNotLogged(user);
 				
 				// Removing the user from temporary table
 				this.userDAO.delUserExpireTime(passExpire);

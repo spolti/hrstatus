@@ -138,7 +138,7 @@ public class GemPassController {
 
 			} else {
 				log.info("[ Not Logged ] User not Found.");
-				result.redirectTo(LoginController.class).login("Se o usuário for válido uma nova senha será enviada para seu e-mail.";
+				result.redirectTo(LoginController.class).login("Se o usuário for válido uma nova senha será enviada para seu e-mail.");
 			}
 
 		} catch (Exception e) {

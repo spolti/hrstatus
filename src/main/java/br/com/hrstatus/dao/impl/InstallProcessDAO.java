@@ -35,12 +35,7 @@ import br.com.hrstatus.dao.InstallProcessInterface;
 import br.com.hrstatus.model.InstallationProcess;
 import br.com.hrstatus.utils.UserInfo;
 
-/*
- * 
- * 
- * 
- * 
- * 
+/* 
  * @author spolti
  */
 
