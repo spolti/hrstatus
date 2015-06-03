@@ -40,7 +40,7 @@
 										href="<c:url value='/findForUpdateUser/${user.username}/0' />"
 										title="Editar Usuário"><i class="icon-edit"> </i></a> &nbsp;
 										<a
-										href="javascript:setParameterUser('${user.username}' ,'${user.nome}');" title="remover Usuário"><i
+										href="javascript:setParameterUser('${user.username}' ,'${user.nome}');" title="Remover Usuário"><i
 											class="icon-remove"> </i></a></td>
 								</tr>
 							</c:forEach>

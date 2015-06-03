@@ -65,7 +65,7 @@ public class PassExpireScheduler {
 		for (PassExpire passExpire : list){
 			if (timeNow.compareTo(parse.parser(passExpire.getExpireTime())) > 0){
 				
-				log.fine("[ System ] Temporary password generated to " + passExpire.getUsername() + "expired, Rolling the password back..");
+				log.fine("[ System ] Temporary password generated to " + passExpire.getUsername() + " expired, Rolling the password back..");
 				Users user = this.userDAO.getUserByIDNotLogged(passExpire.getUsername());
 				
 				user.setPassword(passExpire.getOldPwd());
@@ -75,7 +75,7 @@ public class PassExpireScheduler {
 				this.userDAO.updateUserNotLogged(user);
 				
 				// Removing the user from temporary table
-				this.userDAO.delUserExpireTime(passExpire);
+				this.userDAO.delUserExpireTimeNotLogged(passExpire);
 				
 			}else{
 				log.fine("[ System ] The password generated for the user " + passExpire.getUsername() + " not expire yet.");

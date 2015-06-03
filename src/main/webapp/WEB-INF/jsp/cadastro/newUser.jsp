@@ -70,7 +70,7 @@
 								<td><select name="user.authority">
 										<option value="ROLE_ADMIN">Admin</option>
 										<option value="ROLE_USER">User</option>
-										<option value="ROLE_REST">User</option>
+										<option value="ROLE_REST">Rest Requests</option>
 								</select></td>
 							</tr>
 							<tr>
