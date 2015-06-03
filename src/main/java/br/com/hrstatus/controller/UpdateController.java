@@ -334,7 +334,7 @@ public class UpdateController {
 
 		if (username.toUpperCase().equals("ADMIN")) {
 			if ((isAdmin) && (LoggedUsername.toUpperCase().equals("ADMIN"))) {
-				log.fine("[ " + userInfo.getLoggedUsername() + " ] The user admin id editing himself.");
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] The user admin is editing himself.");
 			} else {
 				log.info("[ " + userInfo.getLoggedUsername() + " ] The user " + userInfo.getLoggedUsername() + " does not have permissions to change the Administrator account. it will be reported to the Admins.");
 				// implementar a funcionalidade de se alguém que não seja o próprio admin tentar alterar os dados do admin uma notificação é enviada para os administradores.
@@ -354,13 +354,16 @@ public class UpdateController {
 			// setting the username
 			user.setUsername(username);
 			user.setFirstLogin(false);
-			result.include("isDisabled", "disabled");
-			result.include("user", user);
+			if (!isAdmin){
+				log.info("[ " + userInfo.getLoggedUsername() + " ] User does not have Admin Role, disabling server textfield.");
+				result.include("isDisabled", "disabled");
+			}
+			
 
 			for (Servidores u1 : FullLogServer) {
 				for (Servidores sv : user.getServer()) {
 					if (u1.getId() == sv.getId()) {
-						log.info("The user " + user + " have permission the read the logs of the server "	+ sv.getHostname());
+						log.info("The user " + user.getUsername() + " have permission the read the logs of the server "	+ sv.getHostname());
 						u1.setSelected("selected");
 					}
 				}
@@ -368,11 +371,13 @@ public class UpdateController {
 			}
 
 			result.include("server", server);
-
-			if (user != null) {
-				log.info("[ " + userInfo.getLoggedUsername() + " ] User Object is not empty, atributing its values.");
-				u = user;
-			}
+			user.setServer(server);
+			result.include("user", user);
+//			if (user != null) {
+//				log.info("[ " + userInfo.getLoggedUsername() + " ] User Object is not empty, assign its values.");
+//				u = user;
+//			}
+			
 		} else {
 			if (isAdmin) {
 				result.include("loggedUser", LoggedUsername);
@@ -388,7 +393,7 @@ public class UpdateController {
 				for (Servidores u1 : FullLogServer) {
 					for (Servidores sv : user.getServer()) {
 						if (u1.getId() == sv.getId()) {
-							log.info("The user " + user + " have permission the read the logs of the server "	+ sv.getHostname());
+							log.info("The user " + user.getUsername() + " have permission the read the logs of the server "	+ sv.getHostname());
 							u1.setSelected("selected");
 						}
 					}
@@ -396,24 +401,32 @@ public class UpdateController {
 				}
 
 				result.include("server", server);
-
-				if (user != null) {
-					log.info("[ " + userInfo.getLoggedUsername() + " ] User Object is not empty, atributing its values.");
-					u = user;
-				}
+				user.setServer(server);
+				result.include("user", user);
+//
+//				if (user != null) {
+//					log.info("[ " + userInfo.getLoggedUsername() + " ] User Object is not empty, assign its values.");
+//					u = user;
+//					
+//				}
 			} else {
 				result.use(Results.http()).sendError(403);
 			}
 		}
+		
 	}
 
 	@SuppressWarnings("static-access")
 	@Post("/updateUser")
 	public void updateUser(Users user, String[] idServer, boolean checkall) {
 	
-		// Inserting HTML title in the result
-		List<Servidores> FullLogServer = this.iteracoesDAO.getHostnamesWithLogDir();
+		List<Servidores> idAccessServers = new ArrayList<Servidores>();
+		//idAccessServers = this.iteracoesDAO.getHostnamesWithLogDir();
+		List<Servidores> FullLogServer = new ArrayList<Servidores>();
 		List<Servidores> server = new ArrayList<Servidores>();
+		
+		// Inserting HTML title in the result
+
 		result.include("title", "Atualizar Usuário");
 
 		// Obtaining the user roles
@@ -424,8 +437,12 @@ public class UpdateController {
 			result.use(Results.http()).sendError(403);
 		} else {
 			result.include("loggedUser", userInfo.getLoggedUsername());
-			result.include("isDisabled", "disabled");
-
+			
+			if (!isAdmin){
+				log.info("[ " + userInfo.getLoggedUsername() + " ] User does not have Admin Role, disabling server textfield.");
+				result.include("isDisabled", "disabled");
+			}
+			
 			log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /updateUser");
 			SpringEncoder encode = new SpringEncoder();
 
@@ -435,12 +452,10 @@ public class UpdateController {
 				validator.add(new ValidationMessage("O campo Username deve ser informado", "Erro"));
 			} else if (checkall) {
 				log.fine("[ " + userInfo.getLoggedUsername() + " ] The checkbox select all server is checked.");
-				List<Servidores> idAccessServers = new ArrayList<Servidores>();
 				idAccessServers = this.iteracoesDAO.getHostnamesWithLogDir();
 				user.setServer(idAccessServers);
 
 			} else if (!checkall && idServer != null) {
-				List<Servidores> idAccessServers = new ArrayList<Servidores>();
 				for (int i = 0; i < idServer.length; i++) {
 					if (!idServer[i].equals("notNull")) {
 						idAccessServers.add(this.iteracoesDAO.getServerByID(Integer.parseInt(idServer[i])));
@@ -499,9 +514,9 @@ public class UpdateController {
 				user.setPassword(encode.encodePassUser(user.getPassword()));
 			}
 			
-			Users returnOnValidtion = this.usersDAO.getUserByID(user.getUsername());
+			Users returnOnValidation = this.usersDAO.getUserByID(user.getUsername());
 			for (Servidores u1 : FullLogServer) {
-				for (Servidores sv : returnOnValidtion.getServer()) {
+				for (Servidores sv : returnOnValidation.getServer()) {
 					if (u1.getId() == sv.getId()) {
 						log.fine("[ " + userInfo.getLoggedUsername() + " ] The user have permissions to read the logs from " + sv.getHostname());
 						u1.setSelected("selected");
@@ -511,14 +526,16 @@ public class UpdateController {
 			}
 
 			result.include("server", server);
-			validator.onErrorUsePageOf(UpdateController.class).findForUpdateUser(user, "", "");
+			user.setServer(server);
+			result.include("user", user);
+			validator.onErrorUsePageOf(UpdateController.class).findForUpdateUser(null, user.getUsername(), "0");
 
 			if (!user.getUsername().equals(userInfo.getLoggedUsername().toString()) && !(isAdmin || isUser)) {
 				result.use(Results.http()).sendError(403);
 			} else {
 				this.usersDAO.updateUser(user);
 				if (this.usersDAO.searchUserChangePass(userInfo.getLoggedUsername()) == 1) {
-					log.info("The user " + userInfo.getLoggedUsername() + " requested the change of the password does little time. Please wait.");
+					log.info("The user " + userInfo.getLoggedUsername() + " already requested the change of the password. Please wait.");
 					this.usersDAO.delUserHasChangedPass(userInfo.getLoggedUsername());
 				}
 			}

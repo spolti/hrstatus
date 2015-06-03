@@ -74,6 +74,9 @@
 											<c:if test="${user.authority == 'ROLE_ADMIN'}"> selected="selected" </c:if>>Admin</option>
 										<option value="ROLE_USER"
 											<c:if test="${user.authority == 'ROLE_USER'}"> selected="selected" </c:if>>User</option>
+										<option value="ROLE_REST"
+											<c:if test="${user.authority == 'ROLE_REST'}"> selected="selected" </c:if>>Rest Request</option>	
+											
 								</select></td>
 							</tr>
 

@@ -392,7 +392,7 @@ public class CadastroController {
 			validator.add(new ValidationMessage("O campo Perfil deve ser informado", "Erro"));
 
 		} else if (checkall) {
-			log.fine("[ "	+ userInfo.getLoggedUsername() + " ] The option \"select all servers\" is checked.");
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] The option \"select all servers\" is checked.");
 			List<Servidores> idAccessServers = new ArrayList<Servidores>();
 			idAccessServers = this.iteracoesDAO.getHostnamesWithLogDir();
 			user.setServer(idAccessServers);

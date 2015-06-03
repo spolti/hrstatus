@@ -248,7 +248,7 @@ public class UsersDAO implements UsersInterface {
 	
 	public void delUserExpireTimeNotLogged(PassExpire passExpire) {
 		
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] delUserExpireTime() -> Deleting the user " + passExpire.getUsername() + " from the temporary table.");
+		log.fine("[ System ] delUserExpireTime() -> Deleting the user " + passExpire.getUsername() + " from the temporary table.");
 		session().refresh(passExpire);
 		session().delete(passExpire);
 	

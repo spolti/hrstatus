@@ -59,8 +59,7 @@ public class MainScheduler {
 	DateUtils dateUtils = new DateUtils();
 	GetServerIPAddress getIP = new GetServerIPAddress();
 
-	public MainScheduler() {
-	}
+	public MainScheduler() {}
 
 	@Scheduled(cron = "${br.com.hrstatus.scheduler.MailScheduler.cron}")
 	public void sendMail() throws UnknownHostException {
@@ -88,7 +87,7 @@ public class MainScheduler {
 				log.fine("[ System ] No server outdated was found");
 			}
 		} else {
-			log.fine("Sending notification e-mail is disabled, aborting shipping");
+			log.fine("Sending notification e-mail is disabled");
 		}
 	}
 
