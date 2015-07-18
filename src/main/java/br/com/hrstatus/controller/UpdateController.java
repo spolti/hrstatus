@@ -388,7 +388,7 @@ public class UpdateController {
 				for (Servidores u1 : FullLogServer) {
 					for (Servidores sv : user.getServer()) {
 						if (u1.getId() == sv.getId()) {
-							log.info("The user " + user + " have permission the read the logs of the server "	+ sv.getHostname());
+							log.info("The user " + user.getUsername() + " have permission the read the logs of the server "	+ sv.getHostname());
 							u1.setSelected("selected");
 						}
 					}
@@ -499,19 +499,11 @@ public class UpdateController {
 				user.setPassword(encode.encodePassUser(user.getPassword()));
 			}
 			
-			Users returnOnValidtion = this.usersDAO.getUserByID(user.getUsername());
-			for (Servidores u1 : FullLogServer) {
-				for (Servidores sv : returnOnValidtion.getServer()) {
-					if (u1.getId() == sv.getId()) {
-						log.fine("[ " + userInfo.getLoggedUsername() + " ] The user have permissions to read the logs from " + sv.getHostname());
-						u1.setSelected("selected");
-					}
-				}
-				server.add(u1);
+			for (Servidores sv : user.getServer()) {
+				log.fine("*******************server " +	sv.getHostname());
 			}
 
-			result.include("server", server);
-			validator.onErrorUsePageOf(UpdateController.class).findForUpdateUser(user, "", "");
+			validator.onErrorUsePageOf(UpdateController.class).findForUpdateUser(user, user.getUsername(), "0");
 
 			if (!user.getUsername().equals(userInfo.getLoggedUsername().toString()) && !(isAdmin || isUser)) {
 				result.use(Results.http()).sendError(403);

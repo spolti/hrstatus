@@ -336,6 +336,8 @@ public class CadastroController {
 		result.include("title", "Registrar Usuário");
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
+		List<Servidores> idAccessServers = new ArrayList<Servidores>();
+		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ]URI Called: /registerUser");
 		SpringEncoder encode = new SpringEncoder();
 
@@ -391,35 +393,28 @@ public class CadastroController {
 			result.include("server", server);
 			validator.add(new ValidationMessage("O campo Perfil deve ser informado", "Erro"));
 
-		} else if (checkall) {
-			log.fine("[ "	+ userInfo.getLoggedUsername() + " ] The option \"select all servers\" is checked.");
-			List<Servidores> idAccessServers = new ArrayList<Servidores>();
+		}
+		if (checkall) {
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] The checkbox select all server is checked.");
 			idAccessServers = this.iteracoesDAO.getHostnamesWithLogDir();
 			user.setServer(idAccessServers);
 
-		} else if (idServer[0].equals("notNull")) {
-			log.info("[ " + userInfo.getLoggedUsername() + " ] Empty server list for this user.");
-		} else if (!idServer[0].equals("notNull")) {
-			List<Servidores> idAccessServers = new ArrayList<Servidores>();
+		} else if (!checkall && idServer != null) {
 			for (int i = 0; i < idServer.length; i++) {
-				log.info("Server ID received: " + idServer[i]);
 				if (!idServer[i].equals("notNull")) {
 					idAccessServers.add(this.iteracoesDAO.getServerByID(Integer.parseInt(idServer[i])));
+					log.fine("Server ID received: " + idServer[i]);
 				}
 			}
-			user.setServer(idAccessServers);
+			user.setServer(idAccessServers); 
+			for (Servidores sv : user.getServer()) {
+				log.fine("*******************server " +	sv.getHostname());
+			}
 		}
-		
 		result.include("user", user);
 		validator.onErrorUsePageOf(CadastroController.class).newUser(user);
 		
 		user.setFirstLogin(true);
-
-		// Sending a e-mail to the user to notify about the user creation.
-		MailSender sendMail = new MailSender();
-		sendMail.sendCreatUserInfo(this.configurationDAO.getMailSender(),
-				user.getMail(), this.configurationDAO.getJndiMail(),
-				user.getNome(), user.getUsername(), user.getPassword());
 
 		// Encrypting the password and save the new user
 		// Encrypting the password using the MD5 module of springframework
@@ -427,6 +422,11 @@ public class CadastroController {
 		this.userDAO.saveORupdateUser(user);
 
 		log.info("[ " + userInfo.getLoggedUsername() + " ] The user " + user.getUsername() + " was succesfully created.");
+		// Sending a e-mail to the user to notify about the user creation.
+		MailSender sendMail = new MailSender();
+		sendMail.sendCreatUserInfo(this.configurationDAO.getMailSender(),
+				user.getMail(), this.configurationDAO.getJndiMail(),
+				user.getNome(), user.getUsername(), user.getPassword());
 		result.redirectTo(HomeController.class).home("null");
 	}
 }
