@@ -114,17 +114,17 @@ public class UsersDAO implements UsersInterface {
 	}
 	
 	
-	@Transactional(propagation = Propagation.REQUIRED)
+	//@Transactional(propagation = Propagation.REQUIRED)
 	public void updateUser(Users user) {
 		
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] deleteUserByID(Users user)[" + user.getUsername() +"]");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] updateUser(Users user)[" + user.getUsername() +"]");
 		session().update(user);
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void updateUserNotLogged(Users user) {
 		
-		log.fine("[ System ] deleteUserByID(Users user)[" + user.getUsername() +"]");
+		log.fine("[ System ] updateUserNotLogged(Users user)[" + user.getUsername() +"]");
 		session().update(user);
 	}
 	

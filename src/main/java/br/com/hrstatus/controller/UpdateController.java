@@ -463,6 +463,10 @@ public class UpdateController {
 					}
 				}
 				user.setServer(idAccessServers); 
+				for (int j = 0; j < idAccessServers.size(); j++){
+					log.fine("*******************server " + user.getServer());
+				}
+				
 
 			}
 			if (!user.getPassword().isEmpty() || !user.getConfirmPass().isEmpty()) {
@@ -514,26 +518,31 @@ public class UpdateController {
 				user.setPassword(encode.encodePassUser(user.getPassword()));
 			}
 			
-			Users returnOnValidation = this.usersDAO.getUserByID(user.getUsername());
-			for (Servidores u1 : FullLogServer) {
-				for (Servidores sv : returnOnValidation.getServer()) {
-					if (u1.getId() == sv.getId()) {
-						log.fine("[ " + userInfo.getLoggedUsername() + " ] The user have permissions to read the logs from " + sv.getHostname());
-						u1.setSelected("selected");
-					}
-				}
-				server.add(u1);
-			}
+//			Users returnOnValidation = this.usersDAO.getUserByID(user.getUsername());
+//			for (Servidores u1 : FullLogServer) {
+//				for (Servidores sv : returnOnValidation.getServer()) {
+//					if (u1.getId() == sv.getId()) {
+//						log.fine("[ " + userInfo.getLoggedUsername() + " ] The user have permissions to read the logs from " + sv.getHostname());
+//						u1.setSelected("selected");
+//					}
+//				}
+//				server.add(u1);
+//			}
 
-			result.include("server", server);
-			user.setServer(server);
-			result.include("user", user);
-			validator.onErrorUsePageOf(UpdateController.class).findForUpdateUser(null, user.getUsername(), "0");
+			//result.include("server", server);
+						
+			for (Servidores sv : user.getServer()) {
+				log.fine("*******************server " +	sv.getHostname());
+			}
+			
+			//result.include("user", user);
+			validator.onErrorUsePageOf(UpdateController.class).findForUpdateUser(user, user.getUsername(), "0");
 
 			if (!user.getUsername().equals(userInfo.getLoggedUsername().toString()) && !(isAdmin || isUser)) {
 				result.use(Results.http()).sendError(403);
 			} else {
 				this.usersDAO.updateUser(user);
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] Updating user.");
 				if (this.usersDAO.searchUserChangePass(userInfo.getLoggedUsername()) == 1) {
 					log.info("The user " + userInfo.getLoggedUsername() + " already requested the change of the password. Please wait.");
 					this.usersDAO.delUserHasChangedPass(userInfo.getLoggedUsername());

@@ -334,9 +334,16 @@
 
 		<!-- DB2 - comment it if you don't have the libs in your maven repository, 
 			steps to add it in your repo are in the docs. -->
-		<!--dependency> <groupId>com.ibm.db2.jcc</groupId> <artifactId>db2jcc</artifactId> 
-			<version>3.8.47</version> </dependency> <dependency> <groupId>com.ibm.db2.jcc</groupId> 
-			<artifactId>db2jcc_license_cu</artifactId> <version>3.8.47</version> </dependency -->
+		<dependency>
+			<groupId>com.ibm.db2.jcc</groupId>
+			<artifactId>db2jcc</artifactId>
+			<version>3.8.47</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ibm.db2.jcc</groupId>
+			<artifactId>db2jcc_license_cu</artifactId>
+			<version>3.8.47</version>
+		</dependency>
 
 		<!-- Testes unitários -->
 		<dependency>

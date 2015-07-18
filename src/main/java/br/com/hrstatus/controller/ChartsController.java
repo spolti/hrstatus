@@ -119,7 +119,7 @@ public class ChartsController {
 		// Inserting HTML title in the result
 		result.include("title", "Gráficos - Databases");
 
-		log.info("[ " + userInfo.getLoggedUsername()  + " ] URI Called: /charts/servers/consolidated");
+		log.info("[ " + userInfo.getLoggedUsername()  + " ] URI Called: /charts/database/consolidated");
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		// ///////////////////////////////////////
