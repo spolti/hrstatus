@@ -348,11 +348,9 @@ public class CadastroController {
 		List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 		
 		if (user.getNome().isEmpty()) {
-			//List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
 			validator.add(new ValidationMessage("O campo Nome deve ser informado", "Erro"));
 		} else if (user.getUsername().isEmpty()) {
-			//List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
 			validator.add(new ValidationMessage("O campo Username deve ser informado", "Erro"));
 		} else if (user.getPassword().isEmpty()	&& user.getConfirmPass().isEmpty()) {
@@ -361,7 +359,6 @@ public class CadastroController {
 			user.setPassword(password);
 			log.info("[ " + userInfo.getLoggedUsername() + " ] - Senha gerada");
 		} else if (!user.getPassword().equals(user.getConfirmPass())) {
-			//List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
 			validator.add(new ValidationMessage("As senhas informadas não são iguais.", "Erro"));
 		} else if (user.getPassword().equals(user.getConfirmPass())) {
@@ -383,15 +380,12 @@ public class CadastroController {
 			result.include("server", server);
 			
 		}else if (user.getMail().isEmpty()) {
-			//List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
 			validator.add(new ValidationMessage("O campo E-mail deve ser informado", "Erro"));
 		} else if (!m.find()) {
-			//List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
 			validator.add(new ValidationMessage("Favor informe o e-mail corretamente.", "Erro"));
 		} else if (user.getAuthority().isEmpty()) {
-			//List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
 			validator.add(new ValidationMessage("O campo Perfil deve ser informado", "Erro"));
 
