@@ -373,10 +373,7 @@ public class UpdateController {
 			result.include("server", server);
 			user.setServer(server);
 			result.include("user", user);
-//			if (user != null) {
-//				log.info("[ " + userInfo.getLoggedUsername() + " ] User Object is not empty, assign its values.");
-//				u = user;
-//			}
+
 			
 		} else {
 			if (isAdmin) {
@@ -403,12 +400,7 @@ public class UpdateController {
 				result.include("server", server);
 				user.setServer(server);
 				result.include("user", user);
-//
-//				if (user != null) {
-//					log.info("[ " + userInfo.getLoggedUsername() + " ] User Object is not empty, assign its values.");
-//					u = user;
-//					
-//				}
+
 			} else {
 				result.use(Results.http()).sendError(403);
 			}
@@ -517,19 +509,7 @@ public class UpdateController {
 			} else {
 				user.setPassword(encode.encodePassUser(user.getPassword()));
 			}
-			
-//			Users returnOnValidation = this.usersDAO.getUserByID(user.getUsername());
-//			for (Servidores u1 : FullLogServer) {
-//				for (Servidores sv : returnOnValidation.getServer()) {
-//					if (u1.getId() == sv.getId()) {
-//						log.fine("[ " + userInfo.getLoggedUsername() + " ] The user have permissions to read the logs from " + sv.getHostname());
-//						u1.setSelected("selected");
-//					}
-//				}
-//				server.add(u1);
-//			}
 
-			//result.include("server", server);
 						
 			for (Servidores sv : user.getServer()) {
 				log.fine("*******************server " +	sv.getHostname());
