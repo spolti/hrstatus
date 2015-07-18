@@ -276,8 +276,8 @@ public class BancoDadosDAO implements BancoDadosInterface {
 
 		try {
 			Criteria criteria = session().createCriteria(BancoDados.class);
-			criteria.add(Restrictions.and(Restrictions.eq("vendor", "MYSQL"),Restrictions.and(Restrictions.eq("trClass", "Error"),
-							Restrictions.eq("status", "NOK"))));
+			criteria.add(Restrictions.and(Restrictions.eq("vendor", "MYSQL"),
+					Restrictions.or(Restrictions.eq("trClass", "Error"), Restrictions.eq("status", "NOK"))));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			log.fine("[ " + userInfo.getLoggedUsername() + " ] countMySQLNOK() -> " + count + " found.");
@@ -316,7 +316,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 		try {
 			Criteria criteria = session().createCriteria(BancoDados.class);
 			criteria.add(Restrictions.and(Restrictions.eq("vendor", "ORACLE"),
-					Restrictions.and(Restrictions.eq("trClass", "Error"), Restrictions.eq("status", "NOK"))));
+					Restrictions.or(Restrictions.eq("trClass", "Error"), Restrictions.eq("status", "NOK"))));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			log.fine("[ " + userInfo.getLoggedUsername() + " ] countOracleNOK() -> " + count + " found.");
@@ -355,7 +355,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 		try {
 			Criteria criteria = session().createCriteria(BancoDados.class);
 			criteria.add(Restrictions.and(Restrictions.eq("vendor", "POSTGRESQL"),
-					Restrictions.and(Restrictions.eq("trClass", "Error"), Restrictions.eq("status", "NOK"))));
+					Restrictions.or(Restrictions.eq("trClass", "Error"), Restrictions.eq("status", "NOK"))));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			log.fine("[ " + userInfo.getLoggedUsername() + " ] countPostgreNOK() -> " + count + " found.");
@@ -393,7 +393,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 		try {
 			Criteria criteria = session().createCriteria(BancoDados.class);
 			criteria.add(Restrictions.and(Restrictions.eq("vendor", "SQLSERVER"),
-					Restrictions.and(Restrictions.eq("trClass", "Error"), Restrictions.eq("status", "NOK"))));
+					Restrictions.or(Restrictions.eq("trClass", "Error"), Restrictions.eq("status", "NOK"))));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			log.fine("[ " + userInfo.getLoggedUsername() + " ] countSqlServerNOK() -> " + count + " found.");
@@ -431,7 +431,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 		try {
 			Criteria criteria = session().createCriteria(BancoDados.class);
 			criteria.add(Restrictions.and(Restrictions.eq("vendor", "DB2"),
-					Restrictions.and(Restrictions.eq("trClass", "Error"), Restrictions.eq("status", "NOK"))));
+					Restrictions.or(Restrictions.eq("trClass", "Error"), Restrictions.eq("status", "NOK"))));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			log.fine("[ " + userInfo.getLoggedUsername() + " ] countDB2NOK() -> " + count + " found.");

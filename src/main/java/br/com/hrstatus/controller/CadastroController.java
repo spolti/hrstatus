@@ -335,6 +335,7 @@ public class CadastroController {
 		// Inserting HTML title in the result
 		result.include("title", "Registrar Usuário");
 		result.include("loggedUser", userInfo.getLoggedUsername());
+		List<Servidores> idAccessServers = new ArrayList<Servidores>();
 
 		log.fine("[ " + userInfo.getLoggedUsername() + " ]URI Called: /registerUser");
 		SpringEncoder encode = new SpringEncoder();
@@ -343,12 +344,15 @@ public class CadastroController {
 		Pattern p = Pattern.compile("^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]{2,7}$");
 		Matcher m = p.matcher(user.getMail());
 
+		//getting servers with logDir configured
+		List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+		
 		if (user.getNome().isEmpty()) {
-			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+			//List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
 			validator.add(new ValidationMessage("O campo Nome deve ser informado", "Erro"));
 		} else if (user.getUsername().isEmpty()) {
-			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+			//List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
 			validator.add(new ValidationMessage("O campo Username deve ser informado", "Erro"));
 		} else if (user.getPassword().isEmpty()	&& user.getConfirmPass().isEmpty()) {
@@ -357,7 +361,7 @@ public class CadastroController {
 			user.setPassword(password);
 			log.info("[ " + userInfo.getLoggedUsername() + " ] - Senha gerada");
 		} else if (!user.getPassword().equals(user.getConfirmPass())) {
-			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+			//List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
 			validator.add(new ValidationMessage("As senhas informadas não são iguais.", "Erro"));
 		} else if (user.getPassword().equals(user.getConfirmPass())) {
@@ -375,58 +379,58 @@ public class CadastroController {
 			for (int j = 0; j < passVal.size(); j++) {
 				validator.add(new ValidationMessage(passVal.get(j), "Erro"));
 			}
-			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+			
 			result.include("server", server);
 			
 		}else if (user.getMail().isEmpty()) {
-			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+			//List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
 			validator.add(new ValidationMessage("O campo E-mail deve ser informado", "Erro"));
 		} else if (!m.find()) {
-			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+			//List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
 			validator.add(new ValidationMessage("Favor informe o e-mail corretamente.", "Erro"));
 		} else if (user.getAuthority().isEmpty()) {
-			List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
+			//List<Servidores> server = this.iteracoesDAO.getHostnamesWithLogDir();
 			result.include("server", server);
 			validator.add(new ValidationMessage("O campo Perfil deve ser informado", "Erro"));
 
-		} else if (checkall) {
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] The option \"select all servers\" is checked.");
-			List<Servidores> idAccessServers = new ArrayList<Servidores>();
+		}
+
+		 if (checkall) {
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] The checkbox select all server is checked.");
 			idAccessServers = this.iteracoesDAO.getHostnamesWithLogDir();
 			user.setServer(idAccessServers);
 
-		} else if (idServer[0].equals("notNull")) {
-			log.info("[ " + userInfo.getLoggedUsername() + " ] Empty server list for this user.");
-		} else if (!idServer[0].equals("notNull")) {
-			List<Servidores> idAccessServers = new ArrayList<Servidores>();
+		} else if (!checkall && idServer != null) {
 			for (int i = 0; i < idServer.length; i++) {
-				log.info("Server ID received: " + idServer[i]);
 				if (!idServer[i].equals("notNull")) {
 					idAccessServers.add(this.iteracoesDAO.getServerByID(Integer.parseInt(idServer[i])));
+					log.fine("Server ID received: " + idServer[i]);
 				}
 			}
-			user.setServer(idAccessServers);
+			user.setServer(idAccessServers); 
+			for (Servidores sv : user.getServer()) {
+				log.fine("*******************server " +	sv.getHostname());
+			}
 		}
-		
 		result.include("user", user);
 		validator.onErrorUsePageOf(CadastroController.class).newUser(user);
 		
+		//new user, setting firstLogin to true.
 		user.setFirstLogin(true);
-
-		// Sending a e-mail to the user to notify about the user creation.
-		MailSender sendMail = new MailSender();
-		sendMail.sendCreatUserInfo(this.configurationDAO.getMailSender(),
-				user.getMail(), this.configurationDAO.getJndiMail(),
-				user.getNome(), user.getUsername(), user.getPassword());
-
+	
 		// Encrypting the password and save the new user
 		// Encrypting the password using the MD5 module of springframework
 		user.setPassword(encode.encodePassUser(user.getPassword()));
 		this.userDAO.saveORupdateUser(user);
 
 		log.info("[ " + userInfo.getLoggedUsername() + " ] The user " + user.getUsername() + " was succesfully created.");
+		// Sending a e-mail to the user to notify about the user creation.
+		MailSender sendMail = new MailSender();
+		sendMail.sendCreatUserInfo(this.configurationDAO.getMailSender(),
+						user.getMail(), this.configurationDAO.getJndiMail(),
+						user.getNome(), user.getUsername(), user.getPassword());
 		result.redirectTo(HomeController.class).home("null");
 	}
 }
