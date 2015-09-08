@@ -33,6 +33,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /*
  * @author spolti
  */
@@ -51,6 +53,7 @@ public class Servidores {
 	@GeneratedValue
 	private int id;
 	
+	@JsonIgnore //to avoid the loop when call a rest method to list servers
 	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	@JoinTable(name = "USER_SERVER", joinColumns = { @JoinColumn(name = "id") }, inverseJoinColumns = { @JoinColumn(name = "username") })
 	private List<Users> users;

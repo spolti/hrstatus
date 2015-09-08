@@ -29,10 +29,6 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
-/*
- * @author spolti
- */
-
 public class Crypto {
 
 	public static char[] decode(String secret) throws NoSuchPaddingException,

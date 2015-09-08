@@ -28,9 +28,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import br.com.hrstatus.dao.BancoDadosInterface;
-import br.com.hrstatus.model.BancoDados;
-import br.com.hrstatus.rest.DataBaseResource;
+import br.com.hrstatus.dao.UsersInterface;
+import br.com.hrstatus.model.Users;
+import br.com.hrstatus.rest.UserResource;
 import br.com.hrstatus.utils.UserInfo;
 
 /*
@@ -38,57 +38,39 @@ import br.com.hrstatus.utils.UserInfo;
  */
 
 @Component
-public class DataBaseImpl extends SpringBeanAutowiringSupport implements DataBaseResource {
-
-	Logger log = Logger.getLogger(DataBaseImpl.class.getCanonicalName());
-
+public class UserImpl extends SpringBeanAutowiringSupport implements UserResource{
+	
+	Logger log = Logger.getLogger(UserImpl.class.getCanonicalName());
+	
 	@Autowired(required = true)
-	private BancoDadosInterface databaseDAO;
+	private UsersInterface userDAO;
 	private UserInfo userInfo = new UserInfo();
-
+	
 	@PostConstruct
 	public void init() {
 		log.info("initializing Autowired Service.");
 		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 	}
-
-	public List<BancoDados> bancodados() {
+	
+	public List<Users> users() {
 		try {
-			log.info(" [ " + userInfo.getLoggedUsername() + " ]{REST} -> Returning the database list.");
-			return this.databaseDAO.listDataBases();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-
-	}
-
-	public List<BancoDados> bancodadosOK() {
-		try {
-			log.info(" [ " + userInfo.getLoggedUsername() + " ]{REST} -> Returning the database ok list.");
-			return this.databaseDAO.getdataBasesOK();
+			log.info(" [ " + userInfo.getLoggedUsername() + " ]{REST} -> listing users.");
+			return this.userDAO.listUser();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	public List<BancoDados> bancodadosNOK() {
+	public String removeUser(String username) {
 		try {
-			log.info(" [ " + userInfo.getLoggedUsername() + " ]{REST} -> Returning the database nok list.");
-			return this.databaseDAO.getdataBasesNOK();
+			log.info(" [ " + userInfo.getLoggedUsername() + " ]{REST} -> removing user " + username);
+			this.userDAO.deleteUserByID(this.userDAO.getUserByID(username));
+			return "SUCESS";
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "Failed to remove user " + username + ", see the logs for details.";
 		}
 	}
-
-
-	public String addDatabase(String ip) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
 
 }

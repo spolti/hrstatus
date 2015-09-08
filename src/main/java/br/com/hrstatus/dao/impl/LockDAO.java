@@ -91,6 +91,13 @@ public class LockDAO implements LockIntrface{
 	public Lock getLockByID(int id) {
 		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] getLockByID(int " + id + ")");
-		return (Lock) session().createCriteria(Lock.class).add(Restrictions.eq("id", id)).uniqueResult();
+		Lock lock = (Lock) session().createCriteria(Lock.class).add(Restrictions.eq("id", id)).uniqueResult();
+		if (lock != null){
+			return lock;
+		} else {
+			log.severe("Lock ID " + id + " not found.");
+			return lock;
+		}		
 	}
+	
 }

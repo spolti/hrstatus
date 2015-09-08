@@ -19,21 +19,29 @@
 
 package br.com.hrstatus.rest;
 
+import java.util.List;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import br.com.hrstatus.model.Configurations;
+import br.com.hrstatus.model.Users;
 
 /*
  * @author spolti
  */
 
-@Path("setup")
+@Path("user")
 @Produces("application/json; charset=utf8")
-public interface SetupResource {
+public interface UserResource {
 
-	@Path("list")
+	@Path("listAll")
 	@GET
-	public Configurations configurations();
+	public List<Users> users();
+	
+	@Path("remove/{username}")
+	@GET
+	public String removeUser(@PathParam("username") String username);
+	
 }

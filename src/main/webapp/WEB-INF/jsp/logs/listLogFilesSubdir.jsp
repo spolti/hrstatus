@@ -25,7 +25,7 @@
 				alert("Número de linhas é obrigatório.")
 				return; 
 			}
-			$.get('${pageContext.request.contextPath}/tailFile/${hostname}/'+nm[1]+'/'+valor, "", function(retorno) {    
+			$.get('${pageContext.request.contextPath}/tailFile/${hostname}/'+valor+'/'+nm[1], "", function(retorno) {    
 				 var tailContent = $("#tailContent", retorno);
 				 $('#pageContent').empty().append(tailContent);
 			})
@@ -41,7 +41,7 @@
 				alert("Palavra da busca é obrigatória.")
 				return; 
 			}
-			$.get('${pageContext.request.contextPath}/findInFile/${hostname}/'+nm[1]+'/'+valor, "", function(retorno) {    
+			$.get('${pageContext.request.contextPath}/findInFile/${hostname}/'+valor+'/'+nm[1], "", function(retorno) {    
 				 var tailContent = $("#findContent", retorno);
 				 $('#pageContent').empty().append(tailContent);
 			})
@@ -105,7 +105,7 @@
 									<c:when test="${(fn:startsWith(file, 'd ')) == false}">
 										<div style="display: inline"> 
 											<input type="text" name="numLinhas" placeholder="Quantidade de linhas" style="margin-bottom: 0px;" id="file${status.index}" onkeypress="return numbersonly(this,event)"/>
-											<input type="image" src="../img/tail.png" name="image" width="14" height="14" onclick="callTail('${file}', 'file${status.index}')"/>
+											<input type="image" src="${pageContext.request.contextPath}/img/tail.png" name="image" width="14" height="14" onclick="callTail('${file}${logDir}', 'file${status.index}')"/>
 										</div>
 									</c:when>
 									<c:otherwise>
@@ -120,7 +120,7 @@
 									<c:when test="${(fn:startsWith(file, 'd ')) == false}">
 										<div style="display: inline">
 											<input type="text" name="palavraBusca" placeholder="Valor Desejado" style="margin-bottom: 0px;" id="findfile${status.index}"/>
-											<input type="image" src="../img/search.png" name="image" width="14" height="14" onclick="findInFile('${file}', 'findfile${status.index}')"/>
+											<input type="image" src="${pageContext.request.contextPath}/img/search.png" name="image" width="14" height="14" onclick="findInFile('${file}${logDir}', 'findfile${status.index}')"/>
 										</div>
 									</c:when>
 									<c:otherwise>

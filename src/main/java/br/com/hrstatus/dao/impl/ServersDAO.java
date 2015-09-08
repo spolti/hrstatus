@@ -158,7 +158,6 @@ public class ServersDAO implements ServersInterface {
 	public boolean deleteServerByID(Servidores server) {
 
 		log.info("[ " + userInfo.getLoggedUsername() + " ] deleteServerByID(Servidores server)[" + server.getHostname() + "]");
-
 		try {
 			
 			session().refresh(server);
@@ -170,7 +169,6 @@ public class ServersDAO implements ServersInterface {
 
 			return false;
 		}
-
 	}
 
 	public int countLinux() {

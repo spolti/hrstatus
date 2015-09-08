@@ -69,7 +69,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 		log.fine("Server: " + dataBase.getHostname());
 		log.fine("IP: " + dataBase.getIp());
 		log.fine("User: " + dataBase.getUser());
-		log.fine("Pass: :)");
+		log.fine("Pass: gotcha!");
 		log.fine("Port: " + dataBase.getPort());
 		log.fine("VENDOR: " + dataBase.getVendor());
 		log.fine("Query: " + dataBase.getQueryDate());
@@ -136,8 +136,8 @@ public class BancoDadosDAO implements BancoDadosInterface {
 		log.info("[ " + userInfo.getLoggedUsername() + " ] updateDataBase -> Retrieving parameters");
 		log.fine("Server: " + dataBase.getHostname());
 		log.fine("IP: " + dataBase.getIp());
-		log.fine("User: :(");
-		log.fine("Pass: " + dataBase.getPass());
+		log.fine("User: " + dataBase.getUser());
+		log.fine("Pass: gotcha!");
 		log.fine("Port: " + dataBase.getPort());
 		log.fine("VENDOR: " + dataBase.getVendor());
 		log.fine("Query: " + dataBase.getQueryDate());
