@@ -19,7 +19,7 @@
 				alert("Número de linhas é obrigatório.")
 				return; 
 			}
-			$.get('${pageContext.request.contextPath}/tailFile/${hostname}/'+nm[1]+'/'+valor, "", function(retorno) {    
+			$.get('${pageContext.request.contextPath}/tailFile/${hostname}/'+valor+'/'+nm[1], "", function(retorno) {    
 				 var tailContent = $("#tailContent", retorno);
 				 $('#pageContent').empty().append(tailContent);
 			})
@@ -35,7 +35,7 @@
 				alert("Palavra da busca é obrigatória.")
 				return; 
 			}
-			$.get('${pageContext.request.contextPath}/findInFile/${hostname}/'+nm[1]+'/'+valor, "", function(retorno) {    
+			$.get('${pageContext.request.contextPath}/findInFile/${hostname}/'+valor+'/'+nm[1], "", function(retorno) {    
 				 var tailContent = $("#findContent", retorno);
 				 $('#pageContent').empty().append(tailContent);
 			})

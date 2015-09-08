@@ -53,7 +53,7 @@ public class SetupImpl extends SpringBeanAutowiringSupport implements SetupResou
 
 	public Configurations configurations() {
 		try {
-			log.info(" [ " + userInfo.getLoggedUsername() + " ] Returning the database list.");
+			log.info(" [ " + userInfo.getLoggedUsername() + " ]{REST} -> Returning the database list.");
 			return this.configDAO.getConfigs();
 		} catch (Exception e) {
 			e.printStackTrace();

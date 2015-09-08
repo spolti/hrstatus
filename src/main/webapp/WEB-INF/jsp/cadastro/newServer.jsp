@@ -34,7 +34,7 @@
 						<div class="alert">
 							<button type="button" class="close" data-dismiss="alert">×</button>
 							<c:forEach var="error" items="${errors}">
-		   		 ${error.category} - ${error.message}<br />
+		   						 ${error.category} - ${error.message}<br />
 							</c:forEach>
 						</div>
 					</c:if>

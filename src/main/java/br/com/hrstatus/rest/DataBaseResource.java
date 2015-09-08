@@ -21,8 +21,10 @@ package br.com.hrstatus.rest;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import br.com.hrstatus.model.BancoDados;
@@ -38,4 +40,20 @@ public interface DataBaseResource {
 	@Path("list")
 	@GET
 	public List<BancoDados> bancodados();
+	
+	@Path("list/ok")
+	@GET
+	public List<BancoDados> bancodadosOK();
+	
+	@Path("list/nok")
+	@GET
+	public List<BancoDados> bancodadosNOK();
+	
+	
+	@Path("/add/{ip}/")
+	@GET
+	@RolesAllowed("ADMIN")
+	public String addDatabase(@PathParam(value = "ip") String ip);
+	
+	
 }

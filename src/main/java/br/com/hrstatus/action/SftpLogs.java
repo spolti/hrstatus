@@ -170,6 +170,8 @@ public class SftpLogs {
 
 		String s = "";
 
+		log.fine("Debugging grep command: \"grep -i \"" + palavraBusca + "' " + remoteDir + "/" + file);
+		
 		// Disabling host key check
 		java.util.Properties config = new java.util.Properties();
 		config.put("StrictHostKeyChecking", "no");

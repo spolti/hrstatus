@@ -19,21 +19,29 @@
 
 package br.com.hrstatus.rest;
 
+import java.util.List;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import br.com.hrstatus.model.Configurations;
+import br.com.hrstatus.model.Lock;
 
 /*
  * @author spolti
  */
 
-@Path("setup")
+@Path("locks")
 @Produces("application/json; charset=utf8")
-public interface SetupResource {
+public interface LockResource {
 
 	@Path("list")
 	@GET
-	public Configurations configurations();
+	public List<Lock> listLocks();
+	
+	
+	@Path("delete/{id}")
+	@GET
+	public String deleteLockByID(@PathParam(value = "id") int id);
 }

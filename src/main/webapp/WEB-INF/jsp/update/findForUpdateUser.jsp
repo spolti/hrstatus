@@ -99,6 +99,12 @@
 									<c:if test="${not empty isDisabled}"> disabled </c:if>
 									type="checkbox" name="checkall"></td>
 							</tr>
+							<tr>
+								<td align=right>Desmarcar todos os servidores:</td>
+								<td><input
+									<c:if test="${not empty isDisabled}"> disabled </c:if>
+									type="checkbox" name="unCheckall"></td>
+							</tr>
 
 							<tr>
 								<td align=right></td>

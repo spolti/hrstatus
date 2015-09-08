@@ -14,7 +14,7 @@
 	<repositories>
 		<repository>
 			<id>fdvsolution.public</id>
-			<url>http://archiva.fdvs.com.ar/repository/public1/</url>
+			<url>http://nexus.fdvs.com.ar/content/groups/public/</url>
 		</repository>
 		<repository>
 			<id>codelds</id>
@@ -334,7 +334,7 @@
 
 		<!-- DB2 - comment it if you don't have the libs in your maven repository, 
 			steps to add it in your repo are in the docs. -->
-		<dependency>
+		<!-- dependency>
 			<groupId>com.ibm.db2.jcc</groupId>
 			<artifactId>db2jcc</artifactId>
 			<version>3.8.47</version>
@@ -343,7 +343,7 @@
 			<groupId>com.ibm.db2.jcc</groupId>
 			<artifactId>db2jcc_license_cu</artifactId>
 			<version>3.8.47</version>
-		</dependency>
+		</dependency-->
 
 		<!-- Testes unitários -->
 		<dependency>

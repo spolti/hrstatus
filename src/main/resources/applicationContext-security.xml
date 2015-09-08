@@ -93,6 +93,9 @@
 		<!-- Rest URI -->
 		<intercept-url pattern="/rest/**" access="ROLE_ADMIN,ROLE_REST" />
 		<intercept-url pattern="/rest/setup/**" access="ROLE_ADMIN" />
+		<intercept-url pattern="/rest/server/new/**" access="ROLE_ADMIN" />
+		<intercept-url pattern="/rest/server/remove/**" access="ROLE_ADMIN" />
+		<intercept-url pattern="/rest/user/remove/**" access="ROLE_ADMIN" />
 
 		<!-- Set the login page and what to do if login fails -->
 		<form-login login-page="/login" default-target-url="/home" />

@@ -17,12 +17,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.rest.impl;
+package br.com.hrstatus.rest;
 
 import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import br.com.hrstatus.model.Servidores;
@@ -35,7 +36,30 @@ import br.com.hrstatus.model.Servidores;
 @Produces("application/json; charset=utf8")
 public interface ServerResource {
 
-	@Path("list")
+	@Path("listAll")
 	@GET
 	public List<Servidores> servidores();
+	
+	@Path("withLogDir")
+	@GET
+	public List<Servidores> withLogDir();
+	
+	@Path("ok")
+	@GET
+	public List<Servidores> serverOk();
+	
+	@Path("nok")
+	@GET
+	public List<Servidores> serverNok();
+	
+	@Path("remove/{id}")
+	@GET
+	public String removeServer(@PathParam("id")  int id);
+	
+	@Path("new/{ip}/{hostname}/{user}/{passwd}/{logDir}/{ntpCommand}/{port}/{active}/{so}")
+	@GET
+	public String newServer(@PathParam("ip")  String ip, @PathParam("hostname")  String hostname,
+			@PathParam("user")  String user, @PathParam("passwd")  String passwd, @PathParam("logDir")  String logDir,
+			@PathParam("ntpCommand")  String ntpCommand, @PathParam("port")  int port, @PathParam("active")  String active,
+			@PathParam("so")  String so);
 }

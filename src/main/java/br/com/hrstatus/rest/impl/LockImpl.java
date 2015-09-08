@@ -17,33 +17,33 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.rest;
+package br.com.hrstatus.rest.impl;
 
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 
-import br.com.hrstatus.dao.ServersInterface;
-import br.com.hrstatus.model.Servidores;
-import br.com.hrstatus.rest.impl.ServerResource;
-import br.com.hrstatus.utils.UserInfo;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
+import br.com.hrstatus.dao.LockIntrface;
+import br.com.hrstatus.model.Lock;
+import br.com.hrstatus.rest.LockResource;
+import br.com.hrstatus.utils.UserInfo;
 
 /*
  * @author spolti
  */
 
 @Component
-public class ServerImpl extends SpringBeanAutowiringSupport implements ServerResource {
+public class LockImpl extends SpringBeanAutowiringSupport implements LockResource {
 
-	Logger log = Logger.getLogger(ServerImpl.class.getCanonicalName());
+	Logger log = Logger.getLogger(LockImpl.class.getCanonicalName());
 
 	@Autowired(required = true)
-	private ServersInterface iteracoesDAO;
+	private LockIntrface lockDAO;
 	private UserInfo userInfo = new UserInfo();
 
 	@PostConstruct
@@ -52,15 +52,24 @@ public class ServerImpl extends SpringBeanAutowiringSupport implements ServerRes
 		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 	}
 
-	public List<Servidores> servidores() {
+	public List<Lock> listLocks() {
 		try {
-			log.info(" [ " + userInfo.getLoggedUsername() + " ] Returning the server list.");
-			return this.iteracoesDAO.listServers();
+			log.info(" [ " + userInfo.getLoggedUsername() + " ]{REST} -> Returning the database list.");
+			return this.lockDAO.ListAllLocks();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
-
 	}
-
+	
+	public String deleteLockByID(int id){
+		try {
+			log.info(" [ " + userInfo.getLoggedUsername() + " ]{REST} -> Removing lock id: " + id);
+			lockDAO.removeLock(lockDAO.getLockByID(id));
+			return "SUCCESS";
+		} catch (Exception e) {
+			log.severe("Could not delete lock." + e);
+			return "FAIL";
+		}
+	}
 }

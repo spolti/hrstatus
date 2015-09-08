@@ -32,6 +32,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /*
  * @author spolti
  */
@@ -44,6 +46,7 @@ public class Users{
 	@Column(name = "username", nullable = false, unique=true)
 	private String username;
 
+	@JsonIgnore
 	@Column(name = "password", nullable = false)
 	private String password;
 
@@ -65,6 +68,7 @@ public class Users{
 	@Column(name = "lastLogin")
 	private String lastLogin;
 	
+	@JsonIgnore //to avoid the loop when call a rest method to list users
 	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
 	@JoinTable(name = "USER_SERVER", joinColumns = { @JoinColumn(name = "username") }, inverseJoinColumns = { @JoinColumn(name = "id") })
 	private List<Servidores> server;

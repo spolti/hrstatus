@@ -410,7 +410,7 @@ public class UpdateController {
 
 	@SuppressWarnings("static-access")
 	@Post("/updateUser")
-	public void updateUser(Users user, String[] idServer, boolean checkall) {
+	public void updateUser(Users user, String[] idServer, boolean checkall, boolean unCheckall) {
 	
 		List<Servidores> idAccessServers = new ArrayList<Servidores>();
 		//idAccessServers = this.iteracoesDAO.getHostnamesWithLogDir();
@@ -442,12 +442,15 @@ public class UpdateController {
 				validator.add(new ValidationMessage("O campo Nome deve ser informado", "Erro"));
 			} else if (user.getUsername().isEmpty()) {
 				validator.add(new ValidationMessage("O campo Username deve ser informado", "Erro"));
-			} else if (checkall) {
+			} if (unCheckall) {
+				log.info("Removing all servers from user " + user.getUsername());
+				
+			}  else if (checkall) {
 				log.fine("[ " + userInfo.getLoggedUsername() + " ] The checkbox select all server is checked.");
 				idAccessServers = this.iteracoesDAO.getHostnamesWithLogDir();
 				user.setServer(idAccessServers);
 
-			} else if (!checkall && idServer != null) {
+			} else if (!checkall && !unCheckall && idServer != null) {
 				for (int i = 0; i < idServer.length; i++) {
 					if (!idServer[i].equals("notNull")) {
 						idAccessServers.add(this.iteracoesDAO.getServerByID(Integer.parseInt(idServer[i])));
@@ -458,7 +461,6 @@ public class UpdateController {
 				for (int j = 0; j < idAccessServers.size(); j++){
 					log.fine("*******************server " + user.getServer());
 				}
-				
 
 			}
 			if (!user.getPassword().isEmpty() || !user.getConfirmPass().isEmpty()) {
@@ -510,10 +512,6 @@ public class UpdateController {
 				user.setPassword(encode.encodePassUser(user.getPassword()));
 			}
 
-						
-			for (Servidores sv : user.getServer()) {
-				log.fine("*******************server " +	sv.getHostname());
-			}
 			
 			//result.include("user", user);
 			validator.onErrorUsePageOf(UpdateController.class).findForUpdateUser(user, user.getUsername(), "0");
