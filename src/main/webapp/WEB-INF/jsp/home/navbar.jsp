@@ -262,7 +262,19 @@
 										<i class="icon-arrow-right"></i> Banco de Dados
 								</a></li>
 							</ul></li>
-
+						<li class="dropdown-submenu"><a tabindex="-1" href="#"><i
+								class="icon-calendar"> </i> Agendamentos </a>
+							<ul class="dropdown-menu">
+								<li><a href="<c:url value="/scheduler"/>"
+									title="Novo Agendamento/Agendamentos ativos">
+										<i class="icon-plus"></i> Novo Agendamento/Agendamentos ativos
+								</a></li>
+								<li><a
+									href="<c:url value="listScheduler"/>"
+									title="Histórico de Agendamentos executados">
+										<i class="icon-list"></i> Histórico de Agendamentos executados
+								</a></li>
+							</ul></li>
 						<a href="#ModalAbout" data-toggle="modal"><i
 							class="icon-info-sign"></i> Sobre </a>
 

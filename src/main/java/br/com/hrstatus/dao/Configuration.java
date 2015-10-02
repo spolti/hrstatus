@@ -47,6 +47,8 @@ public interface Configuration {
 	
 	public int getDiffirenceSecs();
 	
+	public int getDiffirenceSecsScheduler(String schedulerName);
+	
 	public String getNtpServerAddress();
 	
 	public boolean sendNotification();

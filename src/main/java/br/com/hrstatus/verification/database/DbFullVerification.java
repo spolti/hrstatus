@@ -123,7 +123,7 @@ public class DbFullVerification {
 				try {
 
 					if (bancoDados.getVendor().toUpperCase().equals("MYSQL")) {
-						dateSTR = runMySQL.getDateMySQL(bancoDados);
+						dateSTR = runMySQL.getDateMySQL(bancoDados, userInfo.getLoggedUsername());
 					} else if (bancoDados.getVendor().toUpperCase().equals("POSTGRESQL")) {
 						dateSTR = runPSQL.getDatePSQL(bancoDados);
 					} else if (bancoDados.getVendor().toUpperCase().equals("SQLSERVER")) {

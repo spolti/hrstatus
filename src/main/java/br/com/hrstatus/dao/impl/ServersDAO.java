@@ -154,6 +154,24 @@ public class ServersDAO implements ServersInterface {
 		session().update(server);
 		
 	}
+	
+	public void updateServerScheduler(Servidores server, String SchedulerName) {
+
+		log.finest("[ " + SchedulerName + " ] updateServerScheduler(Servidores server, String SchedulerName)[" + server.getHostname() + "]");
+		log.fine("Server: " + server.getHostname());
+		log.fine("IP: " + server.getIp());
+		log.fine("User: " + server.getUser());
+		log.fine("Pass: gotcha!");
+		log.fine("Port: " + server.getPort());
+		log.fine("OS: " + server.getSO());
+		log.fine("Status: " + server.getStatus());
+		log.fine("Logs directory: " + server.getLogDir());
+		log.fine("Su command: " + server.getSuCommand());
+		log.fine("Verify? -> " + server.getVerify());
+
+		session().update(server);
+		
+	}
 
 	public boolean deleteServerByID(Servidores server) {
 
@@ -254,6 +272,17 @@ public class ServersDAO implements ServersInterface {
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria.add(Restrictions.eq("verify", "SIM")).list();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Servidores> listServersVerActiveScheduler(String schedulerName) {
+		
+		log.info("[ " + schedulerName + " ] listServersVerActiveScheduler(String schedulerName)");
+		
+		Criteria criteria = session().createCriteria(Servidores.class);
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return criteria.add(Restrictions.eq("verify", "SIM")).list();
+	}
+
 
 	@SuppressWarnings("unchecked")
 	public List<Servidores> getServersOK() {
@@ -278,7 +307,7 @@ public class ServersDAO implements ServersInterface {
 		
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.or(Restrictions.eq("trClass", "Errorr"), Restrictions.eq("status", "NOK")));
+			criteria.add(Restrictions.or(Restrictions.eq("trClass", "error"), Restrictions.eq("status", "NOK")));
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			return criteria.list();
 

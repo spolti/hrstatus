@@ -13,6 +13,7 @@
 		<class>br.com.hrstatus.model.Lock</class>
 		<class>br.com.hrstatus.model.BancoDados</class>
 		<class>br.com.hrstatus.model.InstallationProcess</class>
+		<class>br.com.hrstatus.model.VerificationScheduler</class>
 		<exclude-unlisted-classes />
 	</persistence-unit>
 </persistence>

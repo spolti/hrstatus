@@ -62,7 +62,7 @@ public class StartupSingletonVerifications {
         	if (result.equals("0")){
         		log.info("Binary " + bin.name() + ": OK");
         	}else {
-        		log.warning(" (If net bin: samba-common package) Binary " + bin.name() + ": Not found, this can cause strange behavior of some functionalities of HrStatus.");
+        		log.warning("Binary " + bin.name() + ": Not found, this can cause strange behavior of some functionalities of HrStatus.");
         	}
         }
 	}

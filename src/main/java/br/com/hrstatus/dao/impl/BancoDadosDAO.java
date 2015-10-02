@@ -50,8 +50,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 	private EntityManager entityManager;
 	UserInfo userInfo = new UserInfo();
 
-	public BancoDadosDAO() {
-	}
+	public BancoDadosDAO() {}
 
 	@PersistenceContext(unitName = "pu-hr")
 	protected final void setEntityManager(EntityManager entityManager) {
@@ -98,8 +97,13 @@ public class BancoDadosDAO implements BancoDadosInterface {
 	
 	@SuppressWarnings("unchecked")
 	public List<BancoDados> listDataBases() {
-		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] listDataBases()");
+		return session().createCriteria(BancoDados.class).list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BancoDados> listDataBasesScheduler(String schedulerName) {
+		log.fine("[ " + schedulerName + " ] listDataBasesScheduler()");
 		return session().createCriteria(BancoDados.class).list();
 	}
 	
@@ -134,6 +138,22 @@ public class BancoDadosDAO implements BancoDadosInterface {
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] updateDataBase(BancoDados dataBase)[" + dataBase.getHostname() + "]");
 		
 		log.info("[ " + userInfo.getLoggedUsername() + " ] updateDataBase -> Retrieving parameters");
+		log.fine("Server: " + dataBase.getHostname());
+		log.fine("IP: " + dataBase.getIp());
+		log.fine("User: " + dataBase.getUser());
+		log.fine("Pass: gotcha!");
+		log.fine("Port: " + dataBase.getPort());
+		log.fine("VENDOR: " + dataBase.getVendor());
+		log.fine("Query: " + dataBase.getQueryDate());
+		
+		session().update(dataBase);
+	}
+	
+	public void updateDataBaseScheduler(BancoDados dataBase, String schedulerName){
+		
+		log.fine("[ " + schedulerName + " ] updateDataBaseScheduler(BancoDados dataBase, String schedulerName)[" + dataBase.getHostname() + "]");
+		
+		log.info("[ " + schedulerName + " ] updateDataBase -> Retrieving parameters");
 		log.fine("Server: " + dataBase.getHostname());
 		log.fine("IP: " + dataBase.getIp());
 		log.fine("User: " + dataBase.getUser());
