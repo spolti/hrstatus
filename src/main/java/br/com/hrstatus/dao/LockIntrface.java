@@ -31,9 +31,15 @@ public interface LockIntrface {
 
 	public void insertLock(Lock lock);
 	
+	public void insertLockScheduler(Lock lock, String schedulerName);
+	
 	public void removeLock(Lock lock);
 	
+	public void removeLockScheduler(Lock lock, String schedulerName);
+	
 	public List<Lock> listLockedServices(String recurso);
+	
+	public List<Lock> listLockedServicesScheduler(String recurso, String schedulerName);
 	
 	public List<Lock> ListAllLocks();
 	

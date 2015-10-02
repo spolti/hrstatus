@@ -37,6 +37,8 @@ public interface ServersInterface {
 	
 	public void updateServer(Servidores server);
 	
+	public void updateServerScheduler(Servidores server, String SchedulerName);
+	
 	public boolean deleteServerByID(Servidores server);
 	
 	public int countLinux();
@@ -52,6 +54,8 @@ public interface ServersInterface {
 	public  List<Servidores> listServers();
 	
 	public List<Servidores> listServersVerActive();
+	
+	public List<Servidores> listServersVerActiveScheduler(String schedulerName);
 	
 	public List<Servidores> getServersOK();
 	

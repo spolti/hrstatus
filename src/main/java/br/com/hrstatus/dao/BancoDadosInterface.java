@@ -33,6 +33,8 @@ public interface BancoDadosInterface {
 	
 	public List<BancoDados> listDataBases();
 	
+	public List<BancoDados> listDataBasesScheduler(String schedulerName);
+	
 	public List<BancoDados> listDataBaseByID(int id);
 	
 	public BancoDados getDataBaseByID(int id);
@@ -40,6 +42,8 @@ public interface BancoDadosInterface {
 	public boolean deleteDataBase(BancoDados bancoDados);
 	
 	public void updateDataBase(BancoDados dataBase);
+	
+	public void updateDataBaseScheduler(BancoDados dataBase, String schedulerName);
 	
 	public int countMysql();
 	

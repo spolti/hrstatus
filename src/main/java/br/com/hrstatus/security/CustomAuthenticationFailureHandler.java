@@ -20,37 +20,25 @@
 package br.com.hrstatus.security;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import org.apache.poi.hssf.record.formula.functions.Lognormdist;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 
 import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.dao.InstallProcessInterface;
+import br.com.hrstatus.dao.SchedulerInterface;
 import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.model.Configurations;
 import br.com.hrstatus.model.InstallationProcess;
 import br.com.hrstatus.model.Users;
+import br.com.hrstatus.model.VerificationScheduler;
 import br.com.hrstatus.utils.date.DateUtils;
 
 /*
@@ -62,29 +50,32 @@ import br.com.hrstatus.utils.date.DateUtils;
 public class CustomAuthenticationFailureHandler extends
 		SimpleUrlAuthenticationFailureHandler {
 
-	Logger log = Logger.getLogger(CustomAuthenticationFailureHandler.class
-			.getCanonicalName());
+	Logger log = Logger.getLogger(CustomAuthenticationFailureHandler.class.getCanonicalName());
 
 	@Autowired
 	private InstallProcessInterface ipiDAO;
+	
 	@Autowired
 	private Configuration confDAO;
+	
 	@Autowired
 	private UsersInterface userDAO;
+	
+	@Autowired
+	private SchedulerInterface schedulerDAO;
 
 	InstallationProcess ipi = new InstallationProcess();
 	Configurations conf = new Configurations();
+	VerificationScheduler scheduler = new VerificationScheduler();
 	Users user = new Users();
 
 	@Override
-	public void onAuthenticationFailure(HttpServletRequest request,
-			HttpServletResponse response, AuthenticationException exception)
+	public void onAuthenticationFailure(HttpServletRequest request,	HttpServletResponse response, AuthenticationException exception)
 			throws IOException, ServletException {
 
 		if (request.getParameter("j_username").equals("admin") && ipiDAO.freshInstall()) {
 
 			log.fine("[ System ] Fresh Installation, configuring HrStatus settings.");
-
 			log.fine("[ System ] Setting Installation Process parameters");
 			ipi.setFreshInstall(false);
 			ipi.setInstallDate(new DateUtils().getTime().toString());
@@ -106,9 +97,17 @@ public class CustomAuthenticationFailureHandler extends
 			user.setPassword("89794b621a313bb59eed0d9f0f4e8205");
 			user.setUsername("admin");
 
+			//setting the default scheduler
+			scheduler.setSchedulerName("defaultScheduler");
+			scheduler.setEveryday(true);
+			scheduler.setDefaultScheduler(true);
+			scheduler.setFinished(false);
+			scheduler.setEnabled(true);
+			
 			userDAO.saveORupdateUserNotLogged(user);
 			confDAO.saveConfigNotLogged(conf);
 			ipiDAO.saveInstallationProcess(ipi);
+			schedulerDAO.saveSchedulerNotLogged(scheduler);
 			
 			setDefaultFailureUrl("/login?login_error=1&message=O Hrstatus foi instalado com sucesso, para login utilize as credenciais admin/123mudar");
 			super.onAuthenticationFailure(request, response, exception);

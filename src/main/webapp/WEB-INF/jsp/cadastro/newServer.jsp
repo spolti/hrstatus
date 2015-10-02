@@ -43,11 +43,11 @@
 						<table align=center>
 							<br>
 							<tr>
-								<td align=right>IP:</td>
+								<td align=right><span title="Ip do servidor">IP:</span></td>
 								<td><input type="text" name="servidores.ip" /></td>
 							</tr>
 							<tr>
-								<td align=right>Hostname:</td>
+								<td align=right><span title="Hostname do servidor">Hostname:</span></td>
 								<td><input type="text" name="servidores.hostname" /></td>
 							</tr>
 							<tr>
@@ -59,19 +59,19 @@
 								<td><input type="password" name="servidores.pass" /></td>
 							</tr>
 							<tr>
-								<td align="right">Diretório de logs:</td>
+								<td align="right"><span title="Se desejar buscar por logs no servidor, preencha este campo, Ex: /var/log">Diretório de logs:</span></td>
 								<td><input type="text" name="servidores.logDir"></td>
 							</tr>
 							<tr>
-								<td align="right">Comando NTP:</td>
+								<td align="right"><span title="Comando ntp que será executado nos ervidor para atualizar data/hora, Ex: sudo ntpdate -u">Comando NTP:</span></td>
 								<td><input type="text" name="servidores.suCommand"></td>
 							</tr>
 							<tr>
-								<td align=right>Porta (SSH/TELNET):</td>
+								<td align=right><span title="Porta para conexão Remota, SSH: 22, Telnet: 23">Porta (SSH/TELNET):</span></td>
 								<td><input type="text" name="servidores.port" /></td>
 							</tr>
 							<tr>
-								<td align=right>Verificação Ativa:</td>
+								<td align=right><span tilte="Sim o HrStatus irá verificar a data/hora neste servidor em específico, se não, o mesmo não será verificado">Verificação Ativa:</span></td>
 								<td><select name="servidores.verify" id="servidores.verify">
 										<option value="SIM">Sim</option>
 										<option value="NAO">Nao</option>

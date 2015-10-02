@@ -31,7 +31,7 @@
 			<div class="row">
 				<div class="span12">
 					<div class="alert alert-info">Caso deseje deseje usar porta e
-						query default do banco de dados selecionados deixe os campos Porta
+						query default do banco de dados selecionado deixe os campos Porta
 						e Query em branco.</div>
 					<c:if test="${not empty errors}">
 						<div class="alert">
@@ -46,19 +46,22 @@
 						<table align=center>
 							<br>
 							<tr>
-								<td align=right>IP:</td>
+								<td align=right><span title="Ip do Banco de Dados">IP:</span></td>
 								<td><input type="text" name="bancoDados.ip" /></td>
 							</tr>
 							<tr>
-								<td align=right>Hostname:</td>
+								<td align=right><span
+									title="Hostname do servidor ou um nome a sua escolha">Hostname:</span></td>
 								<td><input type="text" name="bancoDados.hostname" /></td>
 							</tr>
 							<tr>
-								<td align=right>Instancia:</td>
+								<td align=right><span
+									title="Instancia que será utilizada (Parametro necessário somente para SQL Servers)">Instancia:</span></td>
 								<td><input type="text" name="bancoDados.instance" /></td>
 							</tr>
 							<tr>
-								<td align=right>Nome do Banco:</td>
+								<td align=right><span title="Nome do Banco de Dados">Nome
+										do Banco:</span></td>
 								<td><input type="text" name="bancoDados.db_name" /></td>
 							</tr>
 							<tr>
@@ -70,7 +73,8 @@
 								<td><input type="password" name="bancoDados.pass" /></td>
 							</tr>
 							<tr>
-								<td align="right">Query:</td>
+								<td align="right"><span
+									title="Query que será utilizada para buscar data/hora no banco de dados, se em branco a query default para o database selecionado será utilizada">Query:</span></td>
 								<td><input type="text" name="bancoDados.queryDate"></td>
 							</tr>
 							<tr>

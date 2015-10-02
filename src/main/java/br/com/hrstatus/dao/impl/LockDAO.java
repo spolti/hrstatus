@@ -64,10 +64,23 @@ public class LockDAO implements LockIntrface{
 		log.info("[ " + userInfo.getLoggedUsername() + " ] Generating lock to resource " + lock.getRecurso()  + " requested by the user " + lock.getUsername());
 		session().save(lock);
 	}
+	
+	public void insertLockScheduler(Lock lock, String schedulerName) {
+		
+		log.info("[ " + schedulerName + " ] Generating lock to resource " + lock.getRecurso()  + " requested by the user " + lock.getUsername());
+		session().save(lock);
+	}
 
 	public void removeLock(Lock lock) {
 		
 		log.info("[ " + userInfo.getLoggedUsername() + " ] Removing the lock for tor the resource  " + lock.getRecurso() + " requested by the user " + lock.getUsername());
+		session().refresh(lock);
+		session().delete(lock);
+	}
+	
+	public void removeLockScheduler(Lock lock, String schedulerName) {
+		
+		log.info("[ " + schedulerName + " ] Removing the lock for tor the resource  " + lock.getRecurso() + " requested by the user " + lock.getUsername());
 		session().refresh(lock);
 		session().delete(lock);
 	}
@@ -76,6 +89,15 @@ public class LockDAO implements LockIntrface{
 	public List<Lock> listLockedServices(String recurso){
 		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] Verifying if any resource is locked.");
+		Criteria criteria = session().createCriteria(Lock.class);
+		criteria.add(Restrictions.eq("recurso", recurso));
+		return criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Lock> listLockedServicesScheduler(String recurso, String schedulerName){
+		
+		log.fine("[ " + schedulerName + " ] Verifying if any resource is locked.");
 		Criteria criteria = session().createCriteria(Lock.class);
 		criteria.add(Restrictions.eq("recurso", recurso));
 		return criteria.list();

@@ -19,7 +19,6 @@
 
 package br.com.hrstatus.controller;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +27,8 @@ import br.com.caelum.vraptor.Delete;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.hrstatus.dao.BancoDadosInterface;
-import br.com.hrstatus.dao.ServersInterface;
 import br.com.hrstatus.dao.LockIntrface;
+import br.com.hrstatus.dao.ServersInterface;
 import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.model.BancoDados;
 import br.com.hrstatus.model.Lock;

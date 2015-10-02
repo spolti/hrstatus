@@ -79,8 +79,8 @@ public class ConfigurationDAO implements Configuration {
 
 	public String getMailSender() {
 		
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] getMailSender()");
-		
+		//log.fine("[ " + userInfo.getLoggedUsername() + " ] getMailSender()");
+		log.fine("[  ] getMailSender()");
 		Criteria mailFrom = session().createCriteria(Configurations.class);
 		ProjectionList proList = Projections.projectionList();
 		proList.add(Projections.property("mailFrom"));
@@ -157,6 +157,18 @@ public class ConfigurationDAO implements Configuration {
 	public int getDiffirenceSecs() {
 		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] getDiffirenceSecs()");
+		
+		Criteria difference = session().createCriteria(Configurations.class);
+		ProjectionList proList = Projections.projectionList();
+		proList.add(Projections.property("difference"));
+		difference.setProjection(proList);
+		int value = (Integer) difference.uniqueResult();
+		return value;
+	}
+	
+	public int getDiffirenceSecsScheduler(String schedulerName) {
+		
+		log.fine("[ " + schedulerName + " ] getDiffirenceSecsScheduler()");
 		
 		Criteria difference = session().createCriteria(Configurations.class);
 		ProjectionList proList = Projections.projectionList();
