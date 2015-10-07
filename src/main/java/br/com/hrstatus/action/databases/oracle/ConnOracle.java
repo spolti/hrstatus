@@ -24,8 +24,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-import br.com.hrstatus.utils.UserInfo;
-
 /*
  * @author spolti
  */
@@ -37,9 +35,8 @@ public class ConnOracle {
 	
 	public ConnOracle() {}
 
-	public static Connection getConexaoOracle(String serverAddress, int port, String username, String password, String instance) throws ClassNotFoundException, SQLException {
+	public static Connection getConexaoOracle(String serverAddress, int port, String username, String password, String instance, String loggedUser) throws ClassNotFoundException, SQLException {
 
-		UserInfo userInfo = new UserInfo();
 		Connection connection = null;
 			String driver = "oracle.jdbc.driver.OracleDriver";
 			Class.forName(driver);
@@ -52,10 +49,10 @@ public class ConnOracle {
 			//Testing if the connection was successfully obtained.
 			if (connection != null) {
 				status = (true);
-				log.fine("[ " + userInfo.getLoggedUsername() + " ] Oracle datbase connection status: " + status);
+				log.fine("[ " + loggedUser + " ] Oracle datbase connection status: " + status);
 			} else {
 				status = (false);
-				log.fine("[ " + userInfo.getLoggedUsername() + " ] Oracle datbase connection status: " + status);
+				log.fine("[ " + loggedUser + " ] Oracle datbase connection status: " + status);
 			}
 			return connection;
 	}

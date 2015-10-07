@@ -25,10 +25,12 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Get;
+import br.com.caelum.vraptor.Post;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.hrstatus.dao.SchedulerInterface;
 import br.com.hrstatus.model.VerificationScheduler;
+import br.com.hrstatus.model.VerificationSchedulerHistory;
 import br.com.hrstatus.utils.UserInfo;
 
 
@@ -45,6 +47,7 @@ public class SchedulerController {
 	private Result result;
 	
 	private UserInfo userInfo = new UserInfo();
+	private VerificationScheduler scheduler = new VerificationScheduler();
 	
 	@Autowired
 	private SchedulerInterface schedulerDAO;
@@ -60,7 +63,6 @@ public class SchedulerController {
 		List<VerificationScheduler> scheduler = this.schedulerDAO.schedulers();
 		result.include("scheduler", scheduler);
 		
-		
 	}
 	
 	
@@ -68,12 +70,79 @@ public class SchedulerController {
 	public void listScheduler () {
 		
 		// Inserting HTML title in the result
-		result.include("title", "Listar Agendamentos");
-
+		result.include("title", "Histórico de Agendamentos");
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /listScheduler");
 		
+		List<VerificationSchedulerHistory> schedulerHistory = this.schedulerDAO.getSchedulerHistory(userInfo.getLoggedUsername());
+		result.include("schedulerHistory", schedulerHistory);
 		
 	}
+	
+	@Get("/findForUpdateScheduler/{schedulerId}")
+	public void findForUpdateScheduler (int schedulerId) {
+		
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /findForUpdateScheduler/" + schedulerId);
+		
+		// Inserting HTML title in the result
+		result.include("title", "Alterar Agendamento");
+		result.include("loggedUser", userInfo.getLoggedUsername());
+		
+		scheduler = this.schedulerDAO.getSchedulerByID(schedulerId);
+		
+		if (scheduler.isDefaultScheduler()) {
+			result.include("isDefault", "checked");
+		} else {
+			result.include("isNotDefault", "checked");
+		}
+		
+		if (scheduler.isEveryday()) {
+			result.include("isEveryday", "checked");
+		} else {
+			result.include("isNotEveryday", "checked");
+		}
+		
+		if (scheduler.isEnabled()) {
+			result.include("isEnabled", "checked");
+		} else {
+			result.include("isNotEnabled", "checked");
+		}
+		
+		result.include("scheduler", scheduler);
+		
+	}
+	
+	@Post("/updateScheduler")
+	public void updateScheduler (VerificationScheduler scheduler, String isDefaultScheduler, String isEveryday, String isEnabled) {
+		
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /updateScheduler");
+		// Inserting HTML title in the result
+		result.include("title", "Atualizar Agendamento");
+		// Inserting the Logged username in the home page
+		result.include("loggedUser", userInfo.getLoggedUsername());
+		
+		//for the default scheduler the two following will be always true
+		scheduler.setDefaultScheduler(true);
+		scheduler.setEveryday(true);
+
+		
+		if (isEnabled.equals("true")) {
+			scheduler.setEnabled(true);
+		} else {
+			scheduler.setEnabled(false);
+		}		
+		
+		log.info("valores do scheduler, ID: " + scheduler.getSchedulerId());
+		log.info("SchedulerName: " + scheduler.getSchedulerName());
+		log.info("isDefaultScheduler: " + scheduler.isDefaultScheduler());
+		log.info("isEveryday: " + scheduler.isEveryday());
+		log.info("isEnabled: " + scheduler.isEnabled());
+		
+		
+		
+		this.schedulerDAO.updateScheduler(scheduler);
+		
+	}
+	
 }

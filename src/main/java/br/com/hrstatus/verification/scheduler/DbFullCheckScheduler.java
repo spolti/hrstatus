@@ -111,13 +111,13 @@ public class DbFullCheckScheduler {
 					if (bancoDados.getVendor().toUpperCase().equals("MYSQL")) {
 						dateSTR = runMySQL.getDateMySQL(bancoDados, schedulerName);
 					} else if (bancoDados.getVendor().toUpperCase().equals("POSTGRESQL")) {
-						dateSTR = runPSQL.getDatePSQL(bancoDados);
+						dateSTR = runPSQL.getDatePSQL(bancoDados, schedulerName);
 					} else if (bancoDados.getVendor().toUpperCase().equals("SQLSERVER")) {
-						dateSTR = runSqlServer.getDateSqlServer(bancoDados);
+						dateSTR = runSqlServer.getDateSqlServer(bancoDados, schedulerName);
 					} else if (bancoDados.getVendor().toUpperCase().equals("ORACLE")) {
-						dateSTR = runOracle.getDateOracle(bancoDados);
+						dateSTR = runOracle.getDateOracle(bancoDados, schedulerName);
 					} else if (bancoDados.getVendor().toUpperCase().equals("DB2")) {
-						dateSTR = runDB2.getDate(bancoDados);
+						dateSTR = runDB2.getDate(bancoDados, schedulerName);
 					}
 					log.fine("[ " + schedulerName + " ] Hora obtida do servidor " + bancoDados.getHostname() + ": " + dateSTR);
 					bancoDados.setClientTime(dateSTR);

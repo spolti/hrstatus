@@ -15,6 +15,7 @@
 		<div class="content">
 			<div class="row">
 				<div class="span12">
+				<div class="alert alert-info">Não é possível deletar o agendamento default, somente ativá-lo ou desativá-lo</div>
 					<table class="table table-striped" id="resultTable">
 						<thead>
 							<tr>
@@ -23,9 +24,8 @@
 								<th>Ativo?</th>
 								<th>Agendamento Default?</th>
 								<th>Executar todos os dias?</th>
-								<th>targets</th>
-								<th>Ações&nbsp;<a href="<c:url value="/newScheduler"/>"
-									title="Novo Scheduler"><i class="icon-plus-sign"> </i></a></th>
+								<!--th>Ações&nbsp;<a href="<c:url value="/newScheduler"/>"
+									title="Novo Scheduler"><i class="icon-plus-sign"> </i></a></th-->
 							</tr>
 						</thead>
 						<tbody>
@@ -36,13 +36,9 @@
 									<td>${scheduler.enabled}</td>
 									<td>${scheduler.defaultScheduler}</td>
 									<td>${scheduler.everyday}</td>
-									<td>Targets</td>
 									<td><a
 										href="<c:url value='/findForUpdateScheduler/${scheduler.schedulerId}' />"
 										title="Editar Scheduler"><i class="icon-edit"> </i></a> &nbsp;
-										<a
-										href="javascript:setParameter('${scheduler.schedulerId}' ,'${scheduler.schedulerName}');" title="remover Scheduler"><i
-											class="icon-remove"> </i></a></td>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -74,9 +70,5 @@
 			</div>
 		</div>
 	</form>
-	<!-- End forms delete bottons table -->
-
 </body>
 </html>
-
-

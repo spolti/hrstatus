@@ -24,8 +24,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-import br.com.hrstatus.utils.UserInfo;
-
 /*
  * @author spolti
  */
@@ -39,9 +37,8 @@ public class ConnPostgreSQL {
 	public ConnPostgreSQL() {
 	}
 
-	public static Connection getConexaoPSQL(String serverAddress,int port, String database, String username, String password) throws ClassNotFoundException, SQLException {
+	public static Connection getConexaoPSQL(String serverAddress,int port, String database, String username, String password, String loggedUser) throws ClassNotFoundException, SQLException {
 
-		UserInfo userInfo = new UserInfo();
 		Connection connection = null;
 		String driver = "org.postgresql.Driver";
 		Class.forName(driver);
@@ -52,10 +49,10 @@ public class ConnPostgreSQL {
 		// Testing if the connection was successfully obtained.
 		if (connection != null) {
 			status = (true);
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] PostgreSQL datbase connection status: " + status);
+			log.fine("[ " + loggedUser + " ] PostgreSQL datbase connection status: " + status);
 		} else {
 			status = (false);
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] PostgreSQL datbase connection status: " + status);
+			log.fine("[ " + loggedUser + " ] PostgreSQL datbase connection status: " + status);
 		}
 		return connection;
 

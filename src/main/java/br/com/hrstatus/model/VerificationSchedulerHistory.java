@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,13 +33,13 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name = "VerificationScheduler")
-public class VerificationScheduler {
+@Table(name = "VerificationSchedulerHistory")
+public class VerificationSchedulerHistory {
 
 	@Id
-	@Column(name = "schedulerId")
+	@Column(name = "schedulerHistoryId")
 	@GeneratedValue
-	private int schedulerId;
+	private int schedulerHistoryId;
 	
 	@Column(name = "schedulerName")
 	private String schedulerName;
@@ -48,8 +50,37 @@ public class VerificationScheduler {
 	@Column(name = "defaultScheduler", nullable = false)
 	private boolean defaultScheduler;
 	
-	@Column(name = "enabled", nullable = false)
+	@Column(name = "finished")
+	private boolean finished;
+	
+	@Column(name = "enabled")
 	private boolean enabled;
+	
+	@Column(name = "startedAt")
+	private Date startedAt;
+	
+	@Column(name = "finishedAt")
+	private Date finishedAt;
+
+	public Date getStartedAt() {
+		return startedAt;
+	}
+
+	public void setStartedAt(Date startedAt) {
+		this.startedAt = startedAt;
+	}
+
+	public Date getFinishedAt() {
+		return finishedAt;
+	}
+
+	public void setFinishedAt(Date finishedAt) {
+		this.finishedAt = finishedAt;
+	}
+
+	public boolean isFinished() {
+		return finished;
+	}
 
 	public boolean isEnabled() {
 		return enabled;
@@ -57,6 +88,10 @@ public class VerificationScheduler {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
 	}
 
 	public boolean isDefaultScheduler() {
@@ -68,11 +103,11 @@ public class VerificationScheduler {
 	}
 
 	public int getSchedulerId() {
-		return schedulerId;
+		return schedulerHistoryId;
 	}
 
 	public void setSchedulerId(int schedulerId) {
-		this.schedulerId = schedulerId;
+		this.schedulerHistoryId = schedulerId;
 	}
 
 	public String getSchedulerName() {
