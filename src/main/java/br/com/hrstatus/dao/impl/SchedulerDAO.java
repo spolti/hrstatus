@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.hrstatus.dao.SchedulerInterface;
 import br.com.hrstatus.model.VerificationScheduler;
+import br.com.hrstatus.model.VerificationSchedulerHistory;
 import br.com.hrstatus.utils.UserInfo;
 
 /*
@@ -65,6 +66,11 @@ public class SchedulerDAO implements SchedulerInterface {
 		return "success";
 	}
 	
+	public void updateScheduler (VerificationScheduler scheduler) {
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] updateScheduler (VerificationScheduler scheduler)");
+		session().update(scheduler);
+	}
+	
 	public String saveSchedulerNotLogged (VerificationScheduler scheduler) {
 		log.fine("[ System ] saveSchedulerNotLogged (VerificationScheduler scheduler)");
 		session().saveOrUpdate(scheduler);
@@ -82,5 +88,20 @@ public class SchedulerDAO implements SchedulerInterface {
 		return (VerificationScheduler) session().createCriteria(VerificationScheduler.class).add(Restrictions.eq("schedulerName", schedulerName)).uniqueResult();
 	}
 	
+	public void saveHistory(VerificationSchedulerHistory schedulerHistory, String schedulerName) {
+		log.fine("[ " + schedulerName + " ] saveHistory(VerificationSchedulerHistory schedulerHistory, String schedulerName)");
+		session().save(schedulerHistory);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<VerificationSchedulerHistory> getSchedulerHistory (String schedulerName){
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getSchedulerHistory (String schedulerName)");
+		return session().createCriteria(VerificationSchedulerHistory.class).list();
+	}
+	
+	public VerificationScheduler getSchedulerByID(int id){
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getSchedulerByID(int id)");
+		return (VerificationScheduler) session().createCriteria(VerificationScheduler.class).add(Restrictions.eq("schedulerId", id)).uniqueResult();
+	}
 	
 }

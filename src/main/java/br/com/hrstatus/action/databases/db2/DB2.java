@@ -35,9 +35,9 @@ public class DB2 {
 
 	static Logger log = Logger.getLogger(DB2.class.getCanonicalName());
 
-	public String getDate(BancoDados dataBase) throws SQLException,	ClassNotFoundException {
+	public String getDate(BancoDados dataBase, String loggedUser) throws SQLException,	ClassNotFoundException {
 
-		Connection conn = ConnDB2.getConexaoDB2(dataBase.getIp(), dataBase.getPort(), dataBase.getUser(), dataBase.getPass(), dataBase.getInstance());
+		Connection conn = ConnDB2.getConexaoDB2(dataBase.getIp(), dataBase.getPort(), dataBase.getUser(), dataBase.getPass(), dataBase.getInstance(), loggedUser);
 		String sql = dataBase.getQueryDate();
 
 		log.fine("DB2 Query: " + sql);

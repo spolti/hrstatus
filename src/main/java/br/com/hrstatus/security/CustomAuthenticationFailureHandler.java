@@ -101,7 +101,6 @@ public class CustomAuthenticationFailureHandler extends
 			scheduler.setSchedulerName("defaultScheduler");
 			scheduler.setEveryday(true);
 			scheduler.setDefaultScheduler(true);
-			scheduler.setFinished(false);
 			scheduler.setEnabled(true);
 			
 			userDAO.saveORupdateUserNotLogged(user);

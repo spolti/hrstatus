@@ -125,13 +125,13 @@ public class DbFullVerification {
 					if (bancoDados.getVendor().toUpperCase().equals("MYSQL")) {
 						dateSTR = runMySQL.getDateMySQL(bancoDados, userInfo.getLoggedUsername());
 					} else if (bancoDados.getVendor().toUpperCase().equals("POSTGRESQL")) {
-						dateSTR = runPSQL.getDatePSQL(bancoDados);
+						dateSTR = runPSQL.getDatePSQL(bancoDados, userInfo.getLoggedUsername());
 					} else if (bancoDados.getVendor().toUpperCase().equals("SQLSERVER")) {
-						dateSTR = runSqlServer.getDateSqlServer(bancoDados);
+						dateSTR = runSqlServer.getDateSqlServer(bancoDados, userInfo.getLoggedUsername());
 					} else if (bancoDados.getVendor().toUpperCase().equals("ORACLE")) {
-						dateSTR = runOracle.getDateOracle(bancoDados);
+						dateSTR = runOracle.getDateOracle(bancoDados, userInfo.getLoggedUsername());
 					} else if (bancoDados.getVendor().toUpperCase().equals("DB2")) {
-						dateSTR = runDB2.getDate(bancoDados);
+						dateSTR = runDB2.getDate(bancoDados, userInfo.getLoggedUsername());
 					}
 					log.fine("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor " + bancoDados.getHostname() + ": " + dateSTR);
 					bancoDados.setClientTime(dateSTR);

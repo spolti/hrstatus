@@ -23,8 +23,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.logging.Logger;
 
-import br.com.hrstatus.utils.UserInfo;
-
 /*
  * @author spolti
  */
@@ -34,9 +32,8 @@ public class ConnSqlServer {
 	static Logger log = Logger.getLogger(ConnSqlServer.class.getCanonicalName());
 	public static boolean status = false;
 
-	public static Connection getConexaoSqlServer(String serverAddress, int port, String username, String password, String db_name, String instance) {
+	public static Connection getConexaoSqlServer(String serverAddress, int port, String username, String password, String db_name, String instance, String loggedUser) {
 
-		UserInfo userInfo = new UserInfo();
 		Connection connection = null;
 		String driver = "net.sourceforge.jtds.jdbc.Driver";
 		String url = "jdbc:jtds:sqlserver://" + serverAddress + ":" + port + "/" + db_name + ";instance=" + instance;
@@ -54,10 +51,10 @@ public class ConnSqlServer {
 		//Testing if the connection was successfully obtained.
 		if (connection != null) {
 			status = (true);
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] SqlServer datbase connection status: " + status);
+			log.fine("[ " + loggedUser + " ] SqlServer datbase connection status: " + status);
 		} else {
 			status = (false);
-			log.severe("[ " + userInfo.getLoggedUsername() + " ] SqlServer datbase connection status: " + status);
+			log.severe("[ " + loggedUser + " ] SqlServer datbase connection status: " + status);
 		}
 		return connection;
 	}	

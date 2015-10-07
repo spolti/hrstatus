@@ -32,9 +32,9 @@ import br.com.hrstatus.model.BancoDados;
 
 public class SqlServer {
 
-	public String getDateSqlServer(BancoDados dataBase) throws SQLException, ClassNotFoundException {
+	public String getDateSqlServer(BancoDados dataBase, String loggedUser) throws SQLException, ClassNotFoundException {
 
-		Connection conn = ConnSqlServer.getConexaoSqlServer(dataBase.getIp(), dataBase.getPort(), dataBase.getUser(), dataBase.getPass(), dataBase.getInstance(), dataBase.getDb_name());
+		Connection conn = ConnSqlServer.getConexaoSqlServer(dataBase.getIp(), dataBase.getPort(), dataBase.getUser(), dataBase.getPass(), dataBase.getInstance(), dataBase.getDb_name(), loggedUser);
 		String sql = dataBase.getQueryDate();
 
 		Statement stm = conn.createStatement();

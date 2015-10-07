@@ -23,7 +23,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import java.util.logging.Logger;
 
 import br.com.hrstatus.model.BancoDados;
@@ -36,9 +35,9 @@ public class PostgreSQL {
 	
 	static Logger log = Logger.getLogger(PostgreSQL.class.getCanonicalName());
 	
-	public String getDatePSQL(BancoDados db) throws SQLException, ClassNotFoundException {
+	public String getDatePSQL(BancoDados db, String loggedUser) throws SQLException, ClassNotFoundException {
 		
-		Connection conn = ConnPostgreSQL.getConexaoPSQL(db.getIp(),db.getPort(), db.getInstance(), db.getUser(), db.getPass());
+		Connection conn = ConnPostgreSQL.getConexaoPSQL(db.getIp(),db.getPort(), db.getInstance(), db.getUser(), db.getPass(), loggedUser);
 		String sql = db.getQueryDate();
 		
 		log.fine("PostgreSQL Query: " + sql);
