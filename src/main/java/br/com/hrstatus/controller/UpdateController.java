@@ -39,6 +39,7 @@ import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.validator.ValidationMessage;
 import br.com.caelum.vraptor.view.Results;
 import br.com.hrstatus.dao.BancoDadosInterface;
+import br.com.hrstatus.dao.InstallProcessInterface;
 import br.com.hrstatus.dao.ServersInterface;
 import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.model.BancoDados;
@@ -46,12 +47,15 @@ import br.com.hrstatus.model.Servidores;
 import br.com.hrstatus.model.Users;
 import br.com.hrstatus.security.Crypto;
 import br.com.hrstatus.security.SpringEncoder;
+import br.com.hrstatus.utils.GetSystemInformation;
+import br.com.hrstatus.utils.PropertiesLoaderImpl;
 import br.com.hrstatus.utils.UserInfo;
 
 /*
  * @author spolti
  */
 
+@SuppressWarnings("static-access")
 @Resource
 public class UpdateController {
 
@@ -69,13 +73,27 @@ public class UpdateController {
 	private BancoDadosInterface BancoDadosDAO;
 	@Autowired
 	private HttpServletRequest request;
+	@Autowired
+	private InstallProcessInterface ipi;
+	
+	private GetSystemInformation getSys = new GetSystemInformation();
 	UserInfo userInfo = new UserInfo();
 	Crypto passUtil = new Crypto();
 	
 	
-	@SuppressWarnings("static-access")
 	@Get("/findForUpdateServer/{serverID}")
 	public void findForUpdateServer(Servidores s, String serverID) {
+		
+		//Sending information to the "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
 		
 		// Inserting HTML title in the result
 		result.include("title", "Atualizar Servidor");
@@ -147,10 +165,20 @@ public class UpdateController {
 		}
 	}
 
-	@SuppressWarnings("static-access")
 	@Post("/updateServer")
 	public void updateServer(Servidores server, String[] idUser, String OSserver) {
 
+		//Sending information to the "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
+		
 		// Inserting HTML title in the result
 		result.include("title", "Atualizar Servidor");
 		// Inserting the Logged username in the home page
@@ -209,9 +237,19 @@ public class UpdateController {
 		result.redirectTo(ConfigController.class).configClients();
 	}
 
-	@SuppressWarnings("static-access")
 	@Get("/findForUpdateDataBase/{dataBaseID}")
 	public void findForUpdateDataBase(BancoDados db, String dataBaseID) {
+		
+		//Sending information to the "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
 		
 		// Inserting HTML title in the result
 		result.include("title", "Atualizar Banco de Dados");
@@ -254,10 +292,20 @@ public class UpdateController {
 		}
 	}
 
-	@SuppressWarnings("static-access")
 	@Post("/updateDataBase")
 	public void updateDataBase(BancoDados dataBase) {
 
+		//Sending information to the "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
+		
 		// Inserting HTML title in the result
 		result.include("title", "Atualizar Banco de Dados");
 		// Inserting the Logged username in the home page
@@ -319,6 +367,17 @@ public class UpdateController {
 
 	@Get("/findForUpdateUser/{username}/{action}")
 	public void findForUpdateUser(Users u, String username, String action) {
+		
+		//Sending information to the "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
 		
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /findForUpdateUser");
 		// Inserting HTML title in the result
@@ -408,13 +467,25 @@ public class UpdateController {
 		
 	}
 
-	@SuppressWarnings("static-access")
 	@Post("/updateUser")
 	public void updateUser(Users user, String[] idServer, boolean checkall, boolean unCheckall) {
 	
+		//Sending information to the "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
+		
 		List<Servidores> idAccessServers = new ArrayList<Servidores>();
 		//idAccessServers = this.iteracoesDAO.getHostnamesWithLogDir();
+		@SuppressWarnings("unused")
 		List<Servidores> FullLogServer = new ArrayList<Servidores>();
+		@SuppressWarnings("unused")
 		List<Servidores> server = new ArrayList<Servidores>();
 		
 		// Inserting HTML title in the result

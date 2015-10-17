@@ -29,7 +29,6 @@
 
 <link href="${pageContext.request.contextPath}/css/bootstrap.css"
 	rel="stylesheet">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link
 	href="${pageContext.request.contextPath}/css/bootstrap-responsive.css"
 	rel="stylesheet">
@@ -141,174 +140,183 @@
 
 	<!-- Begin NavBar -->
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="navbar-inner">
-		<a class="brand" href="<c:url value="/home"/>"> <i
-			class="icon-home"> </i> HR Status
-		</a>
+		<div class="navbar-inner">
+			<a class="brand" href="<c:url value="/home"/>"> <i
+				class="icon-home"> </i> HR Status
+			</a>
 
-		<ul class="nav">
+			<ul class="nav">
 
-			<li class="divider-vertical" />
+				<li class="divider-vertical" />
 
-			<li>
-				<div class="btn-group">
-					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-						<i class="icon-list"> </i> Menu <span class="caret"></span>
-					</a>
-					<ul class="dropdown-menu">
-						<a href="<c:url value="/configServer"/>" data-toggle="modal"><i class="icon-wrench"> </i> Sistema</a>
-						<a href="<c:url value="/listLocks"/>" data-toggle="modal"><i class="icon-lock"> </i> Lock de Recursos</a>
-						<a href="<c:url value="/configClients"/>" data-toggle="modal"><i class="icon-hdd"> </i> Servidores</a>
-						<a href="<c:url value="/configDataBases"/>" data-toggle="modal"><i class="icon-book"> </i> Banco de Dados </a>
-						<a href="<c:url value="/configUser"/>" data-toggle="modal"><i class="icon-user"> </i> Usuários</a>
-						<li class="dropdown-submenu"><a tabindex="-1" href="#"><i
-								class="icon-folder-open"> </i> Relatórios</a>
-							<ul class="dropdown-menu">
-								<li class="dropdown-submenu"><a tabindex="-1" href="#">Servidores</a>
-									<ul class="dropdown-menu">
-										<li><a href="<c:url value="/reports/reportFull"/>"
-											title="Download Relatório de todos os Servidores Cadastrados no formato PDF">
-												<i class="icon-download-alt"></i> Todos Servidores
-												Cadastrados
-										</a></li>
-										<li class="dropdown-submenu"><a tabindex="-1" href="#">Subdivididos
-												por SO</a>
-											<ul class="dropdown-menu">
-												<li><a href="<c:url value="/reports/reportSOLinux"/>"
-													title="Download Relatório Servidores Linux no formato PDF">
-														<i class="icon-download-alt"></i> Linux
-												</a></li>
-												<li><a href="<c:url value="/reports/reportSOWindows"/>"
-													title="Download Relatório Servidores Windows no formato PDF"><i
-														class="icon-download-alt"></i> Windows</a></li>
-												<li><a href="<c:url value="/reports/reportSOUnix"/>"
-													title="Download Relatório Servidores Unix no formato PDF">
-														<i class="icon-download-alt"></i> Unix
-												</a></li>
-												<li><a href="<c:url value="/reports/reportSOOthers"/>"
-													title="Download Relatório Servidores Otros no formato PDF">
-														<i class="icon-download-alt"></i> Outros
-												</a></li>
-											</ul></li>
-										<li class="dropdown-submenu"><a tabindex="-1" href="#">Por
-												Status</a>
-											<ul class="dropdown-menu">
-												<li><a href="<c:url value="/reports/reportServersOK"/>"
-													title="Download Relatório Servidores OK no formato PDF">
-														<i class="icon-download-alt"></i> Servidores OK
-												</a></li>
-												<li><a
-													href="<c:url value="/reports/reportServersNOK"/>"
-													title="Download Relatório Servidores não OK no formato PDF">
-														<i class="icon-download-alt"></i> Servidores não OK
-												</a></li>
-											</ul></li>
-									</ul></li>
-								<li class="dropdown-submenu"><a tabindex="-1" href="#">Banco
-										de Dados</a>
-									<ul class="dropdown-menu">
-										<li><a
-											href="<c:url value="/reports/reportDataBaseFull"/>"
-											title="Download Relatório de todos os Banco de Dados cadastrados no formato PDF">
-												<i class="icon-download-alt"></i> Todos os Banco de Dados
-										</a></li>
-										<li class="dropdown-submenu"><a tabindex="-1" href="#">Subdivididos
-												por Vendor</a>
-											<ul class="dropdown-menu">
-												<li><a
-													href="<c:url value="/reports/reportDataBaseMysql"/>"
-													title="Download Relatório Banco de Dados Mysql no formato PDF">
-														<i class="icon-download-alt"></i> Mysql
-												</a></li>
-												<li><a
-													href="<c:url value="/reports/reportDataBaseOracle"/>"
-													title="Download Relatório Servidores Windows no formato PDF"><i
-														class="icon-download-alt"></i> Oracle</a></li>
-												<li><a
-													href="<c:url value="/reports/reportDataBasePostgre"/>"
-													title="Download Relatório Servidores Unix no formato PDF">
-														<i class="icon-download-alt"></i> Postgre
-												</a></li>
-											</ul></li>
-										<li class="dropdown-submenu"><a tabindex="-1" href="#">Por
-												Status</a>
-											<ul class="dropdown-menu">
-												<li><a
-													href="<c:url value="/reports/reportDataBaseOK"/>"
-													title="Download Relatório de Banco de Dados OK no formato PDF">
-														<i class="icon-download-alt"></i> Banco de Dados OK
-												</a></li>
-												<li><a
-													href="<c:url value="/reports/reportDataBaseNOK"/>"
-													title="Download Relatório de Banco de Dados não OK no formato PDF">
-														<i class="icon-download-alt"></i> Banco de Dados não OK
-												</a></li>
-											</ul></li>
-									</ul></li>
-							</ul></li>
-						<a href="<c:url value="/selectServer"/>" data-toggle="modal"><i
-							class="icon-file"> </i> Verificar logs</a>
+				<li>
+					<div class="btn-group">
+						<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+							<i class="icon-list"> </i> Menu <span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<a href="<c:url value="/configServer"/>" data-toggle="modal"><i
+								class="icon-wrench"> </i> Sistema</a>
+							<a href="<c:url value="/listLocks"/>" data-toggle="modal"><i
+								class="icon-lock"> </i> Lock de Recursos</a>
+							<a href="<c:url value="/configClients"/>" data-toggle="modal"><i
+								class="icon-hdd"> </i> Servidores</a>
+							<a href="<c:url value="/configDataBases"/>" data-toggle="modal"><i
+								class="icon-book"> </i> Banco de Dados </a>
+							<a href="<c:url value="/configUser"/>" data-toggle="modal"><i
+								class="icon-user"> </i> Usuários</a>
+							<li class="dropdown-submenu"><a tabindex="-1" href="#"><i
+									class="icon-folder-open"> </i> Relatórios</a>
+								<ul class="dropdown-menu">
+									<li class="dropdown-submenu"><a tabindex="-1" href="#">Servidores</a>
+										<ul class="dropdown-menu">
+											<li><a href="<c:url value="/reports/reportFull"/>"
+												title="Download Relatório de todos os Servidores Cadastrados no formato PDF">
+													<i class="icon-download-alt"></i> Todos Servidores
+													Cadastrados
+											</a></li>
+											<li class="dropdown-submenu"><a tabindex="-1" href="#">Subdivididos
+													por SO</a>
+												<ul class="dropdown-menu">
+													<li><a href="<c:url value="/reports/reportSOLinux"/>"
+														title="Download Relatório Servidores Linux no formato PDF">
+															<i class="icon-download-alt"></i> Linux
+													</a></li>
+													<li><a
+														href="<c:url value="/reports/reportSOWindows"/>"
+														title="Download Relatório Servidores Windows no formato PDF"><i
+															class="icon-download-alt"></i> Windows</a></li>
+													<li><a href="<c:url value="/reports/reportSOUnix"/>"
+														title="Download Relatório Servidores Unix no formato PDF">
+															<i class="icon-download-alt"></i> Unix
+													</a></li>
+													<li><a href="<c:url value="/reports/reportSOOthers"/>"
+														title="Download Relatório Servidores Otros no formato PDF">
+															<i class="icon-download-alt"></i> Outros
+													</a></li>
+												</ul></li>
+											<li class="dropdown-submenu"><a tabindex="-1" href="#">Por
+													Status</a>
+												<ul class="dropdown-menu">
+													<li><a
+														href="<c:url value="/reports/reportServersOK"/>"
+														title="Download Relatório Servidores OK no formato PDF">
+															<i class="icon-download-alt"></i> Servidores OK
+													</a></li>
+													<li><a
+														href="<c:url value="/reports/reportServersNOK"/>"
+														title="Download Relatório Servidores não OK no formato PDF">
+															<i class="icon-download-alt"></i> Servidores não OK
+													</a></li>
+												</ul></li>
+										</ul></li>
+									<li class="dropdown-submenu"><a tabindex="-1" href="#">Banco
+											de Dados</a>
+										<ul class="dropdown-menu">
+											<li><a
+												href="<c:url value="/reports/reportDataBaseFull"/>"
+												title="Download Relatório de todos os Banco de Dados cadastrados no formato PDF">
+													<i class="icon-download-alt"></i> Todos os Banco de Dados
+											</a></li>
+											<li class="dropdown-submenu"><a tabindex="-1" href="#">Subdivididos
+													por Vendor</a>
+												<ul class="dropdown-menu">
+													<li><a
+														href="<c:url value="/reports/reportDataBaseMysql"/>"
+														title="Download Relatório Banco de Dados Mysql no formato PDF">
+															<i class="icon-download-alt"></i> Mysql
+													</a></li>
+													<li><a
+														href="<c:url value="/reports/reportDataBaseOracle"/>"
+														title="Download Relatório Servidores Windows no formato PDF"><i
+															class="icon-download-alt"></i> Oracle</a></li>
+													<li><a
+														href="<c:url value="/reports/reportDataBasePostgre"/>"
+														title="Download Relatório Servidores Unix no formato PDF">
+															<i class="icon-download-alt"></i> Postgre
+													</a></li>
+												</ul></li>
+											<li class="dropdown-submenu"><a tabindex="-1" href="#">Por
+													Status</a>
+												<ul class="dropdown-menu">
+													<li><a
+														href="<c:url value="/reports/reportDataBaseOK"/>"
+														title="Download Relatório de Banco de Dados OK no formato PDF">
+															<i class="icon-download-alt"></i> Banco de Dados OK
+													</a></li>
+													<li><a
+														href="<c:url value="/reports/reportDataBaseNOK"/>"
+														title="Download Relatório de Banco de Dados não OK no formato PDF">
+															<i class="icon-download-alt"></i> Banco de Dados não OK
+													</a></li>
+												</ul></li>
+										</ul></li>
+								</ul></li>
+							<a href="<c:url value="/selectServer"/>" data-toggle="modal"><i
+								class="icon-file"> </i> Verificar logs</a>
 
-						<li class="dropdown-submenu"><a tabindex="-1" href="#"><i
-								class="icon-tasks"> </i> Gráficos </a>
-							<ul class="dropdown-menu">
-								<li><a href="<c:url value="/charts/servers/consolidated"/>"
-									title="Plotar os gráficos de status das checagens de Servidores">
-										<i class="icon-arrow-right"></i> Servidores
-								</a></li>
-								<li><a
-									href="<c:url value="/charts/database/consolidated"/>"
-									title="Plotar os gráficos de status das checagens de Banco de Dados">
-										<i class="icon-arrow-right"></i> Banco de Dados
-								</a></li>
-							</ul></li>
-						<li class="dropdown-submenu"><a tabindex="-1" href="#"><i
-								class="icon-calendar"> </i> Agendamentos </a>
-							<ul class="dropdown-menu">
-								<li><a href="<c:url value="/scheduler"/>"
-									title="Novo Agendamento/Agendamentos ativos">
-										<i class="icon-plus"></i> Novo Agendamento/Agendamentos ativos
-								</a></li>
-								<li><a
-									href="<c:url value="listScheduler"/>"
-									title="Histórico de Agendamentos executados">
-										<i class="icon-list"></i> Histórico de Agendamentos executados
-								</a></li>
-							</ul></li>
-						<a href="#ModalAbout" data-toggle="modal"><i
-							class="icon-info-sign"></i> Sobre </a>
+							<li class="dropdown-submenu"><a tabindex="-1" href="#"><i
+									class="icon-tasks"> </i> Gráficos </a>
+								<ul class="dropdown-menu">
+									<li><a
+										href="<c:url value="/charts/servers/consolidated"/>"
+										title="Plotar os gráficos de status das checagens de Servidores">
+											<i class="icon-arrow-right"></i> Servidores
+									</a></li>
+									<li><a
+										href="<c:url value="/charts/database/consolidated"/>"
+										title="Plotar os gráficos de status das checagens de Banco de Dados">
+											<i class="icon-arrow-right"></i> Banco de Dados
+									</a></li>
+								</ul></li>
+							<li class="dropdown-submenu"><a tabindex="-1" href="#"><i
+									class="icon-calendar"> </i> Agendamentos </a>
+								<ul class="dropdown-menu">
+									<li><a href="<c:url value="/scheduler"/>"
+										title="Novo Agendamento/Agendamentos ativos"> <i
+											class="icon-plus"></i> Novo Agendamento/Agendamentos ativos
+									</a></li>
+									<li><a href="<c:url value="listScheduler"/>"
+										title="Histórico de Agendamentos executados"> <i
+											class="icon-list"></i> Histórico de Agendamentos executados
+									</a></li>
+								</ul></li>
+							<a href="#ModalAbout" data-toggle="modal"><i
+								class="icon-info-sign"></i> Sobre </a>
 
 
-					</ul>
-			</li>
-		</ul>
+						</ul>
+				</li>
+			</ul>
 
-		<ul class="nav pull-right">
-			<li class="divider-vertical" />
-			<input type="text" class="navbar-search" id="search"
-				placeholder="Procurar" />
+			<ul class="nav pull-right">
+				<li class="divider-vertical" />
+				<input type="text" class="navbar-search" id="search"
+					placeholder="Procurar" />
 
-			<li>
-				<div class="btn-group">
-					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-						<i class="icon-user"> </i> ${loggedUser} <span class="caret"></span>
-					</a>
+				<li>
+					<div class="btn-group">
+						<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+							<i class="icon-user"> </i> ${loggedUser} <span class="caret"></span>
+						</a>
 
-					<ul class="dropdown-menu">
-						<li><a
-							href="<c:url value="/atualizarCadastro/${loggedUser}"/>">Atualizar
-								Cadastro</a></li>
-						<li><a href="<c:url value="/j_spring_security_logout"/>">Logout</a></li>
-					</ul>
-				</div>
-			</li>
-			<li class="divider-vertical" />
-			<li>
-			<li>Seu Horário<b><div align="center" id="time">time</div></b>
-		</ul>
-	</div>
+						<ul class="dropdown-menu">
+							<li><a
+								href="<c:url value="/atualizarCadastro/${loggedUser}"/>">Atualizar
+									Cadastro</a></li>
+							<li><a href="<c:url value="/j_spring_security_logout"/>">Logout</a></li>
+						</ul>
+					</div>
+				</li>
+				<li class="divider-vertical" />
+				<li>
+				<li>Seu Horário<b><div align="center" id="time">time</div></b>
+			</ul>
+		</div>
 	</nav>
-	<br><br><br>
+	<br>
+	<br>
+	<br>
 	<div id="ModalAbout" class="modal hide fade" tabindex="-1"
 		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-header">
@@ -319,7 +327,7 @@
 		<div class="modal-body">
 			<p>
 				<a href="http://www.hrstatus.com.br/hrstatus/home.html"
-					target="_blank">Hr Status</a><br>Versão: 4.1-SPANSHOT<br> <br>
+					target="_blank">Hr Status</a><br>Versão: ${version}<br> <br>
 				<br> <a href="http://www.hrstatus.com.br/hrstatus/home.html"
 					target="_blank"> <img
 					src="${pageContext.request.contextPath}/img/hrimg.JPG"></img></a><br>
@@ -328,10 +336,12 @@
 					href="mailto:spolti@hrstatus.com.br?Subject=Suporte%20Hrstatus">Contato</a>
 				<br> Para reportar bugs: <a
 					href="https://github.com/spolti/hrstatus/issues/new"
-					target="_blank"> Registrar Issue </a>
-				<br> Documentação: <a
+					target="_blank"> Registrar Issue </a> <br> Documentação: <a
 					href="<c:url value="/doc/DocumentacaoHrStatus.pdf"/>"
-					target="_blank"> Vizualizar </a>
+					target="_blank"> Vizualizar </a> <br> <br> Java:
+				${jvmName} <br> Java Version: ${jvmVersion} <br> Java
+				Vendor: ${jvmVendor} <br> Versãi SO: ${osInfo} <br> Data
+				de Instalação: ${installDate}
 			</p>
 		</div>
 		<div class="modal-footer">

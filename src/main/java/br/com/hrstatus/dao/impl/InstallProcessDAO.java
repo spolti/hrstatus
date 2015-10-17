@@ -91,4 +91,14 @@ public class InstallProcessDAO implements InstallProcessInterface {
 		session().save(ipi);
 	}
 	
+	public String getInstallationDate(){
+		
+		log.fine("[ System ] invoking getInstallationDate()");
+		Criteria installDate = session().createCriteria(InstallationProcess.class);
+		ProjectionList proList = Projections.projectionList();
+		proList.add(Projections.property("installDate"));
+		installDate.setProjection(proList);
+		return installDate.uniqueResult().toString();
+	}
+	
 }

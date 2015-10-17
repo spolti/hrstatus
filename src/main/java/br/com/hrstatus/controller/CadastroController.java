@@ -295,7 +295,7 @@ public class CadastroController {
 		bancoDados.setTrClass("error");
 
 		try {
-			// CEncrypting the password
+			// Encrypting the password
 			bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 		} catch (Exception e) {
 			log.severe("Error: " + e);

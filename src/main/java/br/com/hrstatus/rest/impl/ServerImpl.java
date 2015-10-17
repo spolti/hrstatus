@@ -114,15 +114,15 @@ public class ServerImpl extends SpringBeanAutowiringSupport implements ServerRes
 			String active, String so) {
 		
 		log.fine("Server parameters received: +++++++++++++++++++++");
-		log.info("ip "+ ip);
-		log.info("hostname "+ hostname);
-		log.info("user "+ user);
-		log.info("passwd "+ passwd);
-		log.info("logDir "+ logDir);
-		log.info("ntpCommand "+ ntpCommand);
-		log.info("port "+ port);
-		log.info("active "+ active);
-		log.info("so "+ so);
+		log.fine("Server ip "+ ip);
+		log.fine("Server hostname "+ hostname);
+		log.fine("Server username "+ user);
+		log.fine("User password "+ passwd);
+		log.fine("logDir "+ logDir);
+		log.fine("ntpCommand "+ ntpCommand);
+		log.fine("port "+ port);
+		log.fine("active "+ active);
+		log.fine("so "+ so);
 		log.fine("+++++++++++++++++++++++++++++++++++++++++++++++++");
 		
 		server.setIp(ip);

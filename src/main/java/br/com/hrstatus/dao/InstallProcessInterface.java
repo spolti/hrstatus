@@ -31,4 +31,6 @@ public interface InstallProcessInterface {
 	public boolean freshInstall();
 	
 	public void saveInstallationProcess (InstallationProcess ipi);
+	
+	public String getInstallationDate();
 }
