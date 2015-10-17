@@ -28,9 +28,12 @@ import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Post;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.hrstatus.dao.InstallProcessInterface;
 import br.com.hrstatus.dao.SchedulerInterface;
 import br.com.hrstatus.model.VerificationScheduler;
 import br.com.hrstatus.model.VerificationSchedulerHistory;
+import br.com.hrstatus.utils.GetSystemInformation;
+import br.com.hrstatus.utils.PropertiesLoaderImpl;
 import br.com.hrstatus.utils.UserInfo;
 
 
@@ -38,6 +41,8 @@ import br.com.hrstatus.utils.UserInfo;
  * @author spolti
  */
 
+
+@SuppressWarnings("static-access")
 @Resource
 public class SchedulerController {
 
@@ -52,8 +57,24 @@ public class SchedulerController {
 	@Autowired
 	private SchedulerInterface schedulerDAO;
 	
+	@Autowired
+	private InstallProcessInterface ipi;
+	
+	private GetSystemInformation getSys = new GetSystemInformation();
+	
 	@Get("/scheduler")
 	public void scheduler () {
+		
+		//Sending information to the "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
 		
 		// Inserting HTML title in the result
 		result.include("title", "Agendamentos Ativos/Novo Agendamento");
@@ -69,6 +90,17 @@ public class SchedulerController {
 	@Get("/listScheduler")
 	public void listScheduler () {
 		
+		//Sending information to the "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
+		
 		// Inserting HTML title in the result
 		result.include("title", "Histórico de Agendamentos");
 		result.include("loggedUser", userInfo.getLoggedUsername());
@@ -82,6 +114,17 @@ public class SchedulerController {
 	
 	@Get("/findForUpdateScheduler/{schedulerId}")
 	public void findForUpdateScheduler (int schedulerId) {
+		
+		//Sending information to the "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
 		
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /findForUpdateScheduler/" + schedulerId);
 		
@@ -116,6 +159,16 @@ public class SchedulerController {
 	@Post("/updateScheduler")
 	public void updateScheduler (VerificationScheduler scheduler, String isDefaultScheduler, String isEveryday, String isEnabled) {
 		
+		//Sending information to the "About" page
+		String version = PropertiesLoaderImpl.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
+		
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /updateScheduler");
 		// Inserting HTML title in the result
 		result.include("title", "Atualizar Agendamento");
@@ -138,11 +191,10 @@ public class SchedulerController {
 		log.info("isDefaultScheduler: " + scheduler.isDefaultScheduler());
 		log.info("isEveryday: " + scheduler.isEveryday());
 		log.info("isEnabled: " + scheduler.isEnabled());
-		
-		
-		
+
 		this.schedulerDAO.updateScheduler(scheduler);
 		
+		result.forwardTo(SchedulerController.class).scheduler();
 	}
 	
 }

@@ -21,7 +21,6 @@ package br.com.hrstatus.rest;
 
 import java.util.List;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -37,23 +36,57 @@ import br.com.hrstatus.model.BancoDados;
 @Produces("application/json; charset=utf8")
 public interface DataBaseResource {
 
+	/*
+	 * \/rest/database/list
+	 * Example: http://localhost:8080/hs/rest/database/list
+	 */
 	@Path("list")
 	@GET
 	public List<BancoDados> bancodados();
 	
+	/*
+	 * \/rest/database/list/ok
+	 * Example: http://localhost:8080/hs/rest/database/list/ok
+	 */
 	@Path("list/ok")
 	@GET
 	public List<BancoDados> bancodadosOK();
 	
+	/*	 
+	 * * \/rest/database/list/nok
+	 * Example: http://localhost:8080/hs/rest/database/list/nok
+	 */
 	@Path("list/nok")
 	@GET
 	public List<BancoDados> bancodadosNOK();
 	
-	
-	@Path("/add/{ip}/")
+	/*
+	 * \/rest/database/remove/{id}
+	 * Example: http://localhost:8080/hs/rest/database/remove/1
+	 */
+	@Path("remove/{id}")
 	@GET
-	@RolesAllowed("ADMIN")
-	public String addDatabase(@PathParam(value = "ip") String ip);
+	public String removeDatabase(@PathParam("id")  int id);
 	
+	/*
+	 * \/rest/database/new/{ip}/{hostname}/{dbInstance}/{username}/{password}/{dbVendor}
+	 * Example: http://localhost:8080/hs/rest/database/new/127.0.0.1/localhost/hrstatus/hrstatus/P@ssw0rd/mysql
+	 */
+	@Path("/new/{ip}/{hostname}/{dbInstance}/{username}/{password}/{dbVendor}")
+	@GET
+	public String addDatabase(@PathParam(value = "ip") String ip, @PathParam("hostname")  String hostname, 
+			@PathParam(value = "dbInstance") String dbInstance, @PathParam(value = "username") String username,
+			@PathParam(value = "password") String password, @PathParam(value = "dbVendor") String dbVendor);
+	
+	/*
+	 * \/rest/database/new/{ip}/{hostname}/{dbInstance}/{username}/{password}/{dbVendor}
+	 * Example: http://localhost:8080/hs/rest/database/new/127.0.0.1/localhost/hrstatus/hrstatus/P@ssw0rd/sqlserver/instanceName
+	 */
+	@Path("/new/{ip}/{hostname}/{dbInstance}/{username}/{password}/{dbVendor}/{dbName}")
+	@GET
+	public String addDatabaseSqlServer(@PathParam(value = "ip") String ip, @PathParam("hostname")  String hostname, 
+			@PathParam(value = "dbInstance") String dbInstance, @PathParam(value = "username") String username,
+			@PathParam(value = "password") String password, @PathParam(value = "dbVendor") String dbVendor,
+			@PathParam(value = "dbName") String dbName);
 	
 }

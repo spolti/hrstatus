@@ -50,7 +50,8 @@
 		<intercept-url pattern="/downloadFileSubdir/**" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/atualizarCadastro/**" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/database/verifySingleDB/**" access="ROLE_USER,ROLE_ADMIN" />
-
+		<intercept-url pattern="/listScheduler" access="ROLE_USER,ROLE_ADMIN" />
+		
 		<!-- Reports -->
 		<intercept-url pattern="/reports/reportFull" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/reports/reportServersOK" access="ROLE_USER,ROLE_ADMIN" />
@@ -89,12 +90,17 @@
 		<intercept-url pattern="/uploud/logo/imagem" access="ROLE_ADMIN" />
 		<intercept-url pattern="/delete/logo/imagem" access="ROLE_ADMIN" />
 		<intercept-url pattern="/sendMailtest" access="ROLE_ADMIN" />
+		<intercept-url pattern="/updateScheduler" access="ROLE_ADMIN" />
+		<intercept-url pattern="/findForUpdateScheduler/**" access="ROLE_ADMIN" />
+		
 
 		<!-- Rest URI -->
 		<intercept-url pattern="/rest/**" access="ROLE_ADMIN,ROLE_REST" />
 		<intercept-url pattern="/rest/setup/**" access="ROLE_ADMIN" />
 		<intercept-url pattern="/rest/server/new/**" access="ROLE_ADMIN" />
 		<intercept-url pattern="/rest/server/remove/**" access="ROLE_ADMIN" />
+		<intercept-url pattern="/rest/database/new/**" access="ROLE_ADMIN" />
+		<intercept-url pattern="/rest/database/remove/**" access="ROLE_ADMIN" />
 		<intercept-url pattern="/rest/user/remove/**" access="ROLE_ADMIN" />
 
 		<!-- Set the login page and what to do if login fails -->

@@ -36,26 +36,56 @@ import br.com.hrstatus.model.Servidores;
 @Produces("application/json; charset=utf8")
 public interface ServerResource {
 
-	@Path("listAll")
+	/*
+	 * \/rest/server/list
+	 * Example: http://localhost:8080/hs/rest/server/list
+	 */
+	@Path("list")
 	@GET
 	public List<Servidores> servidores();
 	
-	@Path("withLogDir")
+	
+	/*
+	 * \/rest/server/list/withLogDir
+	 * Example: http://localhost:8080/hs/rest/server/list/withLogDir
+	 */
+	@Path("list/withLogDir")
 	@GET
 	public List<Servidores> withLogDir();
 	
-	@Path("ok")
+	
+	/*
+	 * \/rest/server/list/ok
+	 * Example: http://localhost:8080/hs/rest/server/list/ok
+	 */
+	@Path("list/ok")
 	@GET
 	public List<Servidores> serverOk();
 	
-	@Path("nok")
+	
+	/*
+	 * \/rest/server/list/nok
+	 * Example: http://localhost:8080/hs/rest/server/list/nok
+	 */
+	@Path("list/nok")
 	@GET
 	public List<Servidores> serverNok();
 	
+	
+	/*
+	 * \/rest/server/remove/{id}
+	 * Example: http://localhost:8080/hs/rest/server/remove/1
+	 */
 	@Path("remove/{id}")
 	@GET
 	public String removeServer(@PathParam("id")  int id);
 	
+	
+	/*
+	 * \/rest/server/list
+	 * Example: http://localhost:8080/hs/rest/server/new/127.0.0.1/localhost/fspolti/lipe33spol90/%2Fvar%2Flog/ntpdate -u/22/SIM/linux
+	 * where %2F is /, example /var/log will be %2Fvar%2Flog
+	 */
 	@Path("new/{ip}/{hostname}/{user}/{passwd}/{logDir}/{ntpCommand}/{port}/{active}/{so}")
 	@GET
 	public String newServer(@PathParam("ip")  String ip, @PathParam("hostname")  String hostname,

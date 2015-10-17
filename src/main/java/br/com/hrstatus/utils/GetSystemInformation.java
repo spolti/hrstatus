@@ -17,39 +17,31 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.rest;
+package br.com.hrstatus.utils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-
-import br.com.hrstatus.model.Lock;
+import org.springframework.stereotype.Service;
 
 /*
  * @author spolti
  */
 
-@Path("locks")
-@Produces("application/json; charset=utf8")
-public interface LockResource {
+@Service
+public class GetSystemInformation {
 
+	Logger log =  Logger.getLogger(GetSystemInformation.class.getCanonicalName());
 	
-	/*
-	 * \/rest/locks/list
-	 * Example: http://localhost:8080/hs/rest/locks/list
-	 */
-	@Path("list")
-	@GET
-	public List<Lock> listLocks();
-	
-	/*
-	 * \/rest/locks/delete/{id}
-	 * Example: http://localhost:8080/hs/rest/locks/delete/1
-	 */
-	@Path("delete/{id}")
-	@GET
-	public String deleteLockByID(@PathParam(value = "id") int id);
+	public List<String> SystemInformation () {
+		
+		ArrayList<String> result = new ArrayList<String>();
+		result.add(System.getProperty("java.runtime.version"));
+		result.add(System.getProperty("java.vendor"));
+		result.add(System.getProperty("java.vm.name"));
+		result.add(System.getProperty("os.name") + "-" + System.getProperty("os.version"));
+		
+		return result;
+	}
 }

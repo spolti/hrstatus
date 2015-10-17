@@ -79,7 +79,7 @@ public class BancoDadosDAO implements BancoDadosInterface {
 							new String(dataBase.getHostname()))).setProjection(Projections.property("hostname"));
 
 			if (hostname.uniqueResult() == null) {
-				log.info("[ " + userInfo.getLoggedUsername() + " ] insert_dataBase -> Database server " + dataBase.getHostname() + " noute found.");
+				log.info("[ " + userInfo.getLoggedUsername() + " ] insert_dataBase -> Database server " + dataBase.getHostname() + " not found.");
 				log.info("[ " + userInfo.getLoggedUsername() + " ] insert_dataBase -> Saving data");
 				session().save(dataBase);
 				return 0;

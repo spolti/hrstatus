@@ -33,6 +33,11 @@ import br.com.hrstatus.model.Configurations;
 @Produces("application/json; charset=utf8")
 public interface SetupResource {
 
+	
+	/*
+	 * \/rest/setup/list
+	 * Example: http://localhost:8080/hs/rest/setup/list
+	 */
 	@Path("list")
 	@GET
 	public Configurations configurations();
