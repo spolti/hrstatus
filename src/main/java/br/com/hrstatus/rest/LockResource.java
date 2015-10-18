@@ -49,7 +49,7 @@ public interface LockResource {
 	 * \/rest/locks/delete/{id}
 	 * Example: http://localhost:8080/hs/rest/locks/delete/1
 	 */
-	@Path("delete/{id}")
+	@Path("remove/{id}")
 	@GET
 	public String deleteLockByID(@PathParam(value = "id") int id);
 }

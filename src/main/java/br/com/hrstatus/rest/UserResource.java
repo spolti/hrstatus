@@ -36,7 +36,7 @@ import br.com.hrstatus.model.Users;
 @Produces("application/json; charset=utf8")
 public interface UserResource {
 
-	@Path("listAll")
+	@Path("list")
 	@GET
 	public List<Users> users();
 	
