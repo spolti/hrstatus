@@ -335,7 +335,7 @@
 				Suporte: <a
 					href="mailto:spolti@hrstatus.com.br?Subject=Suporte%20Hrstatus">Contato</a>
 				<br> Para reportar bugs: <a
-					href="https://github.com/spolti/hrstatus/issues/new"
+					href="https://github.com/hrstatus/hrstatus/issues/new"
 					target="_blank"> Registrar Issue </a> <br> Documentação: <a
 					href="<c:url value="/doc/DocumentacaoHrStatus.pdf"/>"
 					target="_blank"> Vizualizar </a> <br> <br> Java:
