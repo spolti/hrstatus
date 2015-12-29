@@ -340,7 +340,7 @@
 					href="<c:url value="/doc/DocumentacaoHrStatus.pdf"/>"
 					target="_blank"> Vizualizar </a> <br> <br> Java:
 				${jvmName} <br> Java Version: ${jvmVersion} <br> Java
-				Vendor: ${jvmVendor} <br> Versãi SO: ${osInfo} <br> Data
+				Vendor: ${jvmVendor} <br> Versão SO: ${osInfo} <br> Data
 				de Instalação: ${installDate}
 			</p>
 		</div>
