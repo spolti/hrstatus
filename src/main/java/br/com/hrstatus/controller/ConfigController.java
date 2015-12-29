@@ -143,9 +143,21 @@ public class ConfigController {
 		}
 	}
 	
+	@SuppressWarnings("static-access")
 	@Post("/updateConfig")
 	public void updateConfig(String new_value, String campo) throws Exception{
 
+		//Sending information to "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
+		
 		// Inserting HTML title in the result
 		result.include("title","Configurar Servidor");
 		
@@ -222,8 +234,20 @@ public class ConfigController {
 		result.forwardTo(ConfigController.class).configServer();		
 	}
 	
+	@SuppressWarnings("static-access")
 	@Get("/configClients")
 	public void configClients() {
+		
+		//Sending information to "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
 		
 		// Inserting HTML title in the result
 		result.include("title","Configurar Clientes");
@@ -233,8 +257,20 @@ public class ConfigController {
 		result.include("server", list);
 	}
 	
+	@SuppressWarnings("static-access")
 	@Get("/configDataBases")
 	public void configDataBases() {
+		
+		//Sending information to "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
 		
 		// Inserting HTML title in the result
 		result.include("title","Configurar Banco de Dados");
@@ -244,8 +280,20 @@ public class ConfigController {
 		result.include("dataBase", list);		
 	}
 
+	@SuppressWarnings("static-access")
 	@Get("/configUser")
 	public void configUser() {
+		
+		//Sending information to "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
 		
 		// Inserting HTML title in the result
 		result.include("title","Configurar Usuário");

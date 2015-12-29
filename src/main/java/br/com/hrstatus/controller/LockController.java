@@ -27,8 +27,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.hrstatus.dao.InstallProcessInterface;
 import br.com.hrstatus.dao.LockIntrface;
 import br.com.hrstatus.model.Lock;
+import br.com.hrstatus.utils.GetSystemInformation;
+import br.com.hrstatus.utils.PropertiesLoaderImpl;
 import br.com.hrstatus.utils.UserInfo;
 
 /*
@@ -44,11 +47,26 @@ public class LockController {
 	private Result result;
 	@Autowired
 	private LockIntrface lockDAO;
-	UserInfo userInfo = new UserInfo();
+	@Autowired
+	private InstallProcessInterface ipi;
+	private UserInfo userInfo = new UserInfo();
+	private GetSystemInformation getSys = new GetSystemInformation();
 	List<Lock> listLocks;
 	
+	@SuppressWarnings("static-access")
 	@Get("/listLocks")
 	public void listLocks (){
+		
+		//Sending information to "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
 		
 		// Inserting HTML title in the result
 		result.include("title", "Locked Resources");

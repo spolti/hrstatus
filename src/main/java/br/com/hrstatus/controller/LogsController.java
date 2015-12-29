@@ -40,11 +40,14 @@ import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.view.Results;
 import br.com.hrstatus.action.SftpLogs;
+import br.com.hrstatus.dao.InstallProcessInterface;
 import br.com.hrstatus.dao.ServersInterface;
 import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.model.Servidores;
 import br.com.hrstatus.model.Users;
 import br.com.hrstatus.security.Crypto;
+import br.com.hrstatus.utils.GetSystemInformation;
+import br.com.hrstatus.utils.PropertiesLoaderImpl;
 import br.com.hrstatus.utils.UserInfo;
 
 import com.jcraft.jsch.JSchException;
@@ -68,6 +71,9 @@ public class LogsController {
 	private HttpServletResponse response;
 	@Autowired
 	private HttpServletRequest request;
+	@Autowired
+	private InstallProcessInterface ipi;
+	private GetSystemInformation getSys = new GetSystemInformation();
 	private UserInfo userInfo = new UserInfo();
 	private SftpLogs listLogs = new SftpLogs();
 	private SftpLogs getLogFile = new SftpLogs();
@@ -76,6 +82,17 @@ public class LogsController {
 	@Get("/selectServer")
 	public void selectServer() {
 
+		//Sending information to "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
+		
 		// Inserting HTML title in the result
 		result.include("title", "Selecione o Servidor");
 		// Inserting the Logged username in the home page
@@ -99,6 +116,17 @@ public class LogsController {
 	@Get("/listLogFiles/{hostname}")
 	public void listLogFiles(String hostname) throws JSchException, IOException {
 
+		//Sending information to "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
+		
 		// Inserting HTML title in the result
 		result.include("title", "Lista de Arquivos");
 		// Inserting the Logged username in the home page
@@ -194,6 +222,17 @@ public class LogsController {
 	public void listLogFilesSubdir(String hostname, String subdir)
 			throws JSchException, IOException {
 
+		//Sending information to "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
+		
 		// Inserting HTML title in the result
 		result.include("title", "Lista de Arquivos SubiDir " + subdir);
 		// Inserting the Logged username in the home page
@@ -299,6 +338,17 @@ public class LogsController {
 	public void tailFile(String hostname, String file, Integer numeroLinhas)
 			throws JSchException, IOException, Exception {
 
+		//Sending information to "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
+		
 		log.info("[ " + userInfo.getLoggedUsername() + " ] Tail of file "
 				+ file + " of " + hostname + " - " + numeroLinhas + " linhas. ");
 
@@ -373,6 +423,17 @@ public class LogsController {
 	public void findInFile(String hostname, String file, String palavraBusca)
 			throws JSchException, IOException, Exception {
 
+		//Sending information to "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
+		
 		log.fine("hostname: " + hostname + " palavraBusca: " + palavraBusca
 				+ " file: " + file);
 
@@ -445,6 +506,17 @@ public class LogsController {
 	@Get("/downloadFile/{hostname}/{file}")
 	public File downloadFile(String hostname, String file) {
 
+		//Sending information to "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
+		
 		// Inserting HTML title in the result
 		result.include("title", "Download");
 
@@ -513,6 +585,17 @@ public class LogsController {
 	@Get("/downloadFileSubdir/{hostname}/{file}/{logDir*}")
 	public File downloadFileSubdir(String hostname, String file, String logDir) {
 
+		//Sending information to "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
+		
 		// Inserting HTML title in the result
 		result.include("title", "Download");
 		// Inserting the Logged username in the home page
