@@ -33,12 +33,15 @@ import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.validator.ValidationMessage;
 import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.dao.Configuration;
+import br.com.hrstatus.dao.InstallProcessInterface;
 import br.com.hrstatus.dao.ServersInterface;
 import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.model.BancoDados;
 import br.com.hrstatus.model.Configurations;
 import br.com.hrstatus.model.Servidores;
 import br.com.hrstatus.model.Users;
+import br.com.hrstatus.utils.GetSystemInformation;
+import br.com.hrstatus.utils.PropertiesLoaderImpl;
 import br.com.hrstatus.utils.UserInfo;
 import br.com.hrstatus.utils.mail.GetAvailableMailSession;
 
@@ -63,11 +66,25 @@ public class ConfigController {
 	private UsersInterface userDAO;	
 	@Autowired
 	private BancoDadosInterface BancoDadosDAO;
-	UserInfo userInfo = new UserInfo();
+	@Autowired
+	private InstallProcessInterface ipi;
+	private UserInfo userInfo = new UserInfo();
+	private GetSystemInformation getSys = new GetSystemInformation();
 
-
+	@SuppressWarnings("static-access")
 	@Get("/configServer")
 	public void configServer() throws Exception {
+			
+		//Sending information to "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
 		
 		// Inserting HTML title in the result
 		result.include("title","Configurar Servidor");

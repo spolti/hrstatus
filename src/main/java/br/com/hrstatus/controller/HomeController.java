@@ -63,7 +63,7 @@ public class HomeController {
 	@Get("/home")
 	public void home(String verification) {
 		
-		//Sending information to the "About" page
+		//Sending information to "About" page
 		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
 		String version = load.getValor("version");
 		result.include("version", version);

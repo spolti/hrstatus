@@ -4,6 +4,7 @@ Dumps
 .project
 .classpath
 .settings
+.metadata
 # Package Files #
 *.jar
 *.war
