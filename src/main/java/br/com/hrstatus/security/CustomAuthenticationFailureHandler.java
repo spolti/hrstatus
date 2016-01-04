@@ -84,7 +84,7 @@ public class CustomAuthenticationFailureHandler extends
 			conf.setDifference(50);
 			conf.setJndiMail("java:jboss/mail/TestGmail");
 			conf.setMailFrom("hrstatus@hrstatus.com.br");
-			conf.setNtpServer("127.0.0.1");
+			conf.setNtpServer("a.st1.ntp.br");
 			conf.setSendNotification(true);
 			conf.setSubject("NO REPLY - Status Horario de Verao");
 			conf.setUpdateNtpIsActive(false);
