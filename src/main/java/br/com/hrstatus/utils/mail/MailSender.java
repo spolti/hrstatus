@@ -234,13 +234,13 @@ public class MailSender {
 		message.setRecipient(Message.RecipientType.TO, to);
 		message.setSubject("NO REPLY - E-mail de teste");
 		message.setSentDate(new java.util.Date());
-		String msg = " Mail Test Message -> Teste realizado com sucesso.";
-		log.fine(msg);
+		String msg = " Mail Test Message -> Teste realizado com sucesso.";	
 		message.setContent(msg, "text/html; charset=UTF-8");
 
 		try {
 			Transport.send(message);
 			log.info("----> Test email sent");
+			log.fine(msg);
 			return "----> Test email sent.";
 		} catch (Exception e) {
 			log.severe("----> Test email not sent");

@@ -111,7 +111,7 @@ public class MainScheduler {
 			log.finest("ntp ativo: " + isUpdateNtpActive);
 			if (isUpdateNtpActive) {
 				log.fine("Iniciando checagem NTP");
-				String ntpServer = this.configurationDAO.getNtpServerAddress();
+				String ntpServer = this.configurationDAO.getNtpServerAddressNotLogged();
 				log.fine("Servidor NTP configurado: " + ntpServer);
 
 				// Doing the update with sudo
