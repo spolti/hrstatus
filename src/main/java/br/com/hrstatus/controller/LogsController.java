@@ -79,6 +79,7 @@ public class LogsController {
 	private SftpLogs getLogFile = new SftpLogs();
 	private List<Servidores> server = new ArrayList<Servidores>();
 
+	@SuppressWarnings("static-access")
 	@Get("/selectServer")
 	public void selectServer() {
 
@@ -96,23 +97,21 @@ public class LogsController {
 		// Inserting HTML title in the result
 		result.include("title", "Selecione o Servidor");
 		// Inserting the Logged username in the home page
-		result.include("loggedUser", userInfo.getLoggedUsername());
-		log.info("[ " + userInfo.getLoggedUsername()
-				+ " ] URI Called: /selectServer");
+		result.include("loggedUser", userInfo.getLoggedUsername()); 
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /selectServer");
 
 		// Getting the server IDs that the logged user can access.
 		Users user = this.userDAO.getUserByID(userInfo.getLoggedUsername());
 
 		for (Servidores sv : user.getServer()) {
-			log.fine("[ " + userInfo.getLoggedUsername()
-					+ " ] The user has permissions on the server: "
-					+ sv.getHostname());
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] The user has permissions on the server: " + sv.getHostname());
 			server.add(sv);
 		}
 
 		result.include("server", server);
 	}
 
+	@SuppressWarnings("static-access")
 	@Get("/listLogFiles/{hostname}")
 	public void listLogFiles(String hostname) throws JSchException, IOException {
 
@@ -132,10 +131,8 @@ public class LogsController {
 		// Inserting the Logged username in the home page
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		log.info("[ " + userInfo.getLoggedUsername()
-				+ " ] URI Called: /listLogFiles/" + hostname);
-		log.info("[ " + userInfo.getLoggedUsername() + " ] Listing files of "
-				+ hostname);
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /listLogFiles/" + hostname);
+		log.info("[ " + userInfo.getLoggedUsername() + " ] Listing files of " + hostname);
 
 		boolean isAdmin = request.isUserInRole("ROLE_ADMIN");
 		Servidores servidor = this.iteracoesDAO.getServerByHostname(hostname);
@@ -145,8 +142,7 @@ public class LogsController {
 			try {
 				// setting logDir
 				result.include("logDir", servidor.getLogDir());
-				servidor.setPass(String.valueOf(Crypto.decode(servidor
-						.getPass())));
+				servidor.setPass(String.valueOf(Crypto.decode(servidor.getPass())));
 			} catch (InvalidKeyException e) {
 				e.printStackTrace();
 			} catch (NoSuchPaddingException e) {
@@ -164,8 +160,7 @@ public class LogsController {
 			String files = listLogs.showGetFiles(servidor.getUser(),
 					servidor.getPass(), servidor.getIp(), servidor.getPort(),
 					servidor.getLogDir());
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] Files found: "
-					+ files);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Files found: " + files);
 
 			String listOfFiles[] = files.split("\n");
 			result.include("hostname", servidor.getHostname());
@@ -175,15 +170,12 @@ public class LogsController {
 		} else {
 
 			if (userInfo.listLogFiles(user, servidor.getId())) {
-				log.info("[ " + userInfo.getLoggedUsername()
-						+ " ] The user has permissions on the server: "
-						+ hostname);
+				log.info("[ " + userInfo.getLoggedUsername() + " ] The user has permissions on the server: " + hostname);
 
 				try {
 					// setting logDir
 					result.include("logDir", servidor.getLogDir());
-					servidor.setPass(String.valueOf(Crypto.decode(servidor
-							.getPass())));
+					servidor.setPass(String.valueOf(Crypto.decode(servidor.getPass())));
 				} catch (InvalidKeyException e) {
 					e.printStackTrace();
 				} catch (NoSuchPaddingException e) {
@@ -198,11 +190,9 @@ public class LogsController {
 					e.printStackTrace();
 				}
 
-				String files = listLogs.showGetFiles(servidor.getUser(),
-						servidor.getPass(), servidor.getIp(),
+				String files = listLogs.showGetFiles(servidor.getUser(), servidor.getPass(), servidor.getIp(),
 						servidor.getPort(), servidor.getLogDir());
-				log.fine("[ " + userInfo.getLoggedUsername()
-						+ " ] Files found: " + files);
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] Files found: " + files);
 
 				String listOfFiles[] = files.split("\n");
 				result.include("hostname", servidor.getHostname());
@@ -210,14 +200,13 @@ public class LogsController {
 				result.include("listOfFiles", listOfFiles);
 
 			} else {
-				log.info("[ " + userInfo.getLoggedUsername()
-						+ " ] The user has permissions on the server: "
-						+ hostname);
+				log.info("[ " + userInfo.getLoggedUsername() + " ] The user has permissions on the server: " + hostname);
 				result.use(Results.http()).sendError(403);
 			}
 		}
 	}
 
+	@SuppressWarnings("static-access")
 	@Get("/listLogFiles/{hostname}/subdir/{subdir*}")
 	public void listLogFilesSubdir(String hostname, String subdir)
 			throws JSchException, IOException {
@@ -238,8 +227,7 @@ public class LogsController {
 		// Inserting the Logged username in the home page
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		log.info("[ " + userInfo.getLoggedUsername()
-				+ " ] URI Called: /listLogFiles/" + hostname + "/subdir/"
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /listLogFiles/" + hostname + "/subdir/"
 				+ subdir);
 
 		// the "d" represents directory, so is needed remove it to access the
@@ -259,11 +247,9 @@ public class LogsController {
 					if (subdir.contains(servidor.getLogDir())) {
 						subdir = subdir.replace(servidor.getLogDir() + "/", "");
 					}
-					result.include("logDir", servidor.getLogDir() + "/"
-							+ subdir);
+					result.include("logDir", servidor.getLogDir() + "/"	+ subdir);
 				}
-				servidor.setPass(String.valueOf(Crypto.decode(servidor
-						.getPass())));
+				servidor.setPass(String.valueOf(Crypto.decode(servidor.getPass())));
 			} catch (InvalidKeyException e) {
 				e.printStackTrace();
 			} catch (NoSuchPaddingException e) {
@@ -281,8 +267,7 @@ public class LogsController {
 			String files = listLogs.showGetFiles(servidor.getUser(),
 					servidor.getPass(), servidor.getIp(), servidor.getPort(),
 					servidor.getLogDir() + "/" + subdir);
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] Files found: "
-					+ files);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Files found: " + files);
 
 			String listOfFiles[] = files.split("\n");
 			result.include("hostname", servidor.getHostname());
@@ -292,16 +277,12 @@ public class LogsController {
 		} else {
 
 			if (userInfo.listLogFiles(user, servidor.getId())) {
-				log.info("[ " + userInfo.getLoggedUsername()
-						+ " ] The user has permissions on the server: "
-						+ hostname);
+				log.info("[ " + userInfo.getLoggedUsername() + " ] The user has permissions on the server: " + hostname);
 
 				try {
 					// setting logDir in the session
-					result.include("logDir", servidor.getLogDir() + "/"
-							+ subdir);
-					servidor.setPass(String.valueOf(Crypto.decode(servidor
-							.getPass())));
+					result.include("logDir", servidor.getLogDir() + "/"	+ subdir);
+					servidor.setPass(String.valueOf(Crypto.decode(servidor.getPass())));
 				} catch (InvalidKeyException e) {
 					e.printStackTrace();
 				} catch (NoSuchPaddingException e) {
@@ -319,8 +300,7 @@ public class LogsController {
 				String files = listLogs.showGetFiles(servidor.getUser(),
 						servidor.getPass(), servidor.getIp(),
 						servidor.getPort(), servidor.getLogDir());
-				log.fine("[ " + userInfo.getLoggedUsername()
-						+ " ] Files found: " + files);
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] Files found: " + files);
 
 				String listOfFiles[] = files.split("\n");
 				result.include("hostname", servidor.getHostname());
@@ -334,6 +314,7 @@ public class LogsController {
 		}
 	}
 
+	@SuppressWarnings("static-access")
 	@Get("/tailFile/{hostname}/{numeroLinhas}/{file*}")
 	public void tailFile(String hostname, String file, Integer numeroLinhas)
 			throws JSchException, IOException, Exception {
@@ -349,19 +330,15 @@ public class LogsController {
 		result.include("osInfo",info.get(3));
 		result.include("installDate", ipi.getInstallationDate());
 		
-		log.info("[ " + userInfo.getLoggedUsername() + " ] Tail of file "
-				+ file + " of " + hostname + " - " + numeroLinhas + " linhas. ");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] Tail of file " + file + " of " + hostname + " - " + numeroLinhas + " linhas. ");
 
 		// Inserting HTML title in the result
-		result.include("title", "Tail do arquivo " + file + ". Trazendo as "
-				+ numeroLinhas + " últimas linhas.");
+		result.include("title", "Tail do arquivo " + file + ". Trazendo as " + numeroLinhas + " últimas linhas.");
 		// Inserting the Logged username in the home page
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		log.info("[ " + userInfo.getLoggedUsername()
-				+ " ] URI Called: /tailFile");
-		log.info("[ " + userInfo.getLoggedUsername() + " ] Tail of file "
-				+ file + " of " + hostname);
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /tailFile");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] Tail of file " + file + " of " + hostname);
 
 		if (numeroLinhas == null || numeroLinhas < 0 || numeroLinhas > 1000) {
 			throw new Exception("Número de linhas inválido.");
@@ -419,6 +396,7 @@ public class LogsController {
 
 	}
 
+	@SuppressWarnings("static-access")
 	@Get("/findInFile/{hostname}/{palavraBusca}/{file*}")
 	public void findInFile(String hostname, String file, String palavraBusca)
 			throws JSchException, IOException, Exception {
@@ -434,19 +412,15 @@ public class LogsController {
 		result.include("osInfo",info.get(3));
 		result.include("installDate", ipi.getInstallationDate());
 		
-		log.fine("hostname: " + hostname + " palavraBusca: " + palavraBusca
-				+ " file: " + file);
+		log.fine("hostname: " + hostname + " palavraBusca: " + palavraBusca + " file: " + file);
 
 		// Inserting HTML title in the result
-		result.include("title", "Busca no arquivo " + file + ". Buscando: "
-				+ palavraBusca);
+		result.include("title", "Busca no arquivo " + file + ". Buscando: "	+ palavraBusca);
 		// Inserting the Logged username in the home page
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		log.info("[ " + userInfo.getLoggedUsername()
-				+ " ] URI Called: /findInFile");
-		log.info("[ " + userInfo.getLoggedUsername() + " ] Finding "
-				+ palavraBusca + " in file " + file + " of " + hostname);
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /findInFile");
+		log.info("[ " + userInfo.getLoggedUsername() + " ] Finding " + palavraBusca + " in file " + file + " of " + hostname);
 
 		if (palavraBusca == null || palavraBusca.isEmpty()) {
 			throw new Exception("Número de linhas inválido.");
@@ -503,6 +477,7 @@ public class LogsController {
 
 	}
 
+	@SuppressWarnings("static-access")
 	@Get("/downloadFile/{hostname}/{file}")
 	public File downloadFile(String hostname, String file) {
 
@@ -566,22 +541,19 @@ public class LogsController {
 		String rfile = servidor.getLogDir() + "/" + filename;
 
 		this.response.setContentType("application/octet-stream");
-		this.response.setHeader("Content-disposition", "attachment; filename="
-				+ filename + "");
+		this.response.setHeader("Content-disposition", "attachment; filename=" + filename + "");
 
-		log.info("[ " + userInfo.getLoggedUsername()
-				+ " ] Downloading the file " + filename + " from server "
+		log.info("[ " + userInfo.getLoggedUsername() + " ] Downloading the file " + filename + " from server "
 				+ hostname);
 
 		String downloadResult = getLogFile
-				.getFile(servidor.getUser(), servidor.getPass(),
-						servidor.getIp(), servidor.getPort(), rfile);
-		log.info("[ " + userInfo.getLoggedUsername() + " ] Download Result: "
-				+ downloadResult);
+				.getFile(servidor.getUser(), servidor.getPass(), servidor.getIp(), servidor.getPort(), rfile);
+		log.info("[ " + userInfo.getLoggedUsername() + " ] Download Result: " + downloadResult);
 		return new File("tempFile.log");
 
 	}
 
+	@SuppressWarnings("static-access")
 	@Get("/downloadFileSubdir/{hostname}/{file}/{logDir*}")
 	public File downloadFileSubdir(String hostname, String file, String logDir) {
 
@@ -601,24 +573,17 @@ public class LogsController {
 		// Inserting the Logged username in the home page
 		result.include("loggedUser", userInfo.getLoggedUsername());
 
-		log.info("[ " + userInfo.getLoggedUsername()
-				+ " ] URI Called: /downloadFile/" + hostname + "/" + file + "/"
-				+ logDir);
+		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /downloadFileSubdir/" + hostname + "/" + logDir + "/"
+				+ file);
 
-		log.fine("[ " + userInfo.getLoggedUsername()
-				+ " ] Removing Temporary File.");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] Removing Temporary File.");
 		File fileDelete = new File("tempFile.log");
 		if (fileDelete.delete()) {
-			log.fine("[ " + userInfo.getLoggedUsername()
-					+ " ] Temporary file removed. (tempFile.log)");
-			log.fine("[ " + userInfo.getLoggedUsername()
-					+ " ] Location of the file to be deleted: "
-					+ fileDelete.getAbsolutePath());
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Temporary file removed. (tempFile.log)");
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Location of the file to be deleted: " + fileDelete.getAbsolutePath());
 		} else {
-			log.fine("[ " + userInfo.getLoggedUsername()
-					+ " ] Temporary file not found. (tempFile.log)");
-			log.fine("[ " + userInfo.getLoggedUsername()
-					+ " ] Location of the file to be deleted: "
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Temporary file not found. (tempFile.log)");
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Location of the file to be deleted: "
 					+ fileDelete.getAbsolutePath());
 		}
 
@@ -628,6 +593,7 @@ public class LogsController {
 		// database information.
 		if (!servidor.getLogDir().equals(file)) {
 			servidor.setLogDir("/" + logDir);
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] LogDir from server " + hostname + ": " + servidor.getLogDir());
 		}
 
 		try {
@@ -648,8 +614,7 @@ public class LogsController {
 
 		// Verifying if the filename starts with space
 		if (file.startsWith(" ")) {
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] File " + file
-					+ " starts with space, removing it.");
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] File " + file + " starts with space, removing it.");
 			String temp[] = file.split(" ");
 			filename = temp[temp.length - 1];
 		} else {
@@ -660,18 +625,13 @@ public class LogsController {
 		String rfile = servidor.getLogDir() + "/" + filename;
 
 		this.response.setContentType("application/octet-stream");
-		this.response.setHeader("Content-disposition", "attachment; filename="
-				+ filename + "");
+		this.response.setHeader("Content-disposition", "attachment; filename=" + filename);
 
-		log.info("[ " + userInfo.getLoggedUsername()
-				+ " ] Downloading the file " + filename + " from server "
-				+ hostname);
+		log.info("[ " + userInfo.getLoggedUsername() + " ] Downloading the file " + filename + " from server " + hostname);
 
-		String downloadResult = getLogFile
-				.getFile(servidor.getUser(), servidor.getPass(),
+		String downloadResult = getLogFile.getFile(servidor.getUser(), servidor.getPass(),
 						servidor.getIp(), servidor.getPort(), rfile);
-		log.info("[ " + userInfo.getLoggedUsername() + " ] Download Result: "
-				+ downloadResult);
+		log.info("[ " + userInfo.getLoggedUsername() + " ] Download Result: " + downloadResult);
 		return new File("tempFile.log");
 
 	}
