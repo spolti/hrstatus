@@ -19,7 +19,9 @@
 
 package br.com.hrstatus.controller;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -555,8 +557,29 @@ public class LogsController {
 
 	@SuppressWarnings("static-access")
 	@Get("/downloadFileSubdir/{hostname}/{file}/{logDir*}")
-	public File downloadFileSubdir(String hostname, String file, String logDir) {
+	public File downloadFileSubdir(String hostname, String file, String logDir) throws IOException {
 
+		//validating if the Dir passed in the request is the same registered in the database
+		if (checkDir(logDir,hostname)) {
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] SECURITY - the logged user is trying to dowload different files from fileSystem");
+			this.result.use(Results.http()).sendError(HttpServletResponse.SC_FORBIDDEN);
+			
+			String content = "Access denied";
+			File tempFile = new File("tempFile.log");
+			// if file doesnt exists, then create it
+			if (!tempFile.exists()) {
+				tempFile.createNewFile();
+			}
+
+			FileWriter fw = new FileWriter(tempFile.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(content);
+			bw.close();
+			
+			return tempFile;
+		}
+		
+		
 		//Sending information to "About" page
 		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
 		String version = load.getValor("version");
@@ -636,4 +659,24 @@ public class LogsController {
 
 	}
 
+	/*
+	 * return true if the LogDir passed in the request if different from the value stored in the database
+	 * it is to avoid the user to specify another file in the filesystem, for example, the passwd file
+	 */
+	private boolean checkDir (String dirToCheck, String hostname) {
+		
+		Servidores server = this.iteracoesDAO.getServerLogDir(hostname);
+		dirToCheck = "/"+dirToCheck;
+		log.fine("from database: " + server.getLogDir() + "------- from request: " + dirToCheck);
+		String fromDatabase = server.getLogDir().replace("/", "");
+		dirToCheck = dirToCheck.replace("/", "");
+		
+		if (dirToCheck.contains(fromDatabase)) {
+			return false;
+		} else {
+			return true;
+		}
+		
+	}
+	
 }
