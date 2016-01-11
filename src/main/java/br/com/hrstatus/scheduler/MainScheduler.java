@@ -111,7 +111,7 @@ public class MainScheduler {
 			log.finest("ntp ativo: " + isUpdateNtpActive);
 			if (isUpdateNtpActive) {
 				log.fine("Iniciando checagem NTP");
-				String ntpServer = this.configurationDAO.getNtpServerAddress();
+				String ntpServer = this.configurationDAO.getNtpServerAddressNotLogged();
 				log.fine("Servidor NTP configurado: " + ntpServer);
 
 				// Doing the update with sudo
@@ -121,7 +121,13 @@ public class MainScheduler {
 				while ((s = stdInputAtualiza.readLine()) != null) {
 					stdInAtualiza += s + "\n";
 				}
-				log.fine("Result of ntp update [ sudo " + stdIn + " -u " + ntpServer + "]: " + stdInAtualiza);
+				if (stdInAtualiza.contains("offset")) {
+					log.fine("Result of ntp update [ sudo " + stdIn + " -u " + ntpServer + "]: " + stdInAtualiza);
+				} else {
+					log.warning("command not performed, result: " + stdInAtualiza);
+					log.warning("Make sure that the user used to execute the WildFly/JBoss have the correct sudo permissions to execute the ntpdate -u command");
+				}
+				
 			} else {
 				log.fine("NTP Update automatic is not active");
 			}

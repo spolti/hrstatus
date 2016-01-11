@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
+import br.com.hrstatus.utils.ExecuteOSCommand;
+
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
@@ -36,6 +38,7 @@ import com.jcraft.jsch.Session;
 public class GetDateLinux {
 
 	static Logger log = Logger.getLogger(GetDateLinux.class.getCanonicalName());
+	private static ExecuteOSCommand cmd = new ExecuteOSCommand();
 
 	@SuppressWarnings("unchecked")
 	public static class MyLogger implements com.jcraft.jsch.Logger {
@@ -61,50 +64,58 @@ public class GetDateLinux {
 
 	public static String exec(String user, String host, String password, int port) throws JSchException, IOException {
 
-		String s = "";
-		// Disabling host key check
-		java.util.Properties config = new java.util.Properties();
-		config.put("StrictHostKeyChecking", "no");
+		if (!host.equals("127.0.0.1")) {
+			
+			String s = "";
+			// Disabling host key check
+			java.util.Properties config = new java.util.Properties();
+			config.put("StrictHostKeyChecking", "no");
 
-		// Creating the server session and connecting
-		JSch jsch = new JSch();
-		Session session = jsch.getSession(user, host, port);
-		session.setConfig(config);
-		session.setPassword(password);
-		session.connect(10000);
+			// Creating the server session and connecting
+			JSch jsch = new JSch();
+			Session session = jsch.getSession(user, host, port);
+			session.setConfig(config);
+			session.setPassword(password);
+			session.connect(10000);
 
-		// Executing the command
-		Channel channel = session.openChannel("exec");
-		((ChannelExec) channel).setCommand("date");
-		((ChannelExec) channel).setErrStream(System.err);
-		InputStream in = channel.getInputStream();
+			// Executing the command
+			Channel channel = session.openChannel("exec");
+			((ChannelExec) channel).setCommand("date");
+			((ChannelExec) channel).setErrStream(System.err);
+			InputStream in = channel.getInputStream();
 
-		channel.connect();
+			channel.connect();
 
-		byte[] tmp = new byte[1024];
-		boolean test = true;
-		while (test == true) {
+			byte[] tmp = new byte[1024];
+			boolean test = true;
+			while (test == true) {
 
-			while (in.available() > 0) {
+				while (in.available() > 0) {
 
-				int i = in.read(tmp, 0, 1024);
-				if (i < 0) {
+					int i = in.read(tmp, 0, 1024);
+					if (i < 0) {
+						break;
+					}
+					s += (new String(tmp, 0, i));
+				}
+
+				if (channel.isClosed()) {
+
 					break;
 				}
-				s += (new String(tmp, 0, i));
 			}
+			channel.disconnect();
+			session.disconnect();
 
-			if (channel.isClosed()) {
-
-				break;
+			while (s.endsWith(" ")) {
+				s = s.substring(0, -1);
 			}
+			return s;
+		} else {
+			log.fine("GetDateLinux - IP == 127.0.0.1, ignoring ssh connection. Performing a local command execution.");
+			return cmd.executeCommand("date");
 		}
-		channel.disconnect();
-		session.disconnect();
-
-		while (s.endsWith(" ")) {
-			s = s.substring(0, -1);
-		}
-		return s;
+		
+		
 	}
 }

@@ -188,4 +188,15 @@ public class ConfigurationDAO implements Configuration {
 		ntpServer.setProjection(proList);
 		return (String) ntpServer.uniqueResult();
 	}
+	
+	public String getNtpServerAddressNotLogged() {
+		
+		log.fine("[ System ] getNtpServerAddress()");
+		
+		Criteria ntpServer = session().createCriteria(Configurations.class);
+		ProjectionList proList = Projections.projectionList();
+		proList.add(Projections.property("ntpServer"));
+		ntpServer.setProjection(proList);
+		return (String) ntpServer.uniqueResult();
+	}
 }

@@ -43,7 +43,6 @@ public class StartupSingletonVerifications {
 
 	Logger log =  Logger.getLogger(StartupSingletonVerifications.class.getCanonicalName());
 	static StartupSingletonVerifications shell = new StartupSingletonVerifications();
-	private GetSystemInformation getSys = new GetSystemInformation();
 	
 	private enum binaries {
 		//ntpdate: used to update the date/time from Unix like servers, local and remote

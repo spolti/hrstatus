@@ -51,5 +51,7 @@ public interface Configuration {
 	
 	public String getNtpServerAddress();
 	
+	public String getNtpServerAddressNotLogged();
+	
 	public boolean sendNotification();
 }
