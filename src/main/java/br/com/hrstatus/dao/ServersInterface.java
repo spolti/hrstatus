@@ -101,4 +101,6 @@ public interface ServersInterface {
 	
 	public int countServerWithLog();
 	
+	public Servidores getServerLogDir (String hostname);
+	
 }

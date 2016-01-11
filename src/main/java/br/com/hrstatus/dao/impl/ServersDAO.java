@@ -658,4 +658,14 @@ public class ServersDAO implements ServersInterface {
 			return 0;
 		}
 	}
+	
+	public Servidores getServerLogDir (String hostname) {
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getServerLogDir(String " + hostname + ")");
+		Criteria criteria = session().createCriteria(Servidores.class);
+		criteria.add(Restrictions.eq("hostname", hostname));
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return (Servidores) criteria.uniqueResult();
+
+	}
 }
