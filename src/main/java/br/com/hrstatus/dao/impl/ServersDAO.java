@@ -324,7 +324,7 @@ public class ServersDAO implements ServersInterface {
 		
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.or(Restrictions.eq("trClass", "Errorr"), Restrictions.eq("status", "NOK")));
+			criteria.add(Restrictions.or(Restrictions.eq("trClass", "Error"), Restrictions.eq("status", "NOK")));
 			criteria.add(Restrictions.eq("verify", "SIM"));
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);		
 			return criteria.list();
@@ -359,7 +359,7 @@ public class ServersDAO implements ServersInterface {
 
 		try {
 			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.or(Restrictions.eq("trClass", "Errorr"), Restrictions.eq("status", "NOK")));
+			criteria.add(Restrictions.or(Restrictions.eq("trClass", "Error"), Restrictions.eq("status", "NOK")));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			return count;
@@ -396,7 +396,7 @@ public class ServersDAO implements ServersInterface {
 		try {
 			
 			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.and(Restrictions.eq("SO", "LINUX"),(Restrictions.eq("trClass", "Errorr"))));
+			criteria.add(Restrictions.and(Restrictions.eq("SO", "LINUX"),(Restrictions.eq("trClass", "Error"))));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			log.fine("[ " + userInfo.getLoggedUsername() + " ] countLinuxNOK -> " + count + " found.");
@@ -434,7 +434,7 @@ public class ServersDAO implements ServersInterface {
 		try {
 
 			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.and(Restrictions.eq("SO", "UNIX"),(Restrictions.eq("trClass", "Errorr"))));
+			criteria.add(Restrictions.and(Restrictions.eq("SO", "UNIX"),(Restrictions.eq("trClass", "Error"))));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			log.fine("[ " + userInfo.getLoggedUsername() + " ] countUnixNOK -> " + count + " found.");
@@ -472,7 +472,7 @@ public class ServersDAO implements ServersInterface {
 		try {
 			
 			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.and(Restrictions.eq("SO", "WINDOWS"),(Restrictions.eq("trClass", "Errorr"))));
+			criteria.add(Restrictions.and(Restrictions.eq("SO", "WINDOWS"),(Restrictions.eq("trClass", "Error"))));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			log.fine("[ " + userInfo.getLoggedUsername() + " ] countWindowsNOK -> " + count + " found.");
@@ -516,7 +516,7 @@ public class ServersDAO implements ServersInterface {
 			criteria.add(Restrictions.ne("SO", "LINUX"));
 			criteria.add(Restrictions.ne("SO", "Windows"));
 			criteria.add(Restrictions.ne("SO", "Unix"));
-			criteria.add(Restrictions.eq("trClass", "Errorr"));
+			criteria.add(Restrictions.eq("trClass", "Error"));
 			criteria.setProjection(Projections.rowCount());
 			int count = ((Long) criteria.uniqueResult()).intValue();
 			log.fine("[ " + userInfo.getLoggedUsername() + " ] countOtherNOK -> " + count + " found.");
