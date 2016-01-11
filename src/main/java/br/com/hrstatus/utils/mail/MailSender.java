@@ -234,7 +234,7 @@ public class MailSender {
 		message.setRecipient(Message.RecipientType.TO, to);
 		message.setSubject("NO REPLY - E-mail de teste");
 		message.setSentDate(new java.util.Date());
-		String msg = " Mail Test Message -> Teste realizado com sucesso.";	
+		final String msg = " Mail Test Message -> Teste realizado com sucesso.";	
 		message.setContent(msg, "text/html; charset=UTF-8");
 
 		try {
