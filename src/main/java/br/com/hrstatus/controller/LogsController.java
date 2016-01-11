@@ -563,98 +563,87 @@ public class LogsController {
 		if (checkDir(logDir,hostname)) {
 			log.fine("[ " + userInfo.getLoggedUsername() + " ] SECURITY - the logged user is trying to dowload different files from fileSystem");
 			this.result.use(Results.http()).sendError(HttpServletResponse.SC_FORBIDDEN);
+
+		} else {
 			
-			String content = "Access denied";
-			File tempFile = new File("tempFile.log");
-			// if file doesnt exists, then create it
-			if (!tempFile.exists()) {
-				tempFile.createNewFile();
+			
+			//Sending information to "About" page
+			PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+			String version = load.getValor("version");
+			result.include("version", version);
+			List<String> info = getSys.SystemInformation();
+			result.include("jvmName", info.get(2));
+			result.include("jvmVendor",info.get(1));
+			result.include("jvmVersion",info.get(0));
+			result.include("osInfo",info.get(3));
+			result.include("installDate", ipi.getInstallationDate());
+			
+			// Inserting HTML title in the result
+			result.include("title", "Download");
+			// Inserting the Logged username in the home page
+			result.include("loggedUser", userInfo.getLoggedUsername());
+
+			log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /downloadFileSubdir/" + hostname + "/" + logDir + "/"
+					+ file);
+
+			log.fine("[ " + userInfo.getLoggedUsername() + " ] Removing Temporary File.");
+			File fileDelete = new File("tempFile.log");
+			if (fileDelete.delete()) {
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] Temporary file removed. (tempFile.log)");
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] Location of the file to be deleted: " + fileDelete.getAbsolutePath());
+			} else {
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] Temporary file not found. (tempFile.log)");
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] Location of the file to be deleted: "
+						+ fileDelete.getAbsolutePath());
 			}
 
-			FileWriter fw = new FileWriter(tempFile.getAbsoluteFile());
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(content);
-			bw.close();
-			
-			return tempFile;
-		}
-		
-		
-		//Sending information to "About" page
-		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
-		String version = load.getValor("version");
-		result.include("version", version);
-		List<String> info = getSys.SystemInformation();
-		result.include("jvmName", info.get(2));
-		result.include("jvmVendor",info.get(1));
-		result.include("jvmVersion",info.get(0));
-		result.include("osInfo",info.get(3));
-		result.include("installDate", ipi.getInstallationDate());
-		
-		// Inserting HTML title in the result
-		result.include("title", "Download");
-		// Inserting the Logged username in the home page
-		result.include("loggedUser", userInfo.getLoggedUsername());
+			Servidores servidor = this.iteracoesDAO.getServerByHostname(hostname);
 
-		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /downloadFileSubdir/" + hostname + "/" + logDir + "/"
-				+ file);
+			// Verifying if the path received to download is different from the
+			// database information.
+			if (!servidor.getLogDir().equals(file)) {
+				servidor.setLogDir("/" + logDir);
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] LogDir from server " + hostname + ": " + servidor.getLogDir());
+			}
 
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] Removing Temporary File.");
-		File fileDelete = new File("tempFile.log");
-		if (fileDelete.delete()) {
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] Temporary file removed. (tempFile.log)");
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] Location of the file to be deleted: " + fileDelete.getAbsolutePath());
-		} else {
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] Temporary file not found. (tempFile.log)");
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] Location of the file to be deleted: "
-					+ fileDelete.getAbsolutePath());
-		}
+			try {
+				servidor.setPass(String.valueOf(Crypto.decode(servidor.getPass())));
+			} catch (InvalidKeyException e) {
+				e.printStackTrace();
+			} catch (NoSuchPaddingException e) {
+				e.printStackTrace();
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			} catch (BadPaddingException e) {
+				e.printStackTrace();
+			} catch (IllegalBlockSizeException e) {
+				e.printStackTrace();
+			}
 
-		Servidores servidor = this.iteracoesDAO.getServerByHostname(hostname);
+			String filename = null;
 
-		// Verifying if the path received to download is different from the
-		// database information.
-		if (!servidor.getLogDir().equals(file)) {
-			servidor.setLogDir("/" + logDir);
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] LogDir from server " + hostname + ": " + servidor.getLogDir());
-		}
+			// Verifying if the filename starts with space
+			if (file.startsWith(" ")) {
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] File " + file + " starts with space, removing it.");
+				String temp[] = file.split(" ");
+				filename = temp[temp.length - 1];
+			} else {
+				String getName[] = file.split(" ");
+				filename = getName[1];
+			}
 
-		try {
-			servidor.setPass(String.valueOf(Crypto.decode(servidor.getPass())));
-		} catch (InvalidKeyException e) {
-			e.printStackTrace();
-		} catch (NoSuchPaddingException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (BadPaddingException e) {
-			e.printStackTrace();
-		} catch (IllegalBlockSizeException e) {
-			e.printStackTrace();
+			String rfile = servidor.getLogDir() + "/" + filename;
+
+			this.response.setContentType("application/octet-stream");
+			this.response.setHeader("Content-disposition", "attachment; filename=" + filename);
+
+			log.info("[ " + userInfo.getLoggedUsername() + " ] Downloading the file " + filename + " from server " + hostname);
+
+			String downloadResult = getLogFile.getFile(servidor.getUser(), servidor.getPass(),
+							servidor.getIp(), servidor.getPort(), rfile);
+			log.info("[ " + userInfo.getLoggedUsername() + " ] Download Result: " + downloadResult);
 		}
 
-		String filename = null;
-
-		// Verifying if the filename starts with space
-		if (file.startsWith(" ")) {
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] File " + file + " starts with space, removing it.");
-			String temp[] = file.split(" ");
-			filename = temp[temp.length - 1];
-		} else {
-			String getName[] = file.split(" ");
-			filename = getName[1];
-		}
-
-		String rfile = servidor.getLogDir() + "/" + filename;
-
-		this.response.setContentType("application/octet-stream");
-		this.response.setHeader("Content-disposition", "attachment; filename=" + filename);
-
-		log.info("[ " + userInfo.getLoggedUsername() + " ] Downloading the file " + filename + " from server " + hostname);
-
-		String downloadResult = getLogFile.getFile(servidor.getUser(), servidor.getPass(),
-						servidor.getIp(), servidor.getPort(), rfile);
-		log.info("[ " + userInfo.getLoggedUsername() + " ] Download Result: " + downloadResult);
 		return new File("tempFile.log");
 
 	}
