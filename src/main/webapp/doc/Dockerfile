@@ -1,4 +1,4 @@
-#This Dockerfile was retrieve from https://github.com/docker-library/mysql/blob/master/5.5/Dockerfile and modified to run the HrStatus Project.
+#This Dockerfile was retrieved from https://github.com/docker-library/mysql/blob/master/5.5/Dockerfile and modified to run the HrStatus Project.
 
 FROM debian:jessie
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
