@@ -19,9 +19,7 @@
 
 package br.com.hrstatus.controller;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -656,7 +654,7 @@ public class LogsController {
 		
 		Servidores server = this.iteracoesDAO.getServerLogDir(hostname);
 		dirToCheck = "/"+dirToCheck;
-		log.fine("from database: " + server.getLogDir() + "------- from request: " + dirToCheck);
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] dir path from: database: " + server.getLogDir() + "------- from request: " + dirToCheck);
 		String fromDatabase = server.getLogDir().replace("/", "");
 		dirToCheck = dirToCheck.replace("/", "");
 		
