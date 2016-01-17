@@ -79,4 +79,6 @@ public interface UsersInterface {
 	public void lastActivityTimeStamp(String lastActivityTimeStamp);
 	
 	public List<Integer> getIds_access_server(String user);
+	
+	public List<Users> getBlockedUsers();
 }
