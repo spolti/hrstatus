@@ -36,12 +36,29 @@ import br.com.hrstatus.model.Users;
 @Produces("application/json; charset=utf8")
 public interface UserResource {
 
+	/*
+	 * \/rest/user/list
+	 * Example: http://localhost:8080/hs/rest/user/list
+	 */
 	@Path("list")
 	@GET
 	public List<Users> users();
 	
+	/*
+	 * \/rest/user/remove/{username}
+	 * Example: http://localhost:8080/hs/rest/user/remove/username
+	 */
 	@Path("remove/{username}")
 	@GET
 	public String removeUser(@PathParam("username") String username);
+	
+	/*
+	 * \/rest/user/new/{username}/{password}/{role}/{name}/{mail}/{enabled}
+	 * Example: http://localhost:8080/hs/rest/user/new/username/auto|pasword/admin|user|rest/user%20full%20name/test@test.com/true|false
+	 */
+	@Path("new/{username}/{password}/{role}/{name}/{mail}/{enabled}")
+	@GET
+	public String newUser(@PathParam("username") String username, @PathParam("password") String password, @PathParam("role") String role, 
+			@PathParam("name") String name, @PathParam("mail") String mail, @PathParam("enabled") boolean enabled);
 	
 }
