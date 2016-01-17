@@ -104,7 +104,6 @@ public class VerifySingleServer {
 		if (servidores.getSO().equals("LINUX")) {
 			servidores.setServerTime(dt.getTime());
 			servidores.setLastCheck(servidores.getServerTime());
-			// Decripting password
 			
 			try {
 				String dateSTR = GetDateLinux.exec(	servidores.getUser(), servidores.getIp(),servidores.getPass(), servidores.getPort());
@@ -158,6 +157,7 @@ public class VerifySingleServer {
 				this.serversDAO.updateServer(servidores);
 			}
 		}
+		
 		if (servidores.getSO().equals("WINDOWS")) {
 			servidores.setServerTime(dt.getTime());
 			servidores.setLastCheck(servidores.getServerTime());
