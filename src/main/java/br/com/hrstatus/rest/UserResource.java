@@ -45,6 +45,14 @@ public interface UserResource {
 	public List<Users> users();
 	
 	/*
+	 * \/rest/user/list/blockedusers
+	 * Example: http://localhost:8080/hs/rest/user/list/blockedusers
+	 */
+	@Path("list/blockedusers")
+	@GET
+	public List<Users> blockedUsers();
+	
+	/*
 	 * \/rest/user/remove/{username}
 	 * Example: http://localhost:8080/hs/rest/user/remove/username
 	 */

@@ -298,4 +298,14 @@ public class UsersDAO implements UsersInterface {
 		proList.add(Projections.property("access_server"));
 		return criteria.list();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Users> getBlockedUsers() {
+		
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] List<Users> getBlockedUsers() -> Listing blocked users.");
+		Criteria criteria = session().createCriteria(Users.class);
+		criteria.add(Restrictions.eq("enabled", false));
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return criteria.list();
+	}
 }

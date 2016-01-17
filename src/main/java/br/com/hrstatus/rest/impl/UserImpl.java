@@ -73,6 +73,11 @@ public class UserImpl extends SpringBeanAutowiringSupport implements UserResourc
 			return null;
 		}
 	}
+	
+	public List<Users> blockedUsers() {
+		// TODO Auto-generated method stub
+		return this.userDAO.getBlockedUsers();
+	}
 
 	public String removeUser(String username) {
 		try {
