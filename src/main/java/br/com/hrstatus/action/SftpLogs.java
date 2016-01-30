@@ -319,9 +319,9 @@ public class SftpLogs {
 
 		} catch (Exception e) {
 			System.err.println(e);
-			return "Download unrealized";
+			return "Download falied";
 		}
-		return "Download realized.";
+		return "File Downloaded.";
 	}
 
 	static int checkAck(InputStream in) throws IOException {
@@ -343,10 +343,10 @@ public class SftpLogs {
 				sb.append((char) c);
 			} while (c != '\n');
 			if (b == 1) { // error
-				System.out.print(sb.toString());
+				log.severe(sb.toString());
 			}
 			if (b == 2) { // fatal error
-				System.out.print(sb.toString());
+				log.severe(sb.toString());
 			}
 		}
 		return b;

@@ -19,10 +19,8 @@
 
 package br.com.hrstatus.verification.database;
 
-import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -32,26 +30,18 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.jcraft.jsch.JSchException;
-
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
-import br.com.hrstatus.action.databases.db2.DB2;
-import br.com.hrstatus.action.databases.mysql.MySQL;
-import br.com.hrstatus.action.databases.oracle.Oracle;
-import br.com.hrstatus.action.databases.postgre.PostgreSQL;
-import br.com.hrstatus.action.databases.sqlserver.SqlServer;
 import br.com.hrstatus.controller.HomeController;
 import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.dao.LockIntrface;
 import br.com.hrstatus.model.BancoDados;
 import br.com.hrstatus.model.Lock;
-import br.com.hrstatus.security.Crypto;
 import br.com.hrstatus.utils.UserInfo;
-import br.com.hrstatus.utils.date.DateUtils;
+import br.com.hrstatus.verification.impl.DbFullVerificationImpl;
 
 /*
  * @author spolti
@@ -72,20 +62,14 @@ public class DbFullVerification {
 	private Configuration configurationDAO;
 	@Autowired
 	private Validator validator;
+	@Autowired
+	DbFullVerificationImpl dbVerification;
 	private UserInfo userInfo = new UserInfo();
-	private DateUtils dt = new DateUtils();
 	private Lock lockedResource = new Lock();
-	private Crypto encodePass = new Crypto();
-	private MySQL runMySQL = new MySQL();
-	private PostgreSQL runPSQL = new PostgreSQL();
-	private SqlServer runSqlServer = new SqlServer();
-	private Oracle runOracle = new Oracle();
-	private DB2 runDB2 = new DB2();
-	
-	@SuppressWarnings("static-access")
+
+
 	@Get("/database/startDataBaseVerification/fullDBVerification")
 	public void startFullDataBaseVerification() throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException {
-		String dateSTR = null;
 
 		// inserindo html title no result
 		result.include("title", "Hr Status Home");
@@ -112,89 +96,11 @@ public class DbFullVerification {
 			// locking resource
 			lockDAO.insertLock(lockedResource);
 
-			List<BancoDados> listdb = this.dbDAO.listDataBases();
-			for (BancoDados bancoDados : listdb) {
-				bancoDados.setServerTime(dt.getTime());
-				bancoDados.setLastCheck(bancoDados.getServerTime());
 
-				// Decrypting password
-			    bancoDados.setPass(String.valueOf(Crypto.decode(bancoDados.getPass())));
-
-				try {
-
-					if (bancoDados.getVendor().toUpperCase().equals("MYSQL")) {
-						dateSTR = runMySQL.getDateMySQL(bancoDados, userInfo.getLoggedUsername());
-					} else if (bancoDados.getVendor().toUpperCase().equals("POSTGRESQL")) {
-						dateSTR = runPSQL.getDatePSQL(bancoDados, userInfo.getLoggedUsername());
-					} else if (bancoDados.getVendor().toUpperCase().equals("SQLSERVER")) {
-						dateSTR = runSqlServer.getDateSqlServer(bancoDados, userInfo.getLoggedUsername());
-					} else if (bancoDados.getVendor().toUpperCase().equals("ORACLE")) {
-						dateSTR = runOracle.getDateOracle(bancoDados, userInfo.getLoggedUsername());
-					} else if (bancoDados.getVendor().toUpperCase().equals("DB2")) {
-						dateSTR = runDB2.getDate(bancoDados, userInfo.getLoggedUsername());
-					}
-					log.fine("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor " + bancoDados.getHostname() + ": " + dateSTR);
-					bancoDados.setClientTime(dateSTR);
-					// Calculating time difference
-					bancoDados.setDifference((dt.diffrenceTime(bancoDados.getServerTime(), dateSTR,"Dont Need this, Remove!!!")));
-
-					if (bancoDados.getDifference() < 0) {
-						bancoDados.setDifference(bancoDados.getDifference() * -1);
-					}
-
-					if (bancoDados.getDifference() <= this.configurationDAO.getDiffirenceSecs()) {
-						bancoDados.setTrClass("success");
-						bancoDados.setStatus("OK");
-					} else {
-						bancoDados.setTrClass("error");
-						bancoDados.setStatus("não OK");
-					}
-					try {
-						// Encrypting the password
-						bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
-
-					} catch (Exception e1) {
-						log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e1);
-					}
-					this.dbDAO.updateDataBase(bancoDados);
-
-				} catch (JSchException e) {
-					bancoDados.setStatus(e + "");
-					bancoDados.setTrClass("error");
-					try {
-						// Encrypting the password
-						bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
-
-					} catch (Exception e1) {
-						
-						log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e1);
-					}
-					this.dbDAO.updateDataBase(bancoDados);
-				} catch (IOException e) {
-					bancoDados.setStatus(e + "");
-					bancoDados.setTrClass("error");
-					try {
-
-						// Encrypting the password
-						bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
-
-					} catch (Exception e1) {
-						
-						log.severe("[ " + userInfo.getLoggedUsername()+ " ] Error: " + e1);
-					}
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				} catch (SQLException e) {
-					e.printStackTrace();
-					bancoDados.setStatus("Erro: " + e.getMessage());
-					bancoDados.setTrClass("error");
-					bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
-					this.dbDAO.updateDataBase(bancoDados);
-				}
-			}
-
+			dbVerification.performFullVerification();
+			List<BancoDados> listdb =  this.dbDAO.listDataBases();
 			result.include("class", "activeBanco");
-			result.include("bancoDados", listdb).forwardTo(HomeController.class).home("");
+			result.include("bancoDados",listdb).forwardTo(HomeController.class).home("");
 	
 		}
 		lockDAO.removeLock(lockedResource);
