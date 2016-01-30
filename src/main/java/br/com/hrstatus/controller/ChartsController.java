@@ -19,6 +19,7 @@
 
 package br.com.hrstatus.controller;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,10 @@ import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.hrstatus.dao.BancoDadosInterface;
+import br.com.hrstatus.dao.InstallProcessInterface;
 import br.com.hrstatus.dao.ServersInterface;
+import br.com.hrstatus.utils.GetSystemInformation;
+import br.com.hrstatus.utils.PropertiesLoaderImpl;
 import br.com.hrstatus.utils.UserInfo;
 
 /*
@@ -45,14 +49,29 @@ public class ChartsController {
 	private ServersInterface iteracoesDAO;
 	@Autowired
 	private BancoDadosInterface BancoDadosInterfaceDAO;
+	@Autowired
+	private InstallProcessInterface ipi;
 	UserInfo userInfo = new UserInfo();
+	private GetSystemInformation getSys = new GetSystemInformation();
 
+	@SuppressWarnings("static-access")
 	@Get("/charts/servers/consolidated")
 	public void chartServidor() {
 
 		// Inserting HTML title in the result
 		result.include("title", "Gráficos - Servers");
 
+		//Sending information to "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
+		
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /charts/servers/consolidated");
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
