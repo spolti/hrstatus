@@ -132,12 +132,24 @@ public class ChartsController {
 		result.include("totalServer", total);
 	}
 
+	@SuppressWarnings("static-access")
 	@Get("/charts/database/consolidated")
 	public void chartDataBase() {
 
 		// Inserting HTML title in the result
 		result.include("title", "Gráficos - Databases");
 
+		//Sending information to "About" page
+		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+		String version = load.getValor("version");
+		result.include("version", version);
+		List<String> info = getSys.SystemInformation();
+		result.include("jvmName", info.get(2));
+		result.include("jvmVendor",info.get(1));
+		result.include("jvmVersion",info.get(0));
+		result.include("osInfo",info.get(3));
+		result.include("installDate", ipi.getInstallationDate());
+		
 		log.info("[ " + userInfo.getLoggedUsername()  + " ] URI Called: /charts/database/consolidated");
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
