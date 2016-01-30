@@ -48,8 +48,7 @@ public class DB2 {
 		
 		if (rs != null) {
 			while (rs.next()) {
-				dt_db = rs.getString(1);
-				
+				dt_db = rs.getString(1);				
 			}
 		}
 
