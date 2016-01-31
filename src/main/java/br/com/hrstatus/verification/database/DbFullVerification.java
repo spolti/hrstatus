@@ -39,7 +39,7 @@ import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.dao.LockIntrface;
 import br.com.hrstatus.model.BancoDados;
-import br.com.hrstatus.model.Lock;
+import br.com.hrstatus.resrources.ResourcesManagement;
 import br.com.hrstatus.utils.UserInfo;
 import br.com.hrstatus.verification.impl.DbFullVerificationImpl;
 
@@ -64,8 +64,9 @@ public class DbFullVerification {
 	private Validator validator;
 	@Autowired
 	DbFullVerificationImpl dbVerification;
+	@Autowired
+	ResourcesManagement resource;
 	private UserInfo userInfo = new UserInfo();
-	private Lock lockedResource = new Lock();
 
 
 	@Get("/database/startDataBaseVerification/fullDBVerification")
@@ -73,36 +74,24 @@ public class DbFullVerification {
 
 		// inserindo html title no result
 		result.include("title", "Hr Status Home");
-		String LoggedUsername = userInfo.getLoggedUsername();
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI called: /database/startDataBaseVerification/fullDBVerification");
 
-		// Verifica se já tem alguma verificação ocorrendo...
 		log.info("[ " + userInfo.getLoggedUsername() + " ] Initializing a fullDBVerification verification.");
 		
-		lockedResource.setRecurso("fullDBVerification");
-		lockedResource.setUsername(LoggedUsername);
-		List<Lock> lockList = this.lockDAO.listLockedServices("fullDBVerification");
-		if (lockList.size() != 0) {
-			for (Lock lock : lockList) {
-				log.info("[ " + userInfo.getLoggedUsername() + " ] The resource fullDBVerification is locked by the user " + lock.getUsername());
-				result.include("class", "activeBanco");
-				result.include("info","O recurso fullDBVerification está locado pelo usuário " + lock.getUsername()
-								+ ", aguarde o término da mesma").forwardTo(HomeController.class).home("");
-
-			}
-		} else {
-			
-			log.info("[ " + userInfo.getLoggedUsername() + " ] O recurso fullDBVerification não está locado, locando e proseguindo");
-			// locking resource
-			lockDAO.insertLock(lockedResource);
-
-
+		// Verifica se já tem alguma verificação ocorrendo...
+		
+		if (!resource.islocked("fullDbVerification")) {
+			resource.lockRecurso("fullDbVerification");
 			dbVerification.performFullVerification();
 			List<BancoDados> listdb =  this.dbDAO.listDataBases();
 			result.include("class", "activeBanco");
 			result.include("bancoDados",listdb).forwardTo(HomeController.class).home("");
-	
+			resource.releaseLock("fullDbVerification");
+			
+		} else {
+			result.include("class", "activeBanco");
+			result.include("info","O recurso fullDBVerification está locado, aguarde o término da mesma").forwardTo(HomeController.class).home("");
 		}
-		lockDAO.removeLock(lockedResource);
+
 	}
 }
