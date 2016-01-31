@@ -82,7 +82,7 @@ public class CustomAuthenticationFailureHandler extends
 
 			conf.setDests("example@hrstatus.com.br");
 			conf.setDifference(50);
-			conf.setJndiMail("java:jboss/mail/TestGmail");
+			conf.setJndiMail("java:jboss/mail/HrStatus");
 			conf.setMailFrom("hrstatus@hrstatus.com.br");
 			conf.setNtpServer("a.st1.ntp.br");
 			conf.setSendNotification(true);
