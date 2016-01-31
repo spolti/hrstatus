@@ -19,14 +19,12 @@
 
 package br.com.hrstatus.rest.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,6 +37,7 @@ import br.com.hrstatus.rest.DataBaseResource;
 import br.com.hrstatus.security.Crypto;
 import br.com.hrstatus.utils.UserInfo;
 import br.com.hrstatus.verification.impl.DbFullVerificationImpl;
+import br.com.hrstatus.verification.impl.DbNotFullVerificationImpl;
 
 /*
  * @author spolti
@@ -53,6 +52,8 @@ public class DataBaseImpl extends SpringBeanAutowiringSupport implements DataBas
 	private BancoDadosInterface databaseDAO;
 	@Autowired(required = true)
 	private DbFullVerificationImpl fullVerification;
+	@Autowired(required = true)
+	private DbNotFullVerificationImpl notFullVerification;
 	@Autowired(required = true)
 	ResourcesManagement resource;
 
@@ -243,6 +244,31 @@ public class DataBaseImpl extends SpringBeanAutowiringSupport implements DataBas
 			return null;
 		}
 
+	}
+	
+	public List<BancoDados> notFullDbVerification(HttpServletResponse response) {
+		
+		log.info(" [ " + userInfo.getLoggedUsername() + " ]{REST} -> Starting not full db verification: ");
+		
+		List<BancoDados> listNOKbeforeVerification = this.databaseDAO.getdataBasesNOK();
+		List<BancoDados> listdb = new ArrayList<BancoDados>();
+		
+		try {
+			if (!resource.islocked("notFullDBVerification")) {
+				resource.lockRecurso("notFullDBVerification");
+				notFullVerification.performNotFullVerification();
+				
+				for (BancoDados db : listNOKbeforeVerification) {	
+					listdb.add(this.databaseDAO.getDataBaseByID(db.getId()));
+				}	
+				
+				resource.releaseLock("notFullDBVerification");
+			}			
+			return listdb;
+			
+		}  catch (Exception e) {
+			return null;
+		}
 	}
 
 }

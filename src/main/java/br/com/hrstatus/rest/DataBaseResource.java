@@ -98,4 +98,12 @@ public interface DataBaseResource {
 	@Path("verification/full")
 	@GET
 	public List<BancoDados> fullDbVerification(@Context HttpServletResponse response);
+	
+	/*
+	 * \/rest/database/verification/notFull
+	 * Example: http://localhost:8080/hs/rest/database/verification/notFull
+	 */
+	@Path("verification/notFull")
+	@GET
+	public List<BancoDados> notFullDbVerification(@Context HttpServletResponse response);
 }
