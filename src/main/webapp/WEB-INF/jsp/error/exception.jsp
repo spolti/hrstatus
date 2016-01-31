@@ -95,7 +95,7 @@ html,body {
 			<p class="lead">Ocorreu algum erro na execução do recurso
 				solicitado, copie o código abaixo e envie para o administrador.</p>
 
-			<%=exception.getStackTrace() %>
+			<%=exception.getCause() %>
 
 		</div>
 

@@ -33,6 +33,8 @@ import javax.crypto.NoSuchPaddingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jcraft.jsch.JSchException;
+
 import br.com.hrstatus.action.databases.db2.DB2;
 import br.com.hrstatus.action.databases.mysql.MySQL;
 import br.com.hrstatus.action.databases.oracle.Oracle;
@@ -45,16 +47,14 @@ import br.com.hrstatus.security.Crypto;
 import br.com.hrstatus.utils.UserInfo;
 import br.com.hrstatus.utils.date.DateUtils;
 
-import com.jcraft.jsch.JSchException;
-
 /*
  * @author spolti
  */
 
 @Service
-public class DbFullVerificationImpl {
+public class DbNotFullVerificationImpl {
 	
-	Logger log =  Logger.getLogger(DbFullVerificationImpl.class.getCanonicalName());
+	Logger log =  Logger.getLogger(DbNotFullVerificationImpl.class.getCanonicalName());
 	
 	@Autowired
 	private BancoDadosInterface dbDAO;
@@ -70,19 +70,31 @@ public class DbFullVerificationImpl {
 	private Oracle runOracle = new Oracle();
 	private DB2 runDB2 = new DB2();
 	
+	
 	@SuppressWarnings("static-access")
-	public void performFullVerification() throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException {
+	public void performNotFullVerification() throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException {
 		
 		String dateSTR = null;
-
-		List<BancoDados> listdb = this.dbDAO.listDataBases();
+		List<BancoDados> listdb = this.dbDAO.getdataBasesNOK();
 		
 		for (BancoDados bancoDados : listdb) {
 			bancoDados.setServerTime(dt.getTime());
 			bancoDados.setLastCheck(bancoDados.getServerTime());
 
 			// Decrypting password
-		    bancoDados.setPass(String.valueOf(Crypto.decode(bancoDados.getPass())));
+			try {
+				bancoDados.setPass(String.valueOf(Crypto.decode(bancoDados.getPass())));
+			} catch (InvalidKeyException e) {
+				e.printStackTrace();
+			} catch (NoSuchPaddingException e) {
+				e.printStackTrace();
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			} catch (BadPaddingException e) {
+				e.printStackTrace();
+			} catch (IllegalBlockSizeException e) {
+				e.printStackTrace();
+			}
 
 			try {
 
@@ -97,10 +109,11 @@ public class DbFullVerificationImpl {
 				} else if (bancoDados.getVendor().toUpperCase().equals("DB2")) {
 					dateSTR = runDB2.getDate(bancoDados, userInfo.getLoggedUsername());
 				}
-				log.fine("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do servidor " + bancoDados.getHostname() + ": " + dateSTR);
+				
+				log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from the server " + bancoDados.getHostname() + ": " + dateSTR);
 				bancoDados.setClientTime(dateSTR);
 				// Calculating time difference
-				bancoDados.setDifference((dt.diffrenceTime(bancoDados.getServerTime(), dateSTR,"Dont Need this, Remove!!!")));
+				bancoDados.setDifference((dt.diffrenceTime(bancoDados.getServerTime(), dateSTR,	"Dont Need this, Remove!!!")));
 
 				if (bancoDados.getDifference() < 0) {
 					bancoDados.setDifference(bancoDados.getDifference() * -1);
@@ -130,7 +143,6 @@ public class DbFullVerificationImpl {
 					bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 
 				} catch (Exception e1) {
-					
 					log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e1);
 				}
 				this.dbDAO.updateDataBase(bancoDados);
@@ -141,23 +153,19 @@ public class DbFullVerificationImpl {
 
 					// Encrypting the password
 					bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
-
 				} catch (Exception e1) {
-					
-					log.severe("[ " + userInfo.getLoggedUsername()+ " ] Error: " + e1);
-				}
-			} catch (ClassNotFoundException e) {
+					log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e1);
+				} 
+				
+			}catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			} catch (SQLException e) {
 				e.printStackTrace();
 				bancoDados.setStatus("Erro: " + e.getMessage());
 				bancoDados.setTrClass("error");
 				bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
-				this.dbDAO.updateDataBase(bancoDados);
 			}
-			
 		}
-		
+
 	}
-	
 }
