@@ -79,8 +79,7 @@ public class ConfigurationDAO implements Configuration {
 
 	public String getMailSender() {
 		
-		//log.fine("[ " + userInfo.getLoggedUsername() + " ] getMailSender()");
-		log.fine("[  ] getMailSender()");
+		log.fine("[ " + userInfo.getLoggedUsername() + " ] getMailSender()");
 		Criteria mailFrom = session().createCriteria(Configurations.class);
 		ProjectionList proList = Projections.projectionList();
 		proList.add(Projections.property("mailFrom"));
@@ -90,7 +89,7 @@ public class ConfigurationDAO implements Configuration {
 	
 	public String getMailSenderNotLogged() {
 		
-		log.fine("[ System ] getMailSender()");
+		log.fine("[ System ] getMailSenderNotLogged()");
 		
 		Criteria mailFrom = session().createCriteria(Configurations.class);
 		ProjectionList proList = Projections.projectionList();
@@ -121,9 +120,31 @@ public class ConfigurationDAO implements Configuration {
 		return (String) subject.uniqueResult();
 	}
 
+	public String getSubjectNotLogged() {
+		
+		log.fine("[ System ] getSubjectNotLogged()");
+		
+		Criteria subject = session().createCriteria(Configurations.class);
+		ProjectionList proList = Projections.projectionList();
+		proList.add(Projections.property("subject"));
+		subject.setProjection(proList);
+		return (String) subject.uniqueResult();
+	}
+	
 	public String getDests() {
 		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] getDests()");
+		
+		Criteria subject = session().createCriteria(Configurations.class);
+		ProjectionList proList = Projections.projectionList();
+		proList.add(Projections.property("dests"));
+		subject.setProjection(proList);
+		return (String) subject.uniqueResult();
+	}
+	
+	public String getDestsNotLogged() {
+		
+		log.fine("[ System ] getDestsNotLogged()");
 		
 		Criteria subject = session().createCriteria(Configurations.class);
 		ProjectionList proList = Projections.projectionList();
