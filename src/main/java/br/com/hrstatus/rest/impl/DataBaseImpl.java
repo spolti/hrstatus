@@ -23,6 +23,10 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,9 +34,11 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.model.BancoDados;
+import br.com.hrstatus.resrources.ResourcesManagement;
 import br.com.hrstatus.rest.DataBaseResource;
 import br.com.hrstatus.security.Crypto;
 import br.com.hrstatus.utils.UserInfo;
+import br.com.hrstatus.verification.impl.DbFullVerificationImpl;
 
 /*
  * @author spolti
@@ -45,6 +51,10 @@ public class DataBaseImpl extends SpringBeanAutowiringSupport implements DataBas
 
 	@Autowired(required = true)
 	private BancoDadosInterface databaseDAO;
+	@Autowired(required = true)
+	private DbFullVerificationImpl fullVerification;
+	@Autowired(required = true)
+	ResourcesManagement resource;
 
 	private UserInfo userInfo = new UserInfo();
 	private BancoDados database = new BancoDados();
@@ -213,6 +223,26 @@ public class DataBaseImpl extends SpringBeanAutowiringSupport implements DataBas
 			return "FAIL, check logs for details";
 		}
 	
+	}
+
+	public List<BancoDados> fullDbVerification(HttpServletResponse response) {
+		
+		log.info(" [ " + userInfo.getLoggedUsername() + " ]{REST} -> Starting full db verification: ");
+
+		try {
+			if (!resource.islocked("fullDbVerification")) {
+				resource.lockRecurso("fullDbVerification");
+				fullVerification.performFullVerification();
+				resource.releaseLock("fullDbVerification");
+			} else {
+				log.info(" [ " + userInfo.getLoggedUsername() + " ]{REST} -> Recurso solicitado locado");
+				response.sendError(404);
+			}
+			return this.databaseDAO.listDataBases();
+		} catch (Exception e) {
+			return null;
+		}
+
 	}
 
 }

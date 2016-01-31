@@ -21,10 +21,12 @@ package br.com.hrstatus.rest;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 
 import br.com.hrstatus.model.BancoDados;
 
@@ -89,4 +91,11 @@ public interface DataBaseResource {
 			@PathParam(value = "password") String password, @PathParam(value = "dbVendor") String dbVendor,
 			@PathParam(value = "dbName") String dbName);
 	
+	/*
+	 * \/rest/database/verification/full
+	 * Example: http://localhost:8080/hs/rest/database/verification/full
+	 */
+	@Path("verification/full")
+	@GET
+	public List<BancoDados> fullDbVerification(@Context HttpServletResponse response);
 }
