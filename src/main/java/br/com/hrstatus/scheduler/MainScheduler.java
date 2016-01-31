@@ -77,10 +77,10 @@ public class MainScheduler {
 				
 				log.fine("[ System ] Was found " + count + " servers outdated, sending notification email");
 				
-				String mail1 = this.configurationDAO.getMailSender();
-				String Subject = this.configurationDAO.getSubject();
-				String Dests[] = this.configurationDAO.getDests().split(",");
-				String jndiMail = this.configurationDAO.getJndiMail();
+				String mail1 = this.configurationDAO.getMailSenderNotLogged();
+				String Subject = this.configurationDAO.getSubjectNotLogged();
+				String Dests[] = this.configurationDAO.getDestsNotLogged().split(",");
+				String jndiMail = this.configurationDAO.getJndiMailNotLogged();
 				MailSender mail = new MailSender();
 				mail.Sender(mail1, Subject, Dests, jndiMail);
 			} else {

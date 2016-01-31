@@ -39,7 +39,11 @@ public interface Configuration {
 	
 	public String getSubject();
 	
+	public String getSubjectNotLogged();
+	
 	public String getDests();
+	
+	public String getDestsNotLogged();
 	
 	public String getJndiMail();
 	
