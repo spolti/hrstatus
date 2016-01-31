@@ -106,4 +106,12 @@ public interface DataBaseResource {
 	@Path("verification/notFull")
 	@GET
 	public List<BancoDados> notFullDbVerification(@Context HttpServletResponse response);
+	
+	/*
+	 * \/rest/database/singleServer/{id}
+	 * Example: http://localhost:8080/hs/rest/database/verification/singleServer/1
+	 */
+	@Path("verification/singleServer/{id}")
+	@GET
+	public BancoDados singleDbVerification(@PathParam("id") int id);
 }

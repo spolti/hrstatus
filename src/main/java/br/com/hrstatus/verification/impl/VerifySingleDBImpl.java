@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.crypto.BadPaddingException;
@@ -32,8 +31,6 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.jcraft.jsch.JSchException;
 
 import br.com.hrstatus.action.databases.db2.DB2;
 import br.com.hrstatus.action.databases.mysql.MySQL;
@@ -47,22 +44,23 @@ import br.com.hrstatus.security.Crypto;
 import br.com.hrstatus.utils.UserInfo;
 import br.com.hrstatus.utils.date.DateUtils;
 
+import com.jcraft.jsch.JSchException;
+
 /*
  * @author spolti
  */
 
 @Service
-public class DbNotFullVerificationImpl {
-	
-	Logger log =  Logger.getLogger(DbNotFullVerificationImpl.class.getCanonicalName());
+public class VerifySingleDBImpl {
+
+	Logger log = Logger.getLogger(VerifySingleDBImpl.class.getCanonicalName());
 	
 	@Autowired
 	private BancoDadosInterface dbDAO;
 	@Autowired
 	private Configuration configurationDAO;
-	
-	private UserInfo userInfo = new UserInfo();
-	private DateUtils dt = new DateUtils();
+	DateUtils dt = new DateUtils();
+	UserInfo userInfo = new UserInfo();
 	private Crypto encodePass = new Crypto();
 	private MySQL runMySQL = new MySQL();
 	private PostgreSQL runPSQL = new PostgreSQL();
@@ -70,14 +68,13 @@ public class DbNotFullVerificationImpl {
 	private Oracle runOracle = new Oracle();
 	private DB2 runDB2 = new DB2();
 	
-	
 	@SuppressWarnings("static-access")
-	public void performNotFullVerification() throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException {
+	public void performSingleDbVerification(int id) throws ClassNotFoundException, SQLException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException {
 		
 		String dateSTR = null;
-		List<BancoDados> listdb = this.dbDAO.getdataBasesNOK();
 		
-		for (BancoDados bancoDados : listdb) {
+		BancoDados bancoDados = this.dbDAO.getDataBaseByID(id);
+
 			bancoDados.setServerTime(dt.getTime());
 			bancoDados.setLastCheck(bancoDados.getServerTime());
 
@@ -106,14 +103,13 @@ public class DbNotFullVerificationImpl {
 					dateSTR = runSqlServer.getDateSqlServer(bancoDados, userInfo.getLoggedUsername());
 				} else if (bancoDados.getVendor().toUpperCase().equals("ORACLE")) {
 					dateSTR = runOracle.getDateOracle(bancoDados, userInfo.getLoggedUsername());
-				} else if (bancoDados.getVendor().toUpperCase().equals("DB2")) {
+				}else if (bancoDados.getVendor().toUpperCase().equals("DB2")) {
 					dateSTR = runDB2.getDate(bancoDados, userInfo.getLoggedUsername());
 				}
-				
 				log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from the server " + bancoDados.getHostname() + ": " + dateSTR);
 				bancoDados.setClientTime(dateSTR);
 				// Calculating time difference
-				bancoDados.setDifference((dt.diffrenceTime(bancoDados.getServerTime(), dateSTR,	"Dont Need this, Remove!!!")));
+				bancoDados.setDifference((dt.diffrenceTime(bancoDados.getServerTime(), dateSTR, "Dont Need this, Remove!!!")));
 
 				if (bancoDados.getDifference() < 0) {
 					bancoDados.setDifference(bancoDados.getDifference() * -1);
@@ -143,7 +139,7 @@ public class DbNotFullVerificationImpl {
 					bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 
 				} catch (Exception e1) {
-					log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e1);
+					log.severe("[ " + userInfo.getLoggedUsername()	+ " ] Error: " + e1);
 				}
 				this.dbDAO.updateDataBase(bancoDados);
 			} catch (IOException e) {
@@ -155,8 +151,8 @@ public class DbNotFullVerificationImpl {
 					bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 				} catch (Exception e1) {
 					log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e1);
-				} 
-				
+				}
+
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			} catch (SQLException e) {
@@ -166,6 +162,6 @@ public class DbNotFullVerificationImpl {
 				bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 			}
 		}
-
-	}
+	
+	
 }
