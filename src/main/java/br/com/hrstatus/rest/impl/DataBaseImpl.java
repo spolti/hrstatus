@@ -19,11 +19,17 @@
 
 package br.com.hrstatus.rest.impl;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +44,7 @@ import br.com.hrstatus.security.Crypto;
 import br.com.hrstatus.utils.UserInfo;
 import br.com.hrstatus.verification.impl.DbFullVerificationImpl;
 import br.com.hrstatus.verification.impl.DbNotFullVerificationImpl;
+import br.com.hrstatus.verification.impl.VerifySingleDBImpl;
 
 /*
  * @author spolti
@@ -54,6 +61,8 @@ public class DataBaseImpl extends SpringBeanAutowiringSupport implements DataBas
 	private DbFullVerificationImpl fullVerification;
 	@Autowired(required = true)
 	private DbNotFullVerificationImpl notFullVerification;
+	@Autowired(required = true)
+	private VerifySingleDBImpl singleVerification;
 	@Autowired(required = true)
 	ResourcesManagement resource;
 
@@ -269,6 +278,35 @@ public class DataBaseImpl extends SpringBeanAutowiringSupport implements DataBas
 		}  catch (Exception e) {
 			return null;
 		}
+	}
+
+	public BancoDados singleDbVerification(int id) {
+		
+		try {
+			singleVerification.performSingleDbVerification(id);
+		} catch (InvalidKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return this.databaseDAO.getDataBaseByID(id);
 	}
 
 }
