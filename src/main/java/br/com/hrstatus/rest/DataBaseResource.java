@@ -28,6 +28,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 
+import br.com.hrstatus.action.databases.helper.IllegalVendorException;
 import br.com.hrstatus.model.BancoDados;
 
 /*
@@ -113,5 +114,5 @@ public interface DataBaseResource {
 	 */
 	@Path("verification/singleServer/{id}")
 	@GET
-	public BancoDados singleDbVerification(@PathParam("id") int id);
+	public BancoDados singleDbVerification(@PathParam("id") int id) throws IllegalVendorException;
 }

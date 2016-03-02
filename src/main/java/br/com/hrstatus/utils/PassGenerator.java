@@ -42,9 +42,8 @@ public class PassGenerator {
         this.setTam(length);  
         this.setPassGenerator(this.gemPass());  
           
-    } 
-    
-    
+    }
+
     public String gemPass() {  
         String tmp = "";  
         for (int i = 0; i < this.getTam(); i++) {  
