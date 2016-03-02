@@ -30,6 +30,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import br.com.hrstatus.action.databases.helper.IllegalVendorException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Get;
@@ -74,7 +75,7 @@ public class DbNotFullVerification {
 	
 
 	@Get("/database/startDataBaseVerification/notFullDBVerification")
-	public void startNotFullDataBaseVerification() throws ClassNotFoundException, SQLException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException{
+	public void startNotFullDataBaseVerification() throws ClassNotFoundException, SQLException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, IllegalVendorException {
 
 
 		// Inserting HTML title in the result

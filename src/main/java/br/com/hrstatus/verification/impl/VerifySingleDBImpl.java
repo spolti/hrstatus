@@ -29,14 +29,11 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import br.com.hrstatus.action.databases.SQLStatementExecute;
+import br.com.hrstatus.action.databases.helper.IllegalVendorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.hrstatus.action.databases.db2.DB2;
-import br.com.hrstatus.action.databases.mysql.MySQL;
-import br.com.hrstatus.action.databases.oracle.Oracle;
-import br.com.hrstatus.action.databases.postgre.PostgreSQL;
-import br.com.hrstatus.action.databases.sqlserver.SqlServer;
 import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.model.BancoDados;
@@ -53,115 +50,101 @@ import com.jcraft.jsch.JSchException;
 @Service
 public class VerifySingleDBImpl {
 
-	Logger log = Logger.getLogger(VerifySingleDBImpl.class.getCanonicalName());
-	
-	@Autowired
-	private BancoDadosInterface dbDAO;
-	@Autowired
-	private Configuration configurationDAO;
-	DateUtils dt = new DateUtils();
-	UserInfo userInfo = new UserInfo();
-	private Crypto encodePass = new Crypto();
-	private MySQL runMySQL = new MySQL();
-	private PostgreSQL runPSQL = new PostgreSQL();
-	private SqlServer runSqlServer = new SqlServer();
-	private Oracle runOracle = new Oracle();
-	private DB2 runDB2 = new DB2();
-	
-	@SuppressWarnings("static-access")
-	public void performSingleDbVerification(int id) throws ClassNotFoundException, SQLException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException {
-		
-		String dateSTR = null;
-		
-		BancoDados bancoDados = this.dbDAO.getDataBaseByID(id);
+    Logger log = Logger.getLogger(VerifySingleDBImpl.class.getCanonicalName());
 
-			bancoDados.setServerTime(dt.getTime());
-			bancoDados.setLastCheck(bancoDados.getServerTime());
+    @Autowired
+    private BancoDadosInterface dbDAO;
+    @Autowired
+    private Configuration configurationDAO;
+    DateUtils dt = new DateUtils();
+    UserInfo userInfo = new UserInfo();
+    private Crypto encodePass = new Crypto();
+    private SQLStatementExecute execQueryDate = new SQLStatementExecute();
 
-			// Decrypting password
-			try {
-				bancoDados.setPass(String.valueOf(Crypto.decode(bancoDados.getPass())));
-			} catch (InvalidKeyException e) {
-				e.printStackTrace();
-			} catch (NoSuchPaddingException e) {
-				e.printStackTrace();
-			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
-			} catch (BadPaddingException e) {
-				e.printStackTrace();
-			} catch (IllegalBlockSizeException e) {
-				e.printStackTrace();
-			}
+    @SuppressWarnings("static-access")
+    public void performSingleDbVerification(int id) throws ClassNotFoundException, SQLException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, IllegalVendorException {
 
-			try {
+        String dateSTR = null;
 
-				if (bancoDados.getVendor().toUpperCase().equals("MYSQL")) {
-					dateSTR = runMySQL.getDateMySQL(bancoDados, userInfo.getLoggedUsername());
-				} else if (bancoDados.getVendor().toUpperCase().equals("POSTGRESQL")) {
-					dateSTR = runPSQL.getDatePSQL(bancoDados, userInfo.getLoggedUsername());
-				} else if (bancoDados.getVendor().toUpperCase().equals("SQLSERVER")) {
-					dateSTR = runSqlServer.getDateSqlServer(bancoDados, userInfo.getLoggedUsername());
-				} else if (bancoDados.getVendor().toUpperCase().equals("ORACLE")) {
-					dateSTR = runOracle.getDateOracle(bancoDados, userInfo.getLoggedUsername());
-				}else if (bancoDados.getVendor().toUpperCase().equals("DB2")) {
-					dateSTR = runDB2.getDate(bancoDados, userInfo.getLoggedUsername());
-				}
-				log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from the server " + bancoDados.getHostname() + ": " + dateSTR);
-				bancoDados.setClientTime(dateSTR);
-				// Calculating time difference
-				bancoDados.setDifference((dt.diffrenceTime(bancoDados.getServerTime(), dateSTR, "Dont Need this, Remove!!!")));
+        BancoDados bancoDados = this.dbDAO.getDataBaseByID(id);
 
-				if (bancoDados.getDifference() < 0) {
-					bancoDados.setDifference(bancoDados.getDifference() * -1);
-				}
+        bancoDados.setServerTime(dt.getTime());
+        bancoDados.setLastCheck(bancoDados.getServerTime());
 
-				if (bancoDados.getDifference() <= this.configurationDAO.getDiffirenceSecs()) {
-					bancoDados.setTrClass("success");
-					bancoDados.setStatus("OK");
-				} else {
-					bancoDados.setTrClass("error");
-					bancoDados.setStatus("não OK");
-				}
-				try {
-					// Encrypting the password
-					bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
+        // Decrypting password
+        try {
+            bancoDados.setPass(String.valueOf(Crypto.decode(bancoDados.getPass())));
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        }
 
-				} catch (Exception e1) {
-					log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e1);
-				}
-				this.dbDAO.updateDataBase(bancoDados);
+        try {
 
-			} catch (JSchException e) {
-				bancoDados.setStatus(e + "");
-				bancoDados.setTrClass("error");
-				try {
-					// Encrypting the password
-					bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
+            dateSTR = execQueryDate.getDate(bancoDados);
+            log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from the server " + bancoDados.getHostname() + ": " + dateSTR);
+            bancoDados.setClientTime(dateSTR);
+            // Calculating time difference
+            bancoDados.setDifference((dt.diffrenceTime(bancoDados.getServerTime(), dateSTR, "Dont Need this, Remove!!!")));
 
-				} catch (Exception e1) {
-					log.severe("[ " + userInfo.getLoggedUsername()	+ " ] Error: " + e1);
-				}
-				this.dbDAO.updateDataBase(bancoDados);
-			} catch (IOException e) {
-				bancoDados.setStatus(e + "");
-				bancoDados.setTrClass("error");
-				try {
+            if (bancoDados.getDifference() < 0) {
+                bancoDados.setDifference(bancoDados.getDifference() * -1);
+            }
 
-					// Encrypting the password
-					bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
-				} catch (Exception e1) {
-					log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e1);
-				}
+            if (bancoDados.getDifference() <= this.configurationDAO.getDiffirenceSecs()) {
+                bancoDados.setTrClass("success");
+                bancoDados.setStatus("OK");
+            } else {
+                bancoDados.setTrClass("error");
+                bancoDados.setStatus("não OK");
+            }
+            try {
+                // Encrypting the password
+                bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} catch (SQLException e) {
-				e.printStackTrace();
-				bancoDados.setStatus("Erro: " + e.getMessage());
-				bancoDados.setTrClass("error");
-				bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
-			}
-		}
-	
-	
+            } catch (Exception e1) {
+                log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e1);
+            }
+            this.dbDAO.updateDataBase(bancoDados);
+
+        } catch (JSchException e) {
+            bancoDados.setStatus(e + "");
+            bancoDados.setTrClass("error");
+            try {
+                // Encrypting the password
+                bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
+
+            } catch (Exception e1) {
+                log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e1);
+            }
+            this.dbDAO.updateDataBase(bancoDados);
+        } catch (IOException e) {
+            bancoDados.setStatus(e + "");
+            bancoDados.setTrClass("error");
+            try {
+
+                // Encrypting the password
+                bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
+            } catch (Exception e1) {
+                log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e1);
+            }
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            bancoDados.setStatus("Erro: " + e.getMessage());
+            bancoDados.setTrClass("error");
+            bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
+        }
+    }
+
+
 }

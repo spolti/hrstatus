@@ -32,10 +32,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.dao.ServersInterface;
-import br.com.hrstatus.dao.UsersInterface;
 import br.com.hrstatus.model.Configurations;
-import br.com.hrstatus.utils.GetServerIPAddress;
-import br.com.hrstatus.utils.date.DateUtils;
 import br.com.hrstatus.utils.mail.MailSender;
 
 /*
@@ -52,12 +49,6 @@ public class MainScheduler {
 	
 	@Autowired
 	private Configuration configurationDAO;
-	
-	@Autowired
-	private UsersInterface userDAO;
-	
-	DateUtils dateUtils = new DateUtils();
-	GetServerIPAddress getIP = new GetServerIPAddress();
 
 	public MainScheduler() {}
 
@@ -98,7 +89,8 @@ public class MainScheduler {
 		Boolean isUpdateNtpActive = config.isUpdateNtpIsActive();
 
 		Process p = (Runtime.getRuntime().exec("which ntpdate"));
-		String stdIn = "", s = "";
+		String stdIn = "";
+		String s;
 		BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
 		while ((s = stdInput.readLine()) != null) {
 			stdIn += s + "\n";

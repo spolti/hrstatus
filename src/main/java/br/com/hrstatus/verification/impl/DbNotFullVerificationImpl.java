@@ -30,16 +30,13 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import br.com.hrstatus.action.databases.SQLStatementExecute;
+import br.com.hrstatus.action.databases.helper.IllegalVendorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jcraft.jsch.JSchException;
 
-import br.com.hrstatus.action.databases.db2.DB2;
-import br.com.hrstatus.action.databases.mysql.MySQL;
-import br.com.hrstatus.action.databases.oracle.Oracle;
-import br.com.hrstatus.action.databases.postgre.PostgreSQL;
-import br.com.hrstatus.action.databases.sqlserver.SqlServer;
 import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.model.BancoDados;
@@ -64,15 +61,11 @@ public class DbNotFullVerificationImpl {
 	private UserInfo userInfo = new UserInfo();
 	private DateUtils dt = new DateUtils();
 	private Crypto encodePass = new Crypto();
-	private MySQL runMySQL = new MySQL();
-	private PostgreSQL runPSQL = new PostgreSQL();
-	private SqlServer runSqlServer = new SqlServer();
-	private Oracle runOracle = new Oracle();
-	private DB2 runDB2 = new DB2();
+	private SQLStatementExecute execQueryDate = new SQLStatementExecute();
 	
 	
 	@SuppressWarnings("static-access")
-	public void performNotFullVerification() throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException {
+	public void performNotFullVerification() throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, IllegalVendorException {
 		
 		String dateSTR = null;
 		List<BancoDados> listdb = this.dbDAO.getdataBasesNOK();
@@ -98,17 +91,7 @@ public class DbNotFullVerificationImpl {
 
 			try {
 
-				if (bancoDados.getVendor().toUpperCase().equals("MYSQL")) {
-					dateSTR = runMySQL.getDateMySQL(bancoDados, userInfo.getLoggedUsername());
-				} else if (bancoDados.getVendor().toUpperCase().equals("POSTGRESQL")) {
-					dateSTR = runPSQL.getDatePSQL(bancoDados, userInfo.getLoggedUsername());
-				} else if (bancoDados.getVendor().toUpperCase().equals("SQLSERVER")) {
-					dateSTR = runSqlServer.getDateSqlServer(bancoDados, userInfo.getLoggedUsername());
-				} else if (bancoDados.getVendor().toUpperCase().equals("ORACLE")) {
-					dateSTR = runOracle.getDateOracle(bancoDados, userInfo.getLoggedUsername());
-				} else if (bancoDados.getVendor().toUpperCase().equals("DB2")) {
-					dateSTR = runDB2.getDate(bancoDados, userInfo.getLoggedUsername());
-				}
+				dateSTR = execQueryDate.getDate(bancoDados);
 				
 				log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from the server " + bancoDados.getHostname() + ": " + dateSTR);
 				bancoDados.setClientTime(dateSTR);

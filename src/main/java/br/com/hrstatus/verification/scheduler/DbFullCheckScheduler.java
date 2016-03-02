@@ -30,15 +30,12 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import br.com.hrstatus.action.databases.SQLStatementExecute;
+import br.com.hrstatus.action.databases.helper.IllegalVendorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
-import br.com.hrstatus.action.databases.db2.DB2;
-import br.com.hrstatus.action.databases.mysql.MySQL;
-import br.com.hrstatus.action.databases.oracle.Oracle;
-import br.com.hrstatus.action.databases.postgre.PostgreSQL;
-import br.com.hrstatus.action.databases.sqlserver.SqlServer;
 import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.dao.LockIntrface;
@@ -69,15 +66,11 @@ public class DbFullCheckScheduler {
 	private DateUtils dt = new DateUtils();
 	private Lock lockedResource = new Lock();
 	private Crypto encodePass = new Crypto();
-	private MySQL runMySQL = new MySQL();
-	private PostgreSQL runPSQL = new PostgreSQL();
-	private SqlServer runSqlServer = new SqlServer();
-	private Oracle runOracle = new Oracle();
-	private DB2 runDB2 = new DB2();
+	private SQLStatementExecute execQueryDate = new SQLStatementExecute();
 	
 	
 	@SuppressWarnings("static-access")
-	public void startFullDataBaseVerification(String schedulerName) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException {
+	public void startFullDataBaseVerification(String schedulerName) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, IllegalVendorException {
 		String dateSTR = null;
 
 		log.info("[ " + schedulerName + " ] Initializing Full DB Verification");
@@ -108,17 +101,7 @@ public class DbFullCheckScheduler {
 
 				try {
 
-					if (bancoDados.getVendor().toUpperCase().equals("MYSQL")) {
-						dateSTR = runMySQL.getDateMySQL(bancoDados, schedulerName);
-					} else if (bancoDados.getVendor().toUpperCase().equals("POSTGRESQL")) {
-						dateSTR = runPSQL.getDatePSQL(bancoDados, schedulerName);
-					} else if (bancoDados.getVendor().toUpperCase().equals("SQLSERVER")) {
-						dateSTR = runSqlServer.getDateSqlServer(bancoDados, schedulerName);
-					} else if (bancoDados.getVendor().toUpperCase().equals("ORACLE")) {
-						dateSTR = runOracle.getDateOracle(bancoDados, schedulerName);
-					} else if (bancoDados.getVendor().toUpperCase().equals("DB2")) {
-						dateSTR = runDB2.getDate(bancoDados, schedulerName);
-					}
+					dateSTR = execQueryDate.getDate(bancoDados);
 					log.fine("[ " + schedulerName + " ] Hora obtida do servidor " + bancoDados.getHostname() + ": " + dateSTR);
 					bancoDados.setClientTime(dateSTR);
 					// Calculating time difference

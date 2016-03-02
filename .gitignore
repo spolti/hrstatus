@@ -11,3 +11,5 @@ Dumps
 *.ear
 hrstatusDS-ds.xml
 build
+.idea/
+hrstatus.iml

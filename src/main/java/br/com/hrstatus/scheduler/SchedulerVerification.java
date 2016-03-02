@@ -27,6 +27,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import br.com.hrstatus.action.databases.helper.IllegalVendorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -67,7 +68,7 @@ public class SchedulerVerification {
 	public SchedulerVerification() {}
 	
 	@Scheduled(cron = "${br.com.hrstatus.scheduler.DefaultScheduler.cron}")
-	public void defaultScheduler () throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, InterruptedException, JSchException {
+	public void defaultScheduler () throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, InterruptedException, JSchException, IllegalVendorException {
 	
 		log.fine("The default scheduler will start a full server and Db verification everyday at 00:00 if enabled");
 		

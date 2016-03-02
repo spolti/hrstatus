@@ -32,6 +32,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletResponse;
 
+import br.com.hrstatus.action.databases.helper.IllegalVendorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -280,7 +281,7 @@ public class DataBaseImpl extends SpringBeanAutowiringSupport implements DataBas
 		}
 	}
 
-	public BancoDados singleDbVerification(int id) {
+	public BancoDados singleDbVerification(int id) throws IllegalVendorException {
 		
 		try {
 			singleVerification.performSingleDbVerification(id);
