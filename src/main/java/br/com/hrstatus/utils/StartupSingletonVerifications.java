@@ -41,8 +41,8 @@ import javax.ejb.Startup;
 @Startup
 public class StartupSingletonVerifications {
 
-	Logger log =  Logger.getLogger(StartupSingletonVerifications.class.getCanonicalName());
-	static StartupSingletonVerifications shell = new StartupSingletonVerifications();
+    protected final Logger log =  Logger.getLogger(StartupSingletonVerifications.class.getCanonicalName());
+	static ExecuteOSCommand shell = new ExecuteOSCommand();
 	
 	private enum binaries {
 		//ntpdate: used to update the date/time from Unix like servers, local and remote
@@ -65,53 +65,5 @@ public class StartupSingletonVerifications {
         		log.warning("Binary " + bin.name() + ": Not found, this can cause strange behavior of some functionalities of HrStatus.");
         	}
         }
-
 	}
-	
-	/*
-	 * Returna 0 ou 1
-	 * 0 -> Binary found
-	 * 1 -> Binary not found
-	 */
-    public String executeCommand(final String command) {
-        
-        final ArrayList<String> commands = new ArrayList<String>();
-        String retorno = null;
-        commands.add("/bin/bash");
-        commands.add("-c");
-        commands.add(command);
-        
-        BufferedReader br = null;        
-        
-        try {                        
-            final ProcessBuilder p = new ProcessBuilder(commands);
-            final Process process = p.start();
-            final InputStream is = process.getInputStream();
-            final InputStreamReader isr = new InputStreamReader(is);
-            br = new BufferedReader(isr);
-            
-            String line;            
-            while((line = br.readLine()) != null) {
-                retorno = line;
-            }
-            
-        } catch (IOException ioe) {
-            log.severe("Error executing shell command: " + ioe.getMessage());
-        } finally {
-            secureClose(br);
-        }
-        
-        return retorno;
-    }
-
-    
-    private void secureClose(final Closeable resource) {
-        try {
-            if (resource != null) {
-                resource.close();
-            }
-        } catch (IOException ex) {
-            log.severe("Error: " + ex.getMessage());
-        }
-    }
 }

@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.action;
+package br.com.hrstatus.action.os;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,32 +36,9 @@ import com.jcraft.jsch.Session;
  * Any codes from jcraft.com
  */
 
+public class SftpLogs extends CommandExecutionHelper {
 
-public class SftpLogs {
-
-	static Logger log =  Logger.getLogger(SftpLogs.class.getCanonicalName());
-	
-	@SuppressWarnings("unchecked")
-	public static class MyLogger implements com.jcraft.jsch.Logger {
-		@SuppressWarnings("rawtypes")
-		static java.util.Hashtable name = new java.util.Hashtable();
-		static {
-			name.put(new Integer(DEBUG), "DEBUG: ");
-			name.put(new Integer(INFO), "INFO: ");
-			name.put(new Integer(WARN), "WARN: ");
-			name.put(new Integer(ERROR), "ERROR: ");
-			name.put(new Integer(FATAL), "FATAL: ");
-		}
-
-		public boolean isEnabled(int level) {
-			return true;
-		}
-
-		public void log(int level, String message) {
-			System.out.print(name.get(new Integer(level)));
-			log.fine(message);
-		}
-	}
+	private static Logger log =  Logger.getLogger(SftpLogs.class.getName());
 
 	public String showGetFiles(String user, String pass, String host, int port, String remoteDir) throws JSchException, IOException {
 		

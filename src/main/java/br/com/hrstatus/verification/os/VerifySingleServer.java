@@ -29,13 +29,13 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import br.com.hrstatus.action.os.unix.ExecRemoteCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
-import br.com.hrstatus.action.linux.GetDateLinux;
-import br.com.hrstatus.action.windows.GetDateWindows;
+import br.com.hrstatus.action.os.windows.ExecCommand;
 import br.com.hrstatus.controller.HomeController;
 import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.dao.ServersInterface;
@@ -106,7 +106,7 @@ public class VerifySingleServer {
 			servidores.setLastCheck(servidores.getServerTime());
 			
 			try {
-				String dateSTR = GetDateLinux.exec(	servidores.getUser(), servidores.getIp(),servidores.getPass(), servidores.getPort());
+				String dateSTR = ExecRemoteCommand.exec(servidores.getUser(), servidores.getIp(),servidores.getPass(), servidores.getPort(), "/bin/date");
 				log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from server " + servidores.getHostname() + ": " + dateSTR);
 				servidores.setClientTime(dateSTR);
 				// Calculating time difference
@@ -162,10 +162,10 @@ public class VerifySingleServer {
 			servidores.setServerTime(dt.getTime());
 			servidores.setLastCheck(servidores.getServerTime());
 			try {
-				String dateSTR = GetDateWindows.Exec(servidores.getIp(),"I");
+				String dateSTR = ExecCommand.Exec(servidores.getIp(),"I");
 				if (dateSTR == null || dateSTR == ""){
 					log.fine("[ " + userInfo.getLoggedUsername() + " ] net time paratmereter -I returned null, trying the paratemeter -S");
-					dateSTR = GetDateWindows.Exec(servidores.getIp(),"S");
+					dateSTR = ExecCommand.Exec(servidores.getIp(),"S");
 				}
 				log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from server " + servidores.getHostname() + ": " + dateSTR);
 				servidores.setClientTime(dateSTR);

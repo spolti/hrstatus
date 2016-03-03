@@ -33,10 +33,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
-import br.com.hrstatus.action.linux.GetDateLinux;
-import br.com.hrstatus.action.other.GetDateOther;
-import br.com.hrstatus.action.unix.GetDateUnix;
-import br.com.hrstatus.action.windows.GetDateWindows;
+import br.com.hrstatus.action.os.unix.ExecRemoteCommand;
+import br.com.hrstatus.action.os.windows.ExecCommand;
 import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.dao.LockIntrface;
 import br.com.hrstatus.dao.ServersInterface;
@@ -117,8 +115,8 @@ public class ServerFullCheckScheduler {
 						}
 
 						try {
-							String dateSTR = GetDateLinux.exec(servidores.getUser(), servidores.getIp(), servidores.getPass(), servidores.getPort());
-							log.fine("[ " + schedulerName + " ] Time recieved from the server " + servidores.getHostname() + ": " + dateSTR);
+							String dateSTR = ExecRemoteCommand.exec(servidores.getUser(), servidores.getIp(), servidores.getPass(), servidores.getPort(), "/bin/date");
+							log.fine("[ " + schedulerName + " ] Time received from the server " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
 							servidores.setDifference(dt.diffrenceTime(servidores.getServerTime(), dateSTR, "LINUX"));
@@ -190,7 +188,7 @@ public class ServerFullCheckScheduler {
 							e.printStackTrace();
 						}
 						try {
-							String dateSTR = GetDateUnix.exec(servidores.getUser(), servidores.getIp(),	servidores.getPass(), servidores.getPort());
+							String dateSTR = ExecRemoteCommand.exec(servidores.getUser(), servidores.getIp(),	servidores.getPass(), servidores.getPort(), "/bin/date");
 							log.fine("[ " + schedulerName + " ] Time retrieved from the server " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
@@ -242,7 +240,7 @@ public class ServerFullCheckScheduler {
 						}
 
 					} else if (servidores.getVerify().equals("NAO")) {
-						log.info("[ " + schedulerName + " ] - The server " + servidores.getHostname()	+ " has the verification inactive, it will not be verified.");
+						log.info("[ " + schedulerName + " ] - Server verification on " + servidores.getHostname()	+ "  is disabled, it will not be verified.");
 					}
 
 					// if Windows
@@ -251,10 +249,10 @@ public class ServerFullCheckScheduler {
 						servidores.setLastCheck(servidores.getServerTime());
 						try {
 
-							String dateSTR = GetDateWindows.Exec(servidores.getIp(), "I");
+							String dateSTR = ExecCommand.Exec(servidores.getIp(), "I");
 							if (dateSTR == null || dateSTR == "") {
 								log.fine("The net time -I parameter returuns null, trying the parameter -S");
-								dateSTR = GetDateWindows.Exec(servidores.getIp(), "S");
+								dateSTR = ExecCommand.Exec(servidores.getIp(), "S");
 							}
 							log.fine("[ " + schedulerName + " ] Time retrieved from the server " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
@@ -306,7 +304,7 @@ public class ServerFullCheckScheduler {
 							e.printStackTrace();
 						}
 						try {
-							String dateSTR = GetDateOther.exec(servidores.getUser(), servidores.getIp(), servidores.getPass(), servidores.getPort());
+							String dateSTR = ExecRemoteCommand.exec(servidores.getUser(), servidores.getIp(), servidores.getPass(), servidores.getPort(), "/bin/date");
 							log.fine("[ " + schedulerName + " ] Time retrieved from the server " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference

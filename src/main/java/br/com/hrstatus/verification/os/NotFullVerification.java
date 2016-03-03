@@ -19,27 +19,11 @@
 
 package br.com.hrstatus.verification.os;
 
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
-import java.util.logging.Logger;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.jcraft.jsch.JSchException;
-
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
-import br.com.hrstatus.action.linux.GetDateLinux;
-import br.com.hrstatus.action.other.GetDateOther;
-import br.com.hrstatus.action.unix.GetDateUnix;
-import br.com.hrstatus.action.windows.GetDateWindows;
+import br.com.hrstatus.action.os.unix.ExecRemoteCommand;
+import br.com.hrstatus.action.os.windows.ExecCommand;
 import br.com.hrstatus.controller.HomeController;
 import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.dao.LockIntrface;
@@ -49,6 +33,17 @@ import br.com.hrstatus.model.Servidores;
 import br.com.hrstatus.security.Crypto;
 import br.com.hrstatus.utils.UserInfo;
 import br.com.hrstatus.utils.date.DateUtils;
+import com.jcraft.jsch.JSchException;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.logging.Logger;
 
 /*
  * @author spolti
@@ -126,7 +121,7 @@ public class NotFullVerification {
 						}
 
 						try {
-							String dateSTR = GetDateLinux.exec(servidores.getUser(), servidores.getIp(), servidores.getPass(), servidores.getPort());
+							String dateSTR = ExecRemoteCommand.exec(servidores.getUser(), servidores.getIp(), servidores.getPass(), servidores.getPort(), "/bin/date");
 							log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from the server " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
@@ -200,7 +195,7 @@ public class NotFullVerification {
 						}
 						
 						try {
-							String dateSTR = GetDateUnix.exec(servidores.getUser(), servidores.getIp(),	servidores.getPass(), servidores.getPort());
+							String dateSTR = ExecRemoteCommand.exec(servidores.getUser(), servidores.getIp(),	servidores.getPass(), servidores.getPort(), "/bin/date");
 							log.fine("[ " + userInfo.getLoggedUsername()	+ " ] Time retrieved from the server "	+ servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
@@ -259,10 +254,10 @@ public class NotFullVerification {
 						servidores.setServerTime(dt.getTime());
 						servidores.setLastCheck(servidores.getServerTime());
 						try {
-							String dateSTR = GetDateWindows.Exec(servidores.getIp(), "I");
+							String dateSTR = ExecCommand.Exec(servidores.getIp(), "I");
 							if (dateSTR == null || dateSTR == "") {
 								log.fine("The net time -I parameter returned null, trying the parameter -S");
-								dateSTR = GetDateWindows.Exec(servidores.getIp(), "S");
+								dateSTR = ExecCommand.Exec(servidores.getIp(), "S");
 							}
 							log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from the server " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
@@ -312,7 +307,7 @@ public class NotFullVerification {
 							e.printStackTrace();
 						}
 						try {
-							String dateSTR = GetDateOther.exec(servidores.getUser(), servidores.getIp(), servidores.getPass(), servidores.getPort());
+							String dateSTR = ExecRemoteCommand.exec(servidores.getUser(), servidores.getIp(), servidores.getPass(), servidores.getPort(), "/bin/date");
 							log.fine("[ " + userInfo.getLoggedUsername()	+ " ] Time retrieved from the server "	+ servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
@@ -372,5 +367,4 @@ public class NotFullVerification {
 		lockDAO.removeLock(lockedResource);
 
 	}
-
 }
