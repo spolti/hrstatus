@@ -17,56 +17,33 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.action.linux;
-
-/*
- * @author spolti
- */
+package br.com.hrstatus.action.os.unix;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
+import br.com.hrstatus.action.os.CommandExecutionHelper;
 import br.com.hrstatus.utils.ExecuteOSCommand;
-
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
-public class GetDateLinux {
+/*
+ * @author spolti
+ */
 
-	static Logger log = Logger.getLogger(GetDateLinux.class.getCanonicalName());
-	private static ExecuteOSCommand cmd = new ExecuteOSCommand();
+public class ExecRemoteCommand extends CommandExecutionHelper {
 
-	@SuppressWarnings("unchecked")
-	public static class MyLogger implements com.jcraft.jsch.Logger {
-		@SuppressWarnings("rawtypes")
-		static java.util.Hashtable name = new java.util.Hashtable();
-		static {
-			name.put(new Integer(DEBUG), "DEBUG: ");
-			name.put(new Integer(INFO), "INFO: ");
-			name.put(new Integer(WARN), "WARN: ");
-			name.put(new Integer(ERROR), "ERROR: ");
-			name.put(new Integer(FATAL), "FATAL: ");
-		}
+    protected static final Logger log = Logger.getLogger(ExecRemoteCommand.class.getName());
 
-		public boolean isEnabled(int level) {
-			return true;
-		}
+	public static String exec(String user, String host, String password, int port, String command) throws JSchException, IOException {
 
-		public void log(int level, String message) {
-			System.out.print(name.get(new Integer(level)));
-			log.fine(message);
-		}
-	}
-
-	public static String exec(String user, String host, String password, int port) throws JSchException, IOException {
-
-		if (!host.equals("127.0.0.1")) {
-			
-			String s = "";
+		String s = "";
+		log.fine("Executing command " + command + " against " + host);
+		if (!isLocalhost(host)) {
 			// Disabling host key check
 			java.util.Properties config = new java.util.Properties();
 			config.put("StrictHostKeyChecking", "no");
@@ -80,7 +57,7 @@ public class GetDateLinux {
 
 			// Executing the command
 			Channel channel = session.openChannel("exec");
-			((ChannelExec) channel).setCommand("date");
+			((ChannelExec) channel).setCommand(command);
 			((ChannelExec) channel).setErrStream(System.err);
 			InputStream in = channel.getInputStream();
 
@@ -100,22 +77,19 @@ public class GetDateLinux {
 				}
 
 				if (channel.isClosed()) {
-
 					break;
 				}
+
 			}
+
 			channel.disconnect();
 			session.disconnect();
+			return s.replaceAll("\n", "");
 
-			while (s.endsWith(" ")) {
-				s = s.substring(0, -1);
-			}
-			return s;
 		} else {
-			log.fine("GetDateLinux - IP == 127.0.0.1, ignoring ssh connection. Performing a local command execution.");
-			return cmd.executeCommand("date");
+			log.fine("Host received is localhost, performing local command execution...");
+			ExecuteOSCommand shell = new ExecuteOSCommand();
+			return shell.executeCommand("/bin/date");
 		}
-		
-		
 	}
 }

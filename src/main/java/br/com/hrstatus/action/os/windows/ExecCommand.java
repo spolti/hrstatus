@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.action.windows;
+package br.com.hrstatus.action.os.windows;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,9 +28,9 @@ import java.util.logging.Logger;
  * @author spolti
  */
 
-public class GetDateWindows {
+public class ExecCommand {
 
-	static Logger log =  Logger.getLogger(GetDateWindows.class.getCanonicalName());
+	static Logger log =  Logger.getLogger(ExecCommand.class.getCanonicalName());
 	
 	public static String Exec(String ip, String parameter) throws IOException {
 

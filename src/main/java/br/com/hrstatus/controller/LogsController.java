@@ -39,7 +39,7 @@ import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.view.Results;
-import br.com.hrstatus.action.SftpLogs;
+import br.com.hrstatus.action.os.SftpLogs;
 import br.com.hrstatus.dao.InstallProcessInterface;
 import br.com.hrstatus.dao.ServersInterface;
 import br.com.hrstatus.dao.UsersInterface;

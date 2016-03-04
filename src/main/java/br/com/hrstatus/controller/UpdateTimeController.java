@@ -29,6 +29,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import br.com.hrstatus.action.os.unix.ExecRemoteCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Get;
@@ -36,7 +37,6 @@ import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.validator.ValidationMessage;
-import br.com.hrstatus.action.linux.RunNtpDate;
 import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.dao.ServersInterface;
 import br.com.hrstatus.model.Servidores;
@@ -110,7 +110,7 @@ public class UpdateTimeController {
 				}
 				
 				log.info("[ " + userInfo.getLoggedUsername() + " ] Trying to update the date [command: " + command + "] in the server " + servidor.getHostname());
-				resultCommand = RunNtpDate.exec(servidor.getUser(), servidor.getIp(), servidor.getPass(), servidor.getPort(), command);
+				resultCommand = ExecRemoteCommand.exec(servidor.getUser(), servidor.getIp(), servidor.getPass(), servidor.getPort(), command);
 
 				if (resultCommand.equals("")){
 					validator.add(new ValidationMessage(servidor.getHostname() + ": It was not possible execute the automatically update probably due to an error during the command execution.", "Erro"));
@@ -163,7 +163,7 @@ public class UpdateTimeController {
 				}
 				
 				log.info("[ " + userInfo.getLoggedUsername() + " ] Trying to update the date [command: " + command + "] in the server " + servidor.getHostname());
-				resultCommand = RunNtpDate.exec(servidor.getUser(), servidor.getIp(), servidor.getPass(), servidor.getPort(), command);
+				resultCommand = ExecRemoteCommand.exec(servidor.getUser(), servidor.getIp(), servidor.getPass(), servidor.getPort(), command);
 
 				if (resultCommand.equals("")){
 					log.info("[ " + userInfo.getLoggedUsername() + " ] " + servidor.getHostname() + ": It was not possible execute the automatically update probably due to an error during the command execution.");
