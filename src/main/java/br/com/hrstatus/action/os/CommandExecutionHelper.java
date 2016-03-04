@@ -30,4 +30,11 @@ public abstract class CommandExecutionHelper {
             log.fine(message);
         }
     }
+
+   /*
+    * Returns true if the host is localhost or 127.0.0.1
+    */
+    public static boolean isLocalhost (String host) {
+        return true ? host.equals("localhost") || host.equals("127.0.0.1") : false;
+    }
 }

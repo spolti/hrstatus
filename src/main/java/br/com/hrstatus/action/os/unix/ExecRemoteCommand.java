@@ -92,11 +92,4 @@ public class ExecRemoteCommand extends CommandExecutionHelper {
 			return shell.executeCommand("/bin/date");
 		}
 	}
-
-	/*
-	 * Returns true if the host is localhost or 127.0.0.1
-	 */
-	private static boolean isLocalhost (String host) {
-		return true ? host.equals("localhost") || host.equals("127.0.0.1") : false;
-	}
 }
