@@ -19,31 +19,24 @@
 
 package br.com.hrstatus.verification.scheduler;
 
+import br.com.hrstatus.action.os.unix.ExecRemoteCommand;
+import br.com.hrstatus.action.os.windows.ExecCommand;
+import br.com.hrstatus.model.Lock;
+import br.com.hrstatus.model.Servidores;
+import br.com.hrstatus.security.Crypto;
+import br.com.hrstatus.verification.helper.VerificationHelper;
+import com.jcraft.jsch.JSchException;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.stereotype.Service;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.logging.Logger;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.stereotype.Service;
-
-import br.com.hrstatus.action.os.unix.ExecRemoteCommand;
-import br.com.hrstatus.action.os.windows.ExecCommand;
-import br.com.hrstatus.dao.Configuration;
-import br.com.hrstatus.dao.LockIntrface;
-import br.com.hrstatus.dao.ServersInterface;
-import br.com.hrstatus.model.Lock;
-import br.com.hrstatus.model.Servidores;
-import br.com.hrstatus.security.Crypto;
-import br.com.hrstatus.utils.date.DateUtils;
-
-import com.jcraft.jsch.JSchException;
 
 /*
  * @author spolti
@@ -51,24 +44,10 @@ import com.jcraft.jsch.JSchException;
 
 @Service
 @Configurable
-public class ServerFullCheckScheduler {
+public class ServerFullCheckScheduler extends VerificationHelper{
 
-	Logger log =  Logger.getLogger(ServerFullCheckScheduler.class.getCanonicalName());
+	protected final Logger log = Logger.getLogger(getClass().getName());
 	
-
-	@Autowired
-	private ServersInterface serversDAO;
-	@Autowired
-	private Configuration configurationDAO;
-	@Autowired
-	private LockIntrface lockDAO;
-
-	DateUtils getTime = new DateUtils();
-	private Crypto encodePass = new Crypto();
-	private Lock lockedResource = new Lock();
-	private DateUtils dt = new DateUtils();
-
-
 	@SuppressWarnings("static-access")
 	public void startFullVerification(String schedulerName) throws InterruptedException, JSchException {
 
@@ -97,7 +76,7 @@ public class ServerFullCheckScheduler {
 				for (Servidores servidores : list) {
 					// if Linux
 					if (servidores.getSO().equals("LINUX") && servidores.getVerify().equals("SIM")) {
-						servidores.setServerTime(dt.getTime());
+						servidores.setServerTime(getTime());
 						servidores.setLastCheck(servidores.getServerTime());
 						// Decrypting password
 						try {
@@ -119,7 +98,7 @@ public class ServerFullCheckScheduler {
 							log.fine("[ " + schedulerName + " ] Time received from the server " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
-							servidores.setDifference(dt.diffrenceTime(servidores.getServerTime(), dateSTR, "LINUX"));
+							servidores.setDifference(differenceTime(servidores.getServerTime(), dateSTR));
 
 							if (servidores.getDifference() < 0) {
 								servidores.setDifference(servidores.getDifference() * -1);
@@ -171,7 +150,7 @@ public class ServerFullCheckScheduler {
 					}
 
 					if (servidores.getSO().equals("UNIX") && servidores.getVerify().equals("SIM")) {
-						servidores.setServerTime(dt.getTime());
+						servidores.setServerTime(getTime());
 						servidores.setLastCheck(servidores.getServerTime());
 						// Decrypting password
 						try {
@@ -192,7 +171,7 @@ public class ServerFullCheckScheduler {
 							log.fine("[ " + schedulerName + " ] Time retrieved from the server " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
-							servidores.setDifference(dt.diffrenceTime(servidores.getServerTime(), dateSTR, "UNIX"));
+							servidores.setDifference(differenceTime(servidores.getServerTime(), dateSTR));
 
 							if (servidores.getDifference() < 0) {
 								servidores.setDifference(servidores.getDifference() * -1);
@@ -245,7 +224,7 @@ public class ServerFullCheckScheduler {
 
 					// if Windows
 					if (servidores.getSO().equals("WINDOWS") && servidores.getVerify().equals("SIM")) {
-						servidores.setServerTime(dt.getTime());
+						servidores.setServerTime(getTime());
 						servidores.setLastCheck(servidores.getServerTime());
 						try {
 
@@ -257,7 +236,7 @@ public class ServerFullCheckScheduler {
 							log.fine("[ " + schedulerName + " ] Time retrieved from the server " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
-							servidores.setDifference(dt.diffrenceTime(servidores.getServerTime(), dateSTR, "WINDOWS"));
+							servidores.setDifference(differenceTime(servidores.getServerTime(), dateSTR));
 
 							if (servidores.getDifference() < 0) {
 								servidores.setDifference(servidores.getDifference() * -1);
@@ -287,7 +266,7 @@ public class ServerFullCheckScheduler {
 
 					// if Others
 					if (servidores.getSO().equals("OUTRO") && servidores.getVerify().equals("SIM")) {
-						servidores.setServerTime(dt.getTime());
+						servidores.setServerTime(getTime());
 						servidores.setLastCheck(servidores.getServerTime());
 						// Decrypting password
 						try {
@@ -308,7 +287,7 @@ public class ServerFullCheckScheduler {
 							log.fine("[ " + schedulerName + " ] Time retrieved from the server " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
-							servidores.setDifference(dt.diffrenceTime(servidores.getServerTime(), dateSTR,"OUTRO"));
+							servidores.setDifference(differenceTime(servidores.getServerTime(), dateSTR));
 
 							
 							if (servidores.getDifference() < 0) {

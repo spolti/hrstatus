@@ -31,6 +31,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import br.com.hrstatus.action.databases.helper.IllegalVendorException;
+import br.com.hrstatus.verification.impl.VerificationImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Get;
@@ -45,7 +46,6 @@ import br.com.hrstatus.model.BancoDados;
 import br.com.hrstatus.resrources.ResourcesManagement;
 import br.com.hrstatus.utils.UserInfo;
 import br.com.hrstatus.utils.date.DateUtils;
-import br.com.hrstatus.verification.impl.DbNotFullVerificationImpl;
 
 /*
  * @author spolti
@@ -67,7 +67,7 @@ public class DbNotFullVerification {
 	@Autowired
 	private Validator validator;
 	@Autowired
-	DbNotFullVerificationImpl dbVerification;
+	private VerificationImpl verification;
 	@Autowired
 	ResourcesManagement resource;
 	UserInfo userInfo = new UserInfo();
@@ -87,9 +87,9 @@ public class DbNotFullVerification {
 		List<BancoDados> listdb = new ArrayList<BancoDados>();
 		if (!resource.islocked("notFullDBVerification")) {
 			resource.lockRecurso("notFullDBVerification");
-			dbVerification.performNotFullVerification();
+			verification.databaseVerification(this.dbDAO.getdataBasesNOK());
 			
-			for (BancoDados db : listNOKbeforeVerification) {	
+			for (BancoDados db : listNOKbeforeVerification) {
 				listdb.add(this.dbDAO.getDataBaseByID(db.getId()));
 			}
 			
@@ -100,6 +100,5 @@ public class DbNotFullVerification {
 			result.include("class", "activeBanco");
 			result.include("info","O recurso notFullDBVerification está locado, aguarde o término da mesma").forwardTo(HomeController.class).home("");
 		}
-
 	}
 }

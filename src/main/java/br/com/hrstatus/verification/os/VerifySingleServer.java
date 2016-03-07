@@ -30,6 +30,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import br.com.hrstatus.action.os.unix.ExecRemoteCommand;
+import br.com.hrstatus.verification.helper.VerificationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Get;
@@ -37,12 +38,8 @@ import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.hrstatus.action.os.windows.ExecCommand;
 import br.com.hrstatus.controller.HomeController;
-import br.com.hrstatus.dao.Configuration;
-import br.com.hrstatus.dao.ServersInterface;
 import br.com.hrstatus.model.Servidores;
 import br.com.hrstatus.security.Crypto;
-import br.com.hrstatus.utils.UserInfo;
-import br.com.hrstatus.utils.date.DateUtils;
 
 import com.jcraft.jsch.JSchException;
 
@@ -51,19 +48,13 @@ import com.jcraft.jsch.JSchException;
  */
 
 @Resource
-public class VerifySingleServer {
-	
-	Logger log =  Logger.getLogger(VerifySingleServer.class.getCanonicalName());
+public class VerifySingleServer extends VerificationHelper {
+
+	protected final Logger log = Logger.getLogger(getClass().getName());
 	
 	@Autowired
 	private Result result;
-	@Autowired
-	private ServersInterface serversDAO;
-	@Autowired
-	private Configuration configurationDAO;
-	private UserInfo userInfo = new UserInfo();
-	private DateUtils dt = new DateUtils();	
-	private Crypto encodePass = new Crypto();
+
 	
 	@Get("/singleServerToVerify/{id}")
 	public void singleServerToVerify(int id) throws JSchException, IOException {
@@ -102,7 +93,7 @@ public class VerifySingleServer {
 	public void runSingleVerification(Servidores servidores) throws JSchException, IOException{
 				
 		if (servidores.getSO().equals("LINUX")) {
-			servidores.setServerTime(dt.getTime());
+			servidores.setServerTime(getTime());
 			servidores.setLastCheck(servidores.getServerTime());
 			
 			try {
@@ -110,7 +101,7 @@ public class VerifySingleServer {
 				log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from server " + servidores.getHostname() + ": " + dateSTR);
 				servidores.setClientTime(dateSTR);
 				// Calculating time difference
-				servidores.setDifference(dt.diffrenceTime(servidores.getServerTime(), dateSTR,"LINUX"));
+				servidores.setDifference(differenceTime(servidores.getServerTime(), dateSTR));
 				
 				if (servidores.getDifference() < 0){
 					servidores.setDifference(servidores.getDifference() * -1);
@@ -159,7 +150,7 @@ public class VerifySingleServer {
 		}
 		
 		if (servidores.getSO().equals("WINDOWS")) {
-			servidores.setServerTime(dt.getTime());
+			servidores.setServerTime(getTime());
 			servidores.setLastCheck(servidores.getServerTime());
 			try {
 				String dateSTR = ExecCommand.Exec(servidores.getIp(),"I");
@@ -170,7 +161,7 @@ public class VerifySingleServer {
 				log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from server " + servidores.getHostname() + ": " + dateSTR);
 				servidores.setClientTime(dateSTR);
 				// Calculating time difference
-				servidores.setDifference(dt.diffrenceTime(servidores.getServerTime(), dateSTR,"WINDOWS"));
+				servidores.setDifference(differenceTime(servidores.getServerTime(), dateSTR));
 				if (servidores.getDifference() < 0){
 					servidores.setDifference(servidores.getDifference() * -1);
 				}

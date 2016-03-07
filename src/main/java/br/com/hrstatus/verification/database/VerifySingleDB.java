@@ -19,30 +19,28 @@
 
 package br.com.hrstatus.verification.database;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.logging.Logger;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-
-import br.com.hrstatus.action.databases.helper.IllegalVendorException;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
+import br.com.hrstatus.action.databases.helper.IllegalVendorException;
 import br.com.hrstatus.controller.HomeController;
 import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.model.BancoDados;
 import br.com.hrstatus.utils.UserInfo;
 import br.com.hrstatus.utils.date.DateUtils;
-import br.com.hrstatus.verification.impl.VerifySingleDBImpl;
+import br.com.hrstatus.verification.impl.VerificationImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Logger;
 
 /*
  * @author spolti
@@ -51,34 +49,32 @@ import br.com.hrstatus.verification.impl.VerifySingleDBImpl;
 @Resource
 public class VerifySingleDB {
 
-	Logger log = Logger.getLogger(VerifySingleDB.class.getCanonicalName());
+    Logger log = Logger.getLogger(VerifySingleDB.class.getCanonicalName());
 
-	@Autowired
-	private Result result;
-	@Autowired
-	private BancoDadosInterface dbDAO;
-	@Autowired
-	private Configuration configurationDAO;
-	@Autowired
-	private Validator validator;
-	@Autowired
-	private VerifySingleDBImpl singleVerification;
-	UserInfo userInfo = new UserInfo();
-	DateUtils dt = new DateUtils();
-
-
-	@Get("/database/verifySingleDB/{id}")
-	public void verifySingleDB(int id) throws ClassNotFoundException, SQLException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, IllegalVendorException {
+    @Autowired
+    private Result result;
+    @Autowired
+    private BancoDadosInterface dbDAO;
+    @Autowired
+    private Configuration configurationDAO;
+    @Autowired
+    private Validator validator;
+    @Autowired
+    private VerificationImpl verification;
+    UserInfo userInfo = new UserInfo();
+    DateUtils dt = new DateUtils();
 
 
-		// Inserting HTML title in the result
-		result.include("title", "Hr Status Home");
-		log.info("[ " + userInfo.getLoggedUsername() + " ] URI called: /database/verifySingleDB");
-		log.info("[ " + userInfo.getLoggedUsername() + " ] Initializing a verifySingleDB verification.");
+    @Get("/database/verifySingleDB/{id}")
+    public void verifySingleDB(int id) throws ClassNotFoundException, SQLException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, IllegalVendorException {
 
-		singleVerification.performSingleDbVerification(id);
-		List<BancoDados> bancoDados = this.dbDAO.listDataBaseByID(id);
-		result.include("class", "activeBanco");
-		result.include("bancoDados", bancoDados).forwardTo(HomeController.class).home("");
-	}
+        // Inserting HTML title in the result
+        result.include("title", "Hr Status Home");
+        log.info("[ " + userInfo.getLoggedUsername() + " ] URI called: /database/verifySingleDB");
+        log.info("[ " + userInfo.getLoggedUsername() + " ] Initializing a verifySingleDB verification.");
+        verification.databaseVerification(this.dbDAO.listDataBaseByID(id));
+        List<BancoDados> bancoDados = this.dbDAO.listDataBaseByID(id);
+        result.include("class", "activeBanco");
+        result.include("bancoDados", bancoDados).forwardTo(HomeController.class).home("");
+    }
 }

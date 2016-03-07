@@ -35,8 +35,8 @@ public class ExecCommand {
 	public static String Exec(String ip, String parameter) throws IOException {
 
 		Process p = null;
-		String out = null;
-		String s = null;
+		String out = "";
+		String s = "";
 		
 		try {
 
@@ -48,8 +48,6 @@ public class ExecCommand {
 					out += s;
 				}
 
-				// I don't know why, but the net time command returns null before
-				// the date, like this: nullTer Mar ......
 				if (out.startsWith("n")) {
 					String temp = out.substring(4, out.length());
 					out = temp;
@@ -79,6 +77,5 @@ public class ExecCommand {
 			log.severe(ex.toString());
 			return "";
 		}
-
 	}
 }
