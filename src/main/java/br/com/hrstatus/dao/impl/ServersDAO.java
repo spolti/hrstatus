@@ -189,19 +189,6 @@ public class ServersDAO implements ServersInterface {
 		}
 	}
 
-	public int countLinux() {
-		
-		log.info("[ " + userInfo.getLoggedUsername() + " ] countLinux()");
-		
-		Criteria criteria = session().createCriteria(Servidores.class);
-		criteria.add(Restrictions.eq("SO", "LINUX"));
-		criteria.setProjection(Projections.rowCount());
-		int count = ((Long) criteria.uniqueResult()).intValue();
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] countLinux() -> Found " + count + " servers.");
-		return count;
-
-	}
-
 	public int countWindows() {
 		
 		log.info("[ " + userInfo.getLoggedUsername() + " ] countWindows()");
@@ -224,21 +211,6 @@ public class ServersDAO implements ServersInterface {
 		int count = ((Long) criteria.uniqueResult()).intValue();
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] countUnix() -> Found " + count + " servers.");
 		return count;
-	}
-	
-	public int countOther(){
-		
-		log.info("[ " + userInfo.getLoggedUsername() + " ] countUnix()");
-		
-		Criteria criteria = session().createCriteria(Servidores.class);
-		criteria.add(Restrictions.ne("SO", "LINUX"));
-		criteria.add(Restrictions.ne("SO", "Windows"));
-		criteria.add(Restrictions.ne("SO", "Unix"));
-		criteria.setProjection(Projections.rowCount());
-		int count = ((Long) criteria.uniqueResult()).intValue();
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] countOther() -> Found " + count + " servers.");
-		return count;
-		
 	}
 
 	public int countAllServers() {
@@ -370,44 +342,6 @@ public class ServersDAO implements ServersInterface {
 		}
 	}
 
-	public int countLinuxOK() {
-
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] countLinuxOK()");
-		
-		try {
-			
-			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.and(Restrictions.eq("SO", "LINUX"), Restrictions.eq("status", "OK")));
-			criteria.setProjection(Projections.rowCount());
-			int count = ((Long) criteria.uniqueResult()).intValue();
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] countLinuxOK -> " + count + " found.");
-			return count;
-
-		} catch (Exception e) {
-			log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e);
-			return 0;
-		}
-	}
-
-	public int countLinuxNOK() {
-		
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] countLinuxNOK()");
-
-		try {
-			
-			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.and(Restrictions.eq("SO", "LINUX"),(Restrictions.eq("trClass", "Error"))));
-			criteria.setProjection(Projections.rowCount());
-			int count = ((Long) criteria.uniqueResult()).intValue();
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] countLinuxNOK -> " + count + " found.");
-			return count;
-
-		} catch (Exception e) {
-			log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e);
-			return 0;
-		}
-	}
-
 	public int countUnixOK() {
 		
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] countUnixOK()");
@@ -491,7 +425,6 @@ public class ServersDAO implements ServersInterface {
 		try {
 			
 			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.ne("SO", "LINUX"));
 			criteria.add(Restrictions.ne("SO", "Windows"));
 			criteria.add(Restrictions.ne("SO", "Unix"));
 			criteria.add(Restrictions.eq("status", "OK"));
@@ -506,45 +439,6 @@ public class ServersDAO implements ServersInterface {
 		}
 	}
 	
-	public int countOtherNOK() {
-		
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] countOtherNOK()");
-
-		try {
-			
-			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.ne("SO", "LINUX"));
-			criteria.add(Restrictions.ne("SO", "Windows"));
-			criteria.add(Restrictions.ne("SO", "Unix"));
-			criteria.add(Restrictions.eq("trClass", "Error"));
-			criteria.setProjection(Projections.rowCount());
-			int count = ((Long) criteria.uniqueResult()).intValue();
-			log.fine("[ " + userInfo.getLoggedUsername() + " ] countOtherNOK -> " + count + " found.");
-			return count;
-			
-		} catch (Exception e) {
-			log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e);
-			return 0;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Servidores> getSOLinux() {
-		
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] getSOLinux()");
-
-		try {
-			
-			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-			return criteria.add(Restrictions.eq("SO", "LINUX")).list();
-
-		} catch (Exception e) {
-			log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e);
-			return new ArrayList<Servidores>();
-		}
-	}
-
 	@SuppressWarnings("unchecked")
 	public List<Servidores> getSOWindows() {
 		
@@ -572,45 +466,6 @@ public class ServersDAO implements ServersInterface {
 			Criteria criteria = session().createCriteria(Servidores.class);
 			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			return criteria.add(Restrictions.eq("SO", "UNIX")).list();
-
-		} catch (Exception e) {
-			log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e);
-			return new ArrayList<Servidores>();
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Servidores> getSOOthers() {
-
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] getSOOthers()");
-		
-		try {
-			
-			Criteria criteria = session().createCriteria(Servidores.class);
-			criteria.add(Restrictions.ne("SO", "LINUX"));
-			criteria.add(Restrictions.ne("SO", "Windows"));
-			criteria.add(Restrictions.ne("SO", "Unix"));
-			criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-			return criteria.list();
-
-		} catch (Exception e) {
-			log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e);
-			return new ArrayList<Servidores>();
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Servidores> getListOfSO() {
-		
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] getListOfSO()");
-
-		try {
-			
-			Criteria criteria = session().createCriteria(Servidores.class);
-			ProjectionList proList = Projections.projectionList();
-			proList.add(Projections.distinct(Projections.property("SO")));
-			criteria.setProjection(proList);
-			return criteria.list();
 
 		} catch (Exception e) {
 			log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e);

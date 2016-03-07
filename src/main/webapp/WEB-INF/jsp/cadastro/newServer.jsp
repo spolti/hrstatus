@@ -80,8 +80,8 @@
 							<tr>
 								<td align=right>SO:</td>
 								<td><select name="servidores.SO" id="servidores.SO">
-										<c:forEach items="${SO}" var="SO">
-											<option value="<c:out value="${SO}" />">${SO}</option>
+										<c:forEach items="${OS}" var="OS">
+											<option value="<c:out value="${OS}" />">${OS}</option>
 										</c:forEach>
 								</select></td>
 
@@ -99,4 +99,3 @@
 	</div>
 </body>
 </html>
-

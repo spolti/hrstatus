@@ -92,7 +92,7 @@ public class VerifySingleServer extends VerificationHelper {
 	@SuppressWarnings("static-access")
 	public void runSingleVerification(Servidores servidores) throws JSchException, IOException{
 				
-		if (servidores.getSO().equals("LINUX")) {
+		if (servidores.getSO().equals("UNIX")) {
 			servidores.setServerTime(getTime());
 			servidores.setLastCheck(servidores.getServerTime());
 			

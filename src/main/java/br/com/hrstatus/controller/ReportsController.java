@@ -129,13 +129,14 @@ public class ReportsController {
 		return null;
 	}
 
+	@Deprecated
 	@Path("/reports/reportSOLinux")
 	@SuppressWarnings("all")
 	public InputStream soLinux() throws FileNotFoundException, JRException {
 	
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportSOLinux");
 		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class.getResourceAsStream("/jasper/reportSOLinux.jasper"));
-		List<Servidores> listServers = iteracoesDAO.getSOLinux();
+		List<Servidores> listServers = iteracoesDAO.getSOUnix();
 		JasperReport jasperStream = jasperFile;
 		JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(listServers, false);
 
@@ -188,28 +189,6 @@ public class ReportsController {
 			response.setContentType("application/pdf");
 			response.setHeader("Content-disposition","attachment; filename=reportSOUnix.pdf");
 			log.info("[ " + userInfo.getLoggedUsername() + " ] Report reportSOUnix.pdf successfully generated.");
-			return new ByteArrayInputStream(bytes);
-		} catch (JRException e) {
-			log.severe(e.getMessage());
-		}
-		return null;
-	}
-
-	@Path("/reports/reportSOOthers")
-	@SuppressWarnings("all")
-	public InputStream reportSOOthers() throws FileNotFoundException, JRException {
-	
-		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /reports/reportSOOthers");
-		JasperReport jasperFile = (JasperReport) JRLoader.loadObject(ReportsController.class.getResourceAsStream("/jasper/reportSOOthers.jasper"));
-		List<Servidores> listServers = iteracoesDAO.getSOOthers();
-		JasperReport jasperStream = jasperFile;
-		JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(listServers, false);
-
-		try {
-			byte[] bytes = JasperRunManager.runReportToPdf(jasperStream,parametros, ds);
-			response.setContentType("application/pdf");
-			response.setHeader("Content-disposition","attachment; filename=reportSOOthers.pdf");
-			log.info("[ " + userInfo.getLoggedUsername() + " ] Report reportSOOthers.pdf successfully generated.");
 			return new ByteArrayInputStream(bytes);
 		} catch (JRException e) {
 			log.severe(e.getMessage());
