@@ -17,10 +17,8 @@
 		        data.addColumn('string', 'Topping');
 		        data.addColumn('number', 'Slices');
 		        data.addRows([
-					['Linux', ${linux}],
-					['Windows', ${windows}],
 					['Unix', ${unix}],
-					['Outros', ${other}]
+					['Windows', ${windows}]
 			     ]);
 		  // Set chart options
 		  var options = {'title':'Consolidado Total Servidores',
@@ -37,15 +35,13 @@
       google.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['SO', 'Hora Ok', 'Hora Não Ok'],
-          ['Linux',  ${serversLinuxOK}, ${serversLinuxNOK}],
-          ['Windows',  ${serversWindowsOK}, ${serversWindowsNOK}],
-          ['Unix',  ${serversUnixOK}, ${serversUnixNOK}],
-          ['Other',  ${otherOK}, ${otherNOK}]
+          ['SO', 'Hora Ok', 'Hora Nï¿½o Ok'],
+		  ['Unix',  ${serversUnixOK}, ${serversUnixNOK}],
+          ['Windows',  ${serversWindowsOK}, ${serversWindowsNOK}]
         ]);
 
         var options = {
-          title: 'Relação Servidores Atualizados/Desatualizados',
+          title: 'Relaï¿½ï¿½o Servidores Atualizados/Desatualizados',
           hAxis: {title: 'Consolidado', titleTextStyle: {color: 'red'}},
           'backgroundColor':"transparent",
           'width':1100,
@@ -62,13 +58,13 @@
       google.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Task', 'OK/Não OK'],
+          ['Task', 'OK/Nï¿½o OK'],
           ['Servidores Atalizados', ${serversOK}],
           ['Servidores desatualizados', ${serversNOK}]
         ]);
 
         var options = {
-          title: 'Comparativo OK/Não Ok',
+          title: 'Comparativo OK/Nï¿½o Ok',
           pieHole: 0.4,
           'backgroundColor':"transparent",
           'width':400,

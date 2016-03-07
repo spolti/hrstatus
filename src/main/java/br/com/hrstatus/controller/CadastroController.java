@@ -80,6 +80,25 @@ public class CadastroController {
 	private Crypto encodePass = new Crypto();
 	private GetSystemInformation getSys = new GetSystemInformation();
 
+	private ArrayList<String> OS = new ArrayList<String>();
+	private ArrayList<String> VENDOR = new ArrayList<String>();
+
+	private ArrayList<String> setOSList() {
+		OS = new ArrayList<String>();
+		OS.add("UNIX");
+		OS.add("WINDOWS");
+		return OS;
+	}
+
+	private ArrayList<String> setDataBaseVendorList() {
+		VENDOR.add("MySQL");
+		VENDOR.add("ORACLE");
+		VENDOR.add("PostgreSQL");
+		VENDOR.add("SqlServer");
+		VENDOR.add("DB2");
+		return VENDOR;
+	}
+
 	@SuppressWarnings("static-access")
 	@Get("/newServer")
 	public void newServer(Servidores servidores) {
@@ -103,28 +122,8 @@ public class CadastroController {
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /newServer");
 		result.include("servidores", servidores);
 
-		// populating SO combobox
-		List<Servidores> so = this.iteracoesDAO.getListOfSO();
-		int size = so.size();
-		if ((size < 1) || (size < 4)) {
-			so.removeAll(so);
-
-			Servidores linux = new Servidores();
-			Servidores windows = new Servidores();
-			Servidores unix = new Servidores();
-			Servidores outro = new Servidores();
-			linux.setSO("LINUX");
-			windows.setSO("WINDOWS");
-			unix.setSO("UNIX");
-			outro.setSO("OUTRO");
-			so.add(linux);
-			so.add(windows);
-			so.add(unix);
-			so.add(outro);
-			result.include("SO", so);
-		} else {
-			result.include("SO", so);
-		}
+		// populating Database combobox
+		result.include("OS", setOSList());
 	}
 
 	@SuppressWarnings("static-access")
@@ -159,29 +158,8 @@ public class CadastroController {
 		} else if (servidores.getLogDir().isEmpty()) {
 			servidores.setLogDir(null);
 		}
-
-		// populating SO combobox
-		List<Servidores> so = this.iteracoesDAO.getListOfSO();
-		int size = so.size();
-		if ((size < 1) || (size < 4)) {
-			so.removeAll(so);
-
-			Servidores linux = new Servidores();
-			Servidores windows = new Servidores();
-			Servidores unix = new Servidores();
-			Servidores outro = new Servidores();
-			linux.setSO("LINUX");
-			windows.setSO("WINDOWS");
-			unix.setSO("UNIX");
-			outro.setSO("OUTRO");
-			so.add(linux);
-			so.add(windows);
-			so.add(unix);
-			so.add(outro);
-			result.include("SO", so);
-		} else {
-			result.include("SO", so);
-		}
+		// populating Database combobox
+		result.include("OS", setOSList());
 
 		validator.onErrorUsePageOf(CadastroController.class).newServer(servidores);
 
@@ -234,14 +212,8 @@ public class CadastroController {
 		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /newDataBase");
 		result.include("bancoDados", bancoDados);
 
-		// populating SO combobox
-		ArrayList<String> VENDOR = new ArrayList<String>();
-		VENDOR.add("MySQL");
-		VENDOR.add("ORACLE");
-		VENDOR.add("PostgreSQL");
-		VENDOR.add("SqlServer");
-		VENDOR.add("DB2");
-		result.include("VENDOR", VENDOR);
+		// populating Database combobox
+		result.include("VENDOR", setDataBaseVendorList());
 	}
 
 	@SuppressWarnings("static-access")
@@ -306,14 +278,8 @@ public class CadastroController {
 			}
 		}
 
-		// populating SO combobox
-		ArrayList<String> VENDOR = new ArrayList<String>();
-		VENDOR.add("MySQL");
-		VENDOR.add("ORACLE");
-		VENDOR.add("PostgreSQL");
-		VENDOR.add("SqlServer");
-		VENDOR.add("DB2");
-		result.include("VENDOR", VENDOR);
+		// populating Database vendor combobox
+		result.include("VENDOR", setDataBaseVendorList());
 
 		validator.onErrorUsePageOf(CadastroController.class).newDataBase(bancoDados);
 

@@ -41,13 +41,9 @@ public interface ServersInterface {
 	
 	public boolean deleteServerByID(Servidores server);
 	
-	public int countLinux();
-	
 	public int countWindows();
 	
 	public int countUnix();
-	
-	public int countOther();
 	
 	public int countAllServers();
 	
@@ -66,11 +62,7 @@ public interface ServersInterface {
 	public int countServersOK();
 	
 	public int countServersNOK();
-	
-	public int countLinuxOK();
-			
-	public int countLinuxNOK();
-		
+
 	public int countUnixOK();
 		
 	public int countUnixNOK();
@@ -79,19 +71,9 @@ public interface ServersInterface {
 	
 	public int countWindowsNOK();
 	
-	public int countOtherOK();
-	
-	public int countOtherNOK();
-	
-	public List<Servidores> getSOLinux();
-	
 	public List<Servidores> getSOWindows();
 	
 	public List<Servidores> getSOUnix();
-	
-	public List<Servidores> getSOOthers();
-	
-	public List<Servidores> getListOfSO();
 	
 	public List<Servidores> getHostnamesWithLogDir();
 	

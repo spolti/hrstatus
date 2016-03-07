@@ -77,20 +77,14 @@ public class ChartsController {
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		// ///////////////////////////////////////
 		// Sending SERVERS % to plot SO's graph
-		int linux = this.iteracoesDAO.countLinux();
 		int windows = this.iteracoesDAO.countWindows();
 		int unix = this.iteracoesDAO.countUnix();
-		int other = this.iteracoesDAO.countOther();
 		int total = this.iteracoesDAO.countAllServers();
-		result.include("linux", linux);
 		result.include("windows", windows);
 		result.include("unix", unix);
-		result.include("other", other);
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] Total: " + total);
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] linux: " + linux);
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] Windows: " + windows);
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] Unix: " + unix);
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] Other: " + other);
 
 		// Populating 2° graph (servers ok and not ok)
 		int serverOK = this.iteracoesDAO.countServersOK();
@@ -100,14 +94,7 @@ public class ChartsController {
 		result.include("serversNOK", serverNOK);
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] Servers not OK: " + serverNOK);
 
-		// Ploting 3° graph.
-		int countLinuxOK = this.iteracoesDAO.countLinuxOK();
-		result.include("serversLinuxOK", countLinuxOK);
-		log.fine("[ " + userInfo.getLoggedUsername()  + " ] Servers Linux OK: " + countLinuxOK);
-		int countLinuxNOK = this.iteracoesDAO.countLinuxNOK();
-		result.include("serversLinuxNOK", countLinuxNOK);
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] Servers Linux not OK: " + countLinuxNOK);
-
+		// Ploting 3° graph
 		int countUnixOK = this.iteracoesDAO.countUnixOK();
 		result.include("serversUnixOK", countUnixOK);
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] Servers Unix OK: " + countUnixOK);
@@ -121,13 +108,6 @@ public class ChartsController {
 		int countWindowsNOK = this.iteracoesDAO.countWindowsNOK();
 		result.include("serversWindowsNOK", countWindowsNOK);
 		log.fine("[ " + userInfo.getLoggedUsername() + " ] Servers Windows not OK: " + countWindowsNOK);
-
-		int countOtherOK = this.iteracoesDAO.countOtherOK();
-		result.include("otherOK", countOtherOK);
-		log.fine("[ " + userInfo.getLoggedUsername() + " ] Others Servers OK: " + countOtherOK);
-		int countOtherNOK = this.iteracoesDAO.countOtherNOK();
-		result.include("otherNOK", countOtherNOK);
-		log.fine("[ " + userInfo.getLoggedUsername()  + " ] Other Servers not OK: " + countOtherNOK);
 
 		result.include("totalServer", total);
 	}
@@ -154,7 +134,7 @@ public class ChartsController {
 
 		result.include("loggedUser", userInfo.getLoggedUsername());
 		// ///////////////////////////////////////
-		// Sending DataBases % to plot SO's graph
+		// Sending DataBases % to plot database's graph
 		int mysql = this.BancoDadosInterfaceDAO.countMysql();
 		int oracle = this.BancoDadosInterfaceDAO.countOracle();
 		int postgre = this.BancoDadosInterfaceDAO.countPostgre();

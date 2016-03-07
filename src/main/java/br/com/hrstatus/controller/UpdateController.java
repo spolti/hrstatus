@@ -79,8 +79,16 @@ public class UpdateController {
 	private GetSystemInformation getSys = new GetSystemInformation();
 	UserInfo userInfo = new UserInfo();
 	Crypto passUtil = new Crypto();
-	
-	
+
+	private ArrayList<String> OS = new ArrayList<String>();
+
+	private ArrayList<String> setOSList() {
+		OS = new ArrayList<String>();
+		OS.add("UNIX");
+		OS.add("WINDOWS");
+		return OS;
+	}
+
 	@Get("/findForUpdateServer/{serverID}")
 	public void findForUpdateServer(Servidores s, String serverID) {
 		
@@ -121,27 +129,7 @@ public class UpdateController {
 		}
 
 		// populating OS combobox
-		List<Servidores> so = this.iteracoesDAO.getListOfSO();
-		int size = so.size();
-		if ((size < 1) || (size < 4)) {
-			so.removeAll(so);
-
-			Servidores linux = new Servidores();
-			Servidores windows = new Servidores();
-			Servidores unix = new Servidores();
-			Servidores outro = new Servidores();
-			linux.setSO("LINUX");
-			windows.setSO("WINDOWS");
-			unix.setSO("UNIX");
-			outro.setSO("OUTRO");
-			so.add(linux);
-			so.add(windows);
-			so.add(unix);
-			so.add(outro);
-			result.include("SO", so);
-		} else {
-			result.include("SO", so);
-		}
+		result.include("SO", setOSList());
 
 		List<Users> userCorrect = this.usersDAO.listUser();
 		List<Users> userFinal = new ArrayList<Users>();
