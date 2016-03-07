@@ -25,15 +25,10 @@ import br.com.caelum.vraptor.Result;
 import br.com.hrstatus.action.os.unix.ExecRemoteCommand;
 import br.com.hrstatus.action.os.windows.ExecCommand;
 import br.com.hrstatus.controller.HomeController;
-import br.com.hrstatus.dao.Configuration;
-import br.com.hrstatus.dao.LockIntrface;
-import br.com.hrstatus.dao.ServersInterface;
 import br.com.hrstatus.model.Lock;
 import br.com.hrstatus.model.Servidores;
 import br.com.hrstatus.security.Crypto;
-import br.com.hrstatus.utils.PropertiesLoaderImpl;
-import br.com.hrstatus.utils.UserInfo;
-import br.com.hrstatus.utils.date.DateUtils;
+import br.com.hrstatus.verification.helper.VerificationHelper;
 import com.jcraft.jsch.JSchException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -51,23 +46,12 @@ import java.util.logging.Logger;
  */
 
 @Resource
-public class FullVerification {
+public class FullVerification extends VerificationHelper {
 
-	Logger log =  Logger.getLogger(FullVerification.class.getCanonicalName());
+	protected final Logger log = Logger.getLogger(getClass().getName());
 	
 	@Autowired
 	private Result result;
-	@Autowired
-	private ServersInterface serversDAO;
-	@Autowired
-	private Configuration configurationDAO;
-	@Autowired
-	private LockIntrface lockDAO;
-	UserInfo userInfo = new UserInfo();
-	DateUtils getTime = new DateUtils();
-	private Crypto encodePass = new Crypto();
-	private Lock lockedResource = new Lock();
-	private DateUtils dt = new DateUtils();
 
 	@SuppressWarnings("static-access")
 	@Get("/home/startVerification/full")
@@ -106,7 +90,7 @@ public class FullVerification {
 				for (Servidores servidores : list) {
 					// if Linux
 					if (servidores.getSO().equals("LINUX") && servidores.getVerify().equals("SIM")) {
-						servidores.setServerTime(dt.getTime());
+						servidores.setServerTime(getTime());
 						servidores.setLastCheck(servidores.getServerTime());
 						// Decrypting password
 						try {
@@ -128,7 +112,7 @@ public class FullVerification {
 							log.fine("[ " + userInfo.getLoggedUsername() + " ] Time recieved from the server " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
-							servidores.setDifference(dt.diffrenceTime(servidores.getServerTime(), dateSTR, "LINUX"));
+							servidores.setDifference(differenceTime(servidores.getServerTime(), dateSTR));
 
 							if (servidores.getDifference() < 0) {
 								servidores.setDifference(servidores.getDifference() * -1);
@@ -180,7 +164,7 @@ public class FullVerification {
 					}
 
 					if (servidores.getSO().equals("UNIX") && servidores.getVerify().equals("SIM")) {
-						servidores.setServerTime(dt.getTime());
+						servidores.setServerTime(getTime());
 						servidores.setLastCheck(servidores.getServerTime());
 						// Decrypting password
 						try {
@@ -201,7 +185,7 @@ public class FullVerification {
 							log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from the server " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
-							servidores.setDifference(dt.diffrenceTime(servidores.getServerTime(), dateSTR, "UNIX"));
+							servidores.setDifference(differenceTime(servidores.getServerTime(), dateSTR));
 
 							if (servidores.getDifference() < 0) {
 								servidores.setDifference(servidores.getDifference() * -1);
@@ -254,7 +238,7 @@ public class FullVerification {
 
 					// if Windows
 					if (servidores.getSO().equals("WINDOWS") && servidores.getVerify().equals("SIM")) {
-						servidores.setServerTime(dt.getTime());
+						servidores.setServerTime(getTime());
 						servidores.setLastCheck(servidores.getServerTime());
 						try {
 
@@ -266,7 +250,7 @@ public class FullVerification {
 							log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from the server " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
-							servidores.setDifference(dt.diffrenceTime(servidores.getServerTime(), dateSTR, "WINDOWS"));
+							servidores.setDifference(differenceTime(servidores.getServerTime(), dateSTR));
 
 							if (servidores.getDifference() < 0) {
 								servidores.setDifference(servidores.getDifference() * -1);
@@ -296,7 +280,7 @@ public class FullVerification {
 
 					// if Others
 					if (servidores.getSO().equals("OUTRO") && servidores.getVerify().equals("SIM")) {
-						servidores.setServerTime(dt.getTime());
+						servidores.setServerTime(getTime());
 						servidores.setLastCheck(servidores.getServerTime());
 						// Decrypting password
 						try {
@@ -317,7 +301,7 @@ public class FullVerification {
 							log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from the server " + servidores.getHostname() + ": " + dateSTR);
 							servidores.setClientTime(dateSTR);
 							// Calculating time difference
-							servidores.setDifference(dt.diffrenceTime(servidores.getServerTime(), dateSTR,"OUTRO"));
+							servidores.setDifference(differenceTime(servidores.getServerTime(), dateSTR));
 							
 							if (servidores.getDifference() < 0) {
 								servidores.setDifference(servidores.getDifference() * -1);

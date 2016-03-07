@@ -33,7 +33,6 @@ public class ResourceManagementImpl implements ResourcesManagement {
 			log.severe(" [ " + userInfo.getLoggedUsername() + "] Falied to lock resource: " + e.getCause());
 			return false;
 		}
-		
 	}
 
 	public boolean releaseLock(String resourceName) {
@@ -64,5 +63,4 @@ public class ResourceManagementImpl implements ResourcesManagement {
 			return false;
 		}
 	}
-
 }

@@ -30,19 +30,14 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import br.com.hrstatus.action.databases.SQLStatementExecute;
 import br.com.hrstatus.action.databases.helper.IllegalVendorException;
-import org.springframework.beans.factory.annotation.Autowired;
+import br.com.hrstatus.verification.helper.VerificationHelper;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
-import br.com.hrstatus.dao.BancoDadosInterface;
-import br.com.hrstatus.dao.Configuration;
-import br.com.hrstatus.dao.LockIntrface;
 import br.com.hrstatus.model.BancoDados;
 import br.com.hrstatus.model.Lock;
 import br.com.hrstatus.security.Crypto;
-import br.com.hrstatus.utils.date.DateUtils;
 
 import com.jcraft.jsch.JSchException;
 
@@ -52,22 +47,9 @@ import com.jcraft.jsch.JSchException;
 
 @Service
 @Configurable
-public class DbFullCheckScheduler {
+public class DbFullCheckScheduler extends VerificationHelper{
 
-	Logger log =  Logger.getLogger(DbFullCheckScheduler.class.getCanonicalName());
-	
-	@Autowired
-	private LockIntrface lockDAO;
-	@Autowired
-	private BancoDadosInterface dbDAO;
-	@Autowired
-	private Configuration configurationDAO;
-
-	private DateUtils dt = new DateUtils();
-	private Lock lockedResource = new Lock();
-	private Crypto encodePass = new Crypto();
-	private SQLStatementExecute execQueryDate = new SQLStatementExecute();
-	
+	protected final Logger log = Logger.getLogger(getClass().getName());
 	
 	@SuppressWarnings("static-access")
 	public void startFullDataBaseVerification(String schedulerName) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, IllegalVendorException {
@@ -93,7 +75,7 @@ public class DbFullCheckScheduler {
 
 			List<BancoDados> listdb = this.dbDAO.listDataBasesScheduler(schedulerName);
 			for (BancoDados bancoDados : listdb) {
-				bancoDados.setServerTime(dt.getTime());
+				bancoDados.setServerTime(getTime());
 				bancoDados.setLastCheck(bancoDados.getServerTime());
 
 				// Decrypting password
@@ -105,7 +87,7 @@ public class DbFullCheckScheduler {
 					log.fine("[ " + schedulerName + " ] Hora obtida do servidor " + bancoDados.getHostname() + ": " + dateSTR);
 					bancoDados.setClientTime(dateSTR);
 					// Calculating time difference
-					bancoDados.setDifference((dt.diffrenceTime(bancoDados.getServerTime(), dateSTR,"Dont Need this, Remove!!!")));
+					bancoDados.setDifference((differenceTime(bancoDados.getServerTime(), dateSTR)));
 
 					if (bancoDados.getDifference() < 0) {
 						bancoDados.setDifference(bancoDados.getDifference() * -1);

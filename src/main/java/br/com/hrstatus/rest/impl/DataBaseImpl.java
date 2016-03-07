@@ -33,6 +33,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletResponse;
 
 import br.com.hrstatus.action.databases.helper.IllegalVendorException;
+import br.com.hrstatus.verification.impl.VerificationImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -43,9 +44,6 @@ import br.com.hrstatus.resrources.ResourcesManagement;
 import br.com.hrstatus.rest.DataBaseResource;
 import br.com.hrstatus.security.Crypto;
 import br.com.hrstatus.utils.UserInfo;
-import br.com.hrstatus.verification.impl.DbFullVerificationImpl;
-import br.com.hrstatus.verification.impl.DbNotFullVerificationImpl;
-import br.com.hrstatus.verification.impl.VerifySingleDBImpl;
 
 /*
  * @author spolti
@@ -58,12 +56,8 @@ public class DataBaseImpl extends SpringBeanAutowiringSupport implements DataBas
 
 	@Autowired(required = true)
 	private BancoDadosInterface databaseDAO;
-	@Autowired(required = true)
-	private DbFullVerificationImpl fullVerification;
-	@Autowired(required = true)
-	private DbNotFullVerificationImpl notFullVerification;
-	@Autowired(required = true)
-	private VerifySingleDBImpl singleVerification;
+	@Autowired
+	private VerificationImpl verification;
 	@Autowired(required = true)
 	ResourcesManagement resource;
 
@@ -243,7 +237,7 @@ public class DataBaseImpl extends SpringBeanAutowiringSupport implements DataBas
 		try {
 			if (!resource.islocked("fullDbVerification")) {
 				resource.lockRecurso("fullDbVerification");
-				fullVerification.performFullVerification();
+				verification.databaseVerification(this.databaseDAO.listDataBases());
 				resource.releaseLock("fullDbVerification");
 			} else {
 				log.info(" [ " + userInfo.getLoggedUsername() + " ]{REST} -> Recurso solicitado locado");
@@ -253,7 +247,6 @@ public class DataBaseImpl extends SpringBeanAutowiringSupport implements DataBas
 		} catch (Exception e) {
 			return null;
 		}
-
 	}
 	
 	public List<BancoDados> notFullDbVerification(HttpServletResponse response) {
@@ -266,7 +259,7 @@ public class DataBaseImpl extends SpringBeanAutowiringSupport implements DataBas
 		try {
 			if (!resource.islocked("notFullDBVerification")) {
 				resource.lockRecurso("notFullDBVerification");
-				notFullVerification.performNotFullVerification();
+				verification.databaseVerification(this.databaseDAO.getdataBasesNOK());
 				
 				for (BancoDados db : listNOKbeforeVerification) {	
 					listdb.add(this.databaseDAO.getDataBaseByID(db.getId()));
@@ -284,11 +277,8 @@ public class DataBaseImpl extends SpringBeanAutowiringSupport implements DataBas
 	public BancoDados singleDbVerification(int id) throws IllegalVendorException {
 		
 		try {
-			singleVerification.performSingleDbVerification(id);
+			verification.databaseVerification(this.databaseDAO.listDataBaseByID(id));
 		} catch (InvalidKeyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NoSuchPaddingException e) {
@@ -303,11 +293,7 @@ public class DataBaseImpl extends SpringBeanAutowiringSupport implements DataBas
 		} catch (IllegalBlockSizeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		return this.databaseDAO.getDataBaseByID(id);
 	}
-
 }

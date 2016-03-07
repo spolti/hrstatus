@@ -33,23 +33,18 @@ import com.jcraft.jsch.JSchException;
 public class DateUtils {
 	
 	DateParser parse = new DateParser();
-		
-	public String getTime() {
 
-		Calendar cal = Calendar.getInstance();
-		String serverTime = cal.getTime().toString();
-		serverTime = parse.parser(serverTime).toString();
-		return serverTime;
-	}
-
-	public long diffrenceTime(String serverTime, String clientTime, String SO) throws JSchException, IOException {
+	/*
+     * Returns the date difference in seconds between the client and server
+     */
+	public long differenceTime(String serverTime, String clientTime) throws JSchException, IOException {
 
 		long diff = 0;
 
 		// Converting String dates to java.util.Date
 		Date stime = parse.parser(serverTime);
 		Date ctime = parse.parser(clientTime);
-		
+
 		diff = stime.getTime() - ctime.getTime();
 
 		DecimalFormat df = new DecimalFormat();
@@ -58,4 +53,16 @@ public class DateUtils {
 
 		return result;
 	}
+
+	/*
+     * Returns the the serverTime
+     */
+	public String getTime() {
+		Calendar cal = Calendar.getInstance();
+		String serverTime = cal.getTime().toString();
+		serverTime = parse.parser(serverTime).toString();
+		return serverTime;
+	}
+
+
 }

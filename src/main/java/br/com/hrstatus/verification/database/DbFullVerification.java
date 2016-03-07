@@ -19,30 +19,25 @@
 
 package br.com.hrstatus.verification.database;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
-import java.util.logging.Logger;
+import br.com.caelum.vraptor.Get;
+import br.com.caelum.vraptor.Resource;
+import br.com.caelum.vraptor.Result;
+import br.com.hrstatus.action.databases.helper.IllegalVendorException;
+import br.com.hrstatus.controller.HomeController;
+import br.com.hrstatus.dao.BancoDadosInterface;
+import br.com.hrstatus.model.BancoDados;
+import br.com.hrstatus.resrources.ResourcesManagement;
+import br.com.hrstatus.utils.UserInfo;
+import br.com.hrstatus.verification.impl.VerificationImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-
-import br.com.hrstatus.action.databases.helper.IllegalVendorException;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import br.com.caelum.vraptor.Get;
-import br.com.caelum.vraptor.Resource;
-import br.com.caelum.vraptor.Result;
-import br.com.caelum.vraptor.Validator;
-import br.com.hrstatus.controller.HomeController;
-import br.com.hrstatus.dao.BancoDadosInterface;
-import br.com.hrstatus.dao.Configuration;
-import br.com.hrstatus.dao.LockIntrface;
-import br.com.hrstatus.model.BancoDados;
-import br.com.hrstatus.resrources.ResourcesManagement;
-import br.com.hrstatus.utils.UserInfo;
-import br.com.hrstatus.verification.impl.DbFullVerificationImpl;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.logging.Logger;
 
 /*
  * @author spolti
@@ -51,20 +46,14 @@ import br.com.hrstatus.verification.impl.DbFullVerificationImpl;
 @Resource
 public class DbFullVerification {
 
-	Logger log =  Logger.getLogger(DbFullVerification.class.getCanonicalName());
+	protected final Logger log = Logger.getLogger(getClass().getName());
 	
 	@Autowired
 	private Result result;
 	@Autowired
-	private LockIntrface lockDAO;
-	@Autowired
 	private BancoDadosInterface dbDAO;
 	@Autowired
-	private Configuration configurationDAO;
-	@Autowired
-	private Validator validator;
-	@Autowired
-	DbFullVerificationImpl dbVerification;
+	private VerificationImpl verification;
 	@Autowired
 	ResourcesManagement resource;
 	private UserInfo userInfo = new UserInfo();
@@ -80,10 +69,9 @@ public class DbFullVerification {
 		log.info("[ " + userInfo.getLoggedUsername() + " ] Initializing a fullDBVerification verification.");
 		
 		// Verifica se já tem alguma verificação ocorrendo...
-		
 		if (!resource.islocked("fullDbVerification")) {
 			resource.lockRecurso("fullDbVerification");
-			dbVerification.performFullVerification();
+			verification.databaseVerification(this.dbDAO.listDataBases());
 			List<BancoDados> listdb =  this.dbDAO.listDataBases();
 			result.include("class", "activeBanco");
 			result.include("bancoDados",listdb).forwardTo(HomeController.class).home("");
@@ -93,6 +81,5 @@ public class DbFullVerification {
 			result.include("class", "activeBanco");
 			result.include("info","O recurso fullDBVerification está locado, aguarde o término da mesma").forwardTo(HomeController.class).home("");
 		}
-
 	}
 }

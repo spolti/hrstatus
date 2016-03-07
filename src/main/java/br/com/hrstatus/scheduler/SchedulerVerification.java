@@ -100,5 +100,4 @@ public class SchedulerVerification {
 		//populating the scheduler history table with this current execution.
 		this.schedulerDAO.saveHistory(schedulerHistory, schedulerName);
 	}
-
 }

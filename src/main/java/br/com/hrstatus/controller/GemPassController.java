@@ -48,7 +48,7 @@ import br.com.hrstatus.utils.mail.MailSender;
 @Resource
 public class GemPassController {
 
-	Logger log =  Logger.getLogger(GemPassController.class.getCanonicalName());
+	protected final Logger log = Logger.getLogger(getClass().getName());
 	
 	@Autowired
 	private UsersInterface userDAO;

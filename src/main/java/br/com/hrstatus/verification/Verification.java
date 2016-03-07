@@ -17,25 +17,22 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.dao;
+package br.com.hrstatus.verification;
 
-import org.hibernate.cfg.AnnotationConfiguration;
-import org.hibernate.tool.hbm2ddl.SchemaExport;
+import br.com.hrstatus.action.databases.helper.IllegalVendorException;
+import br.com.hrstatus.model.BancoDados;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 /*
  * @author spolti
  */
+public interface Verification {
 
-@SuppressWarnings("deprecation")
-@Deprecated
-public class CreateTables {
-	public static void main(String[] args) {
-		AnnotationConfiguration cfg = new AnnotationConfiguration();
-		
-		cfg.addAnnotatedClass(br.com.hrstatus.model.Users.class);		
-		cfg.addAnnotatedClass(br.com.hrstatus.model.Servidores.class);
-		
-		SchemaExport se = new SchemaExport(cfg);
-		se.create(true, true);
-	}
+    public void databaseVerification (List<BancoDados> dataBases) throws IllegalVendorException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException;
 }
