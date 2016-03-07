@@ -67,18 +67,6 @@ public class FullVerification extends VerificationHelper {
 
         log.info("[ " + userInfo.getLoggedUsername() + " ] Initializing a full verification.");
 
-//		lockedResource.setRecurso("verificationFull");
-//		lockedResource.setUsername(LoggedUsername);
-//		List<Lock> lockList = this.lockDAO.listLockedServices("verificationFull");
-//		if (lockList.size() != 0) {
-//			for (Lock lock : lockList) {
-//				log.info("[ " + userInfo.getLoggedUsername() + " ] The resource verificationFull is locked by the user " + lock.getUsername());
-//				result.include("class", "activeServer");
-//				result.include("info", "O recurso verificationFull está locado pelo usuário " + lock.getUsername()
-//								+ ", aguarde o término da mesma").forwardTo(HomeController.class).home("");
-//
-//			}
-//		} else {
         // Verifica se já tem alguma verificação ocorrendo...
         if (!resource.islocked("verificationFull")) {
             log.info("[ " + userInfo.getLoggedUsername() + " ] The resource verificationFull is not locked, locking and continuing.");
