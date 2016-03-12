@@ -21,11 +21,15 @@ package br.com.hrstatus.rest;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 
+import br.com.hrstatus.action.databases.helper.IllegalVendorException;
+import br.com.hrstatus.model.BancoDados;
 import br.com.hrstatus.model.Servidores;
 
 /*
@@ -92,4 +96,28 @@ public interface ServerResource {
 			@PathParam("user")  String user, @PathParam("passwd")  String passwd, @PathParam("logDir")  String logDir,
 			@PathParam("ntpCommand")  String ntpCommand, @PathParam("port")  int port, @PathParam("active")  String active,
 			@PathParam("so")  String so);
+
+	/*
+ 	* \/rest/server/verification/full
+ 	* Example: http://localhost:8080/hs/rest/server/verification/full
+ 	*/
+	@Path("verification/full")
+	@GET
+	public List<Servidores> fullServerVerification(@Context HttpServletResponse response);
+
+	/*
+	 * \/rest/server/verification/notFull
+	 * Example: http://localhost:8080/hs/rest/server/verification/notFull
+	 */
+	@Path("verification/notFull")
+	@GET
+	public List<Servidores> notFullServerVerification(@Context HttpServletResponse response);
+
+	/*
+	 * \/rest/server/singleServer/{id}
+	 * Example: http://localhost:8080/hs/rest/server/verification/singleServer/1
+	 */
+	@Path("verification/singleServer/{id}")
+	@GET
+	public Servidores singleServerVerification(@PathParam("id") int id) throws IllegalVendorException;
 }
