@@ -30,6 +30,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import br.com.hrstatus.action.os.unix.ExecRemoteCommand;
+import br.com.hrstatus.verification.impl.VerificationImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Get;
@@ -68,6 +69,8 @@ public class UpdateTimeController {
 	private Validator validator;
 	@Autowired
 	private VerifySingleServer runVerify;
+	@Autowired
+	private VerificationImpl verification;
 	Servidores servidor = new Servidores();
 	String command = null;
 	int id = 0;
@@ -119,7 +122,7 @@ public class UpdateTimeController {
 					// this step have an error to append the result in the home page where the result is shown
 					validator.add(new ValidationMessage(servidor.getHostname() + ": " + resultCommand, "Erro"));
 					//Calling the individual verification of the server passswed as parameter
-					runVerify.runSingleVerification(servidor);				
+					verification.serverVerification(this.iteracoesDAO.listServerByID(servidor.getId()));
 					log.fine("[ " + userInfo.getLoggedUsername() + " ] " + resultCommand);
 				}
 
@@ -174,7 +177,7 @@ public class UpdateTimeController {
 					validator.add(new ValidationMessage(servidor.getHostname() + ": " + resultCommand, "Erro"));
 					
 					// Calling the individual verification of the server passswed as parameter
-					runVerify.runSingleVerification(servidor);				
+					verification.serverVerification(this.iteracoesDAO.listServerByID(servidor.getId()));
 					log.fine("[ " + userInfo.getLoggedUsername() + " ] " + resultCommand);
 				}
 
