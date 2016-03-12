@@ -56,7 +56,7 @@ public class DataBaseImpl extends SpringBeanAutowiringSupport implements DataBas
 
 	@Autowired(required = true)
 	private BancoDadosInterface databaseDAO;
-	@Autowired
+	@Autowired(required = true)
 	private VerificationImpl verification;
 	@Autowired(required = true)
 	ResourcesManagement resource;

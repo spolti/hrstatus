@@ -25,12 +25,15 @@ import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.dao.LockIntrface;
 import br.com.hrstatus.dao.ServersInterface;
 import br.com.hrstatus.model.Lock;
+import br.com.hrstatus.resrources.ResourcesManagement;
 import br.com.hrstatus.security.Crypto;
 import br.com.hrstatus.utils.UserInfo;
 import br.com.hrstatus.utils.date.DateParser;
 import br.com.hrstatus.utils.date.DateUtils;
+import br.com.hrstatus.verification.impl.VerificationImpl;
 import com.jcraft.jsch.JSchException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -49,6 +52,8 @@ public abstract class VerificationHelper {
     public Configuration configurationDAO;
     @Autowired
     public LockIntrface lockDAO;
+    @Autowired
+    public ResourcesManagement resource;
     public UserInfo userInfo = new UserInfo();
     public  Crypto encodePass = new Crypto();
     public SQLStatementExecute execQueryDate = new SQLStatementExecute();

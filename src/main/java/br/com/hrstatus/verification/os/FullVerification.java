@@ -29,6 +29,7 @@ import br.com.hrstatus.model.Servidores;
 import br.com.hrstatus.resrources.ResourcesManagement;
 import br.com.hrstatus.security.Crypto;
 import br.com.hrstatus.verification.helper.VerificationHelper;
+import br.com.hrstatus.verification.impl.VerificationImpl;
 import com.jcraft.jsch.JSchException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -53,7 +54,8 @@ public class FullVerification extends VerificationHelper {
     @Autowired
     private Result result;
     @Autowired
-    ResourcesManagement resource;
+    public VerificationImpl verification;
+
     private String LoggedUsername = userInfo.getLoggedUsername();
 
     @SuppressWarnings("static-access")
@@ -71,135 +73,19 @@ public class FullVerification extends VerificationHelper {
         if (!resource.islocked("verificationFull")) {
             log.info("[ " + userInfo.getLoggedUsername() + " ] The resource verificationFull is not locked, locking and continuing.");
 
-            List<Servidores> list = this.serversDAO.listServersVerActive();
-            if (list.size() <= 0) {
+            List<Servidores> serverList = this.serversDAO.listServersVerActive();
+            if (serverList.size() <= 0) {
                 log.info("[ " + userInfo.getLoggedUsername() + " ] No server found or no servers with active check.");
                 result.include("info", "Nenhum servidor encontrado ou não há servidores com verficação ativa").forwardTo(HomeController.class).home("");
 
             } else {
                 // locar recurso.
                 resource.lockRecurso("verificationFull");
-                for (Servidores servidores : list) {
-                    // if Linux
-                    if (servidores.getSO().equals("UNIX") && servidores.getVerify().equals("SIM")) {
-                        servidores.setServerTime(getTime());
-                        servidores.setLastCheck(servidores.getServerTime());
-                        // Decrypting password
-                        try {
-                            servidores.setPass(String.valueOf(Crypto.decode(servidores.getPass())));
-                        } catch (InvalidKeyException e) {
-                            e.printStackTrace();
-                        } catch (NoSuchPaddingException e) {
-                            e.printStackTrace();
-                        } catch (NoSuchAlgorithmException e) {
-                            e.printStackTrace();
-                        } catch (BadPaddingException e) {
-                            e.printStackTrace();
-                        } catch (IllegalBlockSizeException e) {
-                            e.printStackTrace();
-                        }
 
-                        try {
-                            String dateSTR = ExecRemoteCommand.exec(servidores.getUser(), servidores.getIp(), servidores.getPass(), servidores.getPort(), "/bin/date");
-                            log.fine("[ " + userInfo.getLoggedUsername() + " ] Time recieved from the server " + servidores.getHostname() + ": " + dateSTR);
-                            servidores.setClientTime(dateSTR);
-                            // Calculating time difference
-                            servidores.setDifference(differenceTime(servidores.getServerTime(), dateSTR));
+                verification.serverVerification(serverList);
 
-                            if (servidores.getDifference() < 0) {
-                                servidores.setDifference(servidores.getDifference() * -1);
-                            }
-
-                            if (servidores.getDifference() <= this.configurationDAO.getDiffirenceSecs()) {
-                                servidores.setTrClass("success");
-                                servidores.setStatus("OK");
-                            } else {
-                                servidores.setTrClass("error");
-                                servidores.setStatus("não OK");
-                            }
-                            try {
-                                // Encrypting the password
-                                servidores.setPass(encodePass.encode(servidores.getPass()));
-
-                            } catch (Exception e1) {
-                                log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e1);
-                            }
-                            this.serversDAO.updateServer(servidores);
-
-                        } catch (JSchException e) {
-                            servidores.setStatus(e + "");
-                            servidores.setTrClass("error");
-                            try {
-                                // Encrypting the password
-                                servidores.setPass(encodePass.encode(servidores.getPass()));
-
-                            } catch (Exception e1) {
-                                log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e1);
-                            }
-                            this.serversDAO.updateServer(servidores);
-                        } catch (IOException e) {
-                            servidores.setStatus(e + "");
-                            servidores.setTrClass("error");
-                            try {
-
-                                // Encrypting the password
-                                servidores.setPass(encodePass.encode(servidores.getPass()));
-
-                            } catch (Exception e1) {
-                                log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e1);
-                            }
-                            this.serversDAO.updateServer(servidores);
-                        }
-
-                    } else if (servidores.getVerify().equals("NAO")) {
-                        log.info("[ " + userInfo.getLoggedUsername() + " ] - The server " + servidores.getHostname() + " has the verification inactive, it will not be verified.");
-                    }
-
-                    // if Windows
-                    if (servidores.getSO().equals("WINDOWS") && servidores.getVerify().equals("SIM")) {
-                        servidores.setServerTime(getTime());
-                        servidores.setLastCheck(servidores.getServerTime());
-                        try {
-
-                            String dateSTR = ExecCommand.Exec(servidores.getIp(), "I");
-                            if (dateSTR == null || dateSTR == "") {
-                                log.fine("The net time -I parameter returuns null, trying the parameter -S");
-                                dateSTR = ExecCommand.Exec(servidores.getIp(), "S");
-                            }
-                            log.fine("[ " + userInfo.getLoggedUsername() + " ] Time retrieved from the server " + servidores.getHostname() + ": " + dateSTR);
-                            servidores.setClientTime(dateSTR);
-                            // Calculating time difference
-                            servidores.setDifference(differenceTime(servidores.getServerTime(), dateSTR));
-
-                            if (servidores.getDifference() < 0) {
-                                servidores.setDifference(servidores.getDifference() * -1);
-                            }
-
-                            if (servidores.getDifference() <= this.configurationDAO.getDiffirenceSecs()) {
-                                servidores.setTrClass("success");
-                                servidores.setStatus("OK");
-                            } else if (dateSTR == null || dateSTR == "") {
-                                servidores.setTrClass("error");
-                                servidores.setStatus("Não foi possível obter data/hora deste servidor, verique conectividade.");
-                                servidores.setDifference(00);
-                            } else {
-                                servidores.setTrClass("error");
-                                servidores.setStatus("não OK");
-                            }
-                            this.serversDAO.updateServer(servidores);
-                        } catch (IOException e) {
-                            servidores.setStatus(e + "");
-                            servidores.setTrClass("error");
-                            this.serversDAO.updateServer(servidores);
-                        }
-
-                    } else if (servidores.getVerify().equals("NAO")) {
-                        log.info("[ " + userInfo.getLoggedUsername() + " ] - The server " + servidores.getHostname() + " has the verification inactive, it will not be verified.");
-                    }
-
-                }
-
-                result.include("server", list).forwardTo(HomeController.class).home("");
+                List<Servidores> checkedServers = this.serversDAO.listServersVerActive();
+                result.include("server", checkedServers).forwardTo(HomeController.class).home("");
                 result.include("class", "activeServer");
 
             }
