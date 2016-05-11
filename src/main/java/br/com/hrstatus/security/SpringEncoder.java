@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,9 +27,9 @@ import org.springframework.util.DigestUtils;
 
 public class SpringEncoder {
 
-	public static String encodePassUser(String secret){
-		
-		String passMD5 =  DigestUtils.md5DigestAsHex(secret.getBytes());
-		return passMD5;
-	}
+    public static String encodePassUser(String secret) {
+
+        final String passMD5 = DigestUtils.md5DigestAsHex(secret.getBytes());
+        return passMD5;
+    }
 }

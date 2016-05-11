@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,43 +19,42 @@
 
 package br.com.hrstatus.security;
 
-import java.math.BigInteger;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
+import java.math.BigInteger;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 public class Crypto {
 
-	public static char[] decode(String secret) throws NoSuchPaddingException,
-			NoSuchAlgorithmException, InvalidKeyException, BadPaddingException,
-			IllegalBlockSizeException {
-		byte[] kbytes = "summer time way".getBytes();
-		SecretKeySpec key = new SecretKeySpec(kbytes, "Blowfish");
+    public static char[] decode(String secret) throws NoSuchPaddingException,
+            NoSuchAlgorithmException, InvalidKeyException, BadPaddingException,
+            IllegalBlockSizeException {
+        final byte[] kbytes = "summer time way".getBytes();
+        final SecretKeySpec key = new SecretKeySpec(kbytes, "Blowfish");
 
-		BigInteger n = new BigInteger(secret, 16);
-		byte[] encoding = n.toByteArray();
+        final BigInteger n = new BigInteger(secret, 16);
+        final byte[] encoding = n.toByteArray();
 
-		Cipher cipher = Cipher.getInstance("Blowfish");
-		cipher.init(Cipher.DECRYPT_MODE, key);
-		byte[] decode = cipher.doFinal(encoding);
-		return new String(decode).toCharArray();
-	}
-	
-	public static String encode(String secret) throws NoSuchPaddingException,
-			NoSuchAlgorithmException, InvalidKeyException, BadPaddingException,
-			IllegalBlockSizeException {
-		byte[] kbytes = "summer time way".getBytes();
-		SecretKeySpec key = new SecretKeySpec(kbytes, "Blowfish");
+        final Cipher cipher = Cipher.getInstance("Blowfish");
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        final byte[] decode = cipher.doFinal(encoding);
+        return new String(decode).toCharArray();
+    }
 
-		Cipher cipher = Cipher.getInstance("Blowfish");
-		cipher.init(Cipher.ENCRYPT_MODE, key);
-		byte[] encoding = cipher.doFinal(secret.getBytes());
-		BigInteger n = new BigInteger(encoding);
-		return n.toString(16);
-	}
+    public static String encode(String secret) throws NoSuchPaddingException,
+            NoSuchAlgorithmException, InvalidKeyException, BadPaddingException,
+            IllegalBlockSizeException {
+        final byte[] kbytes = "summer time way".getBytes();
+        final SecretKeySpec key = new SecretKeySpec(kbytes, "Blowfish");
+
+        final Cipher cipher = Cipher.getInstance("Blowfish");
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        final byte[] encoding = cipher.doFinal(secret.getBytes());
+        final BigInteger n = new BigInteger(encoding);
+        return n.toString(16);
+    }
 }

@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,11 +19,10 @@
 
 package br.com.hrstatus.utils;
 
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
-
-import org.springframework.stereotype.Service;
 
 /*
  * @author spolti
@@ -32,16 +31,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class GetSystemInformation {
 
-	Logger log =  Logger.getLogger(GetSystemInformation.class.getCanonicalName());
-	
-	public List<String> SystemInformation () {
-		
-		ArrayList<String> result = new ArrayList<String>();
-		result.add(System.getProperty("java.runtime.version"));
-		result.add(System.getProperty("java.vendor"));
-		result.add(System.getProperty("java.vm.name"));
-		result.add(System.getProperty("os.name") + "-" + System.getProperty("os.version"));
-		
-		return result;
-	}
+    public List<String> SystemInformation() {
+
+        final ArrayList<String> result = new ArrayList<String>();
+        result.add(System.getProperty("java.runtime.version"));
+        result.add(System.getProperty("java.vendor"));
+        result.add(System.getProperty("java.vm.name"));
+        result.add(System.getProperty("os.name") + "-" + System.getProperty("os.version"));
+
+        return result;
+    }
 }

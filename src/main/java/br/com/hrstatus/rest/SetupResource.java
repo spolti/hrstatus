@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@
 
 package br.com.hrstatus.rest;
 
+import br.com.hrstatus.model.Configurations;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-
-import br.com.hrstatus.model.Configurations;
 
 /*
  * @author spolti
@@ -33,12 +33,12 @@ import br.com.hrstatus.model.Configurations;
 @Produces("application/json; charset=utf8")
 public interface SetupResource {
 
-	
-	/*
-	 * \/rest/setup/list
-	 * Example: http://localhost:8080/hs/rest/setup/list
-	 */
-	@Path("list")
-	@GET
-	public Configurations configurations();
+
+    /*
+     * \/rest/setup/list
+     * Example: http://localhost:8080/hs/rest/setup/list
+     */
+    @Path("list")
+    @GET
+    Configurations configurations();
 }

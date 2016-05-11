@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,9 +21,9 @@ package br.com.hrstatus.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.GeneratedValue;
 
 /*
  * @author spolti
@@ -33,39 +33,39 @@ import javax.persistence.Table;
 @Table(name = "lockedResources")
 public class Lock {
 
-	@Id
-	@Column(name = "id")
-	@GeneratedValue
-	private int id;
-	
-	@Column(name = "username")
-	private String username;
-	
-	@Column(name = "recurso")
-	private String recurso;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue
+    private int id;
 
-	public int getId() {
-		return id;
-	}
+    @Column(name = "username")
+    private String username;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    @Column(name = "recurso")
+    private String recurso;
 
-	public String getUsername() {
-		return username;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getRecurso() {
-		return recurso;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setRecurso(String recurso) {
-		this.recurso = recurso;
-	}
-	
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getRecurso() {
+        return recurso;
+    }
+
+    public void setRecurso(String recurso) {
+        this.recurso = recurso;
+    }
+
 }

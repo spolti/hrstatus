@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,9 +25,9 @@ package br.com.hrstatus.utils;
 
 public class PropertiesLoaderImpl {
 
-    private static PropertiesLoader loader = new PropertiesLoader();  
-    
-    public static String getValor(String key){  
-            return (String)loader.getValor(key);  
-    }  
+    private static PropertiesLoader loader = new PropertiesLoader();
+
+    public static String getValor(String key) {
+        return (String) loader.getValor(key);
+    }
 }

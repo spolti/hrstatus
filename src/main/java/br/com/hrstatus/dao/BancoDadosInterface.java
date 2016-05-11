@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,9 +19,9 @@
 
 package br.com.hrstatus.dao;
 
-import java.util.List;
-
 import br.com.hrstatus.model.BancoDados;
+
+import java.util.List;
 
 /*
  * @author spolti
@@ -29,66 +29,66 @@ import br.com.hrstatus.model.BancoDados;
 
 public interface BancoDadosInterface {
 
-	public int insert_dataBase(BancoDados dataBase);
-	
-	public List<BancoDados> listDataBases();
-	
-	public List<BancoDados> listDataBasesScheduler(String schedulerName);
-	
-	public List<BancoDados> listDataBaseByID(int id);
-	
-	public BancoDados getDataBaseByID(int id);
-	
-	public boolean deleteDataBase(BancoDados bancoDados);
-	
-	public void updateDataBase(BancoDados dataBase);
-	
-	public void updateDataBaseScheduler(BancoDados dataBase, String schedulerName);
-	
-	public int countMysql();
-	
-	public int countOracle();
+    int insert_dataBase(BancoDados dataBase);
 
-	public int countPostgre();
-	
-	public int countSqlServer();
-	
-	public int countDB2();
-	
-	public int countAllDataBases();
-	
-	public int countDataBasesOK();
-	
-	public int countDataBasesNOK();
-	
-	public int countMySQLOK();
-	
-	public int countMySQLNOK();
-	
-	public int countOracleOK();
-	
-	public int countOracleNOK();
-	
-	public int countPostgreOK();
-	
-	public int countPostgreNOK();
-	
-	public int countSqlServerOK();
-	
-	public int countSqlServerNOK();
-	
-	public int countDB2OK();
-	
-	public int countDB2NOK();
-	
-	public List<BancoDados> getdataBasesOK();
-	
-	public List<BancoDados> getdataBasesNOK();
-	
-	public List<BancoDados> getVendorMysql();
-	
-	public List<BancoDados> getVendorOracle();
-	
-	public List<BancoDados> getVendorPostgre();
+    List<BancoDados> listDataBases();
+
+    List<BancoDados> listDataBasesScheduler(String schedulerName);
+
+    List<BancoDados> listDataBaseByID(int id);
+
+    BancoDados getDataBaseByID(int id);
+
+    boolean deleteDataBase(BancoDados bancoDados);
+
+    void updateDataBase(BancoDados dataBase);
+
+    void updateDataBaseScheduler(BancoDados dataBase, String schedulerName);
+
+    int countMysql();
+
+    int countOracle();
+
+    int countPostgre();
+
+    int countSqlServer();
+
+    int countDB2();
+
+    int countAllDataBases();
+
+    int countDataBasesOK();
+
+    int countDataBasesNOK();
+
+    int countMySQLOK();
+
+    int countMySQLNOK();
+
+    int countOracleOK();
+
+    int countOracleNOK();
+
+    int countPostgreOK();
+
+    int countPostgreNOK();
+
+    int countSqlServerOK();
+
+    int countSqlServerNOK();
+
+    int countDB2OK();
+
+    int countDB2NOK();
+
+    List<BancoDados> getdataBasesOK();
+
+    List<BancoDados> getdataBasesNOK();
+
+    List<BancoDados> getVendorMysql();
+
+    List<BancoDados> getVendorOracle();
+
+    List<BancoDados> getVendorPostgre();
 
 }

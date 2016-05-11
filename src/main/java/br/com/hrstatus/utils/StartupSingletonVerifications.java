@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,17 +19,12 @@
 
 package br.com.hrstatus.utils;
 
-import java.io.BufferedReader;
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.logging.Logger;
+import br.com.hrstatus.action.os.unix.ExecuteLocalCommand;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import java.util.logging.Logger;
 
 /*
  * @author spolti
@@ -41,29 +36,28 @@ import javax.ejb.Startup;
 @Startup
 public class StartupSingletonVerifications {
 
-    protected final Logger log =  Logger.getLogger(StartupSingletonVerifications.class.getCanonicalName());
-	static ExecuteOSCommand shell = new ExecuteOSCommand();
-	
-	private enum binaries {
-		//ntpdate: used to update the date/time from Unix like servers, local and remote
-		//net (samba-common package): used to obtain date/time from Windows server
-		ntpdate, net
-	}
-	
-	@PostConstruct
-	public void verifyBinaries() {
-		String message = "Checking binaries required for the execution of HrStatus...";
-		String result = null;
-		log.info(message);
-		
-        for (binaries bin : binaries.values()){
-        	result = shell.executeCommand("type " + bin.name() + ";  echo $?");
-        	
-        	if (result.equals("0")){
-        		log.info("Binary " + bin.name() + ": OK");
-        	}else {
-        		log.warning("Binary " + bin.name() + ": Not found, this can cause strange behavior of some functionalities of HrStatus.");
-        	}
+    protected final Logger log = Logger.getLogger(StartupSingletonVerifications.class.getCanonicalName());
+    private ExecuteLocalCommand shell = new ExecuteLocalCommand();
+
+    private enum binaries {
+        //ntpdate: used to update the date/time from Unix like servers, local and remote
+        //net (samba-common package): used to obtain date/time from Windows server
+        ntpdate, net
+    }
+
+    @PostConstruct
+    public void verifyBinaries() {
+        String result = "";
+        log.info("Checking binaries required for the execution of HrStatus...");
+
+        for (binaries bin : binaries.values()) {
+            result = shell.executeCommand("type " + bin.name() + ";  echo $?");
+
+            if ("0".equals(result)) {
+                log.info("Binary " + bin.name() + ": OK");
+            } else {
+                log.warning("Binary " + bin.name() + ": Not found, this can cause strange behavior of some functionalities of HrStatus.");
+            }
         }
-	}
+    }
 }

@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,10 +19,10 @@
 
 package br.com.hrstatus.dao;
 
-import java.util.List;
-
 import br.com.hrstatus.model.PassExpire;
 import br.com.hrstatus.model.Users;
+
+import java.util.List;
 
 /*
  * @author spolti
@@ -30,55 +30,55 @@ import br.com.hrstatus.model.Users;
 
 public interface UsersInterface {
 
-	public void saveORupdateUser(Users user);
-	
-	public List<Users> listUser();
-	
-	public boolean deleteUserByID(Users user);
-	
-	public Users getUserByID(String username);
-	
-	public Users getUserByIDNotLogged(String username);
-	
-	public void updateUser(Users user);
-	
-	public void updateUserNotLogged(Users user);
-	
-	public void saveORupdateUserNotLogged(Users user);
-	
-	public String getPass(String username);
-	
-	public int searchUser(String username);
-	
-	public int searchUserNotLogged(String username);
-	
-	public String getMail (String username);
-	
-	public String getMailNotLogged(String username);
-	
-	public void setExpirePasswordTime(PassExpire passExpire);
-	
-	public void setExpirePasswordTimeNotLogged(PassExpire passExpire);
-	
-	public int searchUserChangePass(String username);
-	
-	public int searchUserChangePassNotLogged(String username);
-	
-	public List<PassExpire> getExpireTime();
-	
-	public void delUserExpireTime(PassExpire passExpire);
-	
-	public void delUserExpireTimeNotLogged(PassExpire passExpire);
-	
-	public void delUserHasChangedPass(String username);
+    void saveORupdateUser(Users user);
 
-	public String getRole(String user);
-	
-	public boolean getFirstLogin(String username);
-	
-	public void lastActivityTimeStamp(String lastActivityTimeStamp);
-	
-	public List<Integer> getIds_access_server(String user);
-	
-	public List<Users> getBlockedUsers();
+    List<Users> listUser();
+
+    boolean deleteUserByID(Users user);
+
+    Users getUserByID(String username);
+
+    Users getUserByIDNotLogged(String username);
+
+    void updateUser(Users user);
+
+    void updateUserNotLogged(Users user);
+
+    void saveORupdateUserNotLogged(Users user);
+
+    String getPass(String username);
+
+    int searchUser(String username);
+
+    int searchUserNotLogged(String username);
+
+    String getMail(String username);
+
+    String getMailNotLogged(String username);
+
+    void setExpirePasswordTime(PassExpire passExpire);
+
+    void setExpirePasswordTimeNotLogged(PassExpire passExpire);
+
+    int searchUserChangePass(String username);
+
+    int searchUserChangePassNotLogged(String username);
+
+    List<PassExpire> getExpireTime();
+
+    void delUserExpireTime(PassExpire passExpire);
+
+    void delUserExpireTimeNotLogged(PassExpire passExpire);
+
+    void delUserHasChangedPass(String username);
+
+    String getRole(String user);
+
+    boolean getFirstLogin(String username);
+
+    void lastActivityTimeStamp(String lastActivityTimeStamp);
+
+    List<Integer> getIds_access_server(String user);
+
+    List<Users> getBlockedUsers();
 }

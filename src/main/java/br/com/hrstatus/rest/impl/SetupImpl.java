@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,18 +19,16 @@
 
 package br.com.hrstatus.rest.impl;
 
-import java.util.logging.Logger;
-
-import javax.annotation.PostConstruct;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
-
 import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.model.Configurations;
 import br.com.hrstatus.rest.SetupResource;
 import br.com.hrstatus.utils.UserInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
+import javax.annotation.PostConstruct;
+import java.util.logging.Logger;
 
 /*
  * @author spolti
@@ -39,26 +37,26 @@ import br.com.hrstatus.utils.UserInfo;
 @Component
 public class SetupImpl extends SpringBeanAutowiringSupport implements SetupResource {
 
-	Logger log = Logger.getLogger(SetupImpl.class.getCanonicalName());
+    Logger log = Logger.getLogger(SetupImpl.class.getCanonicalName());
 
-	@Autowired(required = true)
-	private Configuration configDAO;
-	private UserInfo userInfo = new UserInfo();
+    @Autowired(required = true)
+    private Configuration configDAO;
+    private UserInfo userInfo = new UserInfo();
 
-	@PostConstruct
-	public void init() {
-		log.info("initializing Autowired Service.");
-		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-	}
+    @PostConstruct
+    public void init() {
+        log.info("initializing Autowired Service.");
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+    }
 
-	public Configurations configurations() {
-		try {
-			log.info(" [ " + userInfo.getLoggedUsername() + " ]{REST} -> Returning the database list.");
-			return this.configDAO.getConfigs();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+    public Configurations configurations() {
+        try {
+            log.info(" [ " + userInfo.getLoggedUsername() + " ]{REST} -> Returning the database list.");
+            return this.configDAO.getConfigs();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
 
-	}
+    }
 }

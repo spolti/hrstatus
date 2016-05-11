@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,11 +19,10 @@
 
 package br.com.hrstatus.utils;
 
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import br.com.hrstatus.model.Servidores;
 import br.com.hrstatus.model.Users;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /*
  * @author spolti
@@ -31,21 +30,20 @@ import br.com.hrstatus.model.Users;
 
 public class UserInfo {
 
-	
-	public String getLoggedUsername(){
-		Object  LoggedObjectUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
-		return LoggedUsername;
-	}	
-	
-	public boolean listLogFiles(Users user, int  id){
-		boolean val = false;
-	
-		for (Servidores u1 : user.getServer()){
-			if (id == u1.getId()){
-				val = true;
-			}
-		}
-		return val;
-	}
+    public String getLoggedUsername() {
+        final Object LoggedObjectUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        final String LoggedUsername = ((UserDetails) LoggedObjectUser).getUsername();
+        return LoggedUsername;
+    }
+
+    public boolean listLogFiles(Users user, int id) {
+        boolean val = false;
+
+        for (Servidores u1 : user.getServer()) {
+            if (id == u1.getId()) {
+                val = true;
+            }
+        }
+        return val;
+    }
 }

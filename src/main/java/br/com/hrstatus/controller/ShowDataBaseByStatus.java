@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,20 +19,18 @@
 
 package br.com.hrstatus.controller;
 
-import java.util.List;
-import java.util.logging.Logger;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.dao.Configuration;
-import br.com.hrstatus.dao.LockIntrface;
 import br.com.hrstatus.model.BancoDados;
 import br.com.hrstatus.utils.UserInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+import java.util.logging.Logger;
 
 /*
  * @author spolti
@@ -41,40 +39,37 @@ import br.com.hrstatus.utils.UserInfo;
 @Resource
 public class ShowDataBaseByStatus {
 
-	Logger log =  Logger.getLogger(ShowDataBaseByStatus.class.getCanonicalName());
-	
-	@Autowired
-	private Result result;
-	@Autowired
-	private LockIntrface lockDAO;
-	@Autowired
-	private BancoDadosInterface dbDAO;
-	@Autowired
-	private Configuration configurationDAO;
-	@Autowired
-	private Validator validator;
-	UserInfo userInfo = new UserInfo();
+    private Logger log = Logger.getLogger(ShowDataBaseByStatus.class.getName());
 
-	
-	@Get("/database/showByStatus/{status}")
-	public void showByStatus(String status) {
-	
-		// Inserting HTML title in the result
-		result.include("title", "Hr Status Home");
-		log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /database/showByStatus/" + status);
+    @Autowired
+    private Result result;
+    @Autowired
+    private BancoDadosInterface dbDAO;
+    @Autowired
+    private Configuration configurationDAO;
+    @Autowired
+    private Validator validator;
+    private UserInfo userInfo = new UserInfo();
 
-		if (status.equals("OK")) {
-			List<BancoDados> listdb = this.dbDAO.getdataBasesOK();
-			result.include("class", "activeBanco");
-			result.include("bancoDados", listdb).forwardTo(HomeController.class).home("");
+    @Get("/database/showByStatus/{status}")
+    public void showByStatus(String status) {
 
-		} else if (!status.equals("OK")) {
-			List<BancoDados> listdb = this.dbDAO.getdataBasesNOK();
-			result.include("class", "activeBanco");
-			result.include("bancoDados", listdb).forwardTo(HomeController.class).home("");
+        // Inserting HTML title in the result
+        result.include("title", "Hr Status Home");
+        log.info("[ " + userInfo.getLoggedUsername() + " ] URI Called: /database/showByStatus/" + status);
 
-		} else {
-			validator.onErrorUsePageOf(HomeController.class).home("");
-		}
-	}
+        if ("OK".equals(status)) {
+            final List<BancoDados> listdb = this.dbDAO.getdataBasesOK();
+            result.include("class", "activeBanco");
+            result.include("bancoDados", listdb).forwardTo(HomeController.class).home("");
+
+        } else if (!"OK".equals(status)) {
+            final List<BancoDados> listdb = this.dbDAO.getdataBasesNOK();
+            result.include("class", "activeBanco");
+            result.include("bancoDados", listdb).forwardTo(HomeController.class).home("");
+
+        } else {
+            validator.onErrorUsePageOf(HomeController.class).home("");
+        }
+    }
 }

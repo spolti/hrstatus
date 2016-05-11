@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,21 +19,20 @@
 
 package br.com.hrstatus.utils;
 
+import br.com.caelum.vraptor.interceptor.multipart.UploadedFile;
+import br.com.caelum.vraptor.ioc.Component;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.logging.Logger;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import br.com.caelum.vraptor.interceptor.multipart.UploadedFile;
-import br.com.caelum.vraptor.ioc.Component;
 
 /*
  *  @author spolti
@@ -42,113 +41,112 @@ import br.com.caelum.vraptor.ioc.Component;
 @Component
 public class Images {
 
-	Logger log =  Logger.getLogger(Images.class.getCanonicalName());
-	
-	private File pastaImages;
-	private static final int IMG_WIDTH_SETTINGS = 350;
-	private static final int IMG_HEIGHT_SETTINGS = 150;
-	private static final int IMG_WIDTH_HOME = 500;
-	private static final int IMG_HEIGHT_HOME = 300;
-	@Autowired
-	private HttpServletRequest request;
+    private static final int IMG_WIDTH_SETTINGS = 350;
+    private static final int IMG_HEIGHT_SETTINGS = 150;
+    private static final int IMG_WIDTH_HOME = 500;
+    private static final int IMG_HEIGHT_HOME = 300;
 
-	public Images() throws IOException {
+    private Logger log = Logger.getLogger(Images.class.getName());
 
-		String caminhoImagens = (System.getProperty("jboss.server.base.dir") + "/images");
-		pastaImages = new File(caminhoImagens);
-		log.fine("Local Imagens: " + pastaImages);
+    @Autowired
+    private HttpServletRequest request;
+    private File pastaImages;
 
-		if (pastaImages.isDirectory()) {
-			log.fine("Final directory " + pastaImages + " exists.");
-		} else {
-			log.fine("The final directory" + pastaImages + " don't exists, creating it.");
-			pastaImages.mkdir();
-		}
-	}
+    public Images() throws IOException {
 
-	public void save(UploadedFile imagem) {
+        final String caminhoImagens = (System.getProperty("jboss.server.base.dir") + "/images");
+        pastaImages = new File(caminhoImagens);
+        log.fine("Local Imagens: " + pastaImages);
 
-		File destino = new File(pastaImages, "logo.imagem");
-		try {
-			IOUtils.copy(imagem.getFile(), new FileOutputStream(destino));
-			log.info("Imagem salva em " + destino);
-		} catch (IOException e) {
-			throw new RuntimeException("Error copying the file", e);
-		}
-	}
+        if (pastaImages.isDirectory()) {
+            log.fine("Final directory " + pastaImages + " exists.");
+        } else {
+            log.fine("The final directory" + pastaImages + " don't exists, creating it.");
+            pastaImages.mkdir();
+        }
+    }
 
-	public void delete() {
+    public void save(UploadedFile imagem) {
 
-		log.info("Removing the logo image");
-		File logo = new File(pastaImages, "logo.imagem");
-		File logo_home = new File(pastaImages, "logo_login.imagem");
-		File logo_settings = new File(pastaImages, "logo_resized.imagem");
+        final File destino = new File(pastaImages, "logo.imagem");
+        try {
+            IOUtils.copy(imagem.getFile(), new FileOutputStream(destino));
+            log.info("Imagem salva em " + destino);
+        } catch (IOException e) {
+            throw new RuntimeException("Error copying the file", e);
+        }
+    }
 
-		logo.delete();
-		logo_home.delete();
-		logo_settings.delete();
+    public void delete() {
 
-	}
+        log.info("Removing the logo image");
+        final File logo = new File(pastaImages, "logo.imagem");
+        final File logo_home = new File(pastaImages, "logo_login.imagem");
+        final File logo_settings = new File(pastaImages, "logo_resized.imagem");
 
-	@SuppressWarnings("deprecation")
-	public File show(String VizualizationType) throws IOException {
+        logo.delete();
+        logo_home.delete();
+        logo_settings.delete();
 
-		try {
+    }
 
-			if (VizualizationType.equals("settings")) {
-				// resized image
-				BufferedImage originalImage = ImageIO.read(new File(pastaImages	+ "/logo.imagem"));
-				int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
-				BufferedImage resizeImagePng = resizeImage(originalImage, type,	"settings");
-				ImageIO.write(resizeImagePng, "png", new File(pastaImages + "/logo_resized.imagem"));
+    @SuppressWarnings("deprecation")
+    public File show(String VizualizationType) throws IOException {
 
-				log.fine("Resizing oringinal Image to previous vizualization.");
+        try {
 
-				return new File(pastaImages + "/logo_resized.imagem");
+            if ("settings".equals(VizualizationType)) {
+                // resized image
+                final BufferedImage originalImage = ImageIO.read(new File(pastaImages + "/logo.imagem"));
+                final int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
+                final BufferedImage resizeImagePng = resizeImage(originalImage, type, "settings");
+                ImageIO.write(resizeImagePng, "png", new File(pastaImages + "/logo_resized.imagem"));
 
-			} else {
-				
-				log.fine("Resizing original Image to login page vizualization.");
-				BufferedImage originalImage = ImageIO.read(new File(pastaImages	+ "/logo.imagem"));
-				int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
-				BufferedImage resizeImagePng = resizeImage(originalImage, type,	"home");
-				ImageIO.write(resizeImagePng, "png", new File(pastaImages + "/logo_login.imagem"));
-				return new File(pastaImages + "/logo_login.imagem");
-			}
+                log.fine("Resizing oringinal Image to previous vizualization.");
 
-		} catch (Exception ex) {
-			
-			String imgDefault = request.getRealPath("img/hrstatus.jpg");
-			log.fine("Logo Image  " + imgDefault);
-			File file = new File(imgDefault);
-			BufferedImage originalImage = ImageIO.read(file);
-			int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
-			BufferedImage resizeImagePng = resizeImage(originalImage, type,	VizualizationType);
-			ImageIO.write(resizeImagePng, "png", new File(pastaImages + "/logo_login.imagem"));
-			return new File(pastaImages + "/logo_login.imagem");
-		}
-		
-	}
+                return new File(pastaImages + "/logo_resized.imagem");
 
-	private static BufferedImage resizeImage(BufferedImage originalImage, int type, String target) {
+            } else {
 
-		if (target.equals("settings")) {
-			
-			BufferedImage resizedImage = new BufferedImage(IMG_WIDTH_SETTINGS, IMG_HEIGHT_SETTINGS, type);
-			Graphics2D g = resizedImage.createGraphics();
-			g.drawImage(originalImage, 0, 0, IMG_WIDTH_SETTINGS, IMG_HEIGHT_SETTINGS, null);
-			g.dispose();
-			return resizedImage;
+                log.fine("Resizing original Image to login page vizualization.");
+                final BufferedImage originalImage = ImageIO.read(new File(pastaImages + "/logo.imagem"));
+                final int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
+                final BufferedImage resizeImagePng = resizeImage(originalImage, type, "home");
+                ImageIO.write(resizeImagePng, "png", new File(pastaImages + "/logo_login.imagem"));
+                return new File(pastaImages + "/logo_login.imagem");
+            }
 
-		} else if (target.equals("home")) {
-			
-			BufferedImage resizedImage = new BufferedImage(IMG_WIDTH_HOME, IMG_HEIGHT_HOME, type);
-			Graphics2D g = resizedImage.createGraphics();
-			g.drawImage(originalImage, 0, 0, IMG_WIDTH_HOME, IMG_HEIGHT_HOME,null);
-			g.dispose();
-			return resizedImage;
+        } catch (Exception ex) {
 
-		} else
-			return null;
-	}
+            final String imgDefault = request.getRealPath("img/hrstatus.jpg");
+            log.fine("Logo Image  " + imgDefault);
+            final File file = new File(imgDefault);
+            final BufferedImage originalImage = ImageIO.read(file);
+            final int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
+            final BufferedImage resizeImagePng = resizeImage(originalImage, type, VizualizationType);
+            ImageIO.write(resizeImagePng, "png", new File(pastaImages + "/logo_login.imagem"));
+            return new File(pastaImages + "/logo_login.imagem");
+        }
+
+    }
+
+    private static BufferedImage resizeImage(BufferedImage originalImage, int type, String target) {
+
+        if ("settings".equals(target)) {
+            final BufferedImage resizedImage = new BufferedImage(IMG_WIDTH_SETTINGS, IMG_HEIGHT_SETTINGS, type);
+            final Graphics2D g = resizedImage.createGraphics();
+            g.drawImage(originalImage, 0, 0, IMG_WIDTH_SETTINGS, IMG_HEIGHT_SETTINGS, null);
+            g.dispose();
+            return resizedImage;
+
+        } else if ("home".equals(target)) {
+            final BufferedImage resizedImage = new BufferedImage(IMG_WIDTH_HOME, IMG_HEIGHT_HOME, type);
+            final Graphics2D g = resizedImage.createGraphics();
+            g.drawImage(originalImage, 0, 0, IMG_WIDTH_HOME, IMG_HEIGHT_HOME, null);
+            g.dispose();
+            return resizedImage;
+
+        } else
+            return null;
+    }
 }

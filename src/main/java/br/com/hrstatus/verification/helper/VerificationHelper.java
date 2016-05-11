@@ -22,7 +22,7 @@ package br.com.hrstatus.verification.helper;
 import br.com.hrstatus.action.databases.SQLStatementExecute;
 import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.dao.Configuration;
-import br.com.hrstatus.dao.LockIntrface;
+import br.com.hrstatus.dao.LockInterface;
 import br.com.hrstatus.dao.ServersInterface;
 import br.com.hrstatus.model.Lock;
 import br.com.hrstatus.resrources.ResourcesManagement;
@@ -30,10 +30,8 @@ import br.com.hrstatus.security.Crypto;
 import br.com.hrstatus.utils.UserInfo;
 import br.com.hrstatus.utils.date.DateParser;
 import br.com.hrstatus.utils.date.DateUtils;
-import br.com.hrstatus.verification.impl.VerificationImpl;
 import com.jcraft.jsch.JSchException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -51,17 +49,17 @@ public abstract class VerificationHelper {
     @Autowired
     public Configuration configurationDAO;
     @Autowired
-    public LockIntrface lockDAO;
+    public LockInterface lockDAO;
     @Autowired
     public ResourcesManagement resource;
     public UserInfo userInfo = new UserInfo();
-    public  Crypto encodePass = new Crypto();
+    public Crypto encodePass = new Crypto();
     public SQLStatementExecute execQueryDate = new SQLStatementExecute();
     public Lock lockedResource = new Lock();
 
     @Autowired
     public ServersInterface serversDAO;
-    DateUtils getTime = new DateUtils();
+    public DateUtils getTime = new DateUtils();
 
     private DateUtils dt = new DateUtils();
     private DateParser parse = new DateParser();
@@ -75,14 +73,14 @@ public abstract class VerificationHelper {
         long diff = 0;
 
         // Converting String dates to java.util.Date
-        Date stime = parse.parser(serverTime);
-        Date ctime = parse.parser(clientTime);
+        final Date stime = parse.parser(serverTime);
+        final Date ctime = parse.parser(clientTime);
 
         diff = stime.getTime() - ctime.getTime();
 
-        DecimalFormat df = new DecimalFormat();
+        final DecimalFormat df = new DecimalFormat();
         df.applyPattern("00.00;(00.00)");
-        long result = diff / (1000);
+        final long result = diff / (1000);
 
         return result;
     }
@@ -91,7 +89,7 @@ public abstract class VerificationHelper {
      * Returns the the serverTime
      */
     public String getTime() {
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         String serverTime = cal.getTime().toString();
         serverTime = parse.parser(serverTime).toString();
         return serverTime;

@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,15 +22,13 @@ package br.com.hrstatus.verification.database;
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
-import br.com.caelum.vraptor.Validator;
 import br.com.hrstatus.action.databases.helper.IllegalVendorException;
 import br.com.hrstatus.controller.HomeController;
 import br.com.hrstatus.dao.BancoDadosInterface;
-import br.com.hrstatus.dao.Configuration;
 import br.com.hrstatus.model.BancoDados;
 import br.com.hrstatus.utils.UserInfo;
 import br.com.hrstatus.utils.date.DateUtils;
-import br.com.hrstatus.verification.impl.VerificationImpl;
+import br.com.hrstatus.verification.Verification;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.crypto.BadPaddingException;
@@ -49,20 +47,16 @@ import java.util.logging.Logger;
 @Resource
 public class VerifySingleDB {
 
-    Logger log = Logger.getLogger(VerifySingleDB.class.getCanonicalName());
+    private Logger log = Logger.getLogger(VerifySingleDB.class.getName());
 
     @Autowired
     private Result result;
     @Autowired
     private BancoDadosInterface dbDAO;
     @Autowired
-    private Configuration configurationDAO;
-    @Autowired
-    private Validator validator;
-    @Autowired
-    private VerificationImpl verification;
-    UserInfo userInfo = new UserInfo();
-    DateUtils dt = new DateUtils();
+    private Verification verification;
+    private UserInfo userInfo = new UserInfo();
+    private DateUtils dt = new DateUtils();
 
 
     @Get("/database/verifySingleDB/{id}")
@@ -73,7 +67,7 @@ public class VerifySingleDB {
         log.info("[ " + userInfo.getLoggedUsername() + " ] URI called: /database/verifySingleDB");
         log.info("[ " + userInfo.getLoggedUsername() + " ] Initializing a verifySingleDB verification.");
         verification.databaseVerification(this.dbDAO.listDataBaseByID(id));
-        List<BancoDados> bancoDados = this.dbDAO.listDataBaseByID(id);
+        final List<BancoDados> bancoDados = this.dbDAO.listDataBaseByID(id);
         result.include("class", "activeBanco");
         result.include("bancoDados", bancoDados).forwardTo(HomeController.class).home("");
     }

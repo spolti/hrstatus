@@ -20,13 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-import java.util.Date;
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import java.util.Date;
 
 /*
  * @author spolti
@@ -36,94 +35,94 @@ import javax.persistence.Table;
 @Table(name = "VerificationSchedulerHistory")
 public class VerificationSchedulerHistory {
 
-	@Id
-	@Column(name = "schedulerHistoryId")
-	@GeneratedValue
-	private int schedulerHistoryId;
-	
-	@Column(name = "schedulerName")
-	private String schedulerName;
-	
-	@Column(name = "everyday", nullable = false)
-	private boolean everyday;
-	
-	@Column(name = "defaultScheduler", nullable = false)
-	private boolean defaultScheduler;
-	
-	@Column(name = "finished")
-	private boolean finished;
-	
-	@Column(name = "enabled")
-	private boolean enabled;
-	
-	@Column(name = "startedAt")
-	private Date startedAt;
-	
-	@Column(name = "finishedAt")
-	private Date finishedAt;
+    @Id
+    @Column(name = "schedulerHistoryId")
+    @GeneratedValue
+    private int schedulerHistoryId;
 
-	public Date getStartedAt() {
-		return startedAt;
-	}
+    @Column(name = "schedulerName")
+    private String schedulerName;
 
-	public void setStartedAt(Date startedAt) {
-		this.startedAt = startedAt;
-	}
+    @Column(name = "everyday", nullable = false)
+    private boolean everyday;
 
-	public Date getFinishedAt() {
-		return finishedAt;
-	}
+    @Column(name = "defaultScheduler", nullable = false)
+    private boolean defaultScheduler;
 
-	public void setFinishedAt(Date finishedAt) {
-		this.finishedAt = finishedAt;
-	}
+    @Column(name = "finished")
+    private boolean finished;
 
-	public boolean isFinished() {
-		return finished;
-	}
+    @Column(name = "enabled")
+    private boolean enabled;
 
-	public boolean isEnabled() {
-		return enabled;
-	}
+    @Column(name = "startedAt")
+    private Date startedAt;
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
+    @Column(name = "finishedAt")
+    private Date finishedAt;
 
-	public void setFinished(boolean finished) {
-		this.finished = finished;
-	}
+    public Date getStartedAt() {
+        return startedAt;
+    }
 
-	public boolean isDefaultScheduler() {
-		return defaultScheduler;
-	}
+    public void setStartedAt(Date startedAt) {
+        this.startedAt = startedAt;
+    }
 
-	public void setDefaultScheduler(boolean defaultScheduler) {
-		this.defaultScheduler = defaultScheduler;
-	}
+    public Date getFinishedAt() {
+        return finishedAt;
+    }
 
-	public int getSchedulerId() {
-		return schedulerHistoryId;
-	}
+    public void setFinishedAt(Date finishedAt) {
+        this.finishedAt = finishedAt;
+    }
 
-	public void setSchedulerId(int schedulerId) {
-		this.schedulerHistoryId = schedulerId;
-	}
+    public boolean isFinished() {
+        return finished;
+    }
 
-	public String getSchedulerName() {
-		return schedulerName;
-	}
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-	public void setSchedulerName(String schedulerName) {
-		this.schedulerName = schedulerName;
-	}
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
-	public boolean isEveryday() {
-		return everyday;
-	}
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
 
-	public void setEveryday(boolean everyday) {
-		this.everyday = everyday;
-	} 
-	
+    public boolean isDefaultScheduler() {
+        return defaultScheduler;
+    }
+
+    public void setDefaultScheduler(boolean defaultScheduler) {
+        this.defaultScheduler = defaultScheduler;
+    }
+
+    public int getSchedulerId() {
+        return schedulerHistoryId;
+    }
+
+    public void setSchedulerId(int schedulerId) {
+        this.schedulerHistoryId = schedulerId;
+    }
+
+    public String getSchedulerName() {
+        return schedulerName;
+    }
+
+    public void setSchedulerName(String schedulerName) {
+        this.schedulerName = schedulerName;
+    }
+
+    public boolean isEveryday() {
+        return everyday;
+    }
+
+    public void setEveryday(boolean everyday) {
+        this.everyday = everyday;
+    }
+
 }

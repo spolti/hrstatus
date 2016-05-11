@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,8 +27,8 @@ import br.com.hrstatus.controller.HomeController;
 import br.com.hrstatus.dao.BancoDadosInterface;
 import br.com.hrstatus.model.BancoDados;
 import br.com.hrstatus.resrources.ResourcesManagement;
-import br.com.hrstatus.utils.UserInfo;
-import br.com.hrstatus.verification.impl.VerificationImpl;
+import br.com.hrstatus.verification.Verification;
+import br.com.hrstatus.verification.helper.VerificationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.crypto.BadPaddingException;
@@ -44,42 +44,40 @@ import java.util.logging.Logger;
  */
 
 @Resource
-public class DbFullVerification {
+public class DbFullVerification extends VerificationHelper{
 
-	protected final Logger log = Logger.getLogger(getClass().getName());
-	
-	@Autowired
-	private Result result;
-	@Autowired
-	private BancoDadosInterface dbDAO;
-	@Autowired
-	private VerificationImpl verification;
-	@Autowired
-	ResourcesManagement resource;
-	private UserInfo userInfo = new UserInfo();
+    private Logger log = Logger.getLogger(getClass().getName());
 
+    @Autowired
+    private Result result;
+    @Autowired
+    private BancoDadosInterface dbDAO;
+    @Autowired
+    private ResourcesManagement resource;
+    @Autowired
+    private Verification verification;
 
-	@Get("/database/startDataBaseVerification/fullDBVerification")
-	public void startFullDataBaseVerification() throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, IllegalVendorException {
+    @Get("/database/startDataBaseVerification/fullDBVerification")
+    public void startFullDataBaseVerification() throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, IllegalVendorException {
 
-		// inserindo html title no result
-		result.include("title", "Hr Status Home");
-		log.info("[ " + userInfo.getLoggedUsername() + " ] URI called: /database/startDataBaseVerification/fullDBVerification");
+        // inserindo html title no result
+        result.include("title", "Hr Status Home");
+        log.info("[ " + userInfo.getLoggedUsername() + " ] URI called: /database/startDataBaseVerification/fullDBVerification");
 
-		log.info("[ " + userInfo.getLoggedUsername() + " ] Initializing a fullDBVerification verification.");
-		
-		// Verifica se já tem alguma verificação ocorrendo...
-		if (!resource.islocked("fullDbVerification")) {
-			resource.lockRecurso("fullDbVerification");
-			verification.databaseVerification(this.dbDAO.listDataBases());
-			List<BancoDados> listdb =  this.dbDAO.listDataBases();
-			result.include("class", "activeBanco");
-			result.include("bancoDados",listdb).forwardTo(HomeController.class).home("");
-			resource.releaseLock("fullDbVerification");
-			
-		} else {
-			result.include("class", "activeBanco");
-			result.include("info","O recurso fullDBVerification está locado, aguarde o término da mesma").forwardTo(HomeController.class).home("");
-		}
-	}
+        log.info("[ " + userInfo.getLoggedUsername() + " ] Initializing a fullDBVerification verification.");
+
+        // Verifica se já tem alguma verificação ocorrendo...
+        if (!resource.islocked("fullDbVerification")) {
+            resource.lockRecurso("fullDbVerification");
+            verification.databaseVerification(this.dbDAO.listDataBases());
+            final List<BancoDados> listdb = this.dbDAO.listDataBases();
+            result.include("class", "activeBanco");
+            result.include("bancoDados", listdb).forwardTo(HomeController.class).home("");
+            resource.releaseLock("fullDbVerification");
+
+        } else {
+            result.include("class", "activeBanco");
+            result.include("info", "O recurso fullDBVerification está locado, aguarde o término da mesma").forwardTo(HomeController.class).home("");
+        }
+    }
 }

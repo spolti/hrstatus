@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ public class SQLStatementExecute {
     private Connection jdbcConnection;
     private Statement stm;
     private ResultSet rs;
-    private String result = null;
+    private String result;
 
     public String getDate(BancoDados dataBase) throws SQLException, ClassNotFoundException, IllegalVendorException {
 
@@ -95,7 +95,7 @@ public class SQLStatementExecute {
         //Removing timestamp
         if (date.endsWith(".0")){
             date = date.replace(".","#");
-            String dt_tmp[] = date.split("#");
+            final String []dt_tmp = date.split("#");
             date = dt_tmp[0];
         }
         return date;

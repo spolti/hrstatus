@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@ package br.com.hrstatus.verification;
 
 import br.com.hrstatus.action.databases.helper.IllegalVendorException;
 import br.com.hrstatus.model.BancoDados;
+import br.com.hrstatus.model.Servidores;
+import com.jcraft.jsch.JSchException;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -32,7 +34,10 @@ import java.util.List;
 /*
  * @author spolti
  */
+
 public interface Verification {
 
-    public void databaseVerification (List<BancoDados> dataBases) throws IllegalVendorException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException;
+    void serverVerification(List<Servidores> server) throws JSchException;
+
+    void databaseVerification(List<BancoDados> dataBases) throws IllegalVendorException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException;
 }

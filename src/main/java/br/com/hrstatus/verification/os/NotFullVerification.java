@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,23 +22,13 @@ package br.com.hrstatus.verification.os;
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
-import br.com.hrstatus.action.os.unix.ExecRemoteCommand;
-import br.com.hrstatus.action.os.windows.ExecCommand;
 import br.com.hrstatus.controller.HomeController;
 import br.com.hrstatus.model.Servidores;
-import br.com.hrstatus.resrources.ResourcesManagement;
-import br.com.hrstatus.security.Crypto;
+import br.com.hrstatus.verification.Verification;
 import br.com.hrstatus.verification.helper.VerificationHelper;
-import br.com.hrstatus.verification.impl.VerificationImpl;
 import com.jcraft.jsch.JSchException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -49,14 +39,13 @@ import java.util.logging.Logger;
 @Resource
 public class NotFullVerification extends VerificationHelper {
 
-    Logger log = Logger.getLogger(NotFullVerification.class.getCanonicalName());
+    private Logger log = Logger.getLogger(NotFullVerification.class.getName());
 
     @Autowired
     private Result result;
     @Autowired
-    ResourcesManagement resource;
-    @Autowired
-    public VerificationImpl verification;
+    private Verification verification;
+
     @SuppressWarnings("static-access")
     @Get("/home/startVerification/notFull")
     public void startNotFullVerification() throws InterruptedException, JSchException {
@@ -71,7 +60,7 @@ public class NotFullVerification extends VerificationHelper {
 
             // Inserting HTML title in the result
             result.include("title", "Hr Status Home");
-            List<Servidores> serverList = this.serversDAO.getServersNOKVerActive();
+            final List<Servidores> serverList = this.serversDAO.getServersNOKVerActive();
 
             if (serverList.size() <= 0) {
                 log.info("[ " + userInfo.getLoggedUsername() + " ] No server found or no servers with active check.");
@@ -82,7 +71,7 @@ public class NotFullVerification extends VerificationHelper {
 
                 verification.serverVerification(serverList);
 
-                List<Servidores> resultServers = this.serversDAO.getServersNOKVerActive();
+                final List<Servidores> resultServers = this.serversDAO.getServersNOKVerActive();
                 result.include("class", "activeServer");
                 result.include("server", resultServers).forwardTo(HomeController.class).home("");
 
