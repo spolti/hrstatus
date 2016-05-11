@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,34 +19,33 @@
 
 package br.com.hrstatus.security;
 
-import java.util.logging.Logger;
-
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.session.SessionDestroyedEvent;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.logging.Logger;
+
 /*
- *Spring Framework 
+ *Spring Framework
  *Customization, rewrite LoginSuccessHandler
  */
 
 @Component
 public class LogoutListener implements ApplicationListener<SessionDestroyedEvent> {
 
-	Logger log =  Logger.getLogger(LogoutListener.class.getCanonicalName());
-	
-    public void onApplicationEvent(SessionDestroyedEvent event)
-    {
-    	
-        try{
-    	 SecurityContext securityContext = (SecurityContext) event.getSecurityContexts();
-    	 UserDetails ud = (UserDetails) securityContext.getAuthentication().getPrincipal();
-         log.info("Session expires or the user " + ud.getUsername() + "logouts");
-         
-    	}catch (Exception e){
-    		 log.fine("There is no user in the session.");
-    	}
+    Logger log = Logger.getLogger(LogoutListener.class.getCanonicalName());
+
+    public void onApplicationEvent(SessionDestroyedEvent event) {
+
+        try {
+            final SecurityContext securityContext = (SecurityContext) event.getSecurityContexts();
+            final UserDetails ud = (UserDetails) securityContext.getAuthentication().getPrincipal();
+            log.info("Session expires or the user " + ud.getUsername() + "logouts");
+
+        } catch (Exception e) {
+            log.fine("There is no user in the session.");
+        }
     }
 }

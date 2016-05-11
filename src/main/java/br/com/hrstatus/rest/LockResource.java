@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,14 +19,13 @@
 
 package br.com.hrstatus.rest;
 
-import java.util.List;
+import br.com.hrstatus.model.Lock;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-
-import br.com.hrstatus.model.Lock;
+import java.util.List;
 
 /*
  * @author spolti
@@ -36,20 +35,19 @@ import br.com.hrstatus.model.Lock;
 @Produces("application/json; charset=utf8")
 public interface LockResource {
 
-	
-	/*
-	 * \/rest/locks/list
-	 * Example: http://localhost:8080/hs/rest/locks/list
-	 */
-	@Path("list")
-	@GET
-	public List<Lock> listLocks();
-	
-	/*
-	 * \/rest/locks/delete/{id}
-	 * Example: http://localhost:8080/hs/rest/locks/delete/1
-	 */
-	@Path("remove/{id}")
-	@GET
-	public String deleteLockByID(@PathParam(value = "id") int id);
+    /*
+     * \/rest/locks/list
+     * Example: http://localhost:8080/hs/rest/locks/list
+     */
+    @Path("list")
+    @GET
+    List<Lock> listLocks();
+
+    /*
+     * \/rest/locks/delete/{id}
+     * Example: http://localhost:8080/hs/rest/locks/delete/1
+     */
+    @Path("remove/{id}")
+    @GET
+    String deleteLockByID(@PathParam(value = "id") int id);
 }

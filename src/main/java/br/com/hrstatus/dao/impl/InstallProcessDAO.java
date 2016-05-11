@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,11 +19,9 @@
 
 package br.com.hrstatus.dao.impl;
 
-import java.util.logging.Logger;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
+import br.com.hrstatus.dao.InstallProcessInterface;
+import br.com.hrstatus.model.InstallationProcess;
+import br.com.hrstatus.utils.UserInfo;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.ProjectionList;
@@ -31,11 +29,11 @@ import org.hibernate.criterion.Projections;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.hrstatus.dao.InstallProcessInterface;
-import br.com.hrstatus.model.InstallationProcess;
-import br.com.hrstatus.utils.UserInfo;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.logging.Logger;
 
-/* 
+/*
  * @author spolti
  */
 
@@ -43,62 +41,61 @@ import br.com.hrstatus.utils.UserInfo;
 @Transactional
 public class InstallProcessDAO implements InstallProcessInterface {
 
-	Logger log = Logger.getLogger(InstallProcessDAO.class.getCanonicalName());
+    Logger log = Logger.getLogger(InstallProcessDAO.class.getCanonicalName());
 
-	private EntityManager entityManager;
-	UserInfo userInfo = new UserInfo();
+    private EntityManager entityManager;
+    private UserInfo userInfo = new UserInfo();
 
-	public InstallProcessDAO() {
-	}
+    public InstallProcessDAO() {
+    }
 
-	@PersistenceContext(unitName = "pu-hr")
-	protected final void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;
-	}
+    @PersistenceContext(unitName = "pu-hr")
+    protected final void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
-	private Session session() {
-		return ((Session) entityManager.getDelegate());
-	}
+    private Session session() {
+        return ((Session) entityManager.getDelegate());
+    }
 
-	public boolean freshInstall() {
+    public boolean freshInstall() {
 
-		log.fine("[ System ] invoking freshInstall()");
+        log.fine("[ System ] invoking freshInstall()");
 
-		Criteria freshInstall = session().createCriteria(InstallationProcess.class);
-		ProjectionList proList = Projections.projectionList();
-		proList.add(Projections.property("freshInstall"));
-		freshInstall.setProjection(proList);
+        final Criteria freshInstall = session().createCriteria(InstallationProcess.class);
+        final ProjectionList proList = Projections.projectionList();
+        proList.add(Projections.property("freshInstall"));
+        freshInstall.setProjection(proList);
 
-		boolean result = false;
+        boolean result = false;
 
-		try {
-			String temp = freshInstall.uniqueResult().toString();
+        try {
+            final String temp = freshInstall.uniqueResult().toString();
 
-			if (new Boolean(temp)) {
-				result = true;
-			} else if (!new Boolean(temp)) { 
-				result = false;
-			}
-		} catch (java.lang.NullPointerException NPE) {
-			result = true;
-		}
-		return result;
-	}
-	
+            if (new Boolean(temp)) {
+                result = true;
+            } else if (!new Boolean(temp)) {
+                result = false;
+            }
+        } catch (java.lang.NullPointerException NPE) {
+            result = true;
+        }
+        return result;
+    }
 
-	public void saveInstallationProcess (InstallationProcess ipi){
-		log.fine("[ System ] invoking updateInstallationProcess()");
-		session().save(ipi);
-	}
-	
-	public String getInstallationDate(){
-		
-		log.fine("[ System ] invoking getInstallationDate()");
-		Criteria installDate = session().createCriteria(InstallationProcess.class);
-		ProjectionList proList = Projections.projectionList();
-		proList.add(Projections.property("installDate"));
-		installDate.setProjection(proList);
-		return installDate.uniqueResult().toString();
-	}
-	
+
+    public void saveInstallationProcess(InstallationProcess ipi) {
+        log.fine("[ System ] invoking updateInstallationProcess()");
+        session().save(ipi);
+    }
+
+    public String getInstallationDate() {
+
+        log.fine("[ System ] invoking getInstallationDate()");
+        final Criteria installDate = session().createCriteria(InstallationProcess.class);
+        final ProjectionList proList = Projections.projectionList();
+        proList.add(Projections.property("installDate"));
+        installDate.setProjection(proList);
+        return installDate.uniqueResult().toString();
+    }
 }

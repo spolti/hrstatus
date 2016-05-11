@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,12 +26,13 @@ import java.util.logging.Logger;
  */
 public abstract class CommandExecutionHelper {
 
-    private final static Logger log = Logger.getLogger(CommandExecutionHelper.class.getName());
+    private static final Logger log = Logger.getLogger(CommandExecutionHelper.class.getName());
 
     @SuppressWarnings("unchecked")
     public static class MyLogger implements com.jcraft.jsch.Logger {
         @SuppressWarnings("rawtypes")
         static java.util.Hashtable name = new java.util.Hashtable();
+
         static {
             name.put(new Integer(DEBUG), "DEBUG: ");
             name.put(new Integer(INFO), "INFO: ");
@@ -50,10 +51,10 @@ public abstract class CommandExecutionHelper {
         }
     }
 
-   /*
-    * Returns true if the host is localhost or 127.0.0.1
-    */
-    public static boolean isLocalhost (String host) {
-        return true ? host.equals("localhost") || host.equals("127.0.0.1") : false;
+    /*
+     * Returns true if the host is localhost or 127.0.0.1
+     */
+    public static boolean isLocalhost(String host) {
+        return true ? "localhost".equals(host) || "127.0.0.1".equals(host) : false;
     }
 }

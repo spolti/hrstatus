@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,9 +28,9 @@ import br.com.hrstatus.model.InstallationProcess;
 
 public interface InstallProcessInterface {
 
-	public boolean freshInstall();
-	
-	public void saveInstallationProcess (InstallationProcess ipi);
-	
-	public String getInstallationDate();
+    boolean freshInstall();
+
+    void saveInstallationProcess(InstallationProcess ipi);
+
+    String getInstallationDate();
 }

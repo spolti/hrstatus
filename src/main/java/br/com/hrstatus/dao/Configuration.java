@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,35 +27,35 @@ import br.com.hrstatus.model.Configurations;
 
 public interface Configuration {
 
-	public void updateConfig(Configurations config);
-	
-	public void saveConfigNotLogged(Configurations config);
-	
-	public Configurations getConfigs();
-	
-	public String getMailSender();
-	
-	public String getMailSenderNotLogged();
-	
-	public String getSubject();
-	
-	public String getSubjectNotLogged();
-	
-	public String getDests();
-	
-	public String getDestsNotLogged();
-	
-	public String getJndiMail();
-	
-	public String getJndiMailNotLogged();
-	
-	public int getDiffirenceSecs();
-	
-	public int getDiffirenceSecsScheduler(String schedulerName);
-	
-	public String getNtpServerAddress();
-	
-	public String getNtpServerAddressNotLogged();
-	
-	public boolean sendNotification();
+    void updateConfig(Configurations config);
+
+    void saveConfigNotLogged(Configurations config);
+
+    Configurations getConfigs();
+
+    String getMailSender();
+
+    String getMailSenderNotLogged();
+
+    String getSubject();
+
+    String getSubjectNotLogged();
+
+    String getDests();
+
+    String getDestsNotLogged();
+
+    String getJndiMail();
+
+    String getJndiMailNotLogged();
+
+    int getDiffirenceSecs();
+
+    int getDiffirenceSecsScheduler(String schedulerName);
+
+    String getNtpServerAddress();
+
+    String getNtpServerAddressNotLogged();
+
+    boolean sendNotification();
 }

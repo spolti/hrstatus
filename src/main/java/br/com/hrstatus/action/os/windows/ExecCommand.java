@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,52 +30,52 @@ import java.util.logging.Logger;
 
 public class ExecCommand {
 
-	static Logger log =  Logger.getLogger(ExecCommand.class.getCanonicalName());
-	
-	public static String Exec(String ip, String parameter) throws IOException {
+    static Logger log = Logger.getLogger(ExecCommand.class.getCanonicalName());
 
-		Process p = null;
-		String out = "";
-		String s = "";
-		
-		try {
+    public static String Exec(String ip, String parameter) throws IOException {
 
-			if (parameter.equals("I")) {
-				log.fine("Trying the parameter -I");
-				p = Runtime.getRuntime().exec("net time -I " + ip);
-				BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-				while ((s = reader.readLine()) != null) {
-					out += s;
-				}
+        Process p = null;
+        String out = "";
+        String s = "";
 
-				if (out.startsWith("n")) {
-					String temp = out.substring(4, out.length());
-					out = temp;
-				}
+        try {
 
-			} else if (parameter.equals("S")) {
-				log.fine("Trying also the parameter -S");
-				p = Runtime.getRuntime().exec("net time -S " + ip);
-				if (p.equals(null)) {
-					log.fine("Null pointer at this point...");
-				}
-				BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-				while ((s = reader.readLine()) != null) {
-					out += s;
-				}
+            if ("I".equals(parameter)) {
+                log.fine("Trying the parameter -I");
+                p = Runtime.getRuntime().exec("net time -I " + ip);
+                final BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                while ((s = reader.readLine()) != null) {
+                    out += s;
+                }
 
-				if (out.startsWith("n")) {
-					String temp = out.substring(4, out.length());
-					out = temp;
-				}
-	
-			}
-			
-			return out;
-			
-		} catch (Exception ex) {
-			log.severe(ex.toString());
-			return "";
-		}
-	}
+                if (out.startsWith("n")) {
+                    final String temp = out.substring(4, out.length());
+                    out = temp;
+                }
+
+            } else if ("S".equals(parameter)) {
+                log.fine("Trying also the parameter -S");
+                p = Runtime.getRuntime().exec("net time -S " + ip);
+                if (p.equals(null)) {
+                    log.fine("Null pointer at this point...");
+                }
+                final BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                while ((s = reader.readLine()) != null) {
+                    out += s;
+                }
+
+                if (out.startsWith("n")) {
+                    final String temp = out.substring(4, out.length());
+                    out = temp;
+                }
+
+            }
+
+            return out;
+
+        } catch (Exception ex) {
+            log.severe(ex.toString());
+            return "";
+        }
+    }
 }

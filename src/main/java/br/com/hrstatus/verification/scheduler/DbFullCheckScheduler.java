@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,6 +19,18 @@
 
 package br.com.hrstatus.verification.scheduler;
 
+import br.com.hrstatus.action.databases.helper.IllegalVendorException;
+import br.com.hrstatus.model.BancoDados;
+import br.com.hrstatus.model.Lock;
+import br.com.hrstatus.security.Crypto;
+import br.com.hrstatus.verification.helper.VerificationHelper;
+import com.jcraft.jsch.JSchException;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.stereotype.Service;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -26,126 +38,111 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-
-import br.com.hrstatus.action.databases.helper.IllegalVendorException;
-import br.com.hrstatus.verification.helper.VerificationHelper;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.stereotype.Service;
-
-import br.com.hrstatus.model.BancoDados;
-import br.com.hrstatus.model.Lock;
-import br.com.hrstatus.security.Crypto;
-
-import com.jcraft.jsch.JSchException;
-
 /*
  * @author spolti
  */
 
 @Service
 @Configurable
-public class DbFullCheckScheduler extends VerificationHelper{
+public class DbFullCheckScheduler extends VerificationHelper {
 
-	protected final Logger log = Logger.getLogger(getClass().getName());
-	
-	@SuppressWarnings("static-access")
-	public void startFullDataBaseVerification(String schedulerName) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, IllegalVendorException {
-		String dateSTR = null;
+    protected final Logger log = Logger.getLogger(getClass().getName());
 
-		log.info("[ " + schedulerName + " ] Initializing Full DB Verification");
+    @SuppressWarnings("static-access")
+    public void startFullDataBaseVerification(String schedulerName) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, IllegalVendorException {
+        String dateSTR = null;
 
-		// Verifica se já tem alguma verificação ocorrendo...
-		lockedResource.setRecurso("fullDBVerification");
-		lockedResource.setUsername(schedulerName);
-		List<Lock> lockList = this.lockDAO.listLockedServicesScheduler("fullDBVerification", schedulerName);
-		
-		if (lockList.size() != 0) {
-			for (Lock lock : lockList) {
-				log.info("[ " + schedulerName + " ] The resource fullDBVerification is locked by the user " + schedulerName);
-				log.info("O recurso fullDBVerification está locado pelo usuário " + lock.getUsername() + ", aguarde o término da mesma");
-			}
-		} else {
-			
-			log.info("[ " + schedulerName + " ] O recurso fullDBVerification não está locado, locando e proseguindo");
-			// locking resource
-			lockDAO.insertLockScheduler(lockedResource, schedulerName);
+        log.info("[ " + schedulerName + " ] Initializing Full DB Verification");
 
-			List<BancoDados> listdb = this.dbDAO.listDataBasesScheduler(schedulerName);
-			for (BancoDados bancoDados : listdb) {
-				bancoDados.setServerTime(getTime());
-				bancoDados.setLastCheck(bancoDados.getServerTime());
+        // Verifica se já tem alguma verificação ocorrendo...
+        lockedResource.setRecurso("fullDBVerification");
+        lockedResource.setUsername(schedulerName);
+        final List<Lock> lockList = this.lockDAO.listLockedServicesScheduler("fullDBVerification", schedulerName);
 
-				// Decrypting password
-			    bancoDados.setPass(String.valueOf(Crypto.decode(bancoDados.getPass())));
+        if (lockList.size() != 0) {
+            for (Lock lock : lockList) {
+                log.info("[ " + schedulerName + " ] The resource fullDBVerification is locked by the user " + schedulerName);
+                log.info("O recurso fullDBVerification está locado pelo usuário " + lock.getUsername() + ", aguarde o término da mesma");
+            }
+        } else {
 
-				try {
+            log.info("[ " + schedulerName + " ] O recurso fullDBVerification não está locado, locando e proseguindo");
+            // locking resource
+            lockDAO.insertLockScheduler(lockedResource, schedulerName);
 
-					dateSTR = execQueryDate.getDate(bancoDados);
-					log.fine("[ " + schedulerName + " ] Hora obtida do servidor " + bancoDados.getHostname() + ": " + dateSTR);
-					bancoDados.setClientTime(dateSTR);
-					// Calculating time difference
-					bancoDados.setDifference((differenceTime(bancoDados.getServerTime(), dateSTR)));
+            final List<BancoDados> listdb = this.dbDAO.listDataBasesScheduler(schedulerName);
+            for (BancoDados bancoDados : listdb) {
+                bancoDados.setServerTime(getTime());
+                bancoDados.setLastCheck(bancoDados.getServerTime());
 
-					if (bancoDados.getDifference() < 0) {
-						bancoDados.setDifference(bancoDados.getDifference() * -1);
-					}
+                // Decrypting password
+                bancoDados.setPass(String.valueOf(Crypto.decode(bancoDados.getPass())));
 
-					if (bancoDados.getDifference() <= this.configurationDAO.getDiffirenceSecsScheduler(schedulerName)) {
-						bancoDados.setTrClass("success");
-						bancoDados.setStatus("OK");
-					} else {
-						bancoDados.setTrClass("error");
-						bancoDados.setStatus("não OK");
-					}
-					try {
-						// Encrypting the password
-						bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
+                try {
 
-					} catch (Exception e1) {
-						log.severe("[ " + schedulerName + " ] Error: " + e1);
-					}
-					this.dbDAO.updateDataBaseScheduler(bancoDados, schedulerName);
+                    dateSTR = execQueryDate.getDate(bancoDados);
+                    log.fine("[ " + schedulerName + " ] Hora obtida do servidor " + bancoDados.getHostname() + ": " + dateSTR);
+                    bancoDados.setClientTime(dateSTR);
+                    // Calculating time difference
+                    bancoDados.setDifference((differenceTime(bancoDados.getServerTime(), dateSTR)));
 
-				} catch (JSchException e) {
-					bancoDados.setStatus(e + "");
-					bancoDados.setTrClass("error");
-					try {
-						// Encrypting the password
-						bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
+                    if (bancoDados.getDifference() < 0) {
+                        bancoDados.setDifference(bancoDados.getDifference() * -1);
+                    }
 
-					} catch (Exception e1) {
-						
-						log.severe("[ " + schedulerName + " ] Error: " + e1);
-					}
-					this.dbDAO.updateDataBaseScheduler(bancoDados, schedulerName);
-				} catch (IOException e) {
-					bancoDados.setStatus(e + "");
-					bancoDados.setTrClass("error");
-					try {
+                    if (bancoDados.getDifference() <= this.configurationDAO.getDiffirenceSecsScheduler(schedulerName)) {
+                        bancoDados.setTrClass("success");
+                        bancoDados.setStatus("OK");
+                    } else {
+                        bancoDados.setTrClass("error");
+                        bancoDados.setStatus("não OK");
+                    }
+                    try {
+                        // Encrypting the password
+                        bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 
-						// Encrypting the password
-						bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
+                    } catch (Exception e1) {
+                        log.severe("[ " + schedulerName + " ] Error: " + e1);
+                    }
+                    this.dbDAO.updateDataBaseScheduler(bancoDados, schedulerName);
 
-					} catch (Exception e1) {
-						
-						log.severe("[ " + schedulerName + " ] Error: " + e1);
-					}
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				} catch (SQLException e) {
-					e.printStackTrace();
-					bancoDados.setStatus("Erro: " + e.getMessage());
-					bancoDados.setTrClass("error");
-					bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
-					this.dbDAO.updateDataBaseScheduler(bancoDados, schedulerName);
-				}
-			}
+                } catch (JSchException e) {
+                    bancoDados.setStatus(e + "");
+                    bancoDados.setTrClass("error");
+                    try {
+                        // Encrypting the password
+                        bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
 
-			lockDAO.removeLockScheduler(lockedResource, schedulerName);
-		}
-		
-	}
+                    } catch (Exception e1) {
+
+                        log.severe("[ " + schedulerName + " ] Error: " + e1);
+                    }
+                    this.dbDAO.updateDataBaseScheduler(bancoDados, schedulerName);
+                } catch (IOException e) {
+                    bancoDados.setStatus(e + "");
+                    bancoDados.setTrClass("error");
+                    try {
+
+                        // Encrypting the password
+                        bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
+
+                    } catch (Exception e1) {
+
+                        log.severe("[ " + schedulerName + " ] Error: " + e1);
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    bancoDados.setStatus("Erro: " + e.getMessage());
+                    bancoDados.setTrClass("error");
+                    bancoDados.setPass(encodePass.encode(bancoDados.getPass()));
+                    this.dbDAO.updateDataBaseScheduler(bancoDados, schedulerName);
+                }
+            }
+
+            lockDAO.removeLockScheduler(lockedResource, schedulerName);
+        }
+
+    }
 }

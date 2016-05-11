@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,9 +19,9 @@
 
 package br.com.hrstatus.dao;
 
-import java.util.List;
-
 import br.com.hrstatus.model.Servidores;
+
+import java.util.List;
 
 /*
  * @author spolti
@@ -29,60 +29,60 @@ import br.com.hrstatus.model.Servidores;
 
 public interface ServersInterface {
 
-	public int insert_server(Servidores server);
-	
-	public List<Servidores> getHostnames();
-	
-	public Servidores getServerByID(int id);
-	
-	public void updateServer(Servidores server);
-	
-	public void updateServerScheduler(Servidores server, String SchedulerName);
-	
-	public boolean deleteServerByID(Servidores server);
-	
-	public int countWindows();
-	
-	public int countUnix();
-	
-	public int countAllServers();
-	
-	public  List<Servidores> listServers();
-	
-	public List<Servidores> listServersVerActive();
-	
-	public List<Servidores> listServersVerActiveScheduler(String schedulerName);
-	
-	public List<Servidores> getServersOK();
-	
-	public List<Servidores> getServersNOK();
-	
-	public List<Servidores> getServersNOKVerActive();
-	
-	public int countServersOK();
-	
-	public int countServersNOK();
+    int insert_server(Servidores server);
 
-	public int countUnixOK();
-		
-	public int countUnixNOK();
-	
-	public int countWindowsOK();
-	
-	public int countWindowsNOK();
-	
-	public List<Servidores> getSOWindows();
-	
-	public List<Servidores> getSOUnix();
-	
-	public List<Servidores> getHostnamesWithLogDir();
-	
-	public Servidores getServerByHostname(String hostname);
-	
-	public List<Servidores> listServerByID(int id);
-	
-	public int countServerWithLog();
-	
-	public Servidores getServerLogDir (String hostname);
-	
+    List<Servidores> getHostnames();
+
+    Servidores getServerByID(int id);
+
+    void updateServer(Servidores server);
+
+    void updateServerScheduler(Servidores server, String SchedulerName);
+
+    boolean deleteServerByID(Servidores server);
+
+    int countWindows();
+
+    int countUnix();
+
+    int countAllServers();
+
+    List<Servidores> listServers();
+
+    List<Servidores> listServersVerActive();
+
+    List<Servidores> listServersVerActiveScheduler(String schedulerName);
+
+    List<Servidores> getServersOK();
+
+    List<Servidores> getServersNOK();
+
+    List<Servidores> getServersNOKVerActive();
+
+    int countServersOK();
+
+    int countServersNOK();
+
+    int countUnixOK();
+
+    int countUnixNOK();
+
+    int countWindowsOK();
+
+    int countWindowsNOK();
+
+    List<Servidores> getSOWindows();
+
+    List<Servidores> getSOUnix();
+
+    List<Servidores> getHostnamesWithLogDir();
+
+    Servidores getServerByHostname(String hostname);
+
+    List<Servidores> listServerByID(int id);
+
+    int countServerWithLog();
+
+    Servidores getServerLogDir(String hostname);
+
 }

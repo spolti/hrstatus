@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,21 +19,20 @@
 
 package br.com.hrstatus.model;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.ManyToMany;
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.Transient;
+import java.util.List;
 
 /*
  * @author spolti
@@ -43,212 +42,211 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "Servidores")
 public class Servidores {
 
-	@Override
-	public String toString() {
-		return ""+SO;
-	}
+    @Id
+    @Column(name = "id")
+    @GeneratedValue
+    private int id;
 
-	@Id
-	@Column(name = "id")
-	@GeneratedValue
-	private int id;
-	
-	@JsonIgnore //to avoid the loop when call a rest method to list servers
-	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-	@JoinTable(name = "USER_SERVER", joinColumns = { @JoinColumn(name = "id") }, inverseJoinColumns = { @JoinColumn(name = "username") })
-	private List<Users> users;
-	
-	@Column(name = "hostname")
-	private String hostname;
-	
-	@Column(name = "ip")
-	private String ip;
+    @JsonIgnore //to avoid the loop when call a rest method to list servers
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    @JoinTable(name = "USER_SERVER", joinColumns = {@JoinColumn(name = "id")}, inverseJoinColumns = {@JoinColumn(name = "username")})
+    private List<Users> users;
 
-	@Column(name = "user")
-	private String user;
+    @Column(name = "hostname")
+    private String hostname;
 
-	@Column(name = "pass")
-	private String pass;
+    @Column(name = "ip")
+    private String ip;
 
-	@Column(name = "port")
-	private int port;
+    @Column(name = "user")
+    private String user;
 
-	@Column(name = "SO")
-	private String SO;
+    @Column(name = "pass")
+    private String pass;
 
-	@Column(name = "status")
-	private String status;
-	
-	@Column(name = "clientTime")
-	private String clientTime;
-	
-	@Column(name = "serverTime")
-	private String serverTime;
-	
-	@Column(name = "lastCheck")
-	private String lastCheck;
-	
-	@Column(name = "difference")
-	private long difference;
-	
-	@Column(name = "trClass")
-	private String trClass;
-	
-	@Column(name = "logDir")
-	private String logDir;
+    @Column(name = "port")
+    private int port;
 
-	@Column(name = "suCommand")
-	private String suCommand;
-	
-	@Column(name = "verify", length = 3)
-	private String verify;
-	
-	@Transient
-	private String selected;
-	
-		
-	public String getSelected() {
-		return selected;
-	}
+    @Column(name = "SO")
+    private String SO;
 
-	public void setSelected(String selected) {
-		this.selected = selected;
-	}
+    @Column(name = "status")
+    private String status;
 
-	public String getVerify() {
-		return verify;
-	}
+    @Column(name = "clientTime")
+    private String clientTime;
 
-	public void setVerify(String verify) {
-		this.verify = verify;
-	}
+    @Column(name = "serverTime")
+    private String serverTime;
 
-	public String getTrClass() {
-		return trClass;
-	}
+    @Column(name = "lastCheck")
+    private String lastCheck;
 
-	public void setTrClass(String trClass) {
-		this.trClass = trClass;
-	}
+    @Column(name = "difference")
+    private long difference;
 
-	public long getDifference() {
-		return difference;
-	}
+    @Column(name = "trClass")
+    private String trClass;
 
-	public void setDifference(long l) {
-		this.difference = l;
-	}
+    @Column(name = "logDir")
+    private String logDir;
 
-	public String getServerTime() {
-		return serverTime;
-	}
+    @Column(name = "suCommand")
+    private String suCommand;
 
-	public void setServerTime(String serverTime) {
-		this.serverTime = serverTime;
-	}
+    @Column(name = "verify", length = 3)
+    private String verify;
 
-	public String getClientTime() {
-		return clientTime;
-	}
+    @Transient
+    private String selected;
 
-	public void setClientTime(String clientTime) {
-		this.clientTime = clientTime;
-	}
+    public String getSelected() {
+        return selected;
+    }
 
-	public String getSO() {
-		return SO;
-	}
+    public void setSelected(String selected) {
+        this.selected = selected;
+    }
 
-	public void setSO(String sO) {
-		SO = sO;
-	}
+    public String getVerify() {
+        return verify;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public void setVerify(String verify) {
+        this.verify = verify;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public String getTrClass() {
+        return trClass;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public void setTrClass(String trClass) {
+        this.trClass = trClass;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public long getDifference() {
+        return difference;
+    }
 
-	public String getHostname() {
-		return hostname;
-	}
+    public void setDifference(long l) {
+        this.difference = l;
+    }
 
-	public void setHostname(String hostname) {
-		this.hostname = hostname;
-	}
-	
-	public String getIp() {
-		return ip;
-	}
+    public String getServerTime() {
+        return serverTime;
+    }
 
-	public void setIp(String ip) {
-		this.ip = ip;
-	}
+    public void setServerTime(String serverTime) {
+        this.serverTime = serverTime;
+    }
 
-	public String getUser() {
-		return user;
-	}
+    public String getClientTime() {
+        return clientTime;
+    }
 
-	public void setUser(String user) {
-		this.user = user;
-	}
+    public void setClientTime(String clientTime) {
+        this.clientTime = clientTime;
+    }
 
-	public String getPass() {
-		return pass;
-	}
+    public String getSO() {
+        return SO;
+    }
 
-	public void setPass(String pass) {
-		this.pass = pass;
-	}
+    public void setSO(String sO) {
+        SO = sO;
+    }
 
-	public int getPort() {
-		return port;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public void setPort(int port) {
-		this.port = port;
-	}
-	
-	public String getLastCheck() {
-		return lastCheck;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-	public void setLastCheck(String lastCheck) {
-		this.lastCheck = lastCheck;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public String getLogDir() {
-		return logDir;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setLogDir(String logDir) {
-		this.logDir = logDir;
-	}
+    public String getHostname() {
+        return hostname;
+    }
 
-	public String getSuCommand() {
-		return suCommand;
-	}
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
 
-	public void setSuCommand(String suCommand) {
-		this.suCommand = suCommand;
-	}
+    public String getIp() {
+        return ip;
+    }
 
-	public List<Users> getUsers() {
-		return users;
-	}
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
-	public void setUsers(List<Users> users) {
-		this.users = users;
-	}
-	
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public String getLastCheck() {
+        return lastCheck;
+    }
+
+    public void setLastCheck(String lastCheck) {
+        this.lastCheck = lastCheck;
+    }
+
+    public String getLogDir() {
+        return logDir;
+    }
+
+    public void setLogDir(String logDir) {
+        this.logDir = logDir;
+    }
+
+    public String getSuCommand() {
+        return suCommand;
+    }
+
+    public void setSuCommand(String suCommand) {
+        this.suCommand = suCommand;
+    }
+
+    public List<Users> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<Users> users) {
+        this.users = users;
+    }
+
+    @Override
+    public String toString() {
+        return "" + SO;
+    }
+
 }

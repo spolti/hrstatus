@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@
 
 package br.com.hrstatus.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 
 /*
  * @author spolti
@@ -33,106 +33,106 @@ import javax.persistence.Table;
 @Table(name = "Configurations")
 public class Configurations {
 
-	@Id
-	@Column(name = "id")
-	@GeneratedValue
-	private int id;
-	
-	@Column(name = "difference")
-	private int difference;
-	
-	@Column(name = "mailFrom")
-	private String mailFrom;
-	
-	@Column(name = "sendNotification")
-	private boolean sendNotification;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue
+    private int id;
 
-	@Column(name = "subject")
-	private String subject;
-	
-	@Column(name = "dests")
-	private String dests;
-	
-	@Column(name = "jndiMail")
-	private String jndiMail;
-	
-	@Column(name = "ntpServer")
-	private String ntpServer;
-	
-	@Column(name = "updateNtpIsActive")
-	private boolean updateNtpIsActive;
-	
-	public String getSubject() {
-		return subject;
-	}
+    @Column(name = "difference")
+    private int difference;
 
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
+    @Column(name = "mailFrom")
+    private String mailFrom;
 
-	public String getDests() {
-		return dests;
-	}
+    @Column(name = "sendNotification")
+    private boolean sendNotification;
 
-	public void setDests(String dests) {
-		this.dests = dests;
-	}
+    @Column(name = "subject")
+    private String subject;
 
-	public String getJndiMail() {
-		return jndiMail;
-	}
+    @Column(name = "dests")
+    private String dests;
 
-	public void setJndiMail(String jndiMail) {
-		this.jndiMail = jndiMail;
-	}
+    @Column(name = "jndiMail")
+    private String jndiMail;
 
-	public int getId() {
-		return id;
-	}
+    @Column(name = "ntpServer")
+    private String ntpServer;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    @Column(name = "updateNtpIsActive")
+    private boolean updateNtpIsActive;
 
-	public int getDifference() {
-		return difference;
-	}
+    public String getSubject() {
+        return subject;
+    }
 
-	public void setDifference(int difference) {
-		this.difference = difference;
-	}
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
 
-	public String getMailFrom() {
-		return mailFrom;
-	}
+    public String getDests() {
+        return dests;
+    }
 
-	public void setMailFrom(String mailFrom) {
-		this.mailFrom = mailFrom;
-	}
+    public void setDests(String dests) {
+        this.dests = dests;
+    }
+
+    public String getJndiMail() {
+        return jndiMail;
+    }
+
+    public void setJndiMail(String jndiMail) {
+        this.jndiMail = jndiMail;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getDifference() {
+        return difference;
+    }
+
+    public void setDifference(int difference) {
+        this.difference = difference;
+    }
+
+    public String getMailFrom() {
+        return mailFrom;
+    }
+
+    public void setMailFrom(String mailFrom) {
+        this.mailFrom = mailFrom;
+    }
 
 
-	public boolean isSendNotification() {
-		return sendNotification;
-	}
+    public boolean isSendNotification() {
+        return sendNotification;
+    }
 
-	public void setSendNotification(boolean sendNotification) {
-		this.sendNotification = sendNotification;
-	}
-	
-	public String getNtpServer() {
-		return ntpServer;
-	}
+    public void setSendNotification(boolean sendNotification) {
+        this.sendNotification = sendNotification;
+    }
 
-	public void setNtpServer(String ntpServer) {
-		this.ntpServer = ntpServer;
-	}
+    public String getNtpServer() {
+        return ntpServer;
+    }
 
-	public boolean isUpdateNtpIsActive() {
-		return updateNtpIsActive;
-	}
+    public void setNtpServer(String ntpServer) {
+        this.ntpServer = ntpServer;
+    }
 
-	public void setUpdateNtpIsActive(boolean updateNtpIsActive) {
-		this.updateNtpIsActive = updateNtpIsActive;
-	}
+    public boolean isUpdateNtpIsActive() {
+        return updateNtpIsActive;
+    }
+
+    public void setUpdateNtpIsActive(boolean updateNtpIsActive) {
+        this.updateNtpIsActive = updateNtpIsActive;
+    }
 
 }

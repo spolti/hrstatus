@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,23 +22,13 @@ package br.com.hrstatus.verification.os;
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
-import br.com.hrstatus.action.os.unix.ExecRemoteCommand;
-import br.com.hrstatus.action.os.windows.ExecCommand;
 import br.com.hrstatus.controller.HomeController;
 import br.com.hrstatus.model.Servidores;
-import br.com.hrstatus.resrources.ResourcesManagement;
-import br.com.hrstatus.security.Crypto;
+import br.com.hrstatus.verification.Verification;
 import br.com.hrstatus.verification.helper.VerificationHelper;
-import br.com.hrstatus.verification.impl.VerificationImpl;
 import com.jcraft.jsch.JSchException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -49,14 +39,12 @@ import java.util.logging.Logger;
 @Resource
 public class FullVerification extends VerificationHelper {
 
-    protected final Logger log = Logger.getLogger(getClass().getName());
+    private Logger log = Logger.getLogger(getClass().getName());
 
     @Autowired
     private Result result;
     @Autowired
-    public VerificationImpl verification;
-
-    private String LoggedUsername = userInfo.getLoggedUsername();
+    private Verification verification;
 
     @SuppressWarnings("static-access")
     @Get("/home/startVerification/full")
@@ -73,7 +61,7 @@ public class FullVerification extends VerificationHelper {
         if (!resource.islocked("verificationFull")) {
             log.info("[ " + userInfo.getLoggedUsername() + " ] The resource verificationFull is not locked, locking and continuing.");
 
-            List<Servidores> serverList = this.serversDAO.listServersVerActive();
+            final List<Servidores> serverList = this.serversDAO.listServersVerActive();
             if (serverList.size() <= 0) {
                 log.info("[ " + userInfo.getLoggedUsername() + " ] No server found or no servers with active check.");
                 result.include("info", "Nenhum servidor encontrado ou não há servidores com verficação ativa").forwardTo(HomeController.class).home("");
@@ -84,7 +72,7 @@ public class FullVerification extends VerificationHelper {
 
                 verification.serverVerification(serverList);
 
-                List<Servidores> checkedServers = this.serversDAO.listServersVerActive();
+                final List<Servidores> checkedServers = this.serversDAO.listServersVerActive();
                 result.include("server", checkedServers).forwardTo(HomeController.class).home("");
                 result.include("class", "activeServer");
 

@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,9 +19,7 @@
 
 package br.com.hrstatus.utils.mail;
 
-import java.io.UnsupportedEncodingException;
-import java.net.UnknownHostException;
-import java.util.logging.Logger;
+import br.com.hrstatus.utils.GetServerIPAddress;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -32,8 +30,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-
-import br.com.hrstatus.utils.GetServerIPAddress;
+import java.io.UnsupportedEncodingException;
+import java.net.UnknownHostException;
+import java.util.logging.Logger;
 
 /*
  * @author spolti
@@ -41,212 +40,212 @@ import br.com.hrstatus.utils.GetServerIPAddress;
 
 public class MailSender {
 
-	Logger log =  Logger.getLogger(MailSender.class.getCanonicalName());
-	
-	GetServerIPAddress getIP = new GetServerIPAddress();	
+    private Logger log = Logger.getLogger(MailSender.class.getName());
 
-	public void Sender(String mailSender, String Subject, String dests[], String jndiMail) throws UnknownHostException {
+    private GetServerIPAddress getIP = new GetServerIPAddress();
 
-		String url = ("" + getIP.returnServerAddres());
-		try {
+    public void Sender(String mailSender, String Subject, String []dests, String jndiMail) throws UnknownHostException {
 
-			InitialContext ic = new InitialContext();
-			Session session = (Session) ic.lookup(jndiMail);
-			session.setDebug(false);
-			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(mailSender));
-			InternetAddress to[] = new InternetAddress[dests.length];
-			for (int i = 0; i < dests.length; i++) {
-				to[i] = new InternetAddress(dests[i]);
-			}
-			message.setRecipients(Message.RecipientType.TO, to);
-			message.setSubject(Subject);
-			message.setSentDate(new java.util.Date());
+        final String url = getIP.returnServerAddres();
+        try {
 
-			String msg = "<html>"
-					+ "<body>"
-					+ "<div style='text-align:center; width: 100%;'>"
-					+ "<div style='width: 700px; margin: 0 auto;'>"
-					+ "<a href='http://"
-					+ url
-					+ "/hs/home'><img src='http://"
-					+ url
-					+ "/hs/show/emailHeader/up' height='125' width='700'/></a><br>"
-					+ "<br><br><h2>Olá, alguns servidores ainda estão com a data/hora desatualizados.  "
-					+ "\nAcesse o link abaixo para maiores detalhes:"
-					+ "<a href=\"http://"
-					+ url
-					+ "/hs/reports/reportServersNOK\"> Relatório</a>"
-					+ "</h1><br><br><a href='http://"
-					+ url
-					+ "/hs/home'><img src='http://"
-					+ url
-					+ "/hs/show/emailHeader/down' height='125' width='700'/></a>"
-					+ "</div>" + "</div>" + "</body>" + "</html>";
+            final InitialContext ic = new InitialContext();
+            final Session session = (Session) ic.lookup(jndiMail);
+            session.setDebug(false);
+            final Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(mailSender));
+            final InternetAddress []to = new InternetAddress[dests.length];
+            for (int i = 0; i < dests.length; i++) {
+                to[i] = new InternetAddress(dests[i]);
+            }
+            message.setRecipients(Message.RecipientType.TO, to);
+            message.setSubject(Subject);
+            message.setSentDate(new java.util.Date());
 
-			log.fine(msg);
-			message.setContent(msg, "text/html; charset=UTF-8");
+            final String msg = "<html>"
+                    + "<body>"
+                    + "<div style='text-align:center; width: 100%;'>"
+                    + "<div style='width: 700px; margin: 0 auto;'>"
+                    + "<a href='http://"
+                    + url
+                    + "/hs/home'><img src='http://"
+                    + url
+                    + "/hs/show/emailHeader/up' height='125' width='700'/></a><br>"
+                    + "<br><br><h2>Olá, alguns servidores ainda estão com a data/hora desatualizados.  "
+                    + "\nAcesse o link abaixo para maiores detalhes:"
+                    + "<a href=\"http://"
+                    + url
+                    + "/hs/reports/reportServersNOK\"> Relatório</a>"
+                    + "</h1><br><br><a href='http://"
+                    + url
+                    + "/hs/home'><img src='http://"
+                    + url
+                    + "/hs/show/emailHeader/down' height='125' width='700'/></a>"
+                    + "</div>" + "</div>" + "</body>" + "</html>";
 
-			try {
-				Transport.send(message);
-				log.info("----> Email sent.");
+            log.fine(msg);
+            message.setContent(msg, "text/html; charset=UTF-8");
 
-			} catch (Exception e) {
-				log.severe("----> Email not sent.");
-				log.severe(e.toString());
-			}
-		} catch (Exception e) {
-			log.severe(e.toString());
-		}
-	}
+            try {
+                Transport.send(message);
+                log.info("----> Email sent.");
 
-	public String sendNewPass(String mailSender, String dest, String jndiMail, String pass, String username) throws UnknownHostException {
+            } catch (Exception e) {
+                log.severe("----> Email not sent.");
+                log.severe(e.toString());
+            }
+        } catch (Exception e) {
+            log.severe(e.toString());
+        }
+    }
 
-		String url = ("" + getIP.returnServerAddres());
+    public String sendNewPass(String mailSender, String dest, String jndiMail, String pass, String username) throws UnknownHostException {
 
-		try {
+        final String url = (getIP.returnServerAddres());
 
-			InitialContext ic = new InitialContext();
-			Session session = (Session) ic.lookup(jndiMail);
-			session.setDebug(false);
-			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(mailSender));
-			InternetAddress to = new InternetAddress(dest);
-			message.setRecipient(Message.RecipientType.TO, to);
-			message.setSubject("NO REPLY - Recuperação de Senha HR status");
-			message.setSentDate(new java.util.Date());
+        try {
 
-			String msg = "<html>"
-					+ "<body>"
-					+ "<div style='text-align:center; width: 100%;'>"
-					+ "<div style='width: 700px; margin: 0 auto;'>"
-					+ "<a href='http://"
-					+ url
-					+ "/hs/home'><img src='http://"
-					+ url
-					+ "/hs/show/emailHeader/up' height='125' width='700'/></a><br>"
-					+ "<h2><br><p align='left' style='width:630px; margin: 0 auto;'>Olá <a style='color: blue;'>"
-					+ username
-					+ "</a><br> Sua nova é senha: <a style='color: blue;'>"
-					+ pass
-					+ "</a><br>"
-					+ " Para acesso utilize a url: <br><a href='http://"
-					+ url
-					+ "/hs/login'> HrStatus </p></h2>"
-					+ "<br><a href='http://"
-					+ url
-					+ "/hs/home'><img src='http://"
-					+ url
-					+ "/hs/show/emailHeader/down' height='125' width='700'/></a>"
-					+ "</div>" + "</div>" + "</body>" + "</html>";
+            final InitialContext ic = new InitialContext();
+            final Session session = (Session) ic.lookup(jndiMail);
+            session.setDebug(false);
+            final Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(mailSender));
+            final InternetAddress to = new InternetAddress(dest);
+            message.setRecipient(Message.RecipientType.TO, to);
+            message.setSubject("NO REPLY - Recuperação de Senha HR status");
+            message.setSentDate(new java.util.Date());
 
-			log.fine(msg);
-			message.setContent(msg, "text/html; charset=UTF-8");
+            final String msg = "<html>"
+                    + "<body>"
+                    + "<div style='text-align:center; width: 100%;'>"
+                    + "<div style='width: 700px; margin: 0 auto;'>"
+                    + "<a href='http://"
+                    + url
+                    + "/hs/home'><img src='http://"
+                    + url
+                    + "/hs/show/emailHeader/up' height='125' width='700'/></a><br>"
+                    + "<h2><br><p align='left' style='width:630px; margin: 0 auto;'>Olá <a style='color: blue;'>"
+                    + username
+                    + "</a><br> Sua nova é senha: <a style='color: blue;'>"
+                    + pass
+                    + "</a><br>"
+                    + " Para acesso utilize a url: <br><a href='http://"
+                    + url
+                    + "/hs/login'> HrStatus </p></h2>"
+                    + "<br><a href='http://"
+                    + url
+                    + "/hs/home'><img src='http://"
+                    + url
+                    + "/hs/show/emailHeader/down' height='125' width='700'/></a>"
+                    + "</div>" + "</div>" + "</body>" + "</html>";
 
-			try {
-				Transport.send(message);
-				log.info("----> Email sent.");
-				return "----> Email sent";
+            log.fine(msg);
+            message.setContent(msg, "text/html; charset=UTF-8");
 
-			} catch (Exception e) {
-				log.severe("----> Email not sent.");
-				log.severe(e.toString());
-				return "----> Email not sent";
-			}
+            try {
+                Transport.send(message);
+                log.info("----> Email sent.");
+                return "----> Email sent";
 
-		} catch (Exception e) {
-			log.severe(e.toString());
-			return "----> Email not sent";
-		}
-	}
+            } catch (Exception e) {
+                log.severe("----> Email not sent.");
+                log.severe(e.toString());
+                return "----> Email not sent";
+            }
 
-	public void sendCreatUserInfo(String mailSender, String dest, String jndiMail, String name, String username, String pass)
-			throws UnsupportedEncodingException, UnknownHostException {
+        } catch (Exception e) {
+            log.severe(e.toString());
+            return "----> Email not sent";
+        }
+    }
 
-		String url = ("" + getIP.returnServerAddres());
+    public void sendCreatUserInfo(String mailSender, String dest, String jndiMail, String name, String username, String pass)
+            throws UnsupportedEncodingException, UnknownHostException {
 
-		try {
+        final String url = (getIP.returnServerAddres());
 
-			InitialContext ic = new InitialContext();
-			Session session = (Session) ic.lookup(jndiMail);
-			session.setDebug(false);
-			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(mailSender));
-			InternetAddress to = new InternetAddress(dest);
-			message.setRecipient(Message.RecipientType.TO, to);
-			message.setSubject("NO REPLY - Criação de usuário HR status");
-			message.setSentDate(new java.util.Date());
+        try {
 
-			String msg = "<html>" + "<body>"
-					+ "<div style='text-align:center; width: 100%;'>"
-					+ "<div style='width: 700px; margin: 0 auto;'>"
-					+ "<a href='http://"
-					+ url
-					+ "/hs/home'><img src='http://"
-					+ url
-					+ "/hs/show/emailHeader/up' height='125' width='700'/></a><br>"
-					+ "<h2><br>Olá <a style='color: blue;'>"
-					+ name
-					+ "</a>, seu usuário foi criado com sucesso no sistema HrStatus"
-					+ " Seus dados para acesso são:<br><br> "
-					+ "<p align='left' style='width:630px; margin: 0 auto;'>Usuário: "
-					+ username
-					+ "<br>"
-					+ "Senha: "
-					+ pass
-					+ "</p><br>"
-					+ " Para acesso utilize a url: <br><a href='http://"
-					+ url
-					+ "/hs/login'> HrStatus </a></h2>"
-					+ "<br><a href='http://"
-					+ url
-					+ "/hs/home'><img src='http://"
-					+ url
-					+ "/hs/show/emailHeader/down' height='125' width='700'/></a>"
-					+ "</div>" + "</div>" + "</body>" + "</html>";
+            final InitialContext ic = new InitialContext();
+            final Session session = (Session) ic.lookup(jndiMail);
+            session.setDebug(false);
+            final Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(mailSender));
+            final InternetAddress to = new InternetAddress(dest);
+            message.setRecipient(Message.RecipientType.TO, to);
+            message.setSubject("NO REPLY - Criação de usuário HR status");
+            message.setSentDate(new java.util.Date());
 
-			log.fine(msg);
-			message.setContent(msg, "text/html; charset=UTF-8");
+            final String msg = "<html>" + "<body>"
+                    + "<div style='text-align:center; width: 100%;'>"
+                    + "<div style='width: 700px; margin: 0 auto;'>"
+                    + "<a href='http://"
+                    + url
+                    + "/hs/home'><img src='http://"
+                    + url
+                    + "/hs/show/emailHeader/up' height='125' width='700'/></a><br>"
+                    + "<h2><br>Olá <a style='color: blue;'>"
+                    + name
+                    + "</a>, seu usuário foi criado com sucesso no sistema HrStatus"
+                    + " Seus dados para acesso são:<br><br> "
+                    + "<p align='left' style='width:630px; margin: 0 auto;'>Usuário: "
+                    + username
+                    + "<br>"
+                    + "Senha: "
+                    + pass
+                    + "</p><br>"
+                    + " Para acesso utilize a url: <br><a href='http://"
+                    + url
+                    + "/hs/login'> HrStatus </a></h2>"
+                    + "<br><a href='http://"
+                    + url
+                    + "/hs/home'><img src='http://"
+                    + url
+                    + "/hs/show/emailHeader/down' height='125' width='700'/></a>"
+                    + "</div>" + "</div>" + "</body>" + "</html>";
 
-			try {
-				Transport.send(message);
-				log.info("----> Email sent");
+            log.fine(msg);
+            message.setContent(msg, "text/html; charset=UTF-8");
 
-			} catch (Exception e) {
-				log.severe("----> Email not sent");
-				log.severe(e.toString());
-			}
+            try {
+                Transport.send(message);
+                log.info("----> Email sent");
 
-		} catch (Exception e) {
-			log.severe(e.toString());
+            } catch (Exception e) {
+                log.severe("----> Email not sent");
+                log.severe(e.toString());
+            }
 
-		}
-	}
-		
-	public String sendTestMail(String mailSender,  String dest, String jndiMail) throws UnknownHostException, NamingException, AddressException, MessagingException {
+        } catch (Exception e) {
+            log.severe(e.toString());
 
-		InitialContext ic = new InitialContext();
-		Session session = (Session) ic.lookup(jndiMail);
-		session.setDebug(false);
-		Message message = new MimeMessage(session);
-		message.setFrom(new InternetAddress(mailSender));
-		InternetAddress to = new InternetAddress(dest);
-		message.setRecipient(Message.RecipientType.TO, to);
-		message.setSubject("NO REPLY - E-mail de teste");
-		message.setSentDate(new java.util.Date());
-		final String msg = " Mail Test Message -> Teste realizado com sucesso.";	
-		message.setContent(msg, "text/html; charset=UTF-8");
+        }
+    }
 
-		try {
-			Transport.send(message);
-			log.info("----> Test email sent");
-			log.fine(msg);
-			return "----> Test email sent.";
-		} catch (Exception e) {
-			log.severe("----> Test email not sent");
-			log.severe(e.toString());
-			return "----> Test email no sent -----> " + e;
-		}
+    public String sendTestMail(String mailSender, String dest, String jndiMail) throws UnknownHostException, NamingException, AddressException, MessagingException {
 
-	}
+        final InitialContext ic = new InitialContext();
+        final Session session = (Session) ic.lookup(jndiMail);
+        session.setDebug(false);
+        final Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(mailSender));
+        final InternetAddress to = new InternetAddress(dest);
+        message.setRecipient(Message.RecipientType.TO, to);
+        message.setSubject("NO REPLY - E-mail de teste");
+        message.setSentDate(new java.util.Date());
+        final String msg = " Mail Test Message -> Teste realizado com sucesso.";
+        message.setContent(msg, "text/html; charset=UTF-8");
+
+        try {
+            Transport.send(message);
+            log.info("----> Test email sent");
+            log.fine(msg);
+            return "----> Test email sent.";
+        } catch (Exception e) {
+            log.severe("----> Test email not sent");
+            log.severe(e.toString());
+            return "----> Test email no sent -----> " + e;
+        }
+
+    }
 }

@@ -8,4 +8,5 @@ import javax.ws.rs.core.Application;
  */
 
 @ApplicationPath("/rest")
-public class JaxRSConfig extends Application{}
+public class JaxRSConfig extends Application {
+}

@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,20 +19,20 @@
 
 package br.com.hrstatus.model;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.ManyToMany;
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
 import javax.persistence.Transient;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
 
 /*
  * @author spolti
@@ -40,125 +40,125 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "Users")
-public class Users{
+public class Users {
 
-	@Id
-	@Column(name = "username", nullable = false, unique=true)
-	private String username;
+    @Id
+    @Column(name = "username", nullable = false, unique = true)
+    private String username;
 
-	@JsonIgnore
-	@Column(name = "password", nullable = false)
-	private String password;
+    @JsonIgnore
+    @Column(name = "password", nullable = false)
+    private String password;
 
-	@Column(name = "enabled", nullable = false)
-	private boolean enabled;
-	
-	@Column(name = "authority")
-	private String authority;
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled;
 
-	@Column(name = "nome", nullable = false, unique=true)
-	private String nome;
-	
-	@Column(name = "mail", nullable = false, unique=true)
-	private String mail;
-	
-	@Column(name = "firstLogin")
-	private boolean firstLogin;
-	
-	@Column(name = "lastLogin")
-	private String lastLogin;
-	
-	@JsonIgnore //to avoid the loop when call a rest method to list users
-	@ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-	@JoinTable(name = "USER_SERVER", joinColumns = { @JoinColumn(name = "username") }, inverseJoinColumns = { @JoinColumn(name = "id") })
-	private List<Servidores> server;
+    @Column(name = "authority")
+    private String authority;
 
-	@Transient
-	private String confirmPass;
-	
+    @Column(name = "nome", nullable = false, unique = true)
+    private String nome;
 
-	public List<Servidores> getServer() {
-		return server;
-	}
+    @Column(name = "mail", nullable = false, unique = true)
+    private String mail;
 
-	public void setServer(List<Servidores> server) {
-		this.server = server;
-	}
+    @Column(name = "firstLogin")
+    private boolean firstLogin;
 
-	public String getLastLogin() {
-		return lastLogin;
-	}
+    @Column(name = "lastLogin")
+    private String lastLogin;
 
-	public void setLastLogin(String lastLogin) {
-		this.lastLogin = lastLogin;
-	}
-	
-	public String getConfirmPass() {
-		return confirmPass;
-	}
+    @JsonIgnore //to avoid the loop when call a rest method to list users
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    @JoinTable(name = "USER_SERVER", joinColumns = {@JoinColumn(name = "username")}, inverseJoinColumns = {@JoinColumn(name = "id")})
+    private List<Servidores> server;
 
-	public void setConfirmPass(String confirmPass) {
-		this.confirmPass = confirmPass;
-	}
+    @Transient
+    private String confirmPass;
 
-	public String getNome() {
-		return nome;
-	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    public List<Servidores> getServer() {
+        return server;
+    }
 
-	public String getMail() {
-		return mail;
-	}
+    public void setServer(List<Servidores> server) {
+        this.server = server;
+    }
 
-	public void setMail(String mail) {
-		this.mail = mail;
-	}
+    public String getLastLogin() {
+        return lastLogin;
+    }
 
-	public String getAuthority() {
-		return authority;
-	}
+    public void setLastLogin(String lastLogin) {
+        this.lastLogin = lastLogin;
+    }
 
-	public void setAuthority(String authority) {
-		if (authority == null){
-			authority = "ROLE_USER";
-		}else {
-			this.authority = authority;
-		}
-	}
+    public String getConfirmPass() {
+        return confirmPass;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public void setConfirmPass(String confirmPass) {
+        this.confirmPass = confirmPass;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public String getNome() {
+        return nome;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public String getMail() {
+        return mail;
+    }
 
-	public boolean isEnabled() {
-		return enabled;
-	}
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
+    public String getAuthority() {
+        return authority;
+    }
 
-	public boolean isFirstLogin() {
-		return firstLogin;
-	}
+    public void setAuthority(String authority) {
+        if (authority == null) {
+            authority = "ROLE_USER";
+        } else {
+            this.authority = authority;
+        }
+    }
 
-	public void setFirstLogin(boolean firstLogin) {
-		this.firstLogin = firstLogin;
-	}
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isFirstLogin() {
+        return firstLogin;
+    }
+
+    public void setFirstLogin(boolean firstLogin) {
+        this.firstLogin = firstLogin;
+    }
 
 }

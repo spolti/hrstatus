@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,7 +48,6 @@ public class VerificationImpl extends VerificationHelper implements Verification
 
     protected final Logger log = Logger.getLogger(getClass().getName());
 
-
     public void serverVerification(List<Servidores> server) throws JSchException {
 
         for (Servidores servidores : server) {
@@ -72,7 +71,7 @@ public class VerificationImpl extends VerificationHelper implements Verification
                 }
 
                 try {
-                    String dateSTR = ExecRemoteCommand.exec(servidores.getUser(), servidores.getIp(), servidores.getPass(), servidores.getPort(), "/bin/date");
+                    final String dateSTR = ExecRemoteCommand.exec(servidores.getUser(), servidores.getIp(), servidores.getPass(), servidores.getPort(), "/bin/date");
                     log.fine("[ " + userInfo.getLoggedUsername() + " ] Time recieved from the server " + servidores.getHostname() + ": " + dateSTR);
                     servidores.setClientTime(dateSTR);
                     // Calculating time difference
@@ -194,7 +193,7 @@ public class VerificationImpl extends VerificationHelper implements Verification
 
             try {
 
-                String dateSTR = execQueryDate.getDate(bancoDados);
+                final String dateSTR = execQueryDate.getDate(bancoDados);
 
                 log.fine("[ " + userInfo.getLoggedUsername() + " ] Hora obtida do banco de dados " + bancoDados.getHostname() + ": " + dateSTR);
                 bancoDados.setClientTime(dateSTR);
@@ -243,7 +242,7 @@ public class VerificationImpl extends VerificationHelper implements Verification
 
                 } catch (Exception e1) {
 
-                    log.severe("[ " + userInfo.getLoggedUsername()+ " ] Error: " + e1);
+                    log.severe("[ " + userInfo.getLoggedUsername() + " ] Error: " + e1);
                 }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();

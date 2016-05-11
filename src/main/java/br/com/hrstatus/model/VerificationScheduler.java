@@ -20,11 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 
 /*
  * @author spolti
@@ -34,61 +34,61 @@ import javax.persistence.Table;
 @Table(name = "VerificationScheduler")
 public class VerificationScheduler {
 
-	@Id
-	@Column(name = "schedulerId")
-	@GeneratedValue
-	private int schedulerId;
-	
-	@Column(name = "schedulerName")
-	private String schedulerName;
-	
-	@Column(name = "everyday", nullable = false)
-	private boolean everyday;
-	
-	@Column(name = "defaultScheduler", nullable = false)
-	private boolean defaultScheduler;
-	
-	@Column(name = "enabled", nullable = false)
-	private boolean enabled;
+    @Id
+    @Column(name = "schedulerId")
+    @GeneratedValue
+    private int schedulerId;
 
-	public boolean isEnabled() {
-		return enabled;
-	}
+    @Column(name = "schedulerName")
+    private String schedulerName;
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
+    @Column(name = "everyday", nullable = false)
+    private boolean everyday;
 
-	public boolean isDefaultScheduler() {
-		return defaultScheduler;
-	}
+    @Column(name = "defaultScheduler", nullable = false)
+    private boolean defaultScheduler;
 
-	public void setDefaultScheduler(boolean defaultScheduler) {
-		this.defaultScheduler = defaultScheduler;
-	}
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled;
 
-	public int getSchedulerId() {
-		return schedulerId;
-	}
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-	public void setSchedulerId(int schedulerId) {
-		this.schedulerId = schedulerId;
-	}
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
-	public String getSchedulerName() {
-		return schedulerName;
-	}
+    public boolean isDefaultScheduler() {
+        return defaultScheduler;
+    }
 
-	public void setSchedulerName(String schedulerName) {
-		this.schedulerName = schedulerName;
-	}
+    public void setDefaultScheduler(boolean defaultScheduler) {
+        this.defaultScheduler = defaultScheduler;
+    }
 
-	public boolean isEveryday() {
-		return everyday;
-	}
+    public int getSchedulerId() {
+        return schedulerId;
+    }
 
-	public void setEveryday(boolean everyday) {
-		this.everyday = everyday;
-	} 
-	
+    public void setSchedulerId(int schedulerId) {
+        this.schedulerId = schedulerId;
+    }
+
+    public String getSchedulerName() {
+        return schedulerName;
+    }
+
+    public void setSchedulerName(String schedulerName) {
+        this.schedulerName = schedulerName;
+    }
+
+    public boolean isEveryday() {
+        return everyday;
+    }
+
+    public void setEveryday(boolean everyday) {
+        this.everyday = everyday;
+    }
+
 }

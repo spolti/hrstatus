@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,12 +19,11 @@
 
 package br.com.hrstatus.utils;
 
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
-
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
 
 /*
  * @author spolti
@@ -32,22 +31,22 @@ import javax.management.ObjectName;
 
 public class GetServerIPAddress {
 
-	Logger log =  Logger.getLogger(GetServerIPAddress.class.getCanonicalName());
-	
-	 public String returnServerAddres() throws UnknownHostException {
+    Logger log = Logger.getLogger(GetServerIPAddress.class.getCanonicalName());
 
-		MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-		String url = null;
-		try {
+    public String returnServerAddres() throws UnknownHostException {
 
-			ObjectName http = new ObjectName("jboss.as:socket-binding-group=standard-sockets,socket-binding=http");
-			String jbossHttpAddress = (String) mBeanServer.getAttribute(http,"boundAddress");
-			int jbossHttpPort = (Integer) mBeanServer.getAttribute(http,"boundPort");
-			url = jbossHttpAddress + ":" + jbossHttpPort;
-			log.fine("Url obtained from the system: " + url);
-		} catch (Exception e) {
-			log.severe(e.getStackTrace().toString());
-		}
-		return url;
-	}
+        final MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+        String url = null;
+        try {
+
+            final ObjectName http = new ObjectName("jboss.as:socket-binding-group=standard-sockets,socket-binding=http");
+            final String jbossHttpAddress = (String) mBeanServer.getAttribute(http, "boundAddress");
+            final int jbossHttpPort = (Integer) mBeanServer.getAttribute(http, "boundPort");
+            url = jbossHttpAddress + ":" + jbossHttpPort;
+            log.fine("Url obtained from the system: " + url);
+        } catch (Exception e) {
+            log.severe(e.getStackTrace().toString());
+        }
+        return url;
+    }
 }

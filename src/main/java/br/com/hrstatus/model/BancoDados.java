@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@
 
 package br.com.hrstatus.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Column;
 
 /*
  * @author spolti
@@ -33,182 +33,182 @@ import javax.persistence.Table;
 @Table(name = "bancoDados")
 public class BancoDados {
 
-	@Id
-	@Column(name = "id")
-	@GeneratedValue
-	private int id;
-	
-	@Column(name = "hostname")
-	private String hostname;
-	
-	@Column(name = "ip")
-	private String ip;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue
+    private int id;
 
-	@Column(name = "user")
-	private String user;
+    @Column(name = "hostname")
+    private String hostname;
 
-	@Column(name = "pass")
-	private String pass;
+    @Column(name = "ip")
+    private String ip;
 
-	@Column(name = "port")
-	private int port;
+    @Column(name = "user")
+    private String user;
 
-	@Column(name = "vendor")
-	private String vendor;
-	
-	@Column(name = "queryDate")
-	private String queryDate;
-	
-	@Column(name = "status")
-	private String status;
-	
-	@Column(name = "clientTime")
-	private String clientTime;
-	
-	@Column(name = "serverTime")
-	private String serverTime;
-	
-	@Column(name = "lastCheck")
-	private String lastCheck;
-	
-	@Column(name = "Difference")
-	private long Difference;
-	
-	@Column(name = "trClass")
-	private String trClass;
+    @Column(name = "pass")
+    private String pass;
 
-	@Column(name = "instance")
-	private String instance;
-	
-	//Usend only by SQL Server
-	@Column(name = "db_name")
-	private String db_name;
-	
-	public String getDb_name() {
-		return db_name;
-	}
+    @Column(name = "port")
+    private int port;
 
-	public void setDb_name(String db_name) {
-		this.db_name = db_name;
-	}
+    @Column(name = "vendor")
+    private String vendor;
 
-	public int getId() {
-		return id;
-	}
+    @Column(name = "queryDate")
+    private String queryDate;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    @Column(name = "status")
+    private String status;
 
-	public String getHostname() {
-		return hostname;
-	}
+    @Column(name = "clientTime")
+    private String clientTime;
 
-	public void setHostname(String hostname) {
-		this.hostname = hostname;
-	}
+    @Column(name = "serverTime")
+    private String serverTime;
 
-	public String getIp() {
-		return ip;
-	}
+    @Column(name = "lastCheck")
+    private String lastCheck;
 
-	public void setIp(String ip) {
-		this.ip = ip;
-	}
+    @Column(name = "Difference")
+    private long Difference;
 
-	public String getUser() {
-		return user;
-	}
+    @Column(name = "trClass")
+    private String trClass;
 
-	public void setUser(String user) {
-		this.user = user;
-	}
+    @Column(name = "instance")
+    private String instance;
 
-	public String getPass() {
-		return pass;
-	}
+    //Usend only by SQL Server
+    @Column(name = "db_name")
+    private String db_name;
 
-	public void setPass(String pass) {
-		this.pass = pass;
-	}
+    public String getDb_name() {
+        return db_name;
+    }
 
-	public int getPort() {
-		return port;
-	}
+    public void setDb_name(String db_name) {
+        this.db_name = db_name;
+    }
 
-	public void setPort(int port) {
-		this.port = port;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public String getVendor() {
-		return vendor;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setVendor(String vendor) {
-		this.vendor = vendor;
-	}
+    public String getHostname() {
+        return hostname;
+    }
 
-	public String getQueryDate() {
-		return queryDate;
-	}
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
 
-	public void setQueryDate(String queryDate) {
-		this.queryDate = queryDate;
-	}
+    public String getIp() {
+        return ip;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public String getUser() {
+        return user;
+    }
 
-	public String getClientTime() {
-		return clientTime;
-	}
+    public void setUser(String user) {
+        this.user = user;
+    }
 
-	public void setClientTime(String clientTime) {
-		this.clientTime = clientTime;
-	}
+    public String getPass() {
+        return pass;
+    }
 
-	public String getServerTime() {
-		return serverTime;
-	}
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
 
-	public void setServerTime(String serverTime) {
-		this.serverTime = serverTime;
-	}
+    public int getPort() {
+        return port;
+    }
 
-	public String getLastCheck() {
-		return lastCheck;
-	}
+    public void setPort(int port) {
+        this.port = port;
+    }
 
-	public void setLastCheck(String lastCheck) {
-		this.lastCheck = lastCheck;
-	}
+    public String getVendor() {
+        return vendor;
+    }
 
-	public long getDifference() {
-		return Difference;
-	}
+    public void setVendor(String vendor) {
+        this.vendor = vendor;
+    }
 
-	public void setDifference(long Difference) {
-		this.Difference = Difference;
-	}
+    public String getQueryDate() {
+        return queryDate;
+    }
 
-	public String getTrClass() {
-		return trClass;
-	}
+    public void setQueryDate(String queryDate) {
+        this.queryDate = queryDate;
+    }
 
-	public void setTrClass(String trClass) {
-		this.trClass = trClass;
-	}
-	
-	public String getInstance() {
-		return instance;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public void setInstance(String instance) {
-		this.instance = instance;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getClientTime() {
+        return clientTime;
+    }
+
+    public void setClientTime(String clientTime) {
+        this.clientTime = clientTime;
+    }
+
+    public String getServerTime() {
+        return serverTime;
+    }
+
+    public void setServerTime(String serverTime) {
+        this.serverTime = serverTime;
+    }
+
+    public String getLastCheck() {
+        return lastCheck;
+    }
+
+    public void setLastCheck(String lastCheck) {
+        this.lastCheck = lastCheck;
+    }
+
+    public long getDifference() {
+        return Difference;
+    }
+
+    public void setDifference(long Difference) {
+        this.Difference = Difference;
+    }
+
+    public String getTrClass() {
+        return trClass;
+    }
+
+    public void setTrClass(String trClass) {
+        this.trClass = trClass;
+    }
+
+    public String getInstance() {
+        return instance;
+    }
+
+    public void setInstance(String instance) {
+        this.instance = instance;
+    }
 }

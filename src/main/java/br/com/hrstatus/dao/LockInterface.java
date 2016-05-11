@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,30 +19,30 @@
 
 package br.com.hrstatus.dao;
 
-import java.util.List;
-
 import br.com.hrstatus.model.Lock;
+
+import java.util.List;
 
 /*
  * @author spolti
  */
 
-public interface LockIntrface {
+public interface LockInterface {
 
-	public void insertLock(Lock lock);
-	
-	public void insertLockScheduler(Lock lock, String schedulerName);
-	
-	public void removeLock(Lock lock);
-	
-	public void removeLockScheduler(Lock lock, String schedulerName);
-	
-	public List<Lock> listLockedServices(String recurso);
-	
-	public List<Lock> listLockedServicesScheduler(String recurso, String schedulerName);
-	
-	public List<Lock> ListAllLocks();
-	
-	public Lock getLockByID(int id);
-	
+    void insertLock(Lock lock);
+
+    void insertLockScheduler(Lock lock, String schedulerName);
+
+    void removeLock(Lock lock);
+
+    void removeLockScheduler(Lock lock, String schedulerName);
+
+    List<Lock> listLockedServices(String recurso);
+
+    List<Lock> listLockedServicesScheduler(String recurso, String schedulerName);
+
+    List<Lock> ListAllLocks();
+
+    Lock getLockByID(int id);
+
 }

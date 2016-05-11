@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,15 +19,13 @@
 
 package br.com.hrstatus.rest.impl;
 
-import br.com.hrstatus.action.databases.helper.IllegalVendorException;
-import br.com.hrstatus.controller.HomeController;
 import br.com.hrstatus.dao.ServersInterface;
 import br.com.hrstatus.model.Servidores;
 import br.com.hrstatus.resrources.ResourcesManagement;
 import br.com.hrstatus.rest.ServerResource;
 import br.com.hrstatus.security.Crypto;
 import br.com.hrstatus.utils.UserInfo;
-import br.com.hrstatus.verification.impl.VerificationImpl;
+import br.com.hrstatus.verification.Verification;
 import com.jcraft.jsch.JSchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,14 +44,14 @@ import java.util.logging.Logger;
 @Component
 public class ServerImpl extends SpringBeanAutowiringSupport implements ServerResource {
 
-    Logger log = Logger.getLogger(ServerImpl.class.getCanonicalName());
+    private Logger log = Logger.getLogger(ServerImpl.class.getName());
 
     @Autowired(required = true)
     private ServersInterface iteracoesDAO;
     @Autowired(required = true)
-    ResourcesManagement resource;
+    private ResourcesManagement resource;
     @Autowired(required = true)
-    private VerificationImpl verification;
+    private Verification verification;
     private UserInfo userInfo = new UserInfo();
 
     private Servidores server = new Servidores();
@@ -168,10 +166,10 @@ public class ServerImpl extends SpringBeanAutowiringSupport implements ServerRes
         try {
             if (!resource.islocked("verificationFull")) {
                 log.info("[ " + userInfo.getLoggedUsername() + " ] The resource verificationFull is not locked, locking and continuing.");
-                List<Servidores> serverList = this.iteracoesDAO.listServersVerActive();
+                final List<Servidores> serverList = this.iteracoesDAO.listServersVerActive();
                 if (serverList.size() <= 0) {
                     log.info("[ " + userInfo.getLoggedUsername() + " ] No server found or no servers with active check.");
-                    throw new Exception ("Nenhum servidor encontrado ou não há servidores com verficação ativa");
+                    throw new Exception("Nenhum servidor encontrado ou não há servidores com verficação ativa");
                 } else {
                     resource.lockRecurso("verificationFull");
                     verification.serverVerification(serverList);
@@ -193,10 +191,10 @@ public class ServerImpl extends SpringBeanAutowiringSupport implements ServerRes
         try {
             if (!resource.islocked("notOkverification")) {
                 log.info("[ " + userInfo.getLoggedUsername() + " ] The resource verificationFull is not locked, locking and continuing.");
-                List<Servidores> serverList = this.iteracoesDAO.getServersNOKVerActive();
+                final List<Servidores> serverList = this.iteracoesDAO.getServersNOKVerActive();
                 if (serverList.size() <= 0) {
                     log.info("[ " + userInfo.getLoggedUsername() + " ] No server found or no servers with active check.");
-                    throw new Exception ("Nenhum servidor encontrado ou não há servidores com verficação ativa");
+                    throw new Exception("Nenhum servidor encontrado ou não há servidores com verficação ativa");
                 } else {
                     resource.lockRecurso("notOkverification");
                     verification.serverVerification(serverList);

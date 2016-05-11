@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,60 +32,60 @@ import javax.persistence.Table;
 @Table(name = "PassExpire")
 public class PassExpire {
 
-	@Id
-	@Column(name = "username", nullable = false, unique=true)
-	private String username;
-	
-	@Column(name = "oldPwd")
-	private String oldPwd;
+    @Id
+    @Column(name = "username", nullable = false, unique = true)
+    private String username;
 
-	@Column(name = "newPwd")
-	private String newPwd;
-	
-	@Column(name = "changeTime")
-	private String changeTime;
-	
-	@Column(name = "expireTime")
-	private String expireTime;
-	
-	public String getUsername() {
-		return username;
-	}
+    @Column(name = "oldPwd")
+    private String oldPwd;
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    @Column(name = "newPwd")
+    private String newPwd;
 
-	public String getOldPwd() {
-		return oldPwd;
-	}
+    @Column(name = "changeTime")
+    private String changeTime;
 
-	public void setOldPwd(String oldPwd) {
-		this.oldPwd = oldPwd;
-	}
+    @Column(name = "expireTime")
+    private String expireTime;
 
-	public String getNewPwd() {
-		return newPwd;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setNewPwd(String newPwd) {
-		this.newPwd = newPwd;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public String getChangeTime() {
-		return changeTime;
-	}
+    public String getOldPwd() {
+        return oldPwd;
+    }
 
-	public void setChangeTime(String changeTime) {
-		this.changeTime = changeTime;
-	}
+    public void setOldPwd(String oldPwd) {
+        this.oldPwd = oldPwd;
+    }
 
-	public String getExpireTime() {
-		return expireTime;
-	}
+    public String getNewPwd() {
+        return newPwd;
+    }
 
-	public void setExpireTime(String expireTime) {
-		this.expireTime = expireTime;
-	}
-	
+    public void setNewPwd(String newPwd) {
+        this.newPwd = newPwd;
+    }
+
+    public String getChangeTime() {
+        return changeTime;
+    }
+
+    public void setChangeTime(String changeTime) {
+        this.changeTime = changeTime;
+    }
+
+    public String getExpireTime() {
+        return expireTime;
+    }
+
+    public void setExpireTime(String expireTime) {
+        this.expireTime = expireTime;
+    }
+
 }

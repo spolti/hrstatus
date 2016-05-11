@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,22 +28,23 @@ import java.util.Properties;
  */
 
 public class PropertiesLoader {
-	
-    private Properties props;  
-    private String version = "/version.properties";  
-  
-    protected PropertiesLoader(){  
-    	
-            props = new Properties();  
-            InputStream in = this.getClass().getResourceAsStream(version);  
-            try{  
-                    props.load(in);  
-                    in.close();  
-            }  
-            catch(IOException e){e.printStackTrace();}  
-    }  
-  
-    protected String getValor(String chave){  
-            return (String)props.getProperty(chave);  
-    }  
+
+    private Properties props;
+    private String version = "/version.properties";
+
+    protected PropertiesLoader() {
+
+        props = new Properties();
+        final InputStream in = this.getClass().getResourceAsStream(version);
+        try {
+            props.load(in);
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected String getValor(String chave) {
+        return (String) props.getProperty(chave);
+    }
 }

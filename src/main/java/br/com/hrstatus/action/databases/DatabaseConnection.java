@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,7 +23,9 @@ import br.com.hrstatus.action.databases.helper.DatabaseConnectionHelper;
 import br.com.hrstatus.action.databases.helper.IllegalVendorException;
 import br.com.hrstatus.model.BancoDados;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.DriverManager;
 import java.util.logging.Logger;
 
 /**
@@ -39,7 +41,7 @@ public class DatabaseConnection {
      */
     public Connection conn(BancoDados database) throws IllegalVendorException, ClassNotFoundException, SQLException {
 
-        DatabaseConnectionHelper connHelper = null;
+        final DatabaseConnectionHelper connHelper = null;
         Connection connection;
 
         switch (database.getVendor().toUpperCase()) {

@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,30 +19,28 @@
 
 package br.com.hrstatus.utils;
 
+import javax.servlet.http.HttpServlet;
 import java.io.IOException;
 import java.util.logging.Logger;
-
-import javax.servlet.http.HttpServlet;
 
 /*
  * @author spolti
  */
 
 @SuppressWarnings("static-access")
-public class VersionServlet  extends HttpServlet {
+public class VersionServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
-	Logger log =  Logger.getLogger(VersionServlet.class.getCanonicalName());
-	
-	private static final long serialVersionUID = 1L;
+    private Logger log = Logger.getLogger(VersionServlet.class.getName());
 
-	public VersionServlet() throws IOException {
-		loadVersionServlet();
-	}
-	
-	private void loadVersionServlet() throws IOException {
-		
-		PropertiesLoaderImpl load = new PropertiesLoaderImpl();
-	    String version = load.getValor("version");
-	    log.info("[ System ] Hr Status version: " + version);
-	}	
+    public VersionServlet() throws IOException {
+        loadVersionServlet();
+    }
+
+    private void loadVersionServlet() throws IOException {
+
+        final PropertiesLoaderImpl load = new PropertiesLoaderImpl();
+        final String version = load.getValor("version");
+        log.info("[ System ] Hr Status version: " + version);
+    }
 }
