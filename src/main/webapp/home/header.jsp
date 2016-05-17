@@ -49,9 +49,30 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <script src="${pageContext.request.contextPath}/patternfly/bootstrap/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/patternfly/bootstrap/bootstrap-select.min.js"></script>
     <script src="${pageContext.request.contextPath}/patternfly/js/patternfly.min.js"></script>
+    <script src="${pageContext.request.contextPath}/patternfly/js/civem.js"></script>
 </head>
 
-<body>
+<body onload="Hora()">
+<script type="text/javascript">
+    function Hora() {
+        horario = new Date();
+        hora = horario.getHours();
+        minuto = horario.getMinutes();
+        segundo = horario.getSeconds();
+        if (hora < 10) {
+            hora = "0" + hora;
+        }
+        if (minuto < 10) {
+            minuto = "0" + minuto;
+        }
+        if (segundo < 10) {
+            segundo = "0" + segundo;
+        }
+        document.getElementById("time").innerHTML = hora + ":" + minuto;
+        +":" + segundo; // hora no documento
+    }
+    window.setInterval("Hora()", 1000);
+</script>
 <nav class="navbar navbar-default navbar-pf" role="navigation">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-1">
@@ -67,7 +88,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <div class="collapse navbar-collapse navbar-collapse-1">
         <ul class="nav navbar-nav navbar-utility">
             <li>
-                <a href="#">Horário Do Servidor: </a>
+                <a href="#">Horário Local <div align="center" id="time">time</div></a>
             </li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">

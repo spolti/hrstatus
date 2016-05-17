@@ -19,6 +19,7 @@
         <jackson.annotations.version>2.7.4</jackson.annotations.version>
         <mysql.connector.version>5.1.38</mysql.connector.version>
         <jboss.javaee7.version>1.0.3.Final</jboss.javaee7.version>
+        <picketbox.version>4.9.4.Final</picketbox.version>
     </properties>
 
 
@@ -40,6 +41,12 @@
                 <version>${javax.persistence.version}</version>
             </dependency>
 
+            <!-- Security Dependencies -->
+            <dependency>
+                <groupId>org.picketbox</groupId>
+                <artifactId>picketbox</artifactId>
+                <version>${picketbox.version}</version>
+            </dependency>
 
             <!-- jackson dependencies -->
             <dependency>
@@ -78,10 +85,25 @@
         <dependency>
             <groupId>org.jboss.spec.javax.servlet</groupId>
             <artifactId>jboss-servlet-api_3.1_spec</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.spec.javax.servlet.jstl</groupId>
             <artifactId>jboss-jstl-api_1.2_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Security dependencies -->
+        <dependency>
+            <groupId>org.picketbox</groupId>
+            <artifactId>picketbox</artifactId>
+        </dependency>
+
+        <!-- JaxRS -->
+        <dependency>
+            <groupId>org.jboss.spec.javax.ws.rs</groupId>
+            <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <!-- CDI -->
@@ -99,6 +121,11 @@
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.spec.javax.transaction</groupId>
+            <artifactId>jboss-transaction-api_1.2_spec</artifactId>
             <scope>provided</scope>
         </dependency>
 

@@ -89,6 +89,24 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" class="collapsed">
+                                Banco de Dados
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseFive" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="${pageContext.request.contextPath}/admin/server/edit-database.jsp">Cadastrar Banco de Dados</a></li>
+                                <li><a href="#">Editar ou Remover Banco de Dados</a></li>
+                                <li><a href="#">Listar Banco de Dados</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" class="collapsed">
                                 Configuração
                             </a>
@@ -97,9 +115,7 @@
                     <div id="collapseThree" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">Sed est</a></li>
-                                <li><a href="#">Curabitur</a></li>
-                                <li><a href="#">Eu dignissim</a></li>
+                                <li><a href="#">Editar Configuração</a></li>
                             </ul>
                         </div>
                     </div>
@@ -115,27 +131,7 @@
                     <div id="collapseFour" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">Sed est</a></li>
-                                <li><a href="#">Curabitur</a></li>
-                                <li><a href="#">Eu dignissim</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" class="collapsed">
-                                Configuração
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseFive" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">Sed est</a></li>
-                                <li><a href="#">Curabitur</a></li>
-                                <li><a href="#">Eu dignissim</a></li>
+                                <li><a href="#">Extrair Logs</a></li>
                             </ul>
                         </div>
                     </div>

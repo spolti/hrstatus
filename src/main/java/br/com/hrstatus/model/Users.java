@@ -19,18 +19,10 @@
 
 package br.com.hrstatus.model;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -53,9 +45,6 @@ public class Users {
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
-    @Column(name = "roles")
-    private String roles;
-
     @Column(name = "nome", nullable = false, unique=true)
     private String nome;
 
@@ -68,24 +57,12 @@ public class Users {
     @Column(name = "lastLogin")
     private String lastLogin;
 
-    @Transient
-    private String confirmPass;
-
-
     public String getLastLogin() {
         return lastLogin;
     }
 
     public void setLastLogin(String lastLogin) {
         this.lastLogin = lastLogin;
-    }
-
-    public String getConfirmPass() {
-        return confirmPass;
-    }
-
-    public void setConfirmPass(String confirmPass) {
-        this.confirmPass = confirmPass;
     }
 
     public String getNome() {
@@ -102,18 +79,6 @@ public class Users {
 
     public void setMail(String mail) {
         this.mail = mail;
-    }
-
-    public String getRoles() {
-        return roles;
-    }
-
-    public void setRoles(String roles) {
-        if (roles == null){
-            roles = "ROLE_USER";
-        }else {
-            this.roles = roles;
-        }
     }
 
     public String getUsername() {
@@ -147,4 +112,5 @@ public class Users {
     public void setFirstLogin(boolean firstLogin) {
         this.firstLogin = firstLogin;
     }
+
 }

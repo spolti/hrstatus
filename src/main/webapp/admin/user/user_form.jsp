@@ -1,5 +1,38 @@
-<%@ include file="/home/header.jsp"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="/home/header.jsp" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
+<script type="text/javascript">
+    window.onload = function () {
+        document.getElementById("password").onchange = validatePassword;
+        document.getElementById("verifyPassword").onchange = validatePassword;
+    }
+    function validatePassword(){
+        var pass2=document.getElementById("verifyPassword").value;
+        var pass1=document.getElementById("password").value;
+        if(pass1!=pass2)
+            document.getElementById("verifyPassword").setCustomValidity("As senhas digitadas não são iguais");
+        else
+            document.getElementById("verifyPassword").setCustomValidity('');
+    }
+</script>
+<c:if test="${error == 'true'}">
+    <div class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+            <span class="pficon pficon-close"></span>
+        </button>
+        <span class="pficon pficon-error-circle-o"></span>
+        Falha ao criar usuário, verificar logs, Mensagem de erro: ${message}
+    </div>
+</c:if>
+<c:if test="${info == 'success'}">
+    <div class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+            <span class="pficon pficon-close"></span>
+        </button>
+        <span class="pficon pficon-ok"></span>
+        Usuário <strong>${user}</strong> foi criado com sucesso.
+    </div>
+</c:if>
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-9 col-md-10 col-sm-push-3 col-md-push-2">
@@ -8,77 +41,247 @@
                 <li>Cadastrar Usuário</li>
             </ol>
             <h1>Cadastrar Usuário</h1>
-            <form class="form-horizontal">
+            <form method="POST" class="form-horizontal" action="${pageContext.request.contextPath}/rest/user/registerUser">
                 <div class="form-group">
-                    <label class="col-md-2 control-label" for="textInput">Nome</label>
+                    <label class="col-md-2 control-label" for="name">Nome</label>
                     <div class="col-md-6">
-                        <input type="text" id="textInput" class="form-control">
+                        <input name="nome" type="text" id="name" class="form-control" required
+                               data-errormessage-value-missing="Campo Obrigatório">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label" for="textInput2">Nome de Usuário</label>
+                    <label class="col-md-2 control-label" for="username">Nome de Usuário</label>
                     <div class="col-md-6">
-                        <input type="text" id="textInput2" class="form-control">
+                        <input name="username" type="text" id="username" class="form-control" required
+                               data-errormessage-value-missing="Campo Obrigatório">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label" for="textInput3">Pharetra vel</label>
+                    <label class="col-md-2 control-label" for="password">Senha</label>
                     <div class="col-md-6">
-                        <input type="text" id="textInput3" class="form-control">
+                        <input name="password" type="password" id="password" class="form-control" required
+                               data-errormessage-value-missing="Campo Obrigatório"
+                               data-errormessage="Senha não atinge os requisitos necessários: mínimo 8 caracteres sendo no mínimo 1 minúsculo, 1 maiúsculo e um caracter especial."
+                               pattern="(?=^.{6,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label" for="textInput4">Arcu ac</label>
+                    <label class="col-md-2 control-label" for="verifyPassword">Repita Senha</label>
                     <div class="col-md-6">
-                        <input type="text" id="textInput4" class="form-control">
+                        <input name="verifyPassword" type="password" id="verifyPassword" class="form-control" required
+                               data-errormessage-value-missing="Campo Obrigatório">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label">Posuere</label>
+                    <label class="col-md-2 control-label" for="email">E-mail</label>
+                    <div class="col-md-6">
+                        <input name="mail" type="email" id="email" class="form-control" required
+                               data-errormessage-type-mismatch="Email inválido." data-errormessage-value-missing="Campo Obrigatório">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Ativo</label>
                     <div class="col-md-6">
                         <div class="radio">
                             <label>
-                                <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
-                                Proin lobortis auctor tortor et posuere
+                                <input name="enabled" type="radio" name="optionsRadios" id="optionsRadios1" value="true">
+                                Sim
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-                                Duis eu ipsum metus
+                                <input name="enabled" type="radio" name="optionsRadios" id="optionsRadios2" value="false" checked>
+                                Não
                             </label>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label" for="boostrapSelect">Vestibulum</label>
+                    <label class="col-md-2 control-label" for="boostrapSelect">Roles</label>
                     <div class="col-md-10">
-                        <select class="selectpicker" multiple data-selected-text-format="count>3" id="boostrapSelect">
-                            <option>Mustard</option>
-                            <option>Ketchup</option>
-                            <option>Relish</option>
-                            <option>Onions</option>
-                            <option>Mushrooms</option>
-                            <option>Pickles</option>
-                            <option>Mayonnaise</option>
-                            <option data-divider="true"></option>
-                            <option data-subtext="Hot">Tabasco</option>
-                            <option data-subtext="Hotter">Sriracha</option>
-                            <option data-subtext="Hottest">Wasabi</option>
+                        <select name="roles" class="selectpicker" multiple data-selected-text-format="count>3" id="boostrapSelect"
+                                required>
+                            <option value="ADMIN">Administrador</option>
+                            <option value="USER">Usuário</option>
+                            <option value="REST">Permissão para Requisições Rest</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-10 col-md-offset-2">
-                        <button type="button" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
                         <button type="reset" class="btn btn-default">Cancel</button>
                     </div>
                 </div>
             </form>
         </div><!-- /col -->
-        <%@ include file="/home/right-side-menu.jsp"%>
+        <div class="col-sm-3 col-md-2 col-sm-pull-9 col-md-pull-10 sidebar-pf sidebar-pf-left">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="collapsed">
+                                Usuários
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li class="active"><a
+                                        href="${pageContext.request.contextPath}/admin/user/user_form.jsp">
+                                    Cadastrar Usuário</a></li>
+                                <li><a href="${pageContext.request.contextPath}/admin/edit_user.jsp">
+                                    Editar ou Remover Usuários</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="collapsed">
+                                Servidores
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="${pageContext.request.contextPath}/admin/server/edit-server.jsp">Cadastrar
+                                    Servidores</a></li>
+                                <li><a href="#">Editar ou Remover Servidores</a></li>
+                                <li><a href="#">Listar Servidores</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" class="collapsed">
+                                Banco de Dados
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseFive" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="${pageContext.request.contextPath}/admin/server/edit-database.jsp">Cadastrar
+                                    Banco de Dados</a></li>
+                                <li><a href="#">Editar ou Remover Banco de Dados</a></li>
+                                <li><a href="#">Listar Banco de Dados</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" class="collapsed">
+                                Configuração
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseThree" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="#">Editar Configuração</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" class="collapsed">
+                                Logs
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseFour" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="#">Extrair Logs</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix" class="collapsed">
+                                Relatórios
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseSix" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="#">Sed est</a></li>
+                                <li><a href="#">Curabitur</a></li>
+                                <li><a href="#">Eu dignissim</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" class="collapsed">
+                                Gráficos
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseSeven" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="#">Sed est</a></li>
+                                <li><a href="#">Curabitur</a></li>
+                                <li><a href="#">Eu dignissim</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseEigth" class="collapsed">
+                                Agendamentos
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseEigth" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="#">Sed est</a></li>
+                                <li><a href="#">Curabitur</a></li>
+                                <li><a href="#">Eu dignissim</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseNine" class="collapsed">
+                                Sobre o Hrstatus
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseNine" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="${pageContext.request.contextPath}/home/about">Sobre</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div><!-- /row -->
-</div><!-- /container -->
+</div>
+<!-- /container -->
 
 </body>
 </html>
