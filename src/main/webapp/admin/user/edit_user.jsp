@@ -21,7 +21,7 @@
                 url: url,
                 type: "DELETE",
                 success: function () {
-                    location.href = protocol + '//' + host + '${pageContext.request.contextPath}/rest/admin/user/list/form?status=success&userDeleted='+user2del;
+                    location.href = protocol + '//' + host + '${pageContext.request.contextPath}/rest/admin/user/list/form?status=successDelete&userDeleted='+user2del;
                 },
                 error: function () {
                     location.href = protocol + '//' + host + '${pageContext.request.contextPath}/rest/admin/user/list/form?status=failed&userDeleted='+user2del;
@@ -39,13 +39,22 @@
         user2del = username;
     }
 </script>
-<c:if test="${info == 'success'}">
+<c:if test="${info == 'successDelete'}">
     <div class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
             <span class="pficon pficon-close"></span>
         </button>
         <span class="pficon pficon-ok"></span>
         Usuário <strong>${userDeleted}</strong> foi removido com sucesso.
+    </div>
+</c:if>
+<c:if test="${info == 'success'}">
+    <div class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+            <span class="pficon pficon-close"></span>
+        </button>
+        <span class="pficon pficon-ok"></span>
+        Usuário <strong>${user}</strong> foi criado com sucesso.
     </div>
 </c:if>
 <c:if test="${info == 'failed'}">
@@ -63,6 +72,8 @@
             <ol class="breadcrumb">
                 <li><a href="/hs/home/home.jsp">Home</a></li>
                 <li>Usuários Cadastrados</li>
+                <li><a href="${pageContext.request.contextPath}/admin/user/user_form.jsp">
+                    Novo Usuário</a></li>
             </ol>
             <table class="datatable table table-striped table-bordered">
                 <thead>
@@ -88,7 +99,6 @@
                         <td>${user.firstLogin}</td>
                         <td>${user.roles}</td>
                         <td>Editar &nbsp;
-
                             <a href="javascript:setParameterUser('${user.username}' ,'${user.nome}');"
                                title="Remover Usuário"><i class="pficon-delete"> </i></a>
                         </td>
@@ -111,12 +121,9 @@
                     <div id="collapseOne" class="panel-collapse collapse in">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a
-                                        href="${pageContext.request.contextPath}/admin/user/user_form.jsp">
-                                    Cadastrar Usuário</a></li>
                                 <li class="active"><a
                                         href="${pageContext.request.contextPath}/rest/admin/user/list/form">
-                                    Editar ou Remover Usuários</a></li>
+                                    Gerenciar Usuários</a></li>
                             </ul>
                         </div>
                     </div>

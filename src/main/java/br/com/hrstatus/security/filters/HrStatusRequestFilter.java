@@ -19,6 +19,12 @@
 
 package br.com.hrstatus.security.filters;
 
+import br.com.hrstatus.dao.RolesInterface;
+import br.com.hrstatus.dao.UserInterface;
+import br.com.hrstatus.model.Role;
+import br.com.hrstatus.model.User;
+
+import javax.inject.Inject;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -30,10 +36,19 @@ import java.util.logging.Logger;
  */
 
 @WebFilter(urlPatterns = {"/*"})
-public class LoginRequestFilter implements Filter {
+public class HrStatusRequestFilter implements Filter {
 
-    private Logger log = Logger.getLogger(LoginRequestFilter.class.getName());
-    private FilterConfig filterConfig = null;
+    private Logger log = Logger.getLogger(HrStatusRequestFilter.class.getName());
+    private FilterConfig filterConfig;
+
+    @Inject
+    private User user;
+    @Inject
+    private Role role;
+    @Inject
+    private UserInterface userDao;
+    @Inject
+    private RolesInterface roleDao;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -45,18 +60,16 @@ public class LoginRequestFilter implements Filter {
 
 
         HttpServletRequest req = (HttpServletRequest) request;
-        log.info("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOIIIIIIIIIIIIIIIIIIIII reques filtrada pelo filtro loko");
-        if (req.getRequestURI().equals("") || req.getRequestURI().equals(null) || req.getRequestURI().equals("j_security_check")) {
-            log.info("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOIIIIIIIIIIIIIIIIIIIII reques filtrada pelo filtro loko");
-            req.setAttribute("targetUri", "/home/home.jsp");
-        }
+
+
+
 
         chain.doFilter(request, response);
     }
 
     @Override
     public void destroy() {
-        log.fine("Destruindo filtro + " + LoginRequestFilter.class.getName());
+        log.fine("Destruindo filtro + " + HrStatusRequestFilter.class.getName());
     }
 
 }

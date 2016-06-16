@@ -37,9 +37,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -100,8 +98,10 @@ public class UsersResourceImpl implements UsersResource {
         }else{
             request.setAttribute("error", true);
             request.setAttribute("message", result);
+            request.getRequestDispatcher("/admin/user/user_form.jsp").forward(request, response);
         }
-        request.getRequestDispatcher("/admin/user/user_form.jsp").forward(request, response);
+        request.setAttribute("userList", getUserAndRoles());
+        request.getRequestDispatcher("/admin/user/edit_user.jsp").forward(request, response);
     }
 
     /*
@@ -130,9 +130,13 @@ public class UsersResourceImpl implements UsersResource {
     public void deleteUser(@PathParam("username") String username, @Context HttpServletRequest request, @Context HttpServletResponse response)
             throws ServletException, IOException {
 
-        log.fine("Usuário recebido para remoção [" + username + "]");
-        userDao.delete(userDao.searchUser(username));
-        roleDao.delete(username);
+        if ("root".equals(username)) {
+            log.fine("Usuário root não pode ser removido do sistema");
+        } else {
+            log.fine("Usuário recebido para remoção [" + username + "]");
+            userDao.delete(userDao.searchUser(username));
+            roleDao.delete(username);
+        }
     }
 
     /*

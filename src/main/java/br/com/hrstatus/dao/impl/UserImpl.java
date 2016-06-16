@@ -65,9 +65,17 @@ public class UserImpl implements UserInterface {
     * @returns list containing all users
     */
     public List<User> getUsers() {
-        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-        cq.multiselect(cq.from(User.class));
-        return em.createQuery(cq).getResultList();
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<User> criteria = builder.createQuery(User.class);
+        Root<User> userRoot = criteria.from(User.class);
+        criteria.select(userRoot);
+        criteria.where(builder.notEqual(userRoot.get("username"), "root"));
+        Query query = em.createQuery(criteria);
+        return query.getResultList();
+
+//        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+//        cq.multiselect(cq.from(User.class));
+//        return em.createQuery(cq).getResultList();
     }
 
     /*

@@ -24,21 +24,15 @@
         Falha ao criar usuário, verificar logs, Mensagem de erro: ${message}
     </div>
 </c:if>
-<c:if test="${info == 'success'}">
-    <div class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-            <span class="pficon pficon-close"></span>
-        </button>
-        <span class="pficon pficon-ok"></span>
-        Usuário <strong>${user}</strong> foi criado com sucesso.
-    </div>
-</c:if>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-9 col-md-10 col-sm-push-3 col-md-push-2">
             <ol class="breadcrumb">
                 <li><a href="/hs/home/home.jsp">Home</a></li>
-                <li>Cadastrar Usuário</li>
+                <li><a href="${pageContext.request.contextPath}/rest/admin/user/list/form">
+                    Gerenciar Usuários</a></li>
+                <li>Novo Usuário</li>
             </ol>
             <h1>Cadastrar Usuário</h1>
             <form method="POST" class="form-horizontal" action="${pageContext.request.contextPath}/rest/admin/user/registerUser">
@@ -128,11 +122,8 @@
                     <div id="collapseOne" class="panel-collapse collapse in">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li class="active"><a
-                                        href="${pageContext.request.contextPath}/admin/user/user_form.jsp">
-                                    Cadastrar Usuário</a></li>
-                                <li><a href="${pageContext.request.contextPath}/rest/admin/user/list/form">
-                                    Editar ou Remover Usuários</a></li>
+                                <li class="active"><a href="${pageContext.request.contextPath}/rest/admin/user/list/form">
+                                    Gerenciar Usuários</a></li>
                             </ul>
                         </div>
                     </div>

@@ -24,7 +24,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 <html lang="pt-br">
 <!--<![endif]-->
 <head>
-    <title>Home - HrStatus</title>
+    <title>HrStatus</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
