@@ -41,7 +41,7 @@ import java.util.logging.Logger;
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
 @WebServlet(name = "aboutServlet", urlPatterns = {"/home/about"})
-@ServletSecurity(@HttpConstraint(rolesAllowed={"ROLE_USERS", "ROLE_ADMIN"}))
+@ServletSecurity(@HttpConstraint(rolesAllowed={"ROLE_USER", "ROLE_ADMIN"}))
 public class AboutServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;

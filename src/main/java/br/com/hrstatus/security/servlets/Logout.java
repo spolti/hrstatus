@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.security;
+package br.com.hrstatus.security.servlets;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.HttpConstraint;
@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  */
 
 @WebServlet(name = "logoutServlet", urlPatterns = {"/logout"})
-@ServletSecurity(@HttpConstraint(rolesAllowed={"ROLE_USERS", "ROLE_ADMIN"}))
+@ServletSecurity(@HttpConstraint(rolesAllowed={"ROLE_USER", "ROLE_ADMIN", "ROLE_REST"}))
 public class Logout extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -48,6 +48,7 @@ public class Logout extends HttpServlet {
         if (session != null) {
             log.info("Realizando logout...");
             session.invalidate();
+            request.logout();
             request.getRequestDispatcher("/login.jsp").forward(request,response);
         } else {
             log.info("Não há sessão ativa para o usuário corrente.");

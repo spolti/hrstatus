@@ -46,6 +46,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <link rel="stylesheet" href="${pageContext.request.contextPath}/patternfly/css/patternfly.min.css" >
     <link rel="stylesheet" href="${pageContext.request.contextPath}/patternfly/css/patternfly-additions.min.css" >
     <script src="${pageContext.request.contextPath}/patternfly/jquery/jquery.min.js"></script>
+    <script src="${pageContext.request.contextPath}/patternfly/jquery/jquery.data-table.js"></script>
     <script src="${pageContext.request.contextPath}/patternfly/bootstrap/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/patternfly/bootstrap/bootstrap-select.min.js"></script>
     <script src="${pageContext.request.contextPath}/patternfly/js/patternfly.min.js"></script>

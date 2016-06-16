@@ -19,7 +19,9 @@
 
 package br.com.hrstatus.dao;
 
-import br.com.hrstatus.model.Roles;
+import br.com.hrstatus.model.Role;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
@@ -30,12 +32,18 @@ public interface RolesInterface {
     * Map user to target role
     * @param Object Roles
     */
-    void save (Roles role);
+    void save(Role role);
 
     /*
-    * Delete the given role
-    * @param Object Roles
+    * Delete all roles for the given username
+    * @param String username
     */
-    void delete (Roles role);
+    void delete(String username);
+
+    /*
+    * Select all roles from the given user
+    * @returns a List containing the roles
+    */
+    List<String> getRoles(String username);
 
 }

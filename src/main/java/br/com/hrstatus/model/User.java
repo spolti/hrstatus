@@ -19,20 +19,29 @@
 
 package br.com.hrstatus.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.Transient;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
 
 @Entity
-@Table(name = "Users")
-public class Users {
+@Table(name = "USER")
+public class User {
 
     @Id
     @Column(name = "username", nullable = false, unique=true)
@@ -60,6 +69,9 @@ public class Users {
     public String getLastLogin() {
         return lastLogin;
     }
+
+    @Transient
+    private List<String> roles;
 
     public void setLastLogin(String lastLogin) {
         this.lastLogin = lastLogin;
@@ -113,4 +125,11 @@ public class Users {
         this.firstLogin = firstLogin;
     }
 
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
 }

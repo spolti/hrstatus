@@ -14,7 +14,7 @@
                     <ul class="nav nav-pills nav-stacked">
                         <li><a href="${pageContext.request.contextPath}/admin/user/user_form.jsp">
                             Cadastrar Usuário</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/edit_user.jsp">
+                        <li><a href="${pageContext.request.contextPath}/rest/admin/user/list/form">
                             Editar ou Remover Usuários</a></li>
                     </ul>
                 </div>

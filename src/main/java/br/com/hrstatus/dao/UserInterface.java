@@ -19,7 +19,9 @@
 
 package br.com.hrstatus.dao;
 
-import br.com.hrstatus.model.Users;
+import br.com.hrstatus.model.User;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
@@ -30,5 +32,23 @@ public interface UserInterface {
     * Register the given user
     * @param Object Users
     */
-    void registerUser(Users user);
+    void registerUser(User user);
+
+    /*
+    * Delete the given user object
+    * @param Users
+    */
+    void delete(User user);
+
+    /*
+    * List the registered users
+    * @returns list containing all users
+    */
+    List<User> getUsers();
+
+    /*
+    * Search the given user
+    * @returns the User object if found
+    */
+    User searchUser (String username);
 }

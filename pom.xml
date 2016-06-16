@@ -15,13 +15,11 @@
         <maven.compiler.target>1.7</maven.compiler.target>
         <maven.compiler.source>1.7</maven.compiler.source>
 
-        <javax.persistence.version>1.0.2</javax.persistence.version>
         <jackson.annotations.version>2.7.4</jackson.annotations.version>
         <mysql.connector.version>5.1.38</mysql.connector.version>
         <jboss.javaee7.version>1.0.3.Final</jboss.javaee7.version>
         <picketbox.version>4.9.4.Final</picketbox.version>
     </properties>
-
 
     <dependencyManagement>
         <dependencies>
@@ -32,13 +30,6 @@
                 <version>${jboss.javaee7.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-
-            <!-- Persistence and Hibernate dependencies -->
-            <dependency>
-                <groupId>javax.persistence</groupId>
-                <artifactId>persistence-api</artifactId>
-                <version>${javax.persistence.version}</version>
             </dependency>
 
             <!-- Security Dependencies -->
@@ -115,10 +106,6 @@
 
         <!-- Persistence and Hibernate dependencies -->
         <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.1-api</artifactId>
             <scope>provided</scope>
@@ -154,7 +141,6 @@
     <build>
         <finalName>hrstatus</finalName>
         <plugins>
-
             <plugin>
                 <groupId>org.wildfly.plugins</groupId>
                 <artifactId>wildfly-maven-plugin</artifactId>
