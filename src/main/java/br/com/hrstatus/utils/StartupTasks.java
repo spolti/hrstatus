@@ -47,7 +47,6 @@ public class StartupTasks {
         verifyBiniries();
     }
 
-
     @PreDestroy
     public void Shutdown() {
         log.info("HrStatus em processo de Shutdown...");

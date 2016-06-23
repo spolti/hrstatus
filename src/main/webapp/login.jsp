@@ -80,7 +80,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             </div><!--/#brand-->
         </div><!--/.col-*-->
             <div class="col-sm-7 col-md-6 col-lg-5 login">
-                <form class="form-horizontal" role="form" method=post action="j_security_check">
+                <form class="form-horizontal" role="form" method=post action="${pageContext.request.contextPath}/login">
                     <div class="form-group">
                         <label for="inputUsername" class="col-sm-2 col-md-2 control-label">Usuário</label>
                         <div class="col-sm-10 col-md-10">

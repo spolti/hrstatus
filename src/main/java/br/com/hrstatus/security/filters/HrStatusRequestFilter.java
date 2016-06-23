@@ -28,7 +28,13 @@ import javax.inject.Inject;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -58,11 +64,22 @@ public class HrStatusRequestFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-
-        HttpServletRequest req = (HttpServletRequest) request;
-
-
-
+    //dump headers and parameters. to activate set -Dbr.com.hrstatus.filter.dump.headers -Dbr.com.hrsatatus.filter.dump.reqParams -Dbr.com.hrstatus.filter.dump.all
+//        HttpServletRequest req = (HttpServletRequest) request;
+//
+////        Map<String, String[]> params = req.getParameterMap();
+//
+//        for(String params: Collections.list(req.getParameterNames())){
+//
+//            log.info("Parameter " + params + " value: " + req.getParameter(params));
+//        }
+//
+////        Enumeration headerNameTemp = req.getHeaderNames();
+////
+////        while (headerNameTemp.hasMoreElements()) {
+////            String headerName = (String)headerNameTemp.nextElement();
+////            log.info("header name " + headerName + ": " + req.getHeader(headerName));
+////        }
 
         chain.doFilter(request, response);
     }
