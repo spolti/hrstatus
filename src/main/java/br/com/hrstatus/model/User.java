@@ -38,7 +38,6 @@ import java.util.Set;
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-
 @Entity
 @Table(name = "USER")
 public class User {
@@ -129,7 +128,11 @@ public class User {
         return roles;
     }
 
-    public void setRoles(List<String> roles) {
+    public void addRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public boolean isAdmin() {
+        return roles.stream().anyMatch(role -> role == "ROLE_ADMIN");
     }
 }

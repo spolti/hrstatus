@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,14 +17,28 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.security.events;
+package br.com.hrstatus.utils.system.impl;
+
+import br.com.hrstatus.utils.system.System;
+
+import javax.management.MBeanServer;
+import java.lang.management.ManagementFactory;
+import java.util.logging.Logger;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public class FailedAuthenticatedEvent extends SecurityEvent {
+public class AbstractSystemImpl implements System {
 
-    public FailedAuthenticatedEvent(Object source, String username) {
-        super(source, username);
+    private final Logger log = Logger.getLogger(AbstractSystemImpl.class.getName());
+
+
+    @Override
+    public String getServerHttpAddress() {
+
+        final MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+
+
+        return null;
     }
 }

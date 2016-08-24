@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-    This file is part of Hrstatus.
+	This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,33 +17,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.utils;
+package br.com.hrstatus.security.interceptor.event;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import java.security.Principal;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public class PropertiesLoader {
+public class LoggedOutEvent extends SecurityEvent {
 
-    private Properties props;
-    private String version = "/version.properties";
+    private static final long serialVersionUID = 1L;
 
-     PropertiesLoader() {
-
-        props = new Properties();
-        final InputStream in = this.getClass().getResourceAsStream(version);
-        try {
-            props.load(in);
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String getValor(String chave) {
-        return (String) props.getProperty(chave);
+    public LoggedOutEvent(Object source, Principal principal) {
+        super(source, principal);
     }
 }

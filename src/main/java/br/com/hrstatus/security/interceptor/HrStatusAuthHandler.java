@@ -17,8 +17,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.security.events;
+package br.com.hrstatus.security.interceptor;
 
+import br.com.hrstatus.security.interceptor.event.AuthenticatedEvent;
+import br.com.hrstatus.security.interceptor.event.FailedAuthenticatedEvent;
+import br.com.hrstatus.security.interceptor.event.LoggedOutEvent;
 import io.undertow.security.api.NotificationReceiver;
 import io.undertow.security.api.SecurityNotification;
 import io.undertow.server.HttpHandler;
@@ -53,22 +56,6 @@ public final class HrStatusAuthHandler implements HttpHandler {
         }
 
         exchange.getSecurityContext().registerNotificationReceiver(NOTIFICATION_RECEIVER);
-
-        //dump headers
-        HeaderMap requestHeaders = exchange.getRequestHeaders();
-        HeaderMap responseHeaders = exchange.getResponseHeaders();
-        for (HeaderValues requestHeaderValues : requestHeaders) {
-            System.out.println(requestHeaderValues.getHeaderName() + " " + requestHeaderValues);
-        }
-        for (HeaderValues responseHeaderValues : responseHeaders) {
-            System.out.println(responseHeaderValues.getHeaderName() + " " + responseHeaderValues);
-        }
-
-//
-//        Map<String, Deque<String>> queryParameters = exchange.getQueryParameters();
-//        queryParameters.putAll(exchange.getPathParameters());
-//
-//        queryParameters.entrySet().forEach(entry -> System.out.println("[" + entry.getKey() + " - " + entry.getValue() + "]"));
 
         next.handleRequest(exchange);
 

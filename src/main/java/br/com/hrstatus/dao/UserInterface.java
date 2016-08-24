@@ -51,4 +51,9 @@ public interface UserInterface {
     * @returns the User object if found
     */
     User searchUser (String username);
+
+    /*
+    * Update the given user
+    */
+    void update (User user);
 }

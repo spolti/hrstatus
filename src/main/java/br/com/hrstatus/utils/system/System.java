@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,20 +17,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.security.events;
-
-import io.undertow.servlet.ServletExtension;
-import io.undertow.servlet.api.DeploymentInfo;
-
-import javax.servlet.ServletContext;
+package br.com.hrstatus.utils.system;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public class UndertowHandlerExtension implements ServletExtension {
+public interface System {
 
-    public void handleDeployment(final DeploymentInfo deploymentInfo, final ServletContext servletContext) {
-        deploymentInfo
-                .addInnerHandlerChainWrapper(handler -> new HrStatusAuthHandler(handler));
-    }
+    String getServerHttpAddress();
+
 }

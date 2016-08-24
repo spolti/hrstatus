@@ -29,7 +29,6 @@ import javax.persistence.Table;
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-
 @Entity
 @Table(name = "ROLE")
 public class Role {
@@ -49,7 +48,7 @@ public class Role {
         this.username = username;
     }
 
-    public void setRole(String role) {
+    public void addRole(String role) {
         this.role = "ROLE_" + role;
     }
 
@@ -65,7 +64,4 @@ public class Role {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 }

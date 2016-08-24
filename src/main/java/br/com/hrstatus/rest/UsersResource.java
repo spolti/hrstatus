@@ -32,36 +32,53 @@ import java.util.List;
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-
 @Path("admin/user")
 @Produces("application/json")
 public interface UsersResource {
 
     /*
+     * Register new user
      * Rest interface
      * \/rest/user/new/{username}/{password}/{role}/{name}/{mail}/{enabled}
      * Example: http://localhost:8080/hs/rest/user/new/username/auto|pasword/admin|user|rest/user%20full%20name/test@test.com/true|false
      */
-    @Path("admin/new/{username}/{password}/{role}/{name}/{mail}/{enabled}")
+    @Path("new/{username}/{password}/{role}/{name}/{mail}/{enabled}")
     @GET
     String newUserRest(@PathParam("username") String username, @PathParam("password") String password, @PathParam("role") String role,
                        @PathParam("name") String name, @PathParam("mail") String mail, @PathParam("enabled") boolean enabled);
 
-
     /*
+    * Register new user
     * Form request
-    * \/rest/user/new/{username}/{password}/{role}/{name}/{mail}/{enabled}
-    * Example: http://localhost:8080/hs/rest/user/new/username/auto|pasword/admin|user|rest/user%20full%20name/test@test.com/true|false
-     */
-    @Path("registerUser")
+    */
+    @Path("new")
     @POST
     void newUserForm(@FormParam("username") String username, @FormParam("password") String password,
                      @FormParam("verifyPassword") String verifyPassword, @FormParam("roles") String[] role,
-                      @FormParam("nome") String name, @FormParam("mail") String mail, @FormParam("enabled") boolean enabled,
+                     @FormParam("nome") String name, @FormParam("mail") String mail, @FormParam("enabled") boolean enabled,
                      @Context HttpServletRequest request, @Context HttpServletResponse response) throws ServletException, IOException;
 
     /*
-    * @returns all users
+    * Update User
+    * Form request
+    */
+    @Path("update")
+    @POST
+    void update(@FormParam("username") String username, @FormParam("password") String password,
+                    @FormParam("verifyPassword") String verifyPassword, @FormParam("roles") String[] roles,
+                    @FormParam("nome") String name, @FormParam("mail") String mail, @FormParam("enabled") boolean enabled,
+                    @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception;
+
+    /*
+    * Update User
+    * Form request
+    */
+    @Path("edit/{username}")
+    @GET
+    void edit(@PathParam("username") String userame, @Context HttpServletRequest request, @Context HttpServletResponse response) throws ServletException, IOException;
+
+    /*
+    * @return all users
     */
     @Path("list{form : (/form)?}")
     @GET
@@ -73,6 +90,6 @@ public interface UsersResource {
     */
     @Path("delete/{username}")
     @DELETE
-    void deleteUser (@PathParam("username") String username, @Context HttpServletRequest request, @Context HttpServletResponse response)
+    void deleteUser(@PathParam("username") String username, @Context HttpServletRequest request, @Context HttpServletResponse response)
             throws ServletException, IOException;
 }

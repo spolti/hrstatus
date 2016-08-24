@@ -43,8 +43,8 @@ public class StartupTasks {
 
     @PostConstruct
     public void Startup() {
-        log.info("Iniciando verificações do startup...");
-        verifyBiniries();
+        log.info("Iniciando verificações de startup...");
+        verifyBinaries();
     }
 
     @PreDestroy
@@ -53,12 +53,12 @@ public class StartupTasks {
     }
 
     /*
-    * Check if the neede binaries are installed on the server
-    * just print in the logs if the if the target binarie is installed or not
+    * Check if the needed binaries are installed on the server
+    * just print in the logs if the if the target binary is installed or not
     */
-    private void verifyBiniries() {
+    private void verifyBinaries() {
         String result = "1";
-        for (binaries bin : binaries.values()) {
+        for (binary bin : binary.values()) {
             result = command.UnixLikeCommand("type " + bin.name() + ";  echo $?");
             if (result.equals("0")) {
                 log.info("Binário " + bin.name() + ": OK");
@@ -71,7 +71,7 @@ public class StartupTasks {
     /*
     * Contains all needed binaries
     */
-    private enum binaries {
+    private enum binary {
         //ntpdate: used to update the date/time from Unix like servers, local and remote
         //net (samba-common package): used to obtain date/time from Windows server
         ntpdate, net

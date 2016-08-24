@@ -55,7 +55,7 @@ public class UserImpl implements UserInterface {
     * Delete the given user object
     * @param Users
     */
-    public void delete(User user){
+    public void delete(User user) {
         em.remove(user);
         em.flush();
     }
@@ -72,17 +72,13 @@ public class UserImpl implements UserInterface {
         criteria.where(builder.notEqual(userRoot.get("username"), "root"));
         Query query = em.createQuery(criteria);
         return query.getResultList();
-
-//        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-//        cq.multiselect(cq.from(User.class));
-//        return em.createQuery(cq).getResultList();
     }
 
     /*
     * Search the given user
     * @returns the User object if found
     */
-    public User searchUser (String username) {
+    public User searchUser(String username) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<User> criteria = builder.createQuery(User.class);
         Root<User> userRoot = criteria.from(User.class);
@@ -90,6 +86,15 @@ public class UserImpl implements UserInterface {
         criteria.where(builder.equal(userRoot.get("username"), username));
         Query query = em.createQuery(criteria);
         return (User) query.getSingleResult();
+    }
+
+
+    /*
+    * Update the given user
+    */
+    public void update(User user) {
+        em.merge(user);
+        em.flush();
     }
 
 }

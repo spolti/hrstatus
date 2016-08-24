@@ -17,7 +17,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.security.events;
+package br.com.hrstatus.security.interceptor.listener;
+
+import br.com.hrstatus.security.interceptor.event.AuthenticatedEvent;
+import br.com.hrstatus.security.interceptor.event.FailedAuthenticatedEvent;
+import br.com.hrstatus.security.interceptor.event.LoggedOutEvent;
 
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Observes;
@@ -27,25 +31,21 @@ import java.util.logging.Logger;
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-
 @SessionScoped
 public class SessionAuthListener implements Serializable {
 
     private Logger log = Logger.getLogger(SessionAuthListener.class.getName());
 
     public void onAuthenticated(@Observes AuthenticatedEvent event) {
-        log.info("Successfull login for " + event.getUserPrincipal().getName());
+        log.fine("Successfull login for " + event.getUserPrincipal().getName());
 
     }
     public void onAuthenticationFailure(@Observes FailedAuthenticatedEvent event) {
-        // take some action, e.g. audit, null out User, etc
+        log.fine("Falha de autenticação usuário " +  event.getUsername() + ", número de tentativas: IMPLEMENTARRRRRRRRRRRRRRRRR");
 
-        log.info("Autenticação falhouuuuuuuuuuuuuuuuuuuuuuuu para o usuário " + event.getUsername());
     }
 
     public void onLoggedOut(@Observes LoggedOutEvent event) {
-        // take some action, e.g. audit, null out User, etc
-
-        log.info("logout..............>>>ASSSSSSSSSSSSSSSSSSSSSS");
+        log.fine("Usuário " +  event.getUserPrincipal().getName() + " efetuou logout.");
     }
 }
