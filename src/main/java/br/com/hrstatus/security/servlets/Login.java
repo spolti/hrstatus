@@ -19,8 +19,10 @@
 
 package br.com.hrstatus.security.servlets;
 
+import br.com.hrstatus.model.User;
 import io.undertow.server.HttpServerExchange;
 
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

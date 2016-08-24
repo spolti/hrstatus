@@ -33,7 +33,6 @@ import java.util.logging.Logger;
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-
 @WebServlet(name = "logoutServlet", urlPatterns = {"/logout"})
 @ServletSecurity(@HttpConstraint(rolesAllowed={"ROLE_USER", "ROLE_ADMIN", "ROLE_REST"}))
 public class Logout extends HttpServlet {
@@ -46,7 +45,6 @@ public class Logout extends HttpServlet {
         //Invalidate the current session
         final HttpSession session = request.getSession(false);
         if (session != null) {
-            log.info("Realizando logout...");
             session.invalidate();
             request.logout();
             request.getRequestDispatcher("/login.jsp").forward(request,response);

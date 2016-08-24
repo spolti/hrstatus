@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.security.events;
+package br.com.hrstatus.security.interceptor.event;
 
 import java.security.Principal;
 import java.util.EventObject;

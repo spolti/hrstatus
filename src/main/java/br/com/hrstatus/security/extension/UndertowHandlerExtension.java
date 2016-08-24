@@ -17,19 +17,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.security.events;
+package br.com.hrstatus.security.extension;
 
-import java.security.Principal;
+import br.com.hrstatus.security.interceptor.HrStatusAuthHandler;
+import io.undertow.servlet.ServletExtension;
+import io.undertow.servlet.api.DeploymentInfo;
+
+import javax.servlet.ServletContext;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public class LoggedOutEvent extends SecurityEvent {
+public class UndertowHandlerExtension implements ServletExtension {
 
-    private static final long serialVersionUID = 1L;
-
-    public LoggedOutEvent(Object source, Principal principal) {
-        super(source, principal);
-        System.out.println("CCCCCCCCCCCCCCCCCCCCC logged out");
+    public void handleDeployment(final DeploymentInfo deploymentInfo, final ServletContext servletContext) {
+        deploymentInfo
+                .addInnerHandlerChainWrapper(handler -> new HrStatusAuthHandler(handler));
     }
 }

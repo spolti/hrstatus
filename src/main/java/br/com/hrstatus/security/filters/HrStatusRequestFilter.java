@@ -40,7 +40,6 @@ import java.util.logging.Logger;
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-
 @WebFilter(urlPatterns = {"/*"})
 public class HrStatusRequestFilter implements Filter {
 
@@ -63,24 +62,6 @@ public class HrStatusRequestFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
-    //dump headers and parameters. to activate set -Dbr.com.hrstatus.filter.dump.headers -Dbr.com.hrsatatus.filter.dump.reqParams -Dbr.com.hrstatus.filter.dump.all
-//        HttpServletRequest req = (HttpServletRequest) request;
-//
-////        Map<String, String[]> params = req.getParameterMap();
-//
-//        for(String params: Collections.list(req.getParameterNames())){
-//
-//            log.info("Parameter " + params + " value: " + req.getParameter(params));
-//        }
-//
-////        Enumeration headerNameTemp = req.getHeaderNames();
-////
-////        while (headerNameTemp.hasMoreElements()) {
-////            String headerName = (String)headerNameTemp.nextElement();
-////            log.info("header name " + headerName + ": " + req.getHeader(headerName));
-////        }
-
         chain.doFilter(request, response);
     }
 
