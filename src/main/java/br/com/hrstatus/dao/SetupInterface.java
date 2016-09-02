@@ -19,47 +19,26 @@
 
 package br.com.hrstatus.dao;
 
-import br.com.hrstatus.model.User;
-
-import java.io.Serializable;
-import java.util.List;
+import br.com.hrstatus.model.Setup;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public interface UserInterface extends Serializable {
+public interface SetupInterface {
 
     /*
-    * Register the given user
-    * @param Object Users
+    * load all configurations
     */
-    void registerUser(User user);
+    Setup loadConfiguration();
 
     /*
-    * Delete the given user object
-    * @param Users
+    * Return the mail session
     */
-    void delete(User user);
+    String mailSession();
 
     /*
-    * List the registered users
-    * @returns list containing all users
+    * Return the mail from
     */
-    List<User> getUsers();
+    String mailFrom();
 
-    /*
-    * Search the given user
-    * @returns the User object if found
-    */
-    User searchUser (String username);
-
-    /*
-    * Update the given user
-    */
-    void update (User user);
-
-    /*
-    * Get the locked users
-    */
-    List<User> getLockedUsers();
 }

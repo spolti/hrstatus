@@ -17,49 +17,45 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.dao;
+package br.com.hrstatus.model;
 
-import br.com.hrstatus.model.User;
-
-import java.io.Serializable;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public interface UserInterface extends Serializable {
+@Entity
+@Table(name = "SETUP")
+public class Setup {
 
-    /*
-    * Register the given user
-    * @param Object Users
-    */
-    void registerUser(User user);
+    @Id
+    @Column(name = "id")
+    @GeneratedValue
+    private int id;
 
-    /*
-    * Delete the given user object
-    * @param Users
-    */
-    void delete(User user);
+    @Column(name = "mailSession")
+    private String mailSession;
 
-    /*
-    * List the registered users
-    * @returns list containing all users
-    */
-    List<User> getUsers();
+    @Column(name = "mailFrom")
+    private String mailFrom;
 
-    /*
-    * Search the given user
-    * @returns the User object if found
-    */
-    User searchUser (String username);
+    public String getMailSession() {
+        return mailSession;
+    }
 
-    /*
-    * Update the given user
-    */
-    void update (User user);
+    public void setMailSession(String mailSession) {
+        this.mailSession = mailSession;
+    }
 
-    /*
-    * Get the locked users
-    */
-    List<User> getLockedUsers();
+    public String getMailFrom() {
+        return mailFrom;
+    }
+
+    public void setMailFrom(String mailFrom) {
+        this.mailFrom = mailFrom;
+    }
 }

@@ -17,49 +17,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.dao;
+package br.com.hrstatus.utils.notification.channel;
 
-import br.com.hrstatus.model.User;
-
-import java.io.Serializable;
-import java.util.List;
+import br.com.hrstatus.utils.notification.Channel;
+import br.com.hrstatus.utils.notification.Notification;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public interface UserInterface extends Serializable {
+public class Email implements Channel {
 
-    /*
-    * Register the given user
-    * @param Object Users
-    */
-    void registerUser(User user);
+    @Override
+    public String send(String message, String receiver) {
+        System.out.println("Enviando a porra do caralho da mensagem [" + message + "] para " + receiver);
+        return "Email Enviado";
+    }
 
-    /*
-    * Delete the given user object
-    * @param Users
-    */
-    void delete(User user);
 
-    /*
-    * List the registered users
-    * @returns list containing all users
-    */
-    List<User> getUsers();
-
-    /*
-    * Search the given user
-    * @returns the User object if found
-    */
-    User searchUser (String username);
-
-    /*
-    * Update the given user
-    */
-    void update (User user);
-
-    /*
-    * Get the locked users
-    */
-    List<User> getLockedUsers();
 }

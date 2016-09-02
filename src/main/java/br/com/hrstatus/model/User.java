@@ -21,26 +21,24 @@ package br.com.hrstatus.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.util.HashSet;
+import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
 @Entity
 @Table(name = "USER")
-public class User {
+public class User implements Serializable {
+
+    @Transient
+    private Logger log = Logger.getLogger(User.class.getName());
 
     @Id
     @Column(name = "username", nullable = false, unique=true)
@@ -65,12 +63,37 @@ public class User {
     @Column(name = "lastLogin")
     private String lastLogin;
 
-    public String getLastLogin() {
-        return lastLogin;
-    }
+    @Column(name = "failedLogins", nullable = false)
+    private int failedLogins;
+
+    @Column(name = "userLockTime")
+    private String userLockTime;
+
+    @Column(name = "lastLoginAddressLocation")
+    private String lastLoginAddressLocation;
 
     @Transient
     private List<String> roles;
+
+    public String getLastLoginAddressLocation() {
+        return lastLoginAddressLocation;
+    }
+
+    public void setLastLoginAddressLocation(String lastLoginAddressLocation) {
+        this.lastLoginAddressLocation = lastLoginAddressLocation;
+    }
+
+    public String getUserLockTime() {
+        return userLockTime;
+    }
+
+    public void setUserLockTime(String userLockTime) {
+        this.userLockTime = userLockTime;
+    }
+
+    public String getLastLogin() {
+        return lastLogin;
+    }
 
     public void setLastLogin(String lastLogin) {
         this.lastLogin = lastLogin;
@@ -113,7 +136,20 @@ public class User {
     }
 
     public void setEnabled(boolean enabled) {
+        if (enabled == true) {
+            this.failedLogins = 0;
+        }
         this.enabled = enabled;
+    }
+
+    public void disable() {
+        this.enabled = false;
+    }
+
+    public void enable() {
+        this.enabled = true;
+        this.userLockTime = "00";
+        this.failedLogins = 0;
     }
 
     public boolean isFirstLogin() {
@@ -132,7 +168,26 @@ public class User {
         this.roles = roles;
     }
 
+    public void setFailedLogins(int failedLogins) {
+        this.failedLogins = failedLogins;
+    }
+
+    public int getFailedLogins() {
+        return failedLogins;
+    }
+
     public boolean isAdmin() {
-        return roles.stream().anyMatch(role -> role == "ROLE_ADMIN");
+        return roles.stream().anyMatch(role -> role.contentEquals("ROLE_ADMIN"));
+    }
+
+    public void dumpUserInformation() {
+        log.fine("[Nome: " + getNome() + "]");
+        log.fine("[Username: " + getUsername() + "]");
+        log.fine("[Password: gotcha!]");
+        log.fine("[Email: " + getMail() + "]");
+        log.fine("[Enabled: " + isEnabled() + "]");
+        log.fine("[Is admin: " + isAdmin() + "]");
+        log.fine("[Is first login: " + isFirstLogin() + "]");
+        roles.stream().forEachOrdered(role ->  log.fine("[ROLES: " + role + "]"));
     }
 }

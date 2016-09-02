@@ -20,6 +20,9 @@
 package br.com.hrstatus.utils;
 
 import br.com.hrstatus.utils.commands.Commands;
+import br.com.hrstatus.utils.notification.Channel;
+import br.com.hrstatus.utils.notification.Notification;
+import br.com.hrstatus.utils.notification.channel.Email;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
