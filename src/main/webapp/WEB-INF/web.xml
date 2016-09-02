@@ -19,6 +19,8 @@
                 AuthenticatedUsers
             </web-resource-name>
             <url-pattern>/home/*</url-pattern>
+            <url-pattern>/rest/user/*</url-pattern>
+            <url-pattern>/user/*</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>
@@ -27,6 +29,7 @@
                 Authenticated users
             </description>
             <role-name>ROLE_USER</role-name>
+            <role-name>ROLE_REST</role-name>
             <role-name>ROLE_ADMIN</role-name>
         </auth-constraint>
     </security-constraint>
@@ -36,7 +39,7 @@
             <web-resource-name>
                 hrstatusAdmins
             </web-resource-name>
-            <url-pattern>/admin/*</url-pattern>
+            <url-pattern>/rest/user/admin/*</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>
@@ -48,23 +51,6 @@
         </auth-constraint>
     </security-constraint>
 
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>
-                hrstatusAdmins
-            </web-resource-name>
-            <url-pattern>/rest/admin/*</url-pattern>
-            <http-method>GET</http-method>
-            <http-method>POST</http-method>
-            <http-method>DELETE</http-method>
-        </web-resource-collection>
-        <auth-constraint>
-            <description>
-                Admins users only
-            </description>
-            <role-name>ROLE_ADMIN</role-name>
-        </auth-constraint>
-    </security-constraint>
 
     <security-role>
         <role-name>ROLE_ADMIN</role-name>
@@ -97,6 +83,11 @@
     </session-config>
     <!-- End of Security configurations -->
 
+    <!-- uncomment this to enable @RolesAllowed on rest endpoints -->
+    <!--context-param>
+        <param-name>resteasy.role.based.security</param-name>
+        <param-value>true</param-value>
+    </context-param-->
     <!-- Error pages -->
     <error-page>
         <error-code>400</error-code>
@@ -119,6 +110,7 @@
         <location>/errors/500.jsp</location>
     </error-page>
     <!-- End Error pages -->
+
 
 
 </web-app>

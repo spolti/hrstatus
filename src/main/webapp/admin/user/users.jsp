@@ -16,15 +16,15 @@
         $('#btDelete').click(function () {
             var protocol = window.location.protocol;
             var host = window.location.host;
-            var url = protocol + '//' + host + '${pageContext.request.contextPath}/rest/admin/user/delete/' + user2del;
+            var url = protocol + '//' + host + '${pageContext.request.contextPath}/rest/user/admin/delete/' + user2del;
             $.ajax({
                 url: url,
                 type: "DELETE",
                 success: function () {
-                    location.href = protocol + '//' + host + '${pageContext.request.contextPath}/rest/admin/user/list/form?status=successDelete&userDeleted=' + user2del;
+                    location.href = protocol + '//' + host + '${pageContext.request.contextPath}/rest/user/admin/list/form?status=successDelete&userDeleted=' + user2del;
                 },
                 error: function () {
-                    location.href = protocol + '//' + host + '${pageContext.request.contextPath}/rest/admin/user/list/form?status=failed&userDeleted=' + user2del;
+                    location.href = protocol + '//' + host + '${pageContext.request.contextPath}/rest/user/admin/list/form?status=failed&userDeleted=' + user2del;
                 }
             });
             $('#delete-user-modal').modal('hide');
@@ -91,7 +91,9 @@
                     <th>Username</th>
                     <th>Email</th>
                     <th>Último Login</th>
+                    <th>Endereço IP</th>
                     <th>Ativo</th>
+                    <th>Falhas de Login</th>
                     <th>Primeiro Login?</th>
                     <th>Roles</th>
                     <th>Ações</th>
@@ -104,11 +106,13 @@
                         <td>${user.username}</td>
                         <td>${user.mail}</td>
                         <td>${user.lastLogin}</td>
+                        <td>${user.lastLoginAddressLocation}</td>
                         <td>${user.enabled}</td>
+                        <td>${user.failedLogins}</td>
                         <td>${user.firstLogin}</td>
                         <td>${user.roles}</td>
                         <td>
-                            <a href="${pageContext.request.contextPath}/rest/admin/user/edit/${user.username}"
+                            <a href="${pageContext.request.contextPath}/rest/user/admin/edit/${user.username}"
                                titlle="Editar Usuário"><i class="pficon-edit"> </i></a>
                             &nbsp;
                             <a href="javascript:setParameterUser('${user.username}' ,'${user.nome}');"
@@ -134,7 +138,7 @@
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
                                 <li class="active"><a
-                                        href="${pageContext.request.contextPath}/rest/admin/user/list/form">
+                                        href="${pageContext.request.contextPath}/rest/user/admin/list/form">
                                     Gerenciar Usuários</a></li>
                             </ul>
                         </div>

@@ -25,6 +25,9 @@ import br.com.hrstatus.model.Role;
 import br.com.hrstatus.model.User;
 import br.com.hrstatus.rest.UsersResource;
 import br.com.hrstatus.security.PasswordUtils;
+import br.com.hrstatus.utils.notification.Channel;
+import br.com.hrstatus.utils.notification.Notification;
+import br.com.hrstatus.utils.notification.channel.Email;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -32,7 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
@@ -45,7 +48,6 @@ import java.util.logging.Logger;
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-
 @Transactional
 public class UsersResourceImpl implements UsersResource {
 
@@ -61,6 +63,8 @@ public class UsersResourceImpl implements UsersResource {
     private RolesInterface roleDao;
     @Inject
     private PasswordUtils passwordUtils;
+    @Inject
+    private Email emailChannel;
 
     public String newUserRest(String username, String password, String role, String name, String mail, boolean enabled) {
         return null;
@@ -68,35 +72,29 @@ public class UsersResourceImpl implements UsersResource {
 
     /*
     * Register the user from a form
-    * @params String username, String password, String verifyPassword, String[] roles, String nome, String mail, boolean enabled
+    * @params String username, String password, String verifyPassword, String[] roles, String nome, String notification, boolean enabled
     */
     public void newUserForm(@FormParam("username") String username, @FormParam("password") String password,
                             @FormParam("verifyPassword") String verifyPassword, @FormParam("roles") String[] roles,
-                            @FormParam("nome") String nome, @FormParam("mail") String mail,
+                            @FormParam("nome") String nome, @FormParam("email") String mail,
                             @FormParam("enabled") boolean enabled, @Context HttpServletRequest request,
                             @Context HttpServletResponse response) throws ServletException, IOException {
 
-        log.fine("Parâmetro recebidos para cadastro de usuário: [Nome: " + nome + "]");
-        log.fine("Parâmetro recebidos para cadastro de usuário: [Username: " + username + "]");
-        log.fine("Parâmetro recebidos para cadastro de usuário: [Password: gotcha!]");
-        log.fine("Parâmetro recebidos para cadastro de usuário: [Email: " + mail + "]");
-        log.fine("Parâmetro recebidos para cadastro de usuário: [Enabled: " + enabled + "]");
-
-        for (String temp : roles) {
-            log.fine("Parâmetro recebidos para cadastro de usuário: [Role: " + temp + "]");
-        }
+        log.info("aaaaaaaaaaaaaaaaaaaaaa email porra " + mail);
 
         user.setNome(nome);
         user.setUsername(username);
         user.setPassword(passwordUtils.encryptUserPassword(password));
         user.setMail(mail);
         user.setEnabled(enabled);
-
-        String result = registerOrUpdate(roles, "new");
+        String result = registerOrUpdate(roles, "new", true);
+        user.addRoles(roleDao.getRoles(user.getUsername()));
+        user.dumpUserInformation();
 
         if ("success".equals(result)) {
             request.setAttribute("info", "success");
             request.setAttribute("user", nome);
+            log.info(new Notification().send("TEMPORARIO").to(user.getMail()).by(emailChannel));
         } else {
             request.setAttribute("error", true);
             request.setAttribute("message", result);
@@ -108,22 +106,20 @@ public class UsersResourceImpl implements UsersResource {
 
     public void update(@FormParam("username") String username, @FormParam("password") String password,
                        @FormParam("verifyPassword") String verifyPassword, @FormParam("roles") String[] roles,
-                       @FormParam("nome") String nome, @FormParam("mail") String mail, @FormParam("enabled") boolean enabled,
+                       @FormParam("nome") String nome, @FormParam("email") String mail, @FormParam("enabled") boolean enabled,
                        @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception {
 
-        log.fine("Parâmetro recebidos para cadastro de usuário: [Nome: " + nome + "]");
-        log.fine("Parâmetro recebidos para cadastro de usuário: [Username: " + username + "]");
-        log.fine("Parâmetro recebidos para cadastro de usuário: [Password: gotcha!]");
-        log.fine("Parâmetro recebidos para cadastro de usuário: [Email: " + mail + "]");
-        log.fine("Parâmetro recebidos para cadastro de usuário: [Enabled: " + enabled + "]");
-
+        //load users information from database before update
+        user = userDao.searchUser(username);
         user.setNome(nome);
         user.setUsername(username);
-        user.setPassword(password);
+        user.setPassword(password.length() == 44 && password.endsWith("=") ? password : passwordUtils.encryptUserPassword(password));
         user.setMail(mail);
         user.setEnabled(enabled);
+        String result = registerOrUpdate(roles, "update", true);
+        user.addRoles(roleDao.getRoles(user.getUsername()));
+        user.dumpUserInformation();
 
-        String result = registerOrUpdate(roles, "update");
         if ("success".equals(result)) {
             request.setAttribute("update", "success");
             request.setAttribute("user", nome);
@@ -141,16 +137,75 @@ public class UsersResourceImpl implements UsersResource {
     * Update User
     * Form request
     */
+    public void updateNonadmin(@FormParam("username") String username, @FormParam("password") String password,
+                               @FormParam("verifyPassword") String verifyPassword, @FormParam("roles") String[] roles,
+                               @FormParam("nome") String nome, @FormParam("email") String mail, @FormParam("enabled") boolean enabled,
+                               @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception {
+        //load users information from database before update
+        user = userDao.searchUser(username);
+        user.setPassword(password.length() == 44 && password.endsWith("=") ? password : passwordUtils.encryptUserPassword(password));
+        user.setMail(mail);
+        String result = registerOrUpdate(roles, "update", false);
+        user.addRoles(roleDao.getRoles(user.getUsername()));
+        user.dumpUserInformation();
+
+        if ("success".equals(result)) {
+            request.setAttribute("update", "success");
+            request.setAttribute("user", nome);
+        } else {
+            request.setAttribute("error", true);
+            request.setAttribute("message", result);
+            request.getRequestDispatcher("/home/home.jsp").forward(request, response);
+        }
+        request.getRequestDispatcher("/home/home.jsp").forward(request, response);
+    }
+
+    /*
+    * Update User
+    * Form request
+    */
     public void edit(@PathParam("username") String username, @Context HttpServletRequest request, @Context HttpServletResponse response) throws ServletException, IOException {
 
-        user = userDao.searchUser(username);
-        user.addRoles(roleDao.getRoles(user.getUsername()));
+        //preload the user attributes before send it to edition
+        User loggedUser = userDao.searchUser(request.getUserPrincipal().getName());
+        loggedUser.addRoles(roleDao.getRoles(loggedUser.getUsername()));
 
-        log.info("IS admin: " + user.isAdmin());
+        //double check to make sure user is admin
+        if (loggedUser.isAdmin() && !"root".equals(username)) {
+            user = userDao.searchUser(username);
+            log.info("Usuário recebido para edição: " + username);
+            user.addRoles(roleDao.getRoles(user.getUsername()));
+            request.setAttribute("user", user);
+            request.getRequestDispatcher("/admin/user/edit_user.jsp").forward(request, response);
+        } else {
+            // Non admin users can't edit other users
+            log.fine("Tentativa de alteração de usuário inválida");
+            response.sendError(403);
+        }
+    }
 
-        log.info("Usuário recebido para edição: " + user.getNome());
-        request.setAttribute("user", user);
-        request.getRequestDispatcher("/admin/user/edit_user.jsp").forward(request, response);
+    /*
+    * Update myself
+    * Form request
+    */
+    public void editLimited(@PathParam("username") String username, @Context HttpServletRequest request, @Context HttpServletResponse response) throws ServletException, IOException {
+
+        //preload the user attributes before send it to edition
+        User loggedUser = userDao.searchUser(request.getUserPrincipal().getName());
+        loggedUser.addRoles(roleDao.getRoles(loggedUser.getUsername()));
+
+        if (loggedUser.getUsername().equals(username)) {
+            log.info("Usuário recebido para edição: " + user.getUsername());
+            user = userDao.searchUser(username);
+            user.addRoles(roleDao.getRoles(user.getUsername()));
+            request.setAttribute("user", user);
+            request.getRequestDispatcher("/user/edit.jsp").forward(request, response);
+
+        } else {
+            // Non admin users can't edit other users
+            log.fine("Tentativa de alteração de usuário inválida");
+            response.sendError(403);
+        }
     }
 
     /*
@@ -194,22 +249,26 @@ public class UsersResourceImpl implements UsersResource {
     * @param String operation - new/update
     * @returns success or the error message if it fail.
     */
-    private String registerOrUpdate(String[] roles, String operation) {
+    private String registerOrUpdate(String[] roles, String operation, boolean updateRoles) {
         try {
 
             if ("new".equals(operation)) {
                 userDao.registerUser(user);
             } else if ("update".equals(operation)) {
                 userDao.update(user);
+
+            }
+            if (updateRoles) {
+                roleDao.delete(user.getUsername());
+                for (String role : roles) {
+                    this.role.addRole(role);
+                    this.role.setUsername(user.getUsername());
+                    log.fine("Mapping the role [" + role + "] to user [" + user.getUsername() + "]");
+                    roleDao.save(this.role);
+                    this.role = new Role();
+                }
             }
 
-            for (String role : roles) {
-                this.role.addRole(role);
-                this.role.setUsername(user.getUsername());
-                log.fine("Mapping the role [" + role + "] to user [" + user.getUsername() + "]");
-                roleDao.save(this.role);
-                this.role = new Role();
-            }
             return "success";
         } catch (Exception e) {
             e.printStackTrace();
@@ -235,5 +294,4 @@ public class UsersResourceImpl implements UsersResource {
         }
         return userList;
     }
-
 }

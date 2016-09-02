@@ -97,4 +97,17 @@ public class UserImpl implements UserInterface {
         em.flush();
     }
 
+    /*
+    * Get the locked users
+    */
+    public List<User> getLockedUsers() {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<User> criteria = builder.createQuery(User.class);
+        Root<User> userRoot = criteria.from(User.class);
+        criteria.select(userRoot);
+        criteria.where(builder.equal(userRoot.get("enabled"), false));
+        Query query = em.createQuery(criteria);
+        return query.getResultList();
+    }
+
 }

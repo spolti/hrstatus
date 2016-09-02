@@ -17,49 +17,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.dao;
+package br.com.hrstatus.utils.date.impl;
 
-import br.com.hrstatus.model.User;
+import br.com.hrstatus.utils.date.DateUtils;
 
-import java.io.Serializable;
-import java.util.List;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public interface UserInterface extends Serializable {
+public class DateUtilsImpl implements DateUtils{
 
-    /*
-    * Register the given user
-    * @param Object Users
-    */
-    void registerUser(User user);
-
-    /*
-    * Delete the given user object
-    * @param Users
-    */
-    void delete(User user);
-
-    /*
-    * List the registered users
-    * @returns list containing all users
-    */
-    List<User> getUsers();
-
-    /*
-    * Search the given user
-    * @returns the User object if found
-    */
-    User searchUser (String username);
-
-    /*
-    * Update the given user
-    */
-    void update (User user);
-
-    /*
-    * Get the locked users
-    */
-    List<User> getLockedUsers();
+    @Override
+    public LocalDateTime now() {
+        return LocalDateTime.now();
+    }
 }

@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-    This file is part of Hrstatus.
+	This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,13 +17,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.utils.system;
+package br.com.hrstatus.utils.notification;
 
 /**
- * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
+ * Created by ataxexe on 9/1/16.
  */
-public interface System {
+public class DestinationSelector {
 
-    String getServerHttpAddress();
+    private String message;
+
+    public DestinationSelector(String message) {
+        this.message = message;
+    }
+
+    public ChannelSelector to(String receiver) {
+        return new ChannelSelector(this.message, receiver);
+    }
 
 }

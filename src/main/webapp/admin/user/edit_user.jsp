@@ -30,13 +30,13 @@
         <div class="col-sm-9 col-md-10 col-sm-push-3 col-md-push-2">
             <ol class="breadcrumb">
                 <li><a href="/hs/home/home.jsp">Home</a></li>
-                <li><a href="${pageContext.request.contextPath}/rest/admin/user/list/form">
+                <li><a href="${pageContext.request.contextPath}/rest/user/admin/list/form">
                     Gerenciar Usuários</a></li>
                 <li>Editar Usuário</li>
             </ol>
             <h1>Editar Usuário</h1>
             <form method="POST" class="form-horizontal"
-                  action="${pageContext.request.contextPath}/rest/admin/user/update">
+                  action="${pageContext.request.contextPath}/rest/user/admin/update">
                 <div class="form-group">
                     <label class="col-md-2 control-label" for="name">Nome</label>
                     <div class="col-md-6">
@@ -78,7 +78,7 @@
                 <div class="form-group">
                     <label class="col-md-2 control-label" for="email">E-mail</label>
                     <div class="col-md-6">
-                        <input name="mail" type="email" id="email"
+                        <input name="email" type="email" id="email"
                                value="${user.mail}"
                                class="form-control" required
                                data-errormessage-type-mismatch="Email inválido."
@@ -110,9 +110,12 @@
                         <select name="roles" class="selectpicker" multiple data-selected-text-format="count>3"
                                 id="boostrapSelect"
                                 required>
-                            <option value="ADMIN">Administrador</option>
-                            <option value="USER">Usuário</option>
-                            <option value="REST">Permissão para Requisições Rest</option>
+                            <c:forEach items="${user.roles}" var="role" varStatus="stat">
+                                <c:set var="myVar" value="${stat.first ? '' : myVar} ${role}" />
+                            </c:forEach>
+                            <option <c:if test="${myVar.contains('ADMIN')}" > selected </c:if> value="ADMIN">Administrador</option>
+                            <option <c:if test="${myVar.contains('USER')}" > selected </c:if>value="USER">Usuário</option>
+                            <option <c:if test="${myVar.contains('REST')}" > selected </c:if>value="REST">Permissão para Requisições Rest</option>
                         </select>
                     </div>
                 </div>
@@ -138,7 +141,7 @@
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
                                 <li class="active"><a
-                                        href="${pageContext.request.contextPath}/rest/admin/user/list/form">
+                                        href="${pageContext.request.contextPath}/rest/user/admin/list/form">
                                     Gerenciar Usuários</a></li>
                             </ul>
                         </div>

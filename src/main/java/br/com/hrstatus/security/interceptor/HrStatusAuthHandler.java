@@ -56,7 +56,6 @@ public final class HrStatusAuthHandler implements HttpHandler {
         }
 
         exchange.getSecurityContext().registerNotificationReceiver(NOTIFICATION_RECEIVER);
-
         next.handleRequest(exchange);
 
     }

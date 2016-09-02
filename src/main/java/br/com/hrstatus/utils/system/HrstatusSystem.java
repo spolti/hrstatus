@@ -1,7 +1,7 @@
 /*
     Copyright (C) 2012  Filippe Costa Spolti
 
-	This file is part of Hrstatus.
+    This file is part of Hrstatus.
 
     Hrstatus is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,49 +17,33 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.dao;
+package br.com.hrstatus.utils.system;
 
-import br.com.hrstatus.model.User;
-
-import java.io.Serializable;
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanException;
+import javax.management.MalformedObjectNameException;
+import javax.management.ReflectionException;
 import java.util.List;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public interface UserInterface extends Serializable {
+public interface HrstatusSystem {
 
     /*
-    * Register the given user
-    * @param Object Users
+    *
     */
-    void registerUser(User user);
+    String getServerHttpAddress();
 
     /*
-    * Delete the given user object
-    * @param Users
+    * Returns the uptime in the following pattern:
+    * 0 Hora(s), 1 minuto(s) e 1 segundo(s)
     */
-    void delete(User user);
+    String uptime();
 
     /*
-    * List the registered users
-    * @returns list containing all users
+    * Return the available mainSessions
     */
-    List<User> getUsers();
-
-    /*
-    * Search the given user
-    * @returns the User object if found
-    */
-    User searchUser (String username);
-
-    /*
-    * Update the given user
-    */
-    void update (User user);
-
-    /*
-    * Get the locked users
-    */
-    List<User> getLockedUsers();
+    List<String> mailSessios();
 }

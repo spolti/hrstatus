@@ -30,21 +30,28 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/patternfly/img/favicon.ico">
     <!-- iPad retina icon -->
-    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="${pageContext.request.contextPath}/patternfly/img/apple-touch-icon-precomposed-152.png">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152"
+          href="${pageContext.request.contextPath}/patternfly/img/apple-touch-icon-precomposed-152.png">
     <!-- iPad retina icon (iOS < 7) -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="${pageContext.request.contextPath}/patternfly/img/apple-touch-icon-precomposed-144.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144"
+          href="${pageContext.request.contextPath}/patternfly/img/apple-touch-icon-precomposed-144.png">
     <!-- iPad non-retina icon -->
-    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="${pageContext.request.contextPath}/patternfly/img/apple-touch-icon-precomposed-76.png">
+    <link rel="apple-touch-icon-precomposed" sizes="76x76"
+          href="${pageContext.request.contextPath}/patternfly/img/apple-touch-icon-precomposed-76.png">
     <!-- iPad non-retina icon (iOS < 7) -->
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="${pageContext.request.contextPath}/patternfly/img/apple-touch-icon-precomposed-72.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72"
+          href="${pageContext.request.contextPath}/patternfly/img/apple-touch-icon-precomposed-72.png">
     <!-- iPhone 6 Plus icon -->
-    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="${pageContext.request.contextPath}/patternfly/img/apple-touch-icon-precomposed-180.png">
+    <link rel="apple-touch-icon-precomposed" sizes="120x120"
+          href="${pageContext.request.contextPath}/patternfly/img/apple-touch-icon-precomposed-180.png">
     <!-- iPhone retina icon (iOS < 7) -->
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="${pageContext.request.contextPath}/patternfly/img/apple-touch-icon-precomposed-114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114"
+          href="${pageContext.request.contextPath}/patternfly/img/apple-touch-icon-precomposed-114.png">
     <!-- iPhone non-retina icon (iOS < 7) -->
-    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="${pageContext.request.contextPath}/patternfly/img/apple-touch-icon-precomposed-57.png">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/patternfly/css/patternfly.min.css" >
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/patternfly/css/patternfly-additions.min.css" >
+    <link rel="apple-touch-icon-precomposed" sizes="57x57"
+          href="${pageContext.request.contextPath}/patternfly/img/apple-touch-icon-precomposed-57.png">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/patternfly/css/patternfly.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/patternfly/css/patternfly-additions.min.css">
     <script src="${pageContext.request.contextPath}/patternfly/jquery/jquery.min.js"></script>
     <script src="${pageContext.request.contextPath}/patternfly/jquery/jquery.data-table.js"></script>
     <script src="${pageContext.request.contextPath}/patternfly/bootstrap/bootstrap.min.js"></script>
@@ -89,7 +96,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <div class="collapse navbar-collapse navbar-collapse-1">
         <ul class="nav navbar-nav navbar-utility">
             <li>
-                <a href="#">Horário Local <div align="center" id="time">time</div></a>
+                <a href="#">Horário Local
+                    <div align="center" id="time">time</div>
+                </a>
             </li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -98,10 +107,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                 </a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a href="#">Link</a>
-                    </li>
-                    <li>
-                        <a href="#">Another link</a>
+                        <a href="${pageContext.request.contextPath}/rest/user/edit-nonadmin/${pageContext.request.userPrincipal.name}">Editar
+                            informações pessoais</a>
                     </li>
                     <li>
                         <a href="#">Something else here</a>

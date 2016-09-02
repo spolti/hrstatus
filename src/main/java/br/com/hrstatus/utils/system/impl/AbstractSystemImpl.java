@@ -19,26 +19,88 @@
 
 package br.com.hrstatus.utils.system.impl;
 
-import br.com.hrstatus.utils.system.System;
+import br.com.hrstatus.utils.system.HrstatusSystem;
 
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanException;
 import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import javax.management.ReflectionException;
 import java.lang.management.ManagementFactory;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public class AbstractSystemImpl implements System {
+public class AbstractSystemImpl implements HrstatusSystem {
 
     private final Logger log = Logger.getLogger(AbstractSystemImpl.class.getName());
-
 
     @Override
     public String getServerHttpAddress() {
 
-        final MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+
 
 
         return null;
+    }
+
+    /*
+    * Returns the uptime in the following pattern:
+    * 0 Hora(s), 1 minuto(s) e 1 segundo(s)
+    */
+    @Override
+    public String uptime() {
+        Duration duration = Duration.ofMillis(ManagementFactory.getRuntimeMXBean().getUptime());
+        long hours = duration.toHours();
+        long minutes = duration.minusHours(hours).toMinutes();
+        long seconds = duration.minusHours(hours).minusMinutes(minutes).getSeconds();
+        return hours + " Hora(s), " + minutes + " Minuto(s) e " + seconds + " Segundo(s)";
+    }
+
+
+    /*
+    * Return the available mainSessions
+    */
+    public List<String> mailSessios() {
+
+        final ArrayList<String> mailSessions = new ArrayList<String>();
+
+        try {
+            mBeanServer().queryNames(new ObjectName("jboss.as:subsystem=mail,mail-session=*"),null).stream().forEach(mbean ->{
+                try {
+                    mailSessions.add((String) mBeanServer().getAttribute(mbean, "jndi-name"));
+                } catch (MBeanException e) {
+                    e.printStackTrace();
+                } catch (AttributeNotFoundException e) {
+                    e.printStackTrace();
+                } catch (InstanceNotFoundException e) {
+                    e.printStackTrace();
+                } catch (ReflectionException e) {
+                    e.printStackTrace();
+                }
+            });
+        } catch (MalformedObjectNameException e) {
+            e.printStackTrace();
+        }
+
+        return mailSessions;
+    }
+
+
+
+
+    /*
+    * return the MBeanServer
+    */
+    private MBeanServer mBeanServer() {
+        return ManagementFactory.getPlatformMBeanServer();
     }
 }

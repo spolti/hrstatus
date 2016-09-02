@@ -30,12 +30,12 @@
         <div class="col-sm-9 col-md-10 col-sm-push-3 col-md-push-2">
             <ol class="breadcrumb">
                 <li><a href="/hs/home/home.jsp">Home</a></li>
-                <li><a href="${pageContext.request.contextPath}/rest/admin/user/list/form">
+                <li><a href="${pageContext.request.contextPath}/rest/user/admin/list/form">
                     Gerenciar Usuários</a></li>
                 <li>Novo Usuário</li>
             </ol>
             <h1>Cadastrar Usuário</h1>
-            <form method="POST" class="form-horizontal" action="${pageContext.request.contextPath}/rest/admin/user/new">
+            <form method="POST" class="form-horizontal" action="${pageContext.request.contextPath}/rest/user/admin/new">
                 <div class="form-group">
                     <label class="col-md-2 control-label" for="name">Nome</label>
                     <div class="col-md-6">
@@ -69,7 +69,7 @@
                 <div class="form-group">
                     <label class="col-md-2 control-label" for="email">E-mail</label>
                     <div class="col-md-6">
-                        <input name="mail" type="email" id="email" class="form-control" required
+                        <input name="email" type="email" id="email" class="form-control" required
                                data-errormessage-type-mismatch="Email inválido." data-errormessage-value-missing="Campo Obrigatório">
                     </div>
                 </div>

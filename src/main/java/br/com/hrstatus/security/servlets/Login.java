@@ -19,7 +19,14 @@
 
 package br.com.hrstatus.security.servlets;
 
+import br.com.hrstatus.dao.SetupInterface;
+import br.com.hrstatus.dao.UserInterface;
+import br.com.hrstatus.model.Setup;
 import br.com.hrstatus.model.User;
+import br.com.hrstatus.utils.notification.Channel;
+import br.com.hrstatus.utils.notification.Notification;
+import br.com.hrstatus.utils.notification.channel.Email;
+import br.com.hrstatus.utils.system.HrstatusSystem;
 import io.undertow.server.HttpServerExchange;
 
 import javax.inject.Inject;
@@ -28,13 +35,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-
+@Transactional
 @WebServlet(name = "loginServlet", urlPatterns = {"/login"})
 public class Login extends HttpServlet {
 
@@ -42,16 +50,32 @@ public class Login extends HttpServlet {
 
     private final Logger log = Logger.getLogger(Login.class.getName());
 
+    @Inject
+    private User user;
+    @Inject
+    private UserInterface userDao;
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         try {
-            request.login(request.getParameter("j_username"), request.getParameter("j_password"));
-            request.getRequestDispatcher("/home/home.jsp").forward(request,response);
-
+            try {
+                user = userDao.searchUser(request.getParameter("j_username"));
+            } catch (Exception e) {
+                //user not found
+                log.fine("Usuário " + request.getParameter("j_username") + " não cadastrado.");
+                request.getRequestDispatcher("login.jsp?failed=true").forward(request,response);
+            }
+            if (user.isEnabled()) {
+                user.setLastLoginAddressLocation(request.getRemoteAddr());
+                userDao.update(user);
+                request.login(request.getParameter("j_username"), request.getParameter("j_password"));
+                request.getRequestDispatcher("/home/home.jsp").forward(request,response);
+            } else {
+                request.getRequestDispatcher("login.jsp?failed=true").forward(request,response);
+            }
         } catch (ServletException ex ) {
             response.setHeader("UT010031", request.getParameter("j_username"));
             request.getRequestDispatcher("login.jsp?failed=true").forward(request,response);
-
         }
     }
 }
