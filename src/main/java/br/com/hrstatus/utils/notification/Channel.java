@@ -24,9 +24,6 @@ package br.com.hrstatus.utils.notification;
  */
 public interface Channel {
 
-    String send(String message, String receiver);
-
-
-
+    String send(String message, String receiver, String subject);
 
 }

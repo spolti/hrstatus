@@ -19,19 +19,80 @@
 
 package br.com.hrstatus.utils.notification.channel;
 
+import br.com.hrstatus.dao.SetupInterface;
 import br.com.hrstatus.utils.notification.Channel;
-import br.com.hrstatus.utils.notification.Notification;
+
+import javax.inject.Inject;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.naming.InitialContext;
+import java.util.logging.Logger;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
 public class Email implements Channel {
 
+    private Logger log = Logger.getLogger(Email.class.getName());
+
+    private InitialContext INITIAL_CONTEXT;
+    private Session MAIL_SESSION;
+    private MimeMessage MAIL_MESSAGE;
+    private String MAIL_SESSION_JNDI = "java:jboss/mail/HrStatus";
+    private String MAIL_FROM = "hrstatus@hrstatus.com.br";
+
+    @Inject
+    private SetupInterface setup;
+
+
     @Override
-    public String send(String message, String receiver) {
-        System.out.println("Enviando a porra do caralho da mensagem [" + message + "] para " + receiver);
-        return "Email Enviado";
+    public String send(String message, String receiver, String subject) {
+        //setup the session
+        setupEmailSession(receiver);
+        log.fine("Enviando email: " + message + " para o usuário " + receiver+ " com o subject: " + subject);
+        try {
+            MAIL_MESSAGE.setSubject(subject);
+            MAIL_MESSAGE.setContent(message, "text/html; charset=UTF-8");
+            Transport.send(MAIL_MESSAGE);
+            return "Email Enviado";
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            return "Falha ao enviar email, verifique os logs.";
+        }
     }
 
+
+    /*
+    * Configure the email Session
+    */
+    private void setupEmailSession(String receiver) {
+        configureMailBasics();
+        try {
+            INITIAL_CONTEXT = new InitialContext();
+            MAIL_SESSION = (Session) INITIAL_CONTEXT.lookup(MAIL_SESSION_JNDI);
+            MAIL_SESSION.setDebug(false);
+            MAIL_MESSAGE = new MimeMessage(MAIL_SESSION);
+            MAIL_MESSAGE.setFrom(MAIL_FROM);
+            MAIL_MESSAGE.setRecipient(Message.RecipientType.TO,new InternetAddress(receiver));
+            MAIL_MESSAGE.setSentDate(new java.util.Date());
+
+        } catch (Exception e) {
+            log.warning("Falha ao enviar email: " + e.getCause());
+        }
+    }
+
+    /*
+    * Retrieve the mail configuration fromn database
+    */
+    private void configureMailBasics() {
+//
+//        MAIL_SESSION_JNDI = ;
+//        MAIL_FROM = ;
+
+    }
 
 }

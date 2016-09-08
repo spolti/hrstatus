@@ -26,13 +26,17 @@ public class ChannelSelector {
 
     private final String message;
     private final String receiver;
+    private final String subject;
 
-    public ChannelSelector(String message, String receiver) {
+
+    public ChannelSelector(String message, String receiver, String subject) {
         this.message = message;
         this.receiver = receiver;
+        this.subject = subject;
     }
 
     public String by(Channel channel) {
-        return channel.send(this.message, this.receiver);
+        return channel.send(this.message, this.receiver, this.subject);
     }
+
 }

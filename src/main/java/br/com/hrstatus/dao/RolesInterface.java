@@ -44,6 +44,6 @@ public interface RolesInterface {
     * Select all roles from the given user
     * @returns a List containing the roles
     */
-    List<String> getRoles(String username);
+    List<String> getRoles(String username) throws Exception;
 
 }

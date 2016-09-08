@@ -65,7 +65,7 @@ public class RolesImpl implements RolesInterface {
     * Select all roles from the given user
     * @returns a String[] containing the roles
     */
-    public List<String> getRoles(String username) {
+    public List<String> getRoles(String username) throws Exception{
         ArrayList<String> list = new ArrayList<>();
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Role> cq = cb.createQuery(Role.class);

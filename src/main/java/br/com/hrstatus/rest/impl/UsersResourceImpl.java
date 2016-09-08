@@ -28,6 +28,7 @@ import br.com.hrstatus.security.PasswordUtils;
 import br.com.hrstatus.utils.notification.Channel;
 import br.com.hrstatus.utils.notification.Notification;
 import br.com.hrstatus.utils.notification.channel.Email;
+import br.com.hrstatus.utils.notification.template.NewUserMessageTemplate;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -43,6 +44,8 @@ import javax.ws.rs.core.Context;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.RunnableFuture;
 import java.util.logging.Logger;
 
 /**
@@ -66,6 +69,9 @@ public class UsersResourceImpl implements UsersResource {
     @Inject
     private Email emailChannel;
 
+    /*
+     To be implemented
+    */
     public String newUserRest(String username, String password, String role, String name, String mail, boolean enabled) {
         return null;
     }
@@ -78,30 +84,37 @@ public class UsersResourceImpl implements UsersResource {
                             @FormParam("verifyPassword") String verifyPassword, @FormParam("roles") String[] roles,
                             @FormParam("nome") String nome, @FormParam("email") String mail,
                             @FormParam("enabled") boolean enabled, @Context HttpServletRequest request,
-                            @Context HttpServletResponse response) throws ServletException, IOException {
+                            @Context HttpServletResponse response) throws Exception {
 
-        log.info("aaaaaaaaaaaaaaaaaaaaaa email porra " + mail);
+        try {
+            user.setNome(nome);
+            user.setUsername(username);
+            user.setPassword(passwordUtils.encryptUserPassword(password));
+            user.setMail(mail);
+            user.setEnabled(enabled);
+            registerOrUpdate(roles, "new", true);
+            user.addRoles(roleDao.getRoles(user.getUsername()));
+            user.dumpUserInformation();
 
-        user.setNome(nome);
-        user.setUsername(username);
-        user.setPassword(passwordUtils.encryptUserPassword(password));
-        user.setMail(mail);
-        user.setEnabled(enabled);
-        String result = registerOrUpdate(roles, "new", true);
-        user.addRoles(roleDao.getRoles(user.getUsername()));
-        user.dumpUserInformation();
+            // Send the notification email in a different thread
+            CompletableFuture.runAsync(() -> {
+                log.info(new Notification()
+                        .send(NewUserMessageTemplate.get(username, password))
+                        .subject(NewUserMessageTemplate.SUBJECT)
+                        .to(user.getMail())
+                        .by(emailChannel));
+            }).toCompletableFuture();
 
-        if ("success".equals(result)) {
             request.setAttribute("info", "success");
             request.setAttribute("user", nome);
-            log.info(new Notification().send("TEMPORARIO").to(user.getMail()).by(emailChannel));
-        } else {
+            request.setAttribute("userList", getUserAndRoles());
+            request.getRequestDispatcher("/admin/user/users.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
             request.setAttribute("error", true);
-            request.setAttribute("message", result);
+            request.setAttribute("message", e.getCause().getMessage());
             request.getRequestDispatcher("/admin/user/user_form.jsp").forward(request, response);
         }
-        request.setAttribute("userList", getUserAndRoles());
-        request.getRequestDispatcher("/admin/user/users.jsp").forward(request, response);
     }
 
     public void update(@FormParam("username") String username, @FormParam("password") String password,
@@ -164,7 +177,7 @@ public class UsersResourceImpl implements UsersResource {
     * Update User
     * Form request
     */
-    public void edit(@PathParam("username") String username, @Context HttpServletRequest request, @Context HttpServletResponse response) throws ServletException, IOException {
+    public void edit(@PathParam("username") String username, @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception {
 
         //preload the user attributes before send it to edition
         User loggedUser = userDao.searchUser(request.getUserPrincipal().getName());
@@ -188,7 +201,7 @@ public class UsersResourceImpl implements UsersResource {
     * Update myself
     * Form request
     */
-    public void editLimited(@PathParam("username") String username, @Context HttpServletRequest request, @Context HttpServletResponse response) throws ServletException, IOException {
+    public void editLimited(@PathParam("username") String username, @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception {
 
         //preload the user attributes before send it to edition
         User loggedUser = userDao.searchUser(request.getUserPrincipal().getName());
@@ -212,7 +225,7 @@ public class UsersResourceImpl implements UsersResource {
     * @returns all users
     */
     public List<User> listUsers(@PathParam("form") String form, @QueryParam("status") String status, @QueryParam("userDeleted") String userDeleted,
-                                @Context HttpServletRequest request, @Context HttpServletResponse response) throws ServletException, IOException {
+                                @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception {
 
         if ("".equals(form)) {
             return getUserAndRoles();
@@ -251,12 +264,10 @@ public class UsersResourceImpl implements UsersResource {
     */
     private String registerOrUpdate(String[] roles, String operation, boolean updateRoles) {
         try {
-
             if ("new".equals(operation)) {
                 userDao.registerUser(user);
             } else if ("update".equals(operation)) {
                 userDao.update(user);
-
             }
             if (updateRoles) {
                 roleDao.delete(user.getUsername());
@@ -268,16 +279,10 @@ public class UsersResourceImpl implements UsersResource {
                     this.role = new Role();
                 }
             }
-
             return "success";
         } catch (Exception e) {
             e.printStackTrace();
-            String constraintViolation = e.getCause().getCause().getMessage();
-            if (!constraintViolation.equals(null)) {
-                return constraintViolation;
-            } else {
-                return e.getCause().getMessage();
-            }
+            return null;
         }
     }
 
@@ -285,7 +290,7 @@ public class UsersResourceImpl implements UsersResource {
     * Get the roles for the given user
     * @return the user roles
     */
-    private List<User> getUserAndRoles() {
+    private List<User> getUserAndRoles() throws Exception {
         ArrayList<User> userList = new ArrayList<>();
         final List<User> userListfromDb = userDao.getUsers();
         for (User user : userListfromDb) {

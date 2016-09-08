@@ -45,7 +45,7 @@ public class UserImpl implements UserInterface {
     * Register the given user
     * @param Object Users
     */
-    public void registerUser(User user) {
+    public void registerUser(User user) throws Exception{
         log.fine("Salvando usuário " + user.getNome());
         em.persist(user);
         em.flush();

@@ -43,13 +43,18 @@ public class AbstractSystemImpl implements HrstatusSystem {
 
     private final Logger log = Logger.getLogger(AbstractSystemImpl.class.getName());
 
+    /*
+    * Return the Hrstatus address
+    */
     @Override
     public String getServerHttpAddress() {
-
-
-
-
-        return null;
+        try {
+            final ObjectName http = new ObjectName("jboss.as:socket-binding-group=standard-sockets,socket-binding=http");
+            return mBeanServer().getAttribute(http, "boundAddress") + ":" + mBeanServer().getAttribute(http, "boundPort");
+        } catch (Exception e ){
+            e.printStackTrace();
+            return "localhost:8080";
+        }
     }
 
     /*
@@ -93,7 +98,6 @@ public class AbstractSystemImpl implements HrstatusSystem {
 
         return mailSessions;
     }
-
 
 
 

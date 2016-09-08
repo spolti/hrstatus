@@ -59,7 +59,7 @@ public interface UsersResource {
     void newUserForm(@FormParam("username") String username, @FormParam("password") String password,
                      @FormParam("verifyPassword") String verifyPassword, @FormParam("roles") String[] role,
                      @FormParam("nome") String name, @FormParam("email") String mail, @FormParam("enabled") boolean enabled,
-                     @Context HttpServletRequest request, @Context HttpServletResponse response) throws ServletException, IOException;
+                     @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception;
 
     /*
     * Update User
@@ -91,7 +91,7 @@ public interface UsersResource {
     @Path("admin/edit/{username}")
     @GET
     @RolesAllowed({"ROLE_ADMIN"})
-    void edit(@PathParam("username") String username, @Context HttpServletRequest request, @Context HttpServletResponse response) throws ServletException, IOException;
+    void edit(@PathParam("username") String username, @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception;
 
     /*
     * Update myself
@@ -99,7 +99,7 @@ public interface UsersResource {
     */
     @Path("/edit-nonadmin/{username}")
     @GET
-    void editLimited(@PathParam("username") String username, @Context HttpServletRequest request, @Context HttpServletResponse response) throws ServletException, IOException;
+    void editLimited(@PathParam("username") String username, @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception;
 
     /*
     * @return all users
@@ -108,7 +108,7 @@ public interface UsersResource {
     @GET
     @RolesAllowed({"ROLE_ADMIN"})
     List<User> listUsers(@PathParam("form") String form, @QueryParam("status") String status, @QueryParam("userDeleted") String userDeleted,
-                         @Context HttpServletRequest request, @Context HttpServletResponse response) throws ServletException, IOException;
+                         @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception;
 
     /*
     * Delete the given user

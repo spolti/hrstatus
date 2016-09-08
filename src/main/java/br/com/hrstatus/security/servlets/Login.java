@@ -19,15 +19,12 @@
 
 package br.com.hrstatus.security.servlets;
 
-import br.com.hrstatus.dao.SetupInterface;
 import br.com.hrstatus.dao.UserInterface;
-import br.com.hrstatus.model.Setup;
 import br.com.hrstatus.model.User;
 import br.com.hrstatus.utils.notification.Channel;
 import br.com.hrstatus.utils.notification.Notification;
 import br.com.hrstatus.utils.notification.channel.Email;
-import br.com.hrstatus.utils.system.HrstatusSystem;
-import io.undertow.server.HttpServerExchange;
+import br.com.hrstatus.utils.notification.template.NewUserMessageTemplate;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -37,6 +34,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.time.Duration;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
 
 /**
@@ -57,7 +61,7 @@ public class Login extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        try {
+       try {
             try {
                 user = userDao.searchUser(request.getParameter("j_username"));
             } catch (Exception e) {
