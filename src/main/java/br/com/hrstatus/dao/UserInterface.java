@@ -33,7 +33,7 @@ public interface UserInterface extends Serializable {
     * Register the given user
     * @param Object Users
     */
-    void registerUser(User user);
+    void registerUser(User user) throws Exception;
 
     /*
     * Delete the given user object

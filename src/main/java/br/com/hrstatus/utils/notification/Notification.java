@@ -27,5 +27,4 @@ public class Notification {
     public DestinationSelector send(String message) {
         return new DestinationSelector(message);
     }
-
 }

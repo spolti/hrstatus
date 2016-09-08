@@ -32,7 +32,7 @@ import java.util.List;
 public interface HrstatusSystem {
 
     /*
-    *
+    * Return the Hrstatus address
     */
     String getServerHttpAddress();
 

@@ -25,13 +25,25 @@ package br.com.hrstatus.utils.notification;
 public class DestinationSelector {
 
     private String message;
+    private String  subject = "HrStatus";
+
 
     public DestinationSelector(String message) {
         this.message = message;
     }
 
+    public DestinationSelector(String message, String subject) {
+        this.message = message;
+        this.subject =  !subject.equals(null) ? subject : this.subject;
+    }
+
     public ChannelSelector to(String receiver) {
-        return new ChannelSelector(this.message, receiver);
+        return new ChannelSelector(this.message, receiver, this.subject);
+    }
+
+    public DestinationSelector subject(String subject) {
+        this.subject = subject;
+        return this;
     }
 
 }
