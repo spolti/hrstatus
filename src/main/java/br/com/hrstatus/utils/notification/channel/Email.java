@@ -19,7 +19,7 @@
 
 package br.com.hrstatus.utils.notification.channel;
 
-import br.com.hrstatus.dao.SetupInterface;
+import br.com.hrstatus.repository.Repository;
 import br.com.hrstatus.utils.notification.Channel;
 
 import javax.inject.Inject;
@@ -39,18 +39,20 @@ public class Email implements Channel {
 
     private Logger log = Logger.getLogger(Email.class.getName());
 
+    @Inject
+    private Repository repository;
+
     private InitialContext INITIAL_CONTEXT;
     private Session MAIL_SESSION;
     private MimeMessage MAIL_MESSAGE;
-    private String MAIL_SESSION_JNDI = "java:jboss/mail/HrStatus";
+    private String MAIL_SESSION_JNDI;
     private String MAIL_FROM = "hrstatus@hrstatus.com.br";
 
-    @Inject
-    private SetupInterface setup;
-
-
     @Override
-    public String send(String message, String receiver, String subject) {
+    public String send(String message, String receiver, String subject, String jndi) {
+
+        MAIL_SESSION_JNDI = jndi != null ? jndi : repository.mailJndi();
+
         //setup the session
         setupEmailSession(receiver);
         log.fine("Enviando email: " + message + " para o usuário " + receiver+ " com o subject: " + subject);
@@ -61,7 +63,7 @@ public class Email implements Channel {
             return "Email Enviado";
         } catch (MessagingException e) {
             e.printStackTrace();
-            return "Falha ao enviar email, verifique os logs.";
+            return "Falha ao enviar email: " + e.getCause();
         }
     }
 
@@ -79,9 +81,8 @@ public class Email implements Channel {
             MAIL_MESSAGE.setFrom(MAIL_FROM);
             MAIL_MESSAGE.setRecipient(Message.RecipientType.TO,new InternetAddress(receiver));
             MAIL_MESSAGE.setSentDate(new java.util.Date());
-
         } catch (Exception e) {
-            log.warning("Falha ao enviar email: " + e.getCause());
+            e.printStackTrace();
         }
     }
 

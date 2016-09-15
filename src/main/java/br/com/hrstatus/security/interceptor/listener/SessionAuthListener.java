@@ -19,15 +19,14 @@
 
 package br.com.hrstatus.security.interceptor.listener;
 
-import br.com.hrstatus.dao.UserInterface;
 import br.com.hrstatus.model.User;
+import br.com.hrstatus.repository.Repository;
 import br.com.hrstatus.security.interceptor.event.AuthenticatedEvent;
 import br.com.hrstatus.security.interceptor.event.FailedAuthenticatedEvent;
 import br.com.hrstatus.security.interceptor.event.LoggedOutEvent;
 import br.com.hrstatus.utils.date.DateUtils;
 
 import javax.ejb.Stateless;
-import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.io.Serializable;
@@ -44,19 +43,19 @@ public class SessionAuthListener implements Serializable {
     @Inject
     private User user;
     @Inject
-    private UserInterface userDao;
+    private Repository repository;
     @Inject
     private DateUtils dateUtils;
 
     public void onAuthenticated(@Observes AuthenticatedEvent event) {
         log.fine("Successfull login for " + event.getUserPrincipal().getName() + " at " + dateUtils.now());
-        user = userDao.searchUser(event.getUserPrincipal().getName());
+        user = repository.searchUser(event.getUserPrincipal().getName());
         user.setLastLogin(dateUtils.now().toString());
-        userDao.update(user);
+        repository.update(user);
     }
 
     public void onAuthenticationFailure(@Observes FailedAuthenticatedEvent event) {
-        user = userDao.searchUser(event.getUsername());
+        user = repository.searchUser(event.getUsername());
         user.setFailedLogins(user.getFailedLogins() + 1);
         log.fine("Falha de autenticação usuário " +  event.getUsername() + ", número de tentativas: [" + user.getFailedLogins() + "]");
         if (user.getFailedLogins() >= 3) {
@@ -64,7 +63,7 @@ public class SessionAuthListener implements Serializable {
             user.disable();
             user.setUserLockTime(String.valueOf(dateUtils.now()));
         }
-        userDao.update(user);
+        repository.update(user);
     }
 
     public void onLoggedOut(@Observes LoggedOutEvent event) {

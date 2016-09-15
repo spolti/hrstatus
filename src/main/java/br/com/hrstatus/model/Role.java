@@ -19,6 +19,8 @@
 
 package br.com.hrstatus.model;
 
+import br.com.hrstatus.model.support.SupportedDatabase;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

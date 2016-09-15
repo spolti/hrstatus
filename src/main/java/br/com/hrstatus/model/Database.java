@@ -17,24 +17,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.utils.notification;
+package br.com.hrstatus.model;
 
-import br.com.hrstatus.repository.Repository;
-import br.com.hrstatus.repository.impl.DataBaseRepository;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
- * Created by ataxexe on 9/1/16.
- *            fspolti
+ * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public class Notification {
+@Entity
+@Table(name = "DATABASE")
+public class Database {
 
-    private Repository repository = new DataBaseRepository();
+    @Id
+    @Column(name = "id")
+    @GeneratedValue
+    private int id;
 
-    public DestinationSelector send(String message) {
-        return new DestinationSelector(message);
-    }
 
-    public MailJndiSelector usingJndi(String jndi) {
-        return new MailJndiSelector(jndi);
-    }
 }

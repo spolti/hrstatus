@@ -39,7 +39,10 @@
             <web-resource-name>
                 hrstatusAdmins
             </web-resource-name>
+            <url-pattern>/admin/*</url-pattern>
             <url-pattern>/rest/user/admin/*</url-pattern>
+            <url-pattern>/rest/setup/*</url-pattern>
+            <url-pattern>/rest/utils/mail/test</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>
