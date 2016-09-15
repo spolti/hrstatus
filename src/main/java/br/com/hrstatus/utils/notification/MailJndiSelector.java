@@ -17,33 +17,23 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.dao;
+package br.com.hrstatus.utils.notification;
 
-import br.com.hrstatus.model.Role;
-
-import java.util.List;
+import br.com.hrstatus.repository.Repository;
+import br.com.hrstatus.repository.impl.DataBaseRepository;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public interface RolesInterface {
+public class MailJndiSelector {
 
-    /*
-    * Map user to target role
-    * @param Object Roles
-    */
-    void save(Role role);
+    private String jndi;
 
-    /*
-    * Delete all roles for the given username
-    * @param String username
-    */
-    void delete(String username);
+    public MailJndiSelector(String jndi) {
+        this.jndi = jndi;
+    }
 
-    /*
-    * Select all roles from the given user
-    * @returns a List containing the roles
-    */
-    List<String> getRoles(String username) throws Exception;
-
+    public DestinationSelector send(String message) {
+        return new DestinationSelector(message, "", this.jndi);
+    }
 }

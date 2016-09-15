@@ -19,8 +19,8 @@
 
 package br.com.hrstatus.utils.timer;
 
-import br.com.hrstatus.dao.UserInterface;
 import br.com.hrstatus.model.User;
+import br.com.hrstatus.repository.Repository;
 import br.com.hrstatus.utils.date.DateUtils;
 
 import javax.ejb.Schedule;
@@ -38,7 +38,7 @@ public class DefaultTimers {
     private Logger log = Logger.getLogger(DefaultTimers.class.getName());
 
     @Inject
-    private UserInterface userDao;
+    private Repository repository;
     @Inject
     private User user;
     @Inject
@@ -51,12 +51,12 @@ public class DefaultTimers {
     */
     @Schedule(hour = "*", minute = "*/15", persistent = false)
     private void unlockUser() {
-        userDao.getLockedUsers().stream().filter(user -> !user.getUserLockTime().equals(null) && LocalDateTime.parse(user.getUserLockTime())
+        repository.getLockedUsers().stream().filter(user -> !user.getUserLockTime().equals(null) && LocalDateTime.parse(user.getUserLockTime())
                 .plusMinutes(30).isBefore(dateUtils.now()))
             .forEach(user ->{
                 log.info("Desbloqueando usuário " + user.getUsername());
                 user.enable();
-                userDao.update(user);
+                repository.update(user);
             });
     }
 }

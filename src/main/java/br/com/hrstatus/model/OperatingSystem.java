@@ -19,43 +19,65 @@
 
 package br.com.hrstatus.model;
 
+import br.com.hrstatus.model.support.SupportedDatabase;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.HashMap;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
 @Entity
-@Table(name = "SETUP")
-public class Setup {
+@Table(name = "OS")
+public class OperatingSystem {
 
     @Id
     @Column(name = "id")
     @GeneratedValue
     private int id;
 
-    @Column(name = "mailJndi")
-    private String mailJndi;
+    @Column(name = "hostname", nullable = false)
+    private String hostname;
 
-    @Column(name = "mailFrom")
-    private String mailFrom;
+    @Column(name = "address", nullable = false)
+    private String address;
 
-    public String getMailJndi() {
-        return mailJndi;
-    }
+    @Column(name = "port")
+    private int port;
 
-    public void setMailJndi(String mailJndi) {
-        this.mailJndi = mailJndi;
-    }
+    // user-pass
+    @Column(name = "credentials", nullable = true)
+    private HashMap<String, String> credentials;
 
-    public String getMailFrom() {
-        return mailFrom;
-    }
+    @Column(name = "type", nullable = false)
+    private Enum type;
 
-    public void setMailFrom(String mailFrom) {
-        this.mailFrom = mailFrom;
-    }
+    @Column(name = "status", nullable = false)
+    private Enum status;
+
+    @Column(name = "osTime")
+    private String osTime;
+
+    @Column(name = "hrstatusTime")
+    private String hrstatusTime;
+
+    @Column(name = "lastCheck")
+    private String lastCheck;
+
+    @Column(name = "difference")
+    private long difference;
+
+    @Column(name = "logDir")
+    private String logDir;
+
+    @Column(name = "suCommand")
+    private String suCommand;
+
+    @Column(name = "verify", nullable = false)
+    private boolean verify;
+
 }

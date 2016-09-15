@@ -19,12 +19,8 @@
 
 package br.com.hrstatus.security.servlets;
 
-import br.com.hrstatus.dao.UserInterface;
 import br.com.hrstatus.model.User;
-import br.com.hrstatus.utils.notification.Channel;
-import br.com.hrstatus.utils.notification.Notification;
-import br.com.hrstatus.utils.notification.channel.Email;
-import br.com.hrstatus.utils.notification.template.NewUserMessageTemplate;
+import br.com.hrstatus.repository.Repository;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -34,13 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.time.Duration;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
 
 /**
@@ -57,13 +46,13 @@ public class Login extends HttpServlet {
     @Inject
     private User user;
     @Inject
-    private UserInterface userDao;
+    private Repository repository;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
        try {
             try {
-                user = userDao.searchUser(request.getParameter("j_username"));
+                user = repository.searchUser(request.getParameter("j_username"));
             } catch (Exception e) {
                 //user not found
                 log.fine("Usuário " + request.getParameter("j_username") + " não cadastrado.");
@@ -71,7 +60,7 @@ public class Login extends HttpServlet {
             }
             if (user.isEnabled()) {
                 user.setLastLoginAddressLocation(request.getRemoteAddr());
-                userDao.update(user);
+                repository.update(user);
                 request.login(request.getParameter("j_username"), request.getParameter("j_password"));
                 request.getRequestDispatcher("/home/home.jsp").forward(request,response);
             } else {

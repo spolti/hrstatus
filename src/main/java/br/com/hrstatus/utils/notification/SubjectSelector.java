@@ -17,49 +17,24 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.dao;
-
-import br.com.hrstatus.model.User;
-
-import java.io.Serializable;
-import java.util.List;
+package br.com.hrstatus.utils.notification;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public interface UserInterface extends Serializable {
+public class SubjectSelector {
 
-    /*
-    * Register the given user
-    * @param Object Users
-    */
-    void registerUser(User user) throws Exception;
+    private String message;
+    private String subject;
+    private String jndi;
 
-    /*
-    * Delete the given user object
-    * @param Users
-    */
-    void delete(User user);
+    public SubjectSelector(String message, String subject, String jndi) {
+        this.message = message;
+        this.subject = subject;
+        this.jndi = jndi;
+    }
 
-    /*
-    * List the registered users
-    * @returns list containing all users
-    */
-    List<User> getUsers();
-
-    /*
-    * Search the given user
-    * @returns the User object if found
-    */
-    User searchUser (String username);
-
-    /*
-    * Update the given user
-    */
-    void update (User user);
-
-    /*
-    * Get the locked users
-    */
-    List<User> getLockedUsers();
+    public ChannelSelector to(String receiver) {
+        return new ChannelSelector(this.message, receiver, this.subject, this.jndi);
+    }
 }

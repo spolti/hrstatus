@@ -17,28 +17,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.dao;
-
-import br.com.hrstatus.model.Setup;
+package br.com.hrstatus.model.support;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public interface SetupInterface {
+public enum VerificationStatus {
 
-    /*
-    * load all configurations
-    */
-    Setup loadConfiguration();
+    NOT_VERIFIED,
+    OK,
+    NOT_OK;
 
-    /*
-    * Return the mail session
-    */
-    String mailSession();
-
-    /*
-    * Return the mail from
-    */
-    String mailFrom();
+    public String toString() {
+        return this.toString();
+    }
 
 }

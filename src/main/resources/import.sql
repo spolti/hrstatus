@@ -2,4 +2,4 @@
 -- default user setup.
 insert into USER (username, enabled, firstLogin, mail, nome, password, failedLogins) VALUES ('root',true,false,'changeme@example.com','Administrador', 'sD3fPKLnFKZUjnSV4qA/XoJOqsmDfNfxWcZ7kPtLc0I=',0);
 insert into ROLE (id, role, username) values (1, 'ROLE_ADMIN', 'root');
-insert into SETUP (id, mailSession, mailFrom) values (1, 'java:jboss/mail/HrStatus','hrstatus@hrstatus.com.br');
+insert into SETUP (id, mailJndi, mailFrom) values (1, 'java:jboss/mail/HrStatus','hrstatus@hrstatus.com.br');

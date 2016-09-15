@@ -19,7 +19,6 @@
 
 package br.com.hrstatus.utils.date;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 /**
@@ -28,5 +27,7 @@ import java.time.LocalDateTime;
 public interface DateUtils {
 
     LocalDateTime now();
+
+
 
 }

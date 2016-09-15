@@ -21,29 +21,31 @@ package br.com.hrstatus.utils.notification;
 
 /**
  * Created by ataxexe on 9/1/16.
+ *            fspolti
  */
 public class DestinationSelector {
 
     private String message;
-    private String  subject = "HrStatus";
+    private String subject = "HrStatus";
+    private String jndi;
 
 
     public DestinationSelector(String message) {
         this.message = message;
     }
 
-    public DestinationSelector(String message, String subject) {
+    public DestinationSelector(String message, String subject, String jndi) {
         this.message = message;
-        this.subject =  !subject.equals(null) ? subject : this.subject;
+        this.subject = subject.length() == 0 ? this.subject : subject;
+        this.jndi = jndi;
     }
 
     public ChannelSelector to(String receiver) {
-        return new ChannelSelector(this.message, receiver, this.subject);
+        return new ChannelSelector(this.message, receiver, this.subject, this.jndi);
     }
 
-    public DestinationSelector subject(String subject) {
-        this.subject = subject;
-        return this;
+    public SubjectSelector subject(String subject) {
+        return new SubjectSelector(this.message,subject, this.jndi);
     }
 
 }

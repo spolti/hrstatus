@@ -19,24 +19,29 @@
 
 package br.com.hrstatus.utils.notification;
 
+import javax.transaction.Transactional;
+
 /**
  * Created by ataxexe on 9/1/16.
+ *            fspolti
  */
+@Transactional
 public class ChannelSelector {
 
     private final String message;
     private final String receiver;
     private final String subject;
+    private String jndi;
 
-
-    public ChannelSelector(String message, String receiver, String subject) {
+    public ChannelSelector(String message, String receiver, String subject, String jndi) {
         this.message = message;
         this.receiver = receiver;
         this.subject = subject;
+        this.jndi = jndi;
     }
 
     public String by(Channel channel) {
-        return channel.send(this.message, this.receiver, this.subject);
+        return channel.send(this.message, this.receiver, this.subject, this.jndi);
     }
 
 }

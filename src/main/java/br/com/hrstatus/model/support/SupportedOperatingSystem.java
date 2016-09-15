@@ -17,24 +17,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.utils.notification;
-
-import br.com.hrstatus.repository.Repository;
-import br.com.hrstatus.repository.impl.DataBaseRepository;
+package br.com.hrstatus.model.support;
 
 /**
- * Created by ataxexe on 9/1/16.
- *            fspolti
+ * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public class Notification {
+public enum SupportedOperatingSystem {
 
-    private Repository repository = new DataBaseRepository();
+    UNIX,
+    WINDOWS
 
-    public DestinationSelector send(String message) {
-        return new DestinationSelector(message);
-    }
-
-    public MailJndiSelector usingJndi(String jndi) {
-        return new MailJndiSelector(jndi);
-    }
 }
