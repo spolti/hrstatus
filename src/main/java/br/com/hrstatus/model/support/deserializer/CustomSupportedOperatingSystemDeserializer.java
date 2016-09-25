@@ -17,25 +17,23 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.model.support;
+package br.com.hrstatus.model.support.deserializer;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import br.com.hrstatus.model.support.SupportedOperatingSystem;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-//@JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum SupportedOperatingSystem {
-//    @JsonProperty("type")
-    UNIX,
-    WINDOWS;
+public class CustomSupportedOperatingSystemDeserializer extends JsonDeserializer<SupportedOperatingSystem> {
 
-//    @JsonCreator
-//    public static SupportedOperatingSystem fromString(String type) {
-//        System.out.println("ENUM called" + type);
-//        return SupportedOperatingSystem.valueOf(type);
-//    }
-
+    @Override
+    public SupportedOperatingSystem deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+        return SupportedOperatingSystem.valueOf(jsonParser.getText());
+    }
 }

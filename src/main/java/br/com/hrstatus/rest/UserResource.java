@@ -19,7 +19,6 @@
 
 package br.com.hrstatus.rest;
 
-import br.com.hrstatus.model.Role;
 import br.com.hrstatus.model.User;
 import br.com.hrstatus.repository.Repository;
 import br.com.hrstatus.security.PasswordUtils;
@@ -33,6 +32,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -42,8 +42,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
@@ -52,16 +52,13 @@ import java.util.logging.Logger;
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
 @Path("user")
-@Produces("application/json")
 @Transactional
-public class UsersResource {
+public class UserResource {
 
-    private Logger log = Logger.getLogger(UsersResource.class.getName());
+    private Logger log = Logger.getLogger(UserResource.class.getName());
 
     @Inject
     private User user;
-    @Inject
-    private Role role;
     @Inject
     private Repository repository;
     @Inject
@@ -71,58 +68,45 @@ public class UsersResource {
 
     /*
     * Register new user
-    * Rest interface
-    * \/rest/user/new/{username}/{password}/{role}/{name}/{notification}/{enabled}
-    * Example: http://localhost:8080/hs/rest/user/new/username/auto|pasword/admin|user|rest/user%20full%20name/test@test.com/true|false
-    */
-    @Path("admin/new/{username}/{password}/{role}/{name}/{mail}/{enabled}")
-    @GET
-    @RolesAllowed({"ROLE_ADMIN"})
-    public String newUserRest(String username, String password, String role, String name, String mail, boolean enabled) {
-        //TODO
-        return null;
-    }
-
-    /*
-    * Register new user
-    * Form request
+    * Receives a JSon Object
     */
     @Path("admin/new")
     @POST
     @RolesAllowed({"ROLE_ADMIN"})
-    public void newUserForm(@FormParam("username") String username, @FormParam("password") String password,
-                            @FormParam("verifyPassword") String verifyPassword, @FormParam("roles") String[] roles,
-                            @FormParam("nome") String nome, @FormParam("email") String mail,
-                            @FormParam("enabled") boolean enabled, @Context HttpServletRequest request,
-                            @Context HttpServletResponse response) throws Exception {
+//    public void newUser(@FormParam("username") String username, @FormParam("password") String password,
+//                            @FormParam("verifyPassword") String verifyPassword, @FormParam("roles") String[] roles,
+//                            @FormParam("nome") String nome, @FormParam("email") String mail,
+//                            @FormParam("enabled") boolean enabled, @Context HttpServletRequest request,
+//                            @Context HttpServletResponse response) throws Exception {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void newUser (User newUser, @Context HttpServletRequest request,
+                         @Context HttpServletResponse response) throws Exception {
 
-        try {
-            user.setNome(nome);
-            user.setUsername(username);
-            user.setPassword(passwordUtils.encryptUserPassword(password));
-            user.setMail(mail);
-            user.setEnabled(enabled);
-            registerOrUpdate(roles, "new", true);
-            user.addRoles(repository.getRoles(user.getUsername()));
-            user.dumpUserInformation();
 
+        newUser.dumpUserInformation();
+        //need to get a plain text password before send the email to the user.
+        String password =  newUser.getPassword();
+        // ok, now encrypt it and persiste the user
+        newUser.setPassword(PasswordUtils.encryptUserPassword(password));
+        String result = repository.registerUser(newUser);
+
+        if ("success".equals(result)) {
             // Send the notification email in a different thread
             CompletableFuture.runAsync(() -> {
                 log.info(new Notification()
-                        .send(NewUserMessageTemplate.get(username, password))
+                        .send(NewUserMessageTemplate.get(newUser.getUsername(), password))
                         .subject(NewUserMessageTemplate.SUBJECT)
-                        .to(user.getMail())
+                        .to(newUser.getMail())
                         .by(emailChannel));
             }).toCompletableFuture();
 
             request.setAttribute("info", "success");
-            request.setAttribute("user", nome);
-            request.setAttribute("userList", getUserAndRoles());
+            request.setAttribute("user", newUser.getNome());
+            request.setAttribute("userList", repository.getUsers());
             request.getRequestDispatcher("/admin/user/users.jsp").forward(request, response);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
             request.setAttribute("error", true);
-            request.setAttribute("message", e.getCause().getMessage());
+            request.setAttribute("message", result);
             request.getRequestDispatcher("/admin/user/user_form.jsp").forward(request, response);
         }
     }
@@ -143,12 +127,13 @@ public class UsersResource {
         user = repository.searchUser(username);
         user.setNome(nome);
         user.setUsername(username);
-        user.setPassword(password.length() == 44 && password.endsWith("=") ? password : passwordUtils.encryptUserPassword(password));
+        user.setPassword(password);
         user.setMail(mail);
         user.setEnabled(enabled);
-        String result = registerOrUpdate(roles, "update", true);
-        user.addRoles(repository.getRoles(user.getUsername()));
+        user.addRoles(roles);
         user.dumpUserInformation();
+
+        String result = repository.registerUser(user);
 
         if ("success".equals(result)) {
             request.setAttribute("update", "success");
@@ -156,10 +141,10 @@ public class UsersResource {
         } else {
             request.setAttribute("error", true);
             request.setAttribute("message", result);
-            request.setAttribute("userList", getUserAndRoles());
+            request.setAttribute("userList", repository.getUsers());
             request.getRequestDispatcher("/admin/user/users.jsp").forward(request, response);
         }
-        request.setAttribute("userList", getUserAndRoles());
+        request.setAttribute("userList", repository.getUsers());
         request.getRequestDispatcher("/admin/user/users.jsp").forward(request, response);
     }
 
@@ -177,9 +162,10 @@ public class UsersResource {
         user = repository.searchUser(username);
         user.setPassword(password.length() == 44 && password.endsWith("=") ? password : passwordUtils.encryptUserPassword(password));
         user.setMail(mail);
-        String result = registerOrUpdate(roles, "update", false);
-        user.addRoles(repository.getRoles(user.getUsername()));
+        user.addRoles(roles);
         user.dumpUserInformation();
+
+        String result = repository.update(user);
 
         if ("success".equals(result)) {
             request.setAttribute("update", "success");
@@ -202,14 +188,14 @@ public class UsersResource {
     public void edit(@PathParam("username") String username, @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception {
 
         //preload the user attributes before send it to edition
-        User loggedUser = repository.searchUser(request.getUserPrincipal().getName());
-        loggedUser.addRoles(repository.getRoles(loggedUser.getUsername()));
+        br.com.hrstatus.model.User loggedUser = repository.searchUser(request.getUserPrincipal().getName());
+        loggedUser.addRoles(loggedUser.getRoles().stream().toArray(String[]::new));
 
         //double check to make sure user is admin
         if (loggedUser.isAdmin() && !"root".equals(username)) {
             user = repository.searchUser(username);
             log.info("Usuário recebido para edição: " + username);
-            user.addRoles(repository.getRoles(user.getUsername()));
+            user.addRoles(user.getRoles().stream().toArray(String[]::new));
             request.setAttribute("user", user);
             request.getRequestDispatcher("/admin/user/edit_user.jsp").forward(request, response);
         } else {
@@ -228,13 +214,13 @@ public class UsersResource {
     public void editLimited(@PathParam("username") String username, @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception {
 
         //preload the user attributes before send it to edition
-        User loggedUser = repository.searchUser(request.getUserPrincipal().getName());
-        loggedUser.addRoles(repository.getRoles(loggedUser.getUsername()));
+        br.com.hrstatus.model.User loggedUser = repository.searchUser(request.getUserPrincipal().getName());
+        loggedUser.addRoles(loggedUser.getRoles().stream().toArray(String[]::new));
 
         if (loggedUser.getUsername().equals(username)) {
             log.info("Usuário recebido para edição: " + user.getUsername());
             user = repository.searchUser(username);
-            user.addRoles(repository.getRoles(user.getUsername()));
+            user.addRoles(user.getRoles().stream().toArray(String[]::new));
             request.setAttribute("user", user);
             request.getRequestDispatcher("/user/edit.jsp").forward(request, response);
 
@@ -251,17 +237,18 @@ public class UsersResource {
     @Path("admin/list{form : (/form)?}")
     @GET
     @RolesAllowed({"ROLE_ADMIN"})
+    @Produces(MediaType.APPLICATION_JSON)
     public List<User> listUsers(@PathParam("form") String form, @QueryParam("status") String status, @QueryParam("userDeleted") String userDeleted,
-                                @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception {
+                                                      @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception {
 
         if ("".equals(form)) {
-            return getUserAndRoles();
+            return repository.getUsers();
         } else {
             if (!"".equals(status)) {
                 request.setAttribute("info", status);
                 request.setAttribute("userDeleted", userDeleted);
             }
-            request.setAttribute("userList", getUserAndRoles());
+            request.setAttribute("userList", repository.getUsers());
             request.getRequestDispatcher("/admin/user/users.jsp").forward(request, response);
         }
         //if the request is not coming from the rest api or the form, ignore it
@@ -282,51 +269,7 @@ public class UsersResource {
         } else {
             log.fine("Usuário recebido para remoção [" + username + "]");
             repository.delete(repository.searchUser(username));
-            repository.delete(username);
         }
     }
 
-    /*
-    * Register or update the given user
-    * @param String[] roles
-    * @param String operation - new/update
-    * @returns success or the error message if it fail.
-    */
-    private String registerOrUpdate(String[] roles, String operation, boolean updateRoles) {
-        try {
-            if ("new".equals(operation)) {
-                repository.registerUser(user);
-            } else if ("update".equals(operation)) {
-                repository.update(user);
-            }
-            if (updateRoles) {
-                repository.delete(user.getUsername());
-                for (String role : roles) {
-                    this.role.addRole(role);
-                    this.role.setUsername(user.getUsername());
-                    log.fine("Mapping the role [" + role + "] to user [" + user.getUsername() + "]");
-                    repository.save(this.role);
-                    this.role = new Role();
-                }
-            }
-            return "success";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /*
-    * Get the roles for the given user
-    * @return the user roles
-    */
-    private List<User> getUserAndRoles() throws Exception {
-        ArrayList<User> userList = new ArrayList<>();
-        final List<User> userListfromDb = repository.getUsers();
-        for (User user : userListfromDb) {
-            user.addRoles(repository.getRoles(user.getUsername()));
-            userList.add(user);
-        }
-        return userList;
-    }
 }

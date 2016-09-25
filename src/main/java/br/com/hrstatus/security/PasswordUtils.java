@@ -19,16 +19,20 @@
 
 package br.com.hrstatus.security;
 
+import org.jboss.security.auth.spi.Util;
+
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public interface PasswordUtils {
+public class PasswordUtils{
 
     /*
     * Encrypt the password
     * @param plain text password
     * @returns encrypted password
     */
-    String encryptUserPassword(String password);
+    public static String encryptUserPassword(String password) {
+        return Util.createPasswordHash("SHA-256", "BASE64", null, null, password);
+    }
 
 }

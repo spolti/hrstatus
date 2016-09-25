@@ -41,9 +41,9 @@ import java.util.logging.Logger;
 @Path("setup")
 @Produces("application/json")
 @Transactional
-public class SetupResource {
+public class Setup {
 
-    private Logger log = Logger.getLogger(SetupResource.class.getName());
+    private Logger log = Logger.getLogger(Setup.class.getName());
 
     @Inject
     private Email emailChannel;

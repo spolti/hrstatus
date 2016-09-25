@@ -19,15 +19,33 @@
 
 package br.com.hrstatus.model;
 
+import br.com.hrstatus.model.support.deserializer.CustomRolesDeserializer;
+import br.com.hrstatus.model.support.deserializer.CustomSupportedOperatingSystemDeserializer;
+import br.com.hrstatus.security.PasswordUtils;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import javax.inject.Inject;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -35,26 +53,27 @@ import java.util.logging.Logger;
  */
 @Entity
 @Table(name = "USER")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User implements Serializable {
 
     @Transient
     private Logger log = Logger.getLogger(User.class.getName());
 
     @Id
-    @Column(name = "username", nullable = false, unique=true)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @JsonIgnore
+    //@JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
-    @Column(name = "nome", nullable = false, unique=true)
+    @Column(name = "nome", nullable = false, unique = true)
     private String nome;
 
-    @Column(name = "mail", nullable = false, unique=true)
+    @Column(name = "mail", nullable = false, unique = true)
     private String mail;
 
     @Column(name = "firstLogin")
@@ -72,8 +91,25 @@ public class User implements Serializable {
     @Column(name = "lastLoginAddressLocation")
     private String lastLoginAddressLocation;
 
-    @Transient
+    @Column(name = "roles")
+    @ElementCollection(targetClass=String.class)
+    @JsonProperty("roles")
+    @JsonDeserialize(using = CustomRolesDeserializer.class)
     private List<String> roles;
+
+    @JsonIgnore
+    @Transient
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
+    }
 
     public String getLastLoginAddressLocation() {
         return lastLoginAddressLocation;
@@ -160,20 +196,28 @@ public class User implements Serializable {
         this.firstLogin = firstLogin;
     }
 
+    public void addRoles(String[] rl) {
+        List<String> roles = new ArrayList<>();
+        for (String role : rl) {
+            roles.add(role);
+        }
+        this.roles = roles;
+    }
+
     public List<String> getRoles() {
         return roles;
     }
 
-    public void addRoles(List<String> roles) {
+    public void setRoles(List<String> roles) {
         this.roles = roles;
-    }
-
-    public void setFailedLogins(int failedLogins) {
-        this.failedLogins = failedLogins;
     }
 
     public int getFailedLogins() {
         return failedLogins;
+    }
+
+    public void setFailedLogins(int failedLogins) {
+        this.failedLogins = failedLogins;
     }
 
     public boolean isAdmin() {
@@ -188,6 +232,6 @@ public class User implements Serializable {
         log.fine("[Enabled: " + isEnabled() + "]");
         log.fine("[Is admin: " + isAdmin() + "]");
         log.fine("[Is first login: " + isFirstLogin() + "]");
-        roles.stream().forEachOrdered(role ->  log.fine("[ROLES: " + role + "]"));
+        roles.stream().forEachOrdered(role -> log.fine("[ROLES: " + role + "]"));
     }
 }

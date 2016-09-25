@@ -2,54 +2,57 @@
 <%@ include file="/home/header.jsp" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <script type="text/javascript">
+
     window.onload = function () {
-        document.getElementById("password").onchange = validatePassword;
-        document.getElementById("verifyPassword").onchange = validatePassword;
-    }
-    function validatePassword() {
-        var pass2 = document.getElementById("verifyPassword").value;
-        var pass1 = document.getElementById("password").value;
-        if (pass1 != pass2)
-            document.getElementById("verifyPassword").setCustomValidity("As senhas digitadas não são iguais");
-        else
-            document.getElementById("verifyPassword").setCustomValidity('');
+        var protocol = window.location.protocol;
+        var host = window.location.host;
+        var url = protocol + '//' + host + '${pageContext.request.contextPath}/rest/utils/resource/suported-os';
+        var option = '';
+        $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "json",
+            success: function (resp) {
+                $.each(resp, function (i) {
+                    $('#type').append('<option value="' + resp[i] + '">' + resp[i] + '</option>');
+                })
+                $('#type').selectpicker('refresh');
+            }
+        });
     }
 
-    $(document).ready(function () {
-        $("button#submit").click(function () {
+    function setPort() {
+        if (document.getElementById('type').value == 'WINDOWS') {
+            document.getElementById('port').setAttribute('value', '23');
+            document.getElementById('logDir').style.visibility = "hidden";
+            document.getElementById('suCommand').style.visibility = "hidden";
+        } else {
+            document.getElementById('port').setAttribute('value', '22');
+            document.getElementById('logDir').style.visibility = "visible";
+            document.getElementById('suCommand').style.visibility = "visible";
+        }
+    }
 
-            var array = jQuery('#new-user-form').serializeArray();
+    $(document).ready(function(){
+        $("button#submit").click(function(){
+
+            var array = jQuery('#new-os-form').serializeArray();
             var json = {};
 
-            var rolesArray = $('#roles option:selected');
-            var rolesString = '';
-            $(rolesArray).each(function(index, role){
-                if (index == rolesArray.length-1) {
-                    rolesString += $(this).val()
-                } else {
-                    rolesString += $(this).val() + ','
-                }
-            });
-
-            jQuery.each(array, function () {
-                if (this.name == 'enable') {
-                    json[this.name] = $(".enabled:checked").val();
-                } else if (this.name == 'roles') {
-                    json[this.name] = rolesString;
-                } else {
-                    json[this.name] = this.value || '';
-                }
+            jQuery.each(array, function() {
+                json[this.name] = this.value || '';
             });
             console.log(json);
             $.ajax({
                 type: "POST",
                 contentType: 'application/json',
-                url: '${pageContext.request.contextPath}/rest/user/admin/new',
+                url: '${pageContext.request.contextPath}/rest/resource/operating-system/new',
                 data: JSON.stringify(json),
                 dataType: 'json'
+
             });
         });
-    })
+    });
 </script>
 <c:if test="${error == 'true'}">
     <div class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-danger alert-dismissable">
@@ -66,22 +69,51 @@
         <div class="col-sm-9 col-md-10 col-sm-push-3 col-md-push-2">
             <ol class="breadcrumb">
                 <li><a href="/hs/home/home.jsp">Home</a></li>
-                <li><a href="${pageContext.request.contextPath}/rest/user/admin/list/form">
-                    Gerenciar Usuários</a></li>
-                <li>Novo Usuário</li>
+                <li><a href="${pageContext.request.contextPath}/rest/resource/operating-system/load">
+                    Gerenciar Sistemas Operacionais</a></li>
+                <li>Novo Sistema Operacional</li>
             </ol>
-            <h1>Cadastrar Usuário</h1>
-            <form method="POST" id="new-user-form" class="form-horizontal" action="#">
-                <input type="hidden" id="firstLogin" name="firstLogin" value="true">
+            <h1>Cadastrar Sistema Operacional</h1>
+            <form id="new-os-form"class="form-horizontal"
+                 >
+                <input type="hidden">
                 <div class="form-group">
-                    <label class="col-md-2 control-label" for="name">Nome</label>
+                    <label class="col-md-2 control-label" for="hostname">Hostname</label>
                     <div class="col-md-6">
-                        <input name="nome" type="text" id="name" class="form-control" required
+                        <input name="hostname" type="text" id="hostname" class="form-control" required
                                data-errormessage-value-missing="Campo Obrigatório">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label" for="username">Nome de Usuário</label>
+                    <label class="col-md-2 control-label" for="address">Endereço de IP</label>
+                    <div class="col-md-6">
+                        <input name="address" type="text" id="address" class="form-control" required
+                               data-errormessage-value-missing="Campo Obrigatório"
+                               data-errormessage="O endereço de Ip digitado não é válido"
+                               pattern="^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="type">Tipo</label>
+                    <div class="col-md-10">
+                        <select name="type" class="selectpicker" id="type"
+                                onchange="setPort();"
+                                required>
+                            <option>Escolha uma opção</option>
+                            <!-- Auto populated through ajax request -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="port">Porta</label>
+                    <div class="col-md-6">
+                        <input name="port" type="number" id="port" class="form-control" required
+                               data-errormessage-value-missing="Campo Obrigatório">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="username">Usuário</label>
                     <div class="col-md-6">
                         <input name="username" type="text" id="username" class="form-control" required
                                data-errormessage-value-missing="Campo Obrigatório">
@@ -91,58 +123,48 @@
                     <label class="col-md-2 control-label" for="password">Senha</label>
                     <div class="col-md-6">
                         <input name="password" type="password" id="password" class="form-control" required
+                               data-errormessage-value-missing="Campo Obrigatório">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="logDir">Diretório de logs</label>
+                    <div class="col-md-6">
+                        <input name="logDir" type="text" id="logDir" class="form-control"
+                               data-errormessage-type-mismatch="O diretório digitado não é válido"
                                data-errormessage-value-missing="Campo Obrigatório"
-                               data-errormessage="Senha não atinge os requisitos necessários: mínimo 8 caracteres sendo no mínimo 1 minúsculo, 1 maiúsculo e um caracter especial."
-                               pattern="(?=^.{6,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*">
+                               pattern="^\/.+">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label" for="verifyPassword">Repita Senha</label>
+                    <label class="col-md-2 control-label" for="suCommand">Comando Sudo</label>
                     <div class="col-md-6">
-                        <input name="verifyPassword" type="password" id="verifyPassword" class="form-control" required
-                               data-errormessage-value-missing="Campo Obrigatório">
+                        <input name="suCommand" type="text" id="suCommand" class="form-control"
+                               data-errormessage-type-mismatch="O comando digitado não é válido"
+                               data-errormessage-value-missing="Campo Obrigatório"
+                               pattern="^sudo.+">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label" for="mail">E-mail</label>
-                    <div class="col-md-6">
-                        <input name="mail" type="email" id="mail" class="form-control" required
-                               data-errormessage-type-mismatch="Email inválido."
-                               data-errormessage-value-missing="Campo Obrigatório">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-2 control-label">Ativo</label>
+                    <label class="col-md-2 control-label">Ativar verificação este Sistema Operacional</label>
                     <div class="col-md-6">
                         <div class="radio">
                             <label>
-                                <input name="enabled" type="radio" id="enabled" value="true">
+                                <input name="verify" type="radio" name="optionsRadios" id="optionsRadios1" value="true">
                                 Sim
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input name="enabled" type="radio" id="enabled1" value="false" checked>
+                                <input name="verify" type="radio" name="optionsRadios" id="optionsRadios2" value="false"
+                                       checked>
                                 Não
                             </label>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label" for="roles">Roles</label>
-                    <div class="col-md-10">
-                        <select name="roles" class="selectpicker" multiple data-selected-text-format="count>3"
-                                id="roles"
-                                required>
-                            <option value="ROLE_ADMIN">Administrador</option>
-                            <option value="ROLE_USER">Usuário</option>
-                            <option value="ROLE_REST">Permissão para Requisições Rest</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
                     <div class="col-md-10 col-md-offset-2">
-                        <button id="submit" type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary" id="submit">Save</button>
                         <button type="reset" class="btn btn-default">Cancel</button>
                     </div>
                 </div>
@@ -158,11 +180,10 @@
                             </a>
                         </h4>
                     </div>
-                    <div id="collapseOne" class="panel-collapse collapse in">
+                    <div id="collapseOne" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li class="active"><a
-                                        href="${pageContext.request.contextPath}/rest/user/admin/list/form">
+                                <li><a href="${pageContext.request.contextPath}/rest/admin/user/list/form">
                                     Gerenciar Usuários</a></li>
                             </ul>
                         </div>
@@ -176,10 +197,11 @@
                             </a>
                         </h4>
                     </div>
-                    <div id="collapseTwo" class="panel-collapse collapse">
+                    <div id="collapseTwo" class="panel-collapse collapse in">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/rest/resource/operating-system/load">Gerenciar
+                                <li class="active"><a
+                                        href="${pageContext.request.contextPath}/rest/resource/operating-system/load">Gerenciar
                                     Servidores</a></li>
                             </ul>
                         </div>

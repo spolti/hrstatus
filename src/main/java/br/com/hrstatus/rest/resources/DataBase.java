@@ -17,23 +17,32 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.security.impl;
+package br.com.hrstatus.rest.resources;
 
-import br.com.hrstatus.security.PasswordUtils;
-import org.jboss.security.auth.spi.Util;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public class PasswordUtilsImpl implements PasswordUtils{
+@Path("resource/database")
+@Produces("application/json")
+@Transactional
+public class DataBase {
 
     /*
-    * Encrypt the password
-    * @param plain text password
-    * @returns encrypted password
+    * Load the databases resources
     */
-    public String encryptUserPassword(String password) {
-       return Util.createPasswordHash("SHA-256", "BASE64", null, null, password);
+    @GET
+    @Path("load")
+    public void load(@Context HttpServletRequest request, @Context HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher("/admin/resource/database.jsp").forward(request, response);
     }
-
 }
