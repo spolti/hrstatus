@@ -17,7 +17,7 @@
         <version.maven.compiler>3.5.1</version.maven.compiler>
         <version.maven.surefire.plugin>2.19.1</version.maven.surefire.plugin>
         <version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
-        <jackson.annotations.version>2.7.4</jackson.annotations.version>
+        <jackson.annotations.version>2.8.3</jackson.annotations.version>
         <mysql.connector.version>5.1.38</mysql.connector.version>
         <jboss.javaee7.version>1.0.3.Final</jboss.javaee7.version>
         <picketbox.version>4.9.4.Final</picketbox.version>
@@ -46,6 +46,11 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
                 <version>${jackson.annotations.version}</version>
             </dependency>
 
@@ -130,6 +135,7 @@
             <scope>provided</scope>
         </dependency>
 
+
         <!-- CDI -->
         <dependency>
             <groupId>javax.enterprise</groupId>
@@ -154,6 +160,10 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
 
         <!--  JDBC connectors -->
         <dependency>
@@ -174,6 +184,7 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
 

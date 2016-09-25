@@ -19,14 +19,16 @@
 
 package br.com.hrstatus.model;
 
-import br.com.hrstatus.model.support.SupportedDatabase;
+import br.com.hrstatus.model.support.deserializer.CustomSupportedOperatingSystemDeserializer;
+import br.com.hrstatus.model.support.VerificationStatus;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.HashMap;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
@@ -43,15 +45,17 @@ public class OperatingSystem {
     @Column(name = "hostname", nullable = false)
     private String hostname;
 
-    @Column(name = "address", nullable = false)
+    @Column(name = "address", nullable = false, unique = true)
     private String address;
 
     @Column(name = "port")
     private int port;
 
-    // user-pass
-    @Column(name = "credentials", nullable = true)
-    private HashMap<String, String> credentials;
+    @Column(name = "username", nullable = true)
+    private String username;
+
+    @Column(name = "password", nullable = true)
+    private String password;
 
     @Column(name = "type", nullable = false)
     private Enum type;
@@ -79,5 +83,127 @@ public class OperatingSystem {
 
     @Column(name = "verify", nullable = false)
     private boolean verify;
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public String getHostname() {
+        return hostname;
+    }
+
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Enum getType() {
+        return type;
+    }
+
+    @JsonProperty("type")
+    @JsonDeserialize(using = CustomSupportedOperatingSystemDeserializer.class)
+    public void setType(Enum type) {
+        this.type = type;
+    }
+
+    public Enum getStatus() {
+        return status;
+    }
+
+    public void setStatus(Enum status) {
+        this.status = status;
+    }
+
+    public String getOsTime() {
+        return osTime;
+    }
+
+    public void setOsTime(String osTime) {
+        this.osTime = osTime;
+    }
+
+    public String getHrstatusTime() {
+        return hrstatusTime;
+    }
+
+    public void setHrstatusTime(String hrstatusTime) {
+        this.hrstatusTime = hrstatusTime;
+    }
+
+    public String getLastCheck() {
+        return lastCheck;
+    }
+
+    public void setLastCheck(String lastCheck) {
+        this.lastCheck = lastCheck;
+    }
+
+    public long getDifference() {
+        return difference;
+    }
+
+    public void setDifference(long difference) {
+        this.difference = difference;
+    }
+
+    public String getLogDir() {
+        return logDir;
+    }
+
+    public void setLogDir(String logDir) {
+        this.logDir = logDir;
+    }
+
+    public String getSuCommand() {
+        return suCommand;
+    }
+
+    public void setSuCommand(String suCommand) {
+        this.suCommand = suCommand;
+    }
+
+    public boolean isToVerify() {
+        return verify;
+    }
+
+    public void setVerify(boolean verify) {
+        this.verify = verify;
+    }
+
+    public void disableVerification() {
+        this.verify = false;
+    }
+
+    public void enableVerification() {
+        this.verify = true;
+    }
 
 }

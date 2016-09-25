@@ -113,9 +113,9 @@
                             <c:forEach items="${user.roles}" var="role" varStatus="stat">
                                 <c:set var="myVar" value="${stat.first ? '' : myVar} ${role}" />
                             </c:forEach>
-                            <option <c:if test="${myVar.contains('ADMIN')}" > selected </c:if> value="ADMIN">Administrador</option>
-                            <option <c:if test="${myVar.contains('USER')}" > selected </c:if>value="USER">Usuário</option>
-                            <option <c:if test="${myVar.contains('REST')}" > selected </c:if>value="REST">Permissão para Requisições Rest</option>
+                            <option <c:if test="${myVar.contains('ROLE_ADMIN')}" > selected </c:if> value="ROLE_ADMIN">Administrador</option>
+                            <option <c:if test="${myVar.contains('ROLE_USER')}" > selected </c:if>value="ROLE_USER">Usuário</option>
+                            <option <c:if test="${myVar.contains('ROLE_REST')}" > selected </c:if>value="ROLE_REST">Permissão para Requisições Rest</option>
                         </select>
                     </div>
                 </div>
@@ -158,10 +158,7 @@
                     <div id="collapseTwo" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/admin/server/edit-server.jsp">Cadastrar
-                                    Servidores</a></li>
-                                <li><a href="#">Editar ou Remover Servidores</a></li>
-                                <li><a href="#">Listar Servidores</a></li>
+                                <li><a href="${pageContext.request.contextPath}/rest/resource/operating-system/load">Gerenciar Servidores</a></li>
                             </ul>
                         </div>
                     </div>
@@ -177,10 +174,7 @@
                     <div id="collapseFive" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/admin/server/edit-database.jsp">Cadastrar
-                                    Banco de Dados</a></li>
-                                <li><a href="#">Editar ou Remover Banco de Dados</a></li>
-                                <li><a href="#">Listar Banco de Dados</a></li>
+                                <li><a href="${pageContext.request.contextPath}/rest/resource/database/load">Gerenciar Banco de Dados</a></li>
                             </ul>
                         </div>
                     </div>

@@ -80,9 +80,9 @@
         <div class="col-sm-9 col-md-10 col-sm-push-3 col-md-push-2">
             <ol class="breadcrumb">
                 <li><a href="/hs/home/home.jsp">Home</a></li>
-                <li>Usuários Cadastrados</li>
-                <li><a href="${pageContext.request.contextPath}/admin/user/user_form.jsp">
-                    Novo Usuário</a></li>
+                <li>Banco de Dados Cadastrados</li>
+                <li><a href="${pageContext.request.contextPath}/admin/resource/new-database.jsp">
+                    Novo Banco de Dados</a></li>
             </ol>
             <table class="datatable table table-striped table-bordered">
                 <thead>
@@ -134,10 +134,10 @@
                             </a>
                         </h4>
                     </div>
-                    <div id="collapseOne" class="panel-collapse collapse in">
+                    <div id="collapseOne" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li class="active"><a
+                                <li><a
                                         href="${pageContext.request.contextPath}/rest/user/admin/list/form">
                                     Gerenciar Usuários</a></li>
                             </ul>
@@ -168,10 +168,10 @@
                             </a>
                         </h4>
                     </div>
-                    <div id="collapseFive" class="panel-collapse collapse">
+                    <div id="collapseFive" class="panel-collapse collapse in">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/rest/resource/database/load">Gerenciar Banco de Dados</a></li>
+                                <li class="active"><a href="${pageContext.request.contextPath}/rest/resource/database/load">Gerenciar Banco de Dados</a></li>
                             </ul>
                         </div>
                     </div>

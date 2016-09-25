@@ -28,8 +28,4 @@ public enum VerificationStatus {
     OK,
     NOT_OK;
 
-    public String toString() {
-        return this.toString();
-    }
-
 }

@@ -1,6 +1,6 @@
 package br.com.hrstatus.repository;
 
-import br.com.hrstatus.model.Role;
+import br.com.hrstatus.model.OperatingSystem;
 import br.com.hrstatus.model.Setup;
 import br.com.hrstatus.model.User;
 
@@ -10,7 +10,6 @@ import java.util.List;
  * Created by fspolti on 9/9/16.
  */
 public interface Repository {
-
 
     /*
     * load all configurations
@@ -31,7 +30,7 @@ public interface Repository {
     * Register the given user
     * @param Object Users
     */
-    void registerUser(User user) throws Exception;
+    String registerUser(User user) throws Exception;
 
     /*
     * Delete the given user object
@@ -54,29 +53,23 @@ public interface Repository {
     /*
     * Update the given user
     */
-    void update (User user);
+    String update(User user);
 
     /*
     * Get the locked users
     */
     List<User> getLockedUsers();
 
+    /***************************************************************
+    * Resources repository - Operating Systems
+    ****************************************************************/
     /*
-    *   Map user to target role
-    * @param Object Roles
+    * Save the give Resource (Operating System)
     */
-    void save(Role role);
+    void save(OperatingSystem operatingSystem);
 
     /*
-    * Delete all roles for the given username
-    * @param String username
+    * Save the give Resource (Operating System)
     */
-    void delete(String username);
-
-    /*
-    * Select all roles from the given user
-    * @returns a List containing the roles
-    */
-    List<String> getRoles(String username) throws Exception;
-
+    List<OperatingSystem> load();
 }

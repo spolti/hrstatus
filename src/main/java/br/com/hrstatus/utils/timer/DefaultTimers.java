@@ -40,8 +40,6 @@ public class DefaultTimers {
     @Inject
     private Repository repository;
     @Inject
-    private User user;
-    @Inject
     private DateUtils dateUtils;
 
     /*

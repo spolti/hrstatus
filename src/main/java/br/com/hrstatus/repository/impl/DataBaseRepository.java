@@ -19,7 +19,7 @@
 
 package br.com.hrstatus.repository.impl;
 
-import br.com.hrstatus.model.Role;
+import br.com.hrstatus.model.OperatingSystem;
 import br.com.hrstatus.model.Setup;
 import br.com.hrstatus.model.User;
 import br.com.hrstatus.repository.Repository;
@@ -30,7 +30,6 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -74,15 +73,22 @@ public class DataBaseRepository implements Repository {
         return String.valueOf(q.getSingleResult());
     }
 
-
+    /***************************************************************
+    * Users management
+    ****************************************************************/
     /*
     * Register the given user
     * @param Object Users
     */
-    public void registerUser(User user) throws Exception{
-        log.fine("Salvando usuário " + user.getNome());
-        em.persist(user);
-        em.flush();
+    public String registerUser(User user) throws Exception{
+        try {
+            log.fine("Salvando usuário " + user.getNome());
+            em.persist(user);
+            em.flush();
+            return "success";
+        } catch (Exception e) {
+            return e.getMessage();
+        }
     }
 
     /*
@@ -125,9 +131,15 @@ public class DataBaseRepository implements Repository {
     /*
     * Update the given user
     */
-    public void update(User user) {
-        em.merge(user);
-        em.flush();
+    public String update(User user) {
+        try {
+            em.merge(user);
+            em.flush();
+            return "success";
+        } catch (Exception e) {
+            return e.getMessage();
+
+        }
     }
 
     /*
@@ -143,44 +155,27 @@ public class DataBaseRepository implements Repository {
         return query.getResultList();
     }
 
+    /***************************************************************
+    * Resources repository - Operating Systems
+    ****************************************************************/
     /*
-    * Map user to target role
-    * @param Object Roles
+    * Save the give Resource (Operating System)
     */
-    public void save(Role role) {
-        em.persist(role);
+    public void save(OperatingSystem object) {
+        em.persist(object);
         em.flush();
     }
 
     /*
-    * Delete all roles for the given username
-    * @param String username
+    * Save the give Resource (Operating System)
     */
-    public void delete(String username) {
-        Query query = em.createNativeQuery("DELETE FROM ROLE WHERE username = '" + username + "';");
-        query.executeUpdate();
-        em.flush();
+    public List<OperatingSystem> load() {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<OperatingSystem> criteria = builder.createQuery(OperatingSystem.class);
+        Root<OperatingSystem> peratingSystemRoot = criteria.from(OperatingSystem.class);
+        criteria.select(peratingSystemRoot);
+        Query query = em.createQuery(criteria);
+        return query.getResultList();
     }
 
-    /*
-    * Select all roles from the given user
-    * @returns a String[] containing the roles
-    */
-    public List<String> getRoles(String username) throws Exception{
-        ArrayList<String> list = new ArrayList<>();
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Role> cq = cb.createQuery(Role.class);
-        Root<Role> c = cq.from(Role.class);
-        cq.select(c);
-        cq.where(cb.equal(c.get("username"),username));
-
-        Query query = em.createQuery(cq);
-        List<Role> result = query.getResultList();
-
-        for (Role tempRoles : result) {
-            log.fine("Usuário [" + username +"] - [" + tempRoles.getRole() + "]");
-            list.add(tempRoles.getRole());
-        }
-        return list;
-    }
 }

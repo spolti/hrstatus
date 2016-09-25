@@ -29,9 +29,7 @@
             <div id="collapseTwo" class="panel-collapse collapse">
                 <div class="panel-body">
                     <ul class="nav nav-pills nav-stacked">
-                        <li><a href="${pageContext.request.contextPath}/admin/server/edit-server.jsp">Cadastrar Servidores</a></li>
-                        <li><a href="#">Editar ou Remover Servidores</a></li>
-                        <li><a href="#">Listar Servidores</a></li>
+                        <li><a href="${pageContext.request.contextPath}/rest/resource/operating-system/load">Gerenciar Servidores</a></li>
                     </ul>
                 </div>
             </div>
@@ -47,9 +45,7 @@
             <div id="collapseFive" class="panel-collapse collapse">
                 <div class="panel-body">
                     <ul class="nav nav-pills nav-stacked">
-                        <li><a href="${pageContext.request.contextPath}/admin/server/edit-database.jsp">Cadastrar Banco de Dados</a></li>
-                        <li><a href="#">Editar ou Remover Banco de Dados</a></li>
-                        <li><a href="#">Listar Banco de Dados</a></li>
+                        <li><a href="${pageContext.request.contextPath}/rest/resource/database/load">Gerenciar Banco de Dados</a></li>
                     </ul>
                 </div>
             </div>
