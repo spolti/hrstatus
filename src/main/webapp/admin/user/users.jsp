@@ -48,15 +48,6 @@
         Usuário <strong>${userDeleted}</strong> foi removido com sucesso.
     </div>
 </c:if>
-<c:if test="${info == 'success'}">
-    <div class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-            <span class="pficon pficon-close"></span>
-        </button>
-        <span class="pficon pficon-ok"></span>
-        Usuário <strong>${user}</strong> foi criado com sucesso.
-    </div>
-</c:if>
 <c:if test="${update == 'success'}">
     <div class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">

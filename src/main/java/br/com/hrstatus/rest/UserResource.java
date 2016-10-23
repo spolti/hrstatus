@@ -20,6 +20,7 @@
 package br.com.hrstatus.rest;
 
 import br.com.hrstatus.model.User;
+import br.com.hrstatus.model.support.response.RequestResponse;
 import br.com.hrstatus.repository.Repository;
 import br.com.hrstatus.security.PasswordUtils;
 import br.com.hrstatus.utils.notification.Notification;
@@ -28,7 +29,6 @@ import br.com.hrstatus.utils.notification.template.NewUserMessageTemplate;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -43,6 +43,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -65,6 +66,8 @@ public class UserResource {
     private PasswordUtils passwordUtils;
     @Inject
     private Email emailChannel;
+    @Inject
+    private RequestResponse reqResponse;
 
     /*
     * Register new user
@@ -73,22 +76,14 @@ public class UserResource {
     @Path("admin/new")
     @POST
     @RolesAllowed({"ROLE_ADMIN"})
-//    public void newUser(@FormParam("username") String username, @FormParam("password") String password,
-//                            @FormParam("verifyPassword") String verifyPassword, @FormParam("roles") String[] roles,
-//                            @FormParam("nome") String nome, @FormParam("email") String mail,
-//                            @FormParam("enabled") boolean enabled, @Context HttpServletRequest request,
-//                            @Context HttpServletResponse response) throws Exception {
     @Consumes(MediaType.APPLICATION_JSON)
-    public void newUser (User newUser, @Context HttpServletRequest request,
-                         @Context HttpServletResponse response) throws Exception {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response newUser(User newUser) {
 
-
-        newUser.dumpUserInformation();
-        //need to get a plain text password before send the email to the user.
-        String password =  newUser.getPassword();
-        // ok, now encrypt it and persiste the user
+        String password = newUser.getPassword();
+        // ok, now encrypt it and persist the user
         newUser.setPassword(PasswordUtils.encryptUserPassword(password));
-        String result = repository.registerUser(newUser);
+        Object result = repository.register(newUser);
 
         if ("success".equals(result)) {
             // Send the notification email in a different thread
@@ -99,15 +94,17 @@ public class UserResource {
                         .to(newUser.getMail())
                         .by(emailChannel));
             }).toCompletableFuture();
-
-            request.setAttribute("info", "success");
-            request.setAttribute("user", newUser.getNome());
-            request.setAttribute("userList", repository.getUsers());
-            request.getRequestDispatcher("/admin/user/users.jsp").forward(request, response);
+            reqResponse.setCreatedUser(newUser.getNome());
+            reqResponse.setResponseMessage("Usuário " + newUser.getNome() + " foi criado com sucesso.");
+            return Response.status(Response.Status.CREATED).entity(reqResponse).build();
+        } else if (result.toString().contains("ConstraintViolation")) {
+            reqResponse.setFailedUser(newUser.getNome());
+            reqResponse.setResponseErrorMessage(String.valueOf(result));
+            return Response.status(Response.Status.CONFLICT).entity(reqResponse).build();
         } else {
-            request.setAttribute("error", true);
-            request.setAttribute("message", result);
-            request.getRequestDispatcher("/admin/user/user_form.jsp").forward(request, response);
+            reqResponse.setFailedUser(newUser.getNome());
+            reqResponse.setResponseErrorMessage(String.valueOf(result));
+            return Response.status(Response.Status.BAD_REQUEST).entity(reqResponse).build();
         }
     }
 
@@ -118,34 +115,19 @@ public class UserResource {
     @Path("admin/update")
     @POST
     @RolesAllowed({"ROLE_ADMIN"})
-    public void update(@FormParam("username") String username, @FormParam("password") String password,
-                       @FormParam("verifyPassword") String verifyPassword, @FormParam("roles") String[] roles,
-                       @FormParam("nome") String nome, @FormParam("email") String mail, @FormParam("enabled") boolean enabled,
-                       @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception {
-
-        //load users information from database before update
-        user = repository.searchUser(username);
-        user.setNome(nome);
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setMail(mail);
-        user.setEnabled(enabled);
-        user.addRoles(roles);
-        user.dumpUserInformation();
-
-        String result = repository.registerUser(user);
-
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response update(User updatedUser) {
+        log.fine("User received to update: " + updatedUser.toString());
+        String result = repository.update(updatedUser);
         if ("success".equals(result)) {
-            request.setAttribute("update", "success");
-            request.setAttribute("user", nome);
+            reqResponse.setResponseMessage("Usuário " + updatedUser.getNome() + " foi atualizado com sucesso.");
+            return Response.ok(reqResponse).build();
         } else {
-            request.setAttribute("error", true);
-            request.setAttribute("message", result);
-            request.setAttribute("userList", repository.getUsers());
-            request.getRequestDispatcher("/admin/user/users.jsp").forward(request, response);
+            reqResponse.setFailedUser(updatedUser.getNome());
+            reqResponse.setResponseErrorMessage(result);
+            return Response.status(Response.Status.BAD_REQUEST).entity(reqResponse).build();
         }
-        request.setAttribute("userList", repository.getUsers());
-        request.getRequestDispatcher("/admin/user/users.jsp").forward(request, response);
     }
 
     /*
@@ -163,7 +145,7 @@ public class UserResource {
         user.setPassword(password.length() == 44 && password.endsWith("=") ? password : passwordUtils.encryptUserPassword(password));
         user.setMail(mail);
         user.addRoles(roles);
-        user.dumpUserInformation();
+        user.toString();
 
         String result = repository.update(user);
 
@@ -239,7 +221,7 @@ public class UserResource {
     @RolesAllowed({"ROLE_ADMIN"})
     @Produces(MediaType.APPLICATION_JSON)
     public List<User> listUsers(@PathParam("form") String form, @QueryParam("status") String status, @QueryParam("userDeleted") String userDeleted,
-                                                      @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception {
+                                @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception {
 
         if ("".equals(form)) {
             return repository.getUsers();
@@ -247,6 +229,7 @@ public class UserResource {
             if (!"".equals(status)) {
                 request.setAttribute("info", status);
                 request.setAttribute("userDeleted", userDeleted);
+
             }
             request.setAttribute("userList", repository.getUsers());
             request.getRequestDispatcher("/admin/user/users.jsp").forward(request, response);
@@ -261,14 +244,15 @@ public class UserResource {
     @Path("admin/delete/{username}")
     @DELETE
     @RolesAllowed({"ROLE_ADMIN"})
-    public void deleteUser(@PathParam("username") String username, @Context HttpServletRequest request, @Context HttpServletResponse response)
-            throws ServletException, IOException {
+    public Response deleteUser(@PathParam("username") String username) throws IOException {
 
         if ("root".equals(username)) {
             log.fine("Usuário root não pode ser removido do sistema");
+            return Response.status(Response.Status.FORBIDDEN).build();
         } else {
             log.fine("Usuário recebido para remoção [" + username + "]");
             repository.delete(repository.searchUser(username));
+            return Response.status(Response.Status.NO_CONTENT).build();
         }
     }
 

@@ -14,17 +14,84 @@
         else
             document.getElementById("verifyPassword").setCustomValidity('');
     }
-</script>
-<c:if test="${error == 'true'}">
-    <div class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-danger alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-            <span class="pficon pficon-close"></span>
-        </button>
-        <span class="pficon pficon-error-circle-o"></span>
-        Falha ao criar usuário, verificar logs, Mensagem de erro: ${message}
-    </div>
-</c:if>
 
+    $(document).ready(function () {
+        $("button#submit").click(function (e) {
+            e.preventDefault();
+            if($("form")[0].checkValidity()) {
+                var array = jQuery('#update-user-form').serializeArray();
+                var json = {};
+
+                var rolesArray = $('#roles option:selected');
+                var rolesString = '';
+                $(rolesArray).each(function (index, role) {
+                    if (index == rolesArray.length - 1) {
+                        rolesString += $(this).val()
+                    } else {
+                        rolesString += $(this).val() + ','
+                    }
+                });
+
+                jQuery.each(array, function () {
+                    if (this.name == 'enable') {
+                        json[this.name] = $(".enabled:checked").val();
+                    } else if (this.name == 'roles') {
+                        json[this.name] = rolesString;
+                    } else {
+                        json[this.name] = this.value || '';
+                    }
+                });
+                var protocol = window.location.protocol;
+                var host = window.location.host;
+                console.log(json);
+                $.ajax({
+                    type: "POST",
+                    contentType: 'application/json',
+                    url: '${pageContext.request.contextPath}/rest/user/admin/update',
+                    data: JSON.stringify(json),
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log('success ' + response.responseMessage);
+                        $('#update-modalUser > h1').text(response.responseMessage);
+                    },
+                    error: function (xhr,textStatus,err) {
+                        //var response = JSON.parse(xhr.responseText);
+                        alert(xhr.responseText)
+                        console.log(xhr.responseText);
+                        $('#update-modalUser > h1').text("Falha ao atualizar usuário " + response.failedUser);
+                        $('#update-modalUser > p').text("Mensagem de erro: " + response.responseErrorMessage);
+                    }
+                });
+                $('#update-user-modal').modal('show');
+            }
+        });
+    })
+
+</script>
+<div class="modal fade" id="update-user-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <span class="pficon pficon-close"></span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Atualização de Usuário</h4>
+            </div>
+            <div id="modal-body" class="modal-body">
+                <div class="form-group">
+                    <div id="update-modalUser" class="modal-body">
+                        <h1 align="center"></h1>
+                        <p align="center"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="${pageContext.request.contextPath}/rest/user/admin/list/form"> <button type="button" class="btn btn-primary">Prosseguir</button> </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-9 col-md-10 col-sm-push-3 col-md-push-2">
@@ -35,8 +102,7 @@
                 <li>Editar Usuário</li>
             </ol>
             <h1>Editar Usuário</h1>
-            <form method="POST" class="form-horizontal"
-                  action="${pageContext.request.contextPath}/rest/user/admin/update">
+            <form method="POST" id="update-user-form" class="form-horizontal" action="#">
                 <div class="form-group">
                     <label class="col-md-2 control-label" for="name">Nome</label>
                     <div class="col-md-6">
@@ -76,9 +142,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label" for="email">E-mail</label>
+                    <label class="col-md-2 control-label" for="mail">E-mail</label>
                     <div class="col-md-6">
-                        <input name="email" type="email" id="email"
+                        <input name="mail" type="email" id="mail"
                                value="${user.mail}"
                                class="form-control" required
                                data-errormessage-type-mismatch="Email inválido."
@@ -105,10 +171,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label" for="boostrapSelect">Roles</label>
+                    <label class="col-md-2 control-label" for="roles">Roles</label>
                     <div class="col-md-10">
                         <select name="roles" class="selectpicker" multiple data-selected-text-format="count>3"
-                                id="boostrapSelect"
+                                id="roles"
                                 required>
                             <c:forEach items="${user.roles}" var="role" varStatus="stat">
                                 <c:set var="myVar" value="${stat.first ? '' : myVar} ${role}" />
@@ -121,8 +187,8 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-10 col-md-offset-2">
-                        <button type="submit" class="btn btn-primary">Save</button>
-                        <button type="reset" class="btn btn-default">Cancel</button>
+                        <button id="submit" type="submit" class="btn btn-primary">Atualizar</button>
+                        <button type="reset" class="btn btn-default">Cancelar</button>
                     </div>
                 </div>
             </form>

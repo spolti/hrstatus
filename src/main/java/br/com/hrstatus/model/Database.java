@@ -30,13 +30,13 @@ import javax.persistence.Table;
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-@Entity
-@Table(name = "DATABASE")
+//@Entity
+//@Table(name = "DATABASE")
 public class Database {
 
-    @Id
-    @Column(name = "id")
-    @GeneratedValue
+  //  @Id
+//    @Column(name = "id")
+ //    @GeneratedValue
     private int id;
 
 }

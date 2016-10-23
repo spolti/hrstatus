@@ -23,9 +23,11 @@ import br.com.hrstatus.model.OperatingSystem;
 import br.com.hrstatus.model.Setup;
 import br.com.hrstatus.model.User;
 import br.com.hrstatus.repository.Repository;
+import org.hibernate.exception.ConstraintViolationException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -41,6 +43,29 @@ public class DataBaseRepository implements Repository {
     @PersistenceContext(unitName = "hrstatus")
     protected EntityManager em;
     private Logger log = Logger.getLogger(DataBaseRepository.class.getName());
+
+    /*
+    * Import the initial configuration in the database if it is a fresh database.
+    */
+    public void initialImport() {
+        String sql1 = "insert into USER (username, enabled, firstLogin, mail, nome, password, failedLogins) VALUES ('root',true,false,'changeme@example.com','Administrador', 'sD3fPKLnFKZUjnSV4qA/XoJOqsmDfNfxWcZ7kPtLc0I=',0);";
+        String sql2 = "insert into User_roles (user_username, roles) values ('root', 'ROLE_ADMIN');";
+        String sql3 = "insert into SETUP (id, mailJndi, mailFrom) values (1, 'java:jboss/mail/HrStatus','hrstatus@hrstatus.com.br');";
+        log.fine("Initial database data: " + sql1 + "\n" +
+                sql2 + "\n" +
+                sql3);
+        Query q1 = em.createNativeQuery(sql1);
+        Query q2 = em.createNativeQuery(sql2);
+        Query q3 = em.createNativeQuery(sql3);
+        Query checkQuery = em.createQuery("SELECT e.username from User e where e.username ='root'");
+        if (checkQuery.getResultList().size() == 1) {
+            log.info("Initial setup already performed, skipping.");
+        } else {
+            q1.executeUpdate();
+            q2.executeUpdate();
+            q3.executeUpdate();
+        }
+    }
 
     /*
     * load all configurations
@@ -77,19 +102,24 @@ public class DataBaseRepository implements Repository {
     * Users management
     ****************************************************************/
     /*
-    * Register the given user
-    * @param Object Users
+    * Register the given Object
+    * @param Object
     */
-    public String registerUser(User user) throws Exception{
+    public Object register(Object obj) {
         try {
-            log.fine("Salvando usuário " + user.getNome());
-            em.persist(user);
+            log.fine("Persistindo objeto: " + obj.toString());
+            em.persist(obj);
             em.flush();
             return "success";
         } catch (Exception e) {
-            return e.getMessage();
+            //Returns com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException
+            if (e.getCause().getCause().toString().contains("ConstraintViolation")) {
+                return e.getCause().getCause();
+            }
+            return e.getCause();
         }
     }
+
 
     /*
     * Delete the given user object

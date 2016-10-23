@@ -16,51 +16,82 @@
     }
 
     $(document).ready(function () {
-        $("button#submit").click(function () {
+        $("button#submit").click(function (e) {
+            e.preventDefault();
+            if($("form")[0].checkValidity()) {
+                var array = jQuery('#new-user-form').serializeArray();
+                var json = {};
 
-            var array = jQuery('#new-user-form').serializeArray();
-            var json = {};
+                var rolesArray = $('#roles option:selected');
+                var rolesString = '';
+                $(rolesArray).each(function(index, role){
+                    if (index == rolesArray.length-1) {
+                        rolesString += $(this).val()
+                    } else {
+                        rolesString += $(this).val() + ','
+                    }
+                });
 
-            var rolesArray = $('#roles option:selected');
-            var rolesString = '';
-            $(rolesArray).each(function(index, role){
-                if (index == rolesArray.length-1) {
-                    rolesString += $(this).val()
-                } else {
-                    rolesString += $(this).val() + ','
-                }
-            });
-
-            jQuery.each(array, function () {
-                if (this.name == 'enable') {
-                    json[this.name] = $(".enabled:checked").val();
-                } else if (this.name == 'roles') {
-                    json[this.name] = rolesString;
-                } else {
-                    json[this.name] = this.value || '';
-                }
-            });
-            console.log(json);
-            $.ajax({
-                type: "POST",
-                contentType: 'application/json',
-                url: '${pageContext.request.contextPath}/rest/user/admin/new',
-                data: JSON.stringify(json),
-                dataType: 'json'
-            });
+                jQuery.each(array, function () {
+                    if (this.name == 'enable') {
+                        json[this.name] = $(".enabled:checked").val();
+                    } else if (this.name == 'roles') {
+                        json[this.name] = rolesString;
+                    } else {
+                        json[this.name] = this.value || '';
+                    }
+                });
+                var protocol = window.location.protocol;
+                var host = window.location.host;
+                console.log(json);
+                $.ajax({
+                    type: "POST",
+                    contentType: 'application/json',
+                    url: '${pageContext.request.contextPath}/rest/user/admin/new',
+                    data: JSON.stringify(json),
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log('success ' + response.responseMessage);
+                        $('#create-modalUser > h1').text("Usuário " + response.createdUser + " criado com sucesso.");
+                    },
+                    error: function (xhr,textStatus,err) {
+                        var response = JSON.parse(xhr.responseText);
+                        console.log(response);
+                        $('#create-modalUser > h1').text("Falha ao criar usuário " + response.failedUser);
+                        $('#create-modalUser > p').text("Mensagem de erro: " + response.responseErrorMessage);
+                    }
+                });
+                $('#create-user-modal').modal('show');
+            }
         });
     })
 </script>
-<c:if test="${error == 'true'}">
-    <div class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-danger alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-            <span class="pficon pficon-close"></span>
-        </button>
-        <span class="pficon pficon-error-circle-o"></span>
-        Falha ao criar usuário, verificar logs, Mensagem de erro: ${message}
+<div class="modal fade" id="create-user-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <span class="pficon pficon-close"></span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Criação de Usuário</h4>
+            </div>
+            <div id="modal-body" class="modal-body">
+                <div class="form-group">
+                    <div id="create-modalUser" class="modal-body">
+                        <h1 align="center"></h1>
+                        <p align="center"></p>
+                    </div>
+                </div>
+                <p1 style="font-size:20px" align="left">O que deseja fazer?</p1>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Criar outro Usuário</button>
+                    <a href="${pageContext.request.contextPath}/rest/user/admin/list/form"> <button type="button" class="btn btn-primary">Ir para página de usuários</button> </a>
+                </div>
+            </div>
+        </div>
     </div>
-</c:if>
-
+</div>
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-9 col-md-10 col-sm-push-3 col-md-push-2">
@@ -142,8 +173,8 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-10 col-md-offset-2">
-                        <button id="submit" type="submit" class="btn btn-primary">Save</button>
-                        <button type="reset" class="btn btn-default">Cancel</button>
+                        <button id="submit" type="submit" class="btn btn-primary">Salvar</button>
+                        <button type="reset" class="btn btn-default">Cancelar</button>
                     </div>
                 </div>
             </form>
@@ -310,6 +341,5 @@
     </div><!-- /row -->
 </div>
 <!-- /container -->
-
 </body>
 </html>

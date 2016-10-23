@@ -19,6 +19,7 @@
 
 package br.com.hrstatus.utils;
 
+import br.com.hrstatus.repository.impl.DataBaseRepository;
 import br.com.hrstatus.utils.commands.Commands;
 
 import javax.annotation.PostConstruct;
@@ -40,6 +41,18 @@ public class StartupTasks {
 
     @Inject
     private Commands command;
+    @Inject
+    private DataBaseRepository database;
+
+    /*
+    * Contains all needed binaries
+    */
+    private enum binary {
+        //ntpdate: used to update the date/time from Unix like servers, local and remote
+        //net (samba-common package): used to obtain date/time from Windows server
+        //for fedora 24 or higher: samba-commom-tools
+        ntpdate, net
+    }
 
     @PostConstruct
     public void Startup() {
@@ -66,14 +79,9 @@ public class StartupTasks {
                 log.warning("Binário " + bin.name() + ": Não encontrado, isto pode causar alguns comportamentos inesperados no HrStatus.");
             }
         }
-    }
 
-    /*
-    * Contains all needed binaries
-    */
-    private enum binary {
-        //ntpdate: used to update the date/time from Unix like servers, local and remote
-        //net (samba-common package): used to obtain date/time from Windows server
-        ntpdate, net
+        log.info("Importing initial database data...");
+        database.initialImport();
+        log.info("Done.");
     }
 }

@@ -12,6 +12,11 @@ import java.util.List;
 public interface Repository {
 
     /*
+    * Import the initial configuration in the database if it is a fresh database.
+    */
+    void initialImport();
+
+    /*
     * load all configurations
     */
     Setup loadConfiguration();
@@ -26,11 +31,12 @@ public interface Repository {
     */
     String mailFrom();
 
+
     /*
-    * Register the given user
-    * @param Object Users
+    * Persists the given Object in the database
     */
-    String registerUser(User user) throws Exception;
+    <T, O> T register (O obj);
+
 
     /*
     * Delete the given user object

@@ -224,14 +224,21 @@ public class User implements Serializable {
         return roles.stream().anyMatch(role -> role.contentEquals("ROLE_ADMIN"));
     }
 
-    public void dumpUserInformation() {
-        log.fine("[Nome: " + getNome() + "]");
-        log.fine("[Username: " + getUsername() + "]");
-        log.fine("[Password: gotcha!]");
-        log.fine("[Email: " + getMail() + "]");
-        log.fine("[Enabled: " + isEnabled() + "]");
-        log.fine("[Is admin: " + isAdmin() + "]");
-        log.fine("[Is first login: " + isFirstLogin() + "]");
-        roles.stream().forEachOrdered(role -> log.fine("[ROLES: " + role + "]"));
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", enabled=" + enabled +
+                ", nome='" + nome + '\'' +
+                ", mail='" + mail + '\'' +
+                ", firstLogin=" + firstLogin +
+                ", lastLogin='" + lastLogin + '\'' +
+                ", failedLogins=" + failedLogins +
+                ", userLockTime='" + userLockTime + '\'' +
+                ", lastLoginAddressLocation='" + lastLoginAddressLocation + '\'' +
+                ", roles=" + roles +
+                ", additionalProperties=" + additionalProperties +
+                '}';
     }
 }
