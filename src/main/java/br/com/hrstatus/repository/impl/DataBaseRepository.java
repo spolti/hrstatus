@@ -40,9 +40,10 @@ import java.util.logging.Logger;
  */
 public class DataBaseRepository implements Repository {
 
+    private Logger log = Logger.getLogger(DataBaseRepository.class.getName());
+
     @PersistenceContext(unitName = "hrstatus")
     protected EntityManager em;
-    private Logger log = Logger.getLogger(DataBaseRepository.class.getName());
 
     /*
     * Import the initial configuration in the database if it is a fresh database.

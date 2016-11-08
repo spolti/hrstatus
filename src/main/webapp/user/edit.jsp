@@ -113,9 +113,9 @@
                             <c:forEach items="${user.roles}" var="role" varStatus="stat">
                                 <c:set var="myVar" value="${stat.first ? '' : myVar} ${role}" />
                             </c:forEach>
-                            <option <c:if test="${myVar.contains('ADMIN')}" > selected </c:if> value="ADMIN">Administrador</option>
-                            <option <c:if test="${myVar.contains('USER')}" > selected </c:if>value="USER">Usuário</option>
-                            <option <c:if test="${myVar.contains('REST')}" > selected </c:if>value="REST">Permissão para Requisições Rest</option>
+                            <option <c:if test="${myVar.contains('ROLE_ADMIN')}" > selected </c:if> value="ROLE_ADMIN">Administrador</option>
+                            <option <c:if test="${myVar.contains('ROLE_USER')}" > selected </c:if>value="ROLE_USER">Usuário</option>
+                            <option <c:if test="${myVar.contains('ROLE_REST')}" > selected </c:if>value="ROLE_REST">Permissão para Requisições Rest</option>
                         </select>
                     </div>
                 </div>

@@ -50,6 +50,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
 /**
+ * For further information about response codes
+ * http://docs.oracle.com/javaee/7/api/javax/ws/rs/core/Response.Status.html
+ * https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.5
+ *
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
 @Path("user")
@@ -119,6 +123,7 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(User updatedUser) {
         log.fine("User received to update: " + updatedUser.toString());
+        updatedUser.setPassword(updatedUser.getPassword().length() == 44 && updatedUser.getPassword().endsWith("=") ? updatedUser.getPassword() : passwordUtils.encryptUserPassword(updatedUser.getPassword()));
         String result = repository.update(updatedUser);
         if ("success".equals(result)) {
             reqResponse.setResponseMessage("Usuário " + updatedUser.getNome() + " foi atualizado com sucesso.");
@@ -248,7 +253,8 @@ public class UserResource {
 
         if ("root".equals(username)) {
             log.fine("Usuário root não pode ser removido do sistema");
-            return Response.status(Response.Status.FORBIDDEN).build();
+            reqResponse.setResponseErrorMessage("Usuário root não pode ser removido do sistema\"");
+            return Response.status(Response.Status.FORBIDDEN).entity(reqResponse).build();
         } else {
             log.fine("Usuário recebido para remoção [" + username + "]");
             repository.delete(repository.searchUser(username));

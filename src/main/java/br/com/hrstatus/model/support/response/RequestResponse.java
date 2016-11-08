@@ -31,48 +31,24 @@ public class RequestResponse {
     private String failedUser;
     private String createdUser;
 
-    public String getCustomMessage() {
-        return customMessage;
-    }
-
     public void setCustomMessage(String customMessage) {
         this.customMessage = customMessage;
-    }
-
-    public String getResponseMessage() {
-        return responseMessage;
     }
 
     public void setResponseMessage(String responseMessage) {
         this.responseMessage = responseMessage;
     }
 
-    public String getResponseBody() {
-        return responseBody;
-    }
-
     public void setResponseBody(String responseBody) {
         this.responseBody = responseBody;
-    }
-
-    public String getResponseErrorMessage() {
-        return responseErrorMessage;
     }
 
     public void setResponseErrorMessage(String responseErrorMessage) {
         this.responseErrorMessage = responseErrorMessage;
     }
 
-    public String getFailedUser() {
-        return failedUser;
-    }
-
     public void setFailedUser(String failedUser) {
         this.failedUser = failedUser;
-    }
-
-    public String getCreatedUser() {
-        return createdUser;
     }
 
     public void setCreatedUser(String createdUser) {
