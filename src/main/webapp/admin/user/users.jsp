@@ -3,6 +3,13 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <script>
     var user2del;
+
+    //hiding alerts
+    $(document).ready(function () {
+        $('#deleteUserSuccess').hide();
+        $('#deleteUserFailure').hide();
+    });
+
     // Initialize Datatables
     $(document).ready(function () {
         $('.datatable').dataTable({
@@ -13,25 +20,63 @@
                 }
             }
         });
+
         $('#btDelete').click(function () {
-            var protocol = window.location.protocol;
-            var host = window.location.host;
-            var url = protocol + '//' + host + '${pageContext.request.contextPath}/rest/user/admin/delete/' + user2del;
+            var oTable = $('#usersTable').dataTable();
             $.ajax({
-                url: url,
+                url: '${pageContext.request.contextPath}/rest/user/admin/delete/' + user2del,
                 type: "DELETE",
                 success: function () {
-                    location.href = protocol + '//' + host + '${pageContext.request.contextPath}/rest/user/admin/list/form?status=successDelete&userDeleted=' + user2del;
+                    $( "tr:contains('" + user2del + "')").each(function() {
+                        oTable.fnDeleteRow(this);
+                    });
+                    $('#deleteUserSuccess > strong').text(user2del);
+                    $('#deleteUserSuccess').show();
                 },
                 error: function () {
-                    location.href = protocol + '//' + host + '${pageContext.request.contextPath}/rest/user/admin/list/form?status=failed&userDeleted=' + user2del;
+                    $('#deleteUserFailure > strong').text(user2del);
+                    $('#deleteUserFailure').show();
                 }
             });
             $('#delete-user-modal').modal('hide');
         });
     });
-</script>
-<script language="JavaScript">
+
+    //populate the users datatable from json
+    $(document).ready(function () {
+        var oTable = $('#usersTable').dataTable();
+        $.ajax({
+            type: "GET",
+            contentType: 'application/json',
+            url: '${pageContext.request.contextPath}/rest/user/list',
+            dataType: 'json',
+            success: function (user) {
+                var editUrl = '${pageContext.request.contextPath}/rest/user/admin/edit/';
+                console.log('success ' + user.valueOf());
+                oTable.fnClearTable();
+                $.each(user, function (id, value) {
+                    oTable.fnAddData([
+                        value.nome,
+                        value.username,
+                        value.mail,
+                        value.lastLogin,
+                        value.lastLoginAddressLocation,
+                        value.enabled,
+                        value.failedLogins,
+                        value.firstLogin,
+                        value.roles,
+                        '<a href=' + editUrl + value.username + ' titlle="Editar Usuário"><i class="pficon-edit"> </i></a>' +
+                        '&nbsp;' +
+                        '<a href="javascript:setParameterUser(\'' + value.username + '\',\'' + value.nome + '\');" title="Remover Usuário"><i class="pficon-delete"> </i></a>'
+                    ])
+                });
+            },
+            error: function (xhr, textStatus, err) {
+                info = 'failed';
+            }
+        });
+    })
+
     function setParameterUser(username, nome) {
         $('#delete-modalUser > h1').text("Usuário: " + nome);
         $('#delete-modalUser > p').text("Username: " + username);
@@ -39,15 +84,22 @@
         user2del = username;
     }
 </script>
-<c:if test="${info == 'successDelete'}">
-    <div class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-            <span class="pficon pficon-close"></span>
-        </button>
-        <span class="pficon pficon-ok"></span>
-        Usuário <strong>${userDeleted}</strong> foi removido com sucesso.
-    </div>
-</c:if>
+<div id="deleteUserSuccess" class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+        <span class="pficon pficon-close"></span>
+    </button>
+    <span class="pficon pficon-ok"></span>
+    Usuário <strong></strong> foi removido com sucesso.
+</div><div id="deleteUserFailure" class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-warning alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+        <span class="pficon pficon-close"></span>
+    </button>
+    <span class="pficon pficon-ok"></span>
+    Falha ao deletar usuário <strong></strong>.
+</div>
+
+
+
 <c:if test="${update == 'success'}">
     <div class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
@@ -57,15 +109,8 @@
         Usuário <strong>${user}</strong> alterado com sucesso.
     </div>
 </c:if>
-<c:if test="${info == 'failed'}">
-    <div class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-warning alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-            <span class="pficon pficon-close"></span>
-        </button>
-        <span class="pficon pficon-ok"></span>
-        Falha ao deletar usuário <strong>${userDeleted}</strong>.
-    </div>
-</c:if>
+
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-9 col-md-10 col-sm-push-3 col-md-push-2">
@@ -75,7 +120,7 @@
                 <li><a href="${pageContext.request.contextPath}/admin/user/user_form.jsp">
                     Novo Usuário</a></li>
             </ol>
-            <table class="datatable table table-striped table-bordered">
+            <table id="usersTable" class="datatable table table-striped table-bordered">
                 <thead>
                 <tr>
                     <th>Nome</th>
@@ -90,29 +135,6 @@
                     <th>Ações</th>
                 </tr>
                 </thead>
-                <tbody>
-                <c:forEach var="user" items="${userList}">
-                    <tr>
-                        <td>${user.nome}</td>
-                        <td>${user.username}</td>
-                        <td>${user.mail}</td>
-                        <td>${user.lastLogin}</td>
-                        <td>${user.lastLoginAddressLocation}</td>
-                        <td>${user.enabled}</td>
-                        <td>${user.failedLogins}</td>
-                        <td>${user.firstLogin}</td>
-                        <td>${user.roles}</td>
-                        <td>
-                            <a href="${pageContext.request.contextPath}/rest/user/admin/edit/${user.username}"
-                               titlle="Editar Usuário"><i class="pficon-edit"> </i></a>
-                            &nbsp;
-                            <a href="javascript:setParameterUser('${user.username}' ,'${user.nome}');"
-                               title="Remover Usuário"><i class="pficon-delete"> </i></a>
-                        </td>
-
-                    </tr>
-                </c:forEach>
-                </tbody>
             </table>
         </div><!-- /col -->
         <div class="col-sm-3 col-md-2 col-sm-pull-9 col-md-pull-10 sidebar-pf sidebar-pf-left">
@@ -129,7 +151,7 @@
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
                                 <li class="active"><a
-                                        href="${pageContext.request.contextPath}/rest/user/admin/list/form">
+                                        href="${pageContext.request.contextPath}/admin/user/users.jsp">
                                     Gerenciar Usuários</a></li>
                             </ul>
                         </div>
@@ -146,7 +168,8 @@
                     <div id="collapseTwo" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/rest/resource/operating-system/load">Gerenciar Servidores</a></li>
+                                <li><a href="${pageContext.request.contextPath}/rest/resource/operating-system/load">Gerenciar
+                                    Servidores</a></li>
                             </ul>
                         </div>
                     </div>
@@ -162,7 +185,8 @@
                     <div id="collapseFive" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/rest/resource/database/load">Gerenciar Banco de Dados</a></li>
+                                <li><a href="${pageContext.request.contextPath}/rest/resource/database/load">Gerenciar
+                                    Banco de Dados</a></li>
                             </ul>
                         </div>
                     </div>
@@ -178,7 +202,8 @@
                     <div id="collapseThree" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/rest/setup/load">Editar Configuração</a></li>
+                                <li><a href="${pageContext.request.contextPath}/rest/setup/load">Editar Configuração</a>
+                                </li>
                             </ul>
                         </div>
                     </div>

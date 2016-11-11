@@ -32,7 +32,6 @@ import java.util.logging.Logger;
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-
 @Startup
 @Singleton
 public class StartupTasks {

@@ -54,4 +54,28 @@ public class RequestResponse {
     public void setCreatedUser(String createdUser) {
         this.createdUser = createdUser;
     }
+
+    public String getCustomMessage() {
+        return customMessage;
+    }
+
+    public String getResponseMessage() {
+        return responseMessage;
+    }
+
+    public String getResponseBody() {
+        return responseBody;
+    }
+
+    public String getResponseErrorMessage() {
+        return responseErrorMessage;
+    }
+
+    public String getFailedUser() {
+        return failedUser;
+    }
+
+    public String getCreatedUser() {
+        return createdUser;
+    }
 }

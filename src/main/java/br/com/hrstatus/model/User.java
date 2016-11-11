@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.hibernate.annotations.Fetch;
 
 import javax.inject.Inject;
 import javax.persistence.CascadeType;
@@ -92,7 +93,7 @@ public class User implements Serializable {
     private String lastLoginAddressLocation;
 
     @Column(name = "roles")
-    @ElementCollection(targetClass=String.class)
+    @ElementCollection(targetClass=String.class, fetch = FetchType.EAGER)
     @JsonProperty("roles")
     @JsonDeserialize(using = CustomRolesDeserializer.class)
     private List<String> roles;

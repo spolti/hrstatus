@@ -26,6 +26,9 @@ import br.com.hrstatus.security.PasswordUtils;
 import br.com.hrstatus.utils.notification.Notification;
 import br.com.hrstatus.utils.notification.channel.Email;
 import br.com.hrstatus.utils.notification.template.NewUserMessageTemplate;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -122,6 +125,7 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(User updatedUser) {
+
         log.fine("User received to update: " + updatedUser.toString());
         updatedUser.setPassword(updatedUser.getPassword().length() == 44 && updatedUser.getPassword().endsWith("=") ? updatedUser.getPassword() : passwordUtils.encryptUserPassword(updatedUser.getPassword()));
         String result = repository.update(updatedUser);
@@ -221,26 +225,30 @@ public class UserResource {
     /*
     * @return all users
     */
-    @Path("admin/list{form : (/form)?}")
+    //@Path("admin/list{form : (/form)?}")
+    @Path("list")
     @GET
     @RolesAllowed({"ROLE_ADMIN"})
     @Produces(MediaType.APPLICATION_JSON)
-    public List<User> listUsers(@PathParam("form") String form, @QueryParam("status") String status, @QueryParam("userDeleted") String userDeleted,
-                                @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception {
+//    public List<User> listUsers(@QueryParam("status") String status, @QueryParam("userDeleted") String userDeleted,
+//                                @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception {
+    public List<User> listUsers() throws JsonProcessingException {
+//        if ("".equals(form)) {
+//            return repository.getUsers();
+//        } else {
+//            if (!"".equals(status)) {
+//                request.setAttribute("info", status);
+//                request.setAttribute("userDeleted", userDeleted);
+//
+//            }
+//            request.setAttribute("userList", repository.getUsers());
+//            request.getRequestDispatcher("/admin/user/users.jsp").forward(request, response);
+//        }
+//        //if the request is not coming from the rest api or the form, ignore it
+//        return null;
 
-        if ("".equals(form)) {
-            return repository.getUsers();
-        } else {
-            if (!"".equals(status)) {
-                request.setAttribute("info", status);
-                request.setAttribute("userDeleted", userDeleted);
 
-            }
-            request.setAttribute("userList", repository.getUsers());
-            request.getRequestDispatcher("/admin/user/users.jsp").forward(request, response);
-        }
-        //if the request is not coming from the rest api or the form, ignore it
-        return null;
+        return repository.getUsers();
     }
 
     /*

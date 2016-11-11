@@ -35,6 +35,7 @@ public class CustomRolesDeserializer extends JsonDeserializer<List<String>> {
 
     @Override
     public List<String> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+
         List<String> roles = new ArrayList<>();
         String[] temp_roles = jsonParser.getText().split(",");
 

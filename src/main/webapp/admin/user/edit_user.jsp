@@ -86,7 +86,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="${pageContext.request.contextPath}/rest/user/admin/list/form"> <button type="button" class="btn btn-primary">Prosseguir</button> </a>
+                    <a href="${pageContext.request.contextPath}/admin/user/users.jsp"> <button type="button" class="btn btn-primary">Prosseguir</button> </a>
                 </div>
             </div>
         </div>
@@ -207,7 +207,7 @@
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
                                 <li class="active"><a
-                                        href="${pageContext.request.contextPath}/rest/user/admin/list/form">
+                                        href="${pageContext.request.contextPath}/admin/user/users.jsp">
                                     Gerenciar Usuários</a></li>
                             </ul>
                         </div>

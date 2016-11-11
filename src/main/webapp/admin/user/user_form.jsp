@@ -41,8 +41,7 @@
                         json[this.name] = this.value || '';
                     }
                 });
-                var protocol = window.location.protocol;
-                var host = window.location.host;
+
                 console.log(json);
                 $.ajax({
                     type: "POST",
@@ -86,7 +85,7 @@
                 <p1 style="font-size:20px" align="left">O que deseja fazer?</p1>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Criar outro Usuário</button>
-                    <a href="${pageContext.request.contextPath}/rest/user/admin/list/form"> <button type="button" class="btn btn-primary">Ir para página de usuários</button> </a>
+                    <a href="${pageContext.request.contextPath}/admin/user/users.jsp"> <button type="button" class="btn btn-primary">Ir para página de usuários</button> </a>
                 </div>
             </div>
         </div>
@@ -97,7 +96,7 @@
         <div class="col-sm-9 col-md-10 col-sm-push-3 col-md-push-2">
             <ol class="breadcrumb">
                 <li><a href="/hs/home/home.jsp">Home</a></li>
-                <li><a href="${pageContext.request.contextPath}/rest/user/admin/list/form">
+                <li><a href="${pageContext.request.contextPath}/admin/user/users.jsp">
                     Gerenciar Usuários</a></li>
                 <li>Novo Usuário</li>
             </ol>
@@ -193,7 +192,7 @@
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
                                 <li class="active"><a
-                                        href="${pageContext.request.contextPath}/rest/user/admin/list/form">
+                                        href="${pageContext.request.contextPath}/admin/user/users.jsp">
                                     Gerenciar Usuários</a></li>
                             </ul>
                         </div>

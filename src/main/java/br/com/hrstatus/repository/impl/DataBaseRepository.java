@@ -46,7 +46,7 @@ public class DataBaseRepository implements Repository {
     protected EntityManager em;
 
     /*
-    * Import the initial configuration in the database if it is a fresh database.
+    * Import, the initial configuration in the database if it is a fresh database.
     */
     public void initialImport() {
         String sql1 = "insert into USER (username, enabled, firstLogin, mail, nome, password, failedLogins) VALUES ('root',true,false,'changeme@example.com','Administrador', 'sD3fPKLnFKZUjnSV4qA/XoJOqsmDfNfxWcZ7kPtLc0I=',0);";
@@ -151,6 +151,8 @@ public class DataBaseRepository implements Repository {
     */
     public User searchUser(String username) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
+
+        
         CriteriaQuery<User> criteria = builder.createQuery(User.class);
         Root<User> userRoot = criteria.from(User.class);
         criteria.select(userRoot);
@@ -205,7 +207,7 @@ public class DataBaseRepository implements Repository {
         CriteriaQuery<OperatingSystem> criteria = builder.createQuery(OperatingSystem.class);
         Root<OperatingSystem> peratingSystemRoot = criteria.from(OperatingSystem.class);
         criteria.select(peratingSystemRoot);
-        Query query = em.createQuery(criteria);
+        Query query = em.createQuery(criteria)  ;
         return query.getResultList();
     }
 

@@ -138,7 +138,7 @@
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
                                 <li><a
-                                        href="${pageContext.request.contextPath}/rest/user/admin/list/form">
+                                        href="${pageContext.request.contextPath}/admin/user/users.jsp">
                                     Gerenciar Usuários</a></li>
                             </ul>
                         </div>
