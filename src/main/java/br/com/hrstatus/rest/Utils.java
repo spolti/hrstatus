@@ -22,6 +22,7 @@ package br.com.hrstatus.rest;
 import br.com.hrstatus.model.support.SupportedDatabase;
 import br.com.hrstatus.model.support.SupportedOperatingSystem;
 import br.com.hrstatus.repository.Repository;
+import br.com.hrstatus.repository.impl.DataBaseRepository;
 import br.com.hrstatus.utils.notification.Notification;
 import br.com.hrstatus.utils.notification.channel.Email;
 import br.com.hrstatus.utils.system.HrstatusSystem;
@@ -50,7 +51,7 @@ public class Utils {
     @Inject
     private Email emailChannel;
     @Inject
-    private Repository repository;
+    private DataBaseRepository repository;
     @Inject
     private HrstatusSystem sys;
 

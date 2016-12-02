@@ -1,20 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="/home/header.jsp" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
+<script src="${pageContext.request.contextPath}/hrstatus-js/common/common-functions.js"></script>
 <script type="text/javascript">
-    window.onload = function () {
-        document.getElementById("password").onchange = validatePassword;
-        document.getElementById("verifyPassword").onchange = validatePassword;
-    }
-    function validatePassword() {
-        var pass2 = document.getElementById("verifyPassword").value;
-        var pass1 = document.getElementById("password").value;
-        if (pass1 != pass2)
-            document.getElementById("verifyPassword").setCustomValidity("As senhas digitadas não são iguais");
-        else
-            document.getElementById("verifyPassword").setCustomValidity('');
-    }
-
     $(document).ready(function () {
         $("button#submit").click(function (e) {
             e.preventDefault();
@@ -41,8 +29,7 @@
                         json[this.name] = this.value || '';
                     }
                 });
-                var protocol = window.location.protocol;
-                var host = window.location.host;
+
                 console.log(json);
                 $.ajax({
                     type: "POST",
@@ -63,6 +50,8 @@
                     }
                 });
                 $('#update-user-modal').modal('show');
+            } else {
+                submitform();
             }
         });
     })
@@ -103,6 +92,7 @@
             </ol>
             <h1>Editar Usuário</h1>
             <form method="POST" id="update-user-form" class="form-horizontal" action="#">
+                <input id="submit_handle" type="submit" style="display: none"/>
                 <div class="form-group">
                     <label class="col-md-2 control-label" for="name">Nome</label>
                     <div class="col-md-6">

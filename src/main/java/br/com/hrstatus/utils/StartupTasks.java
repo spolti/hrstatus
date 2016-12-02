@@ -41,7 +41,7 @@ public class StartupTasks {
     @Inject
     private Commands command;
     @Inject
-    private DataBaseRepository database;
+    private DataBaseRepository repository;
 
     /*
     * Contains all needed binaries
@@ -80,7 +80,7 @@ public class StartupTasks {
         }
 
         log.info("Importing initial database data...");
-        database.initialImport();
+        repository.initialImport();
         log.info("Done.");
     }
 }

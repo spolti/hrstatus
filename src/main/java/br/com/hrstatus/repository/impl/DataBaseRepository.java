@@ -51,7 +51,7 @@ public class DataBaseRepository implements Repository {
     public void initialImport() {
         String sql1 = "insert into USER (username, enabled, firstLogin, mail, nome, password, failedLogins) VALUES ('root',true,false,'changeme@example.com','Administrador', 'sD3fPKLnFKZUjnSV4qA/XoJOqsmDfNfxWcZ7kPtLc0I=',0);";
         String sql2 = "insert into User_roles (user_username, roles) values ('root', 'ROLE_ADMIN');";
-        String sql3 = "insert into SETUP (id, mailJndi, mailFrom) values (1, 'java:jboss/mail/HrStatus','hrstatus@hrstatus.com.br');";
+        String sql3 = "insert into SETUP (id, mailJndi, mailFrom, welcomeMessage) values (1, 'java:jboss/mail/HrStatus','hrstatus@hrstatus.com.br','Bem vindo ao Servidor HrStatus');";
         log.fine("Initial database data: " + sql1 + "\n" +
                 sql2 + "\n" +
                 sql3);
@@ -99,6 +99,12 @@ public class DataBaseRepository implements Repository {
         return String.valueOf(q.getSingleResult());
     }
 
+    @Override
+    public String welcomeMessage() {
+        Query q = em.createQuery("SELECT e.welcomeMessage from Setup e");
+        return String.valueOf(q.getSingleResult());
+    }
+
     /***************************************************************
     * Users management
     ****************************************************************/
@@ -132,15 +138,16 @@ public class DataBaseRepository implements Repository {
     }
 
     /*
-    * List the registered users
-    * @returns list containing all users
+    * List all persisted objects on the database
     */
-    public List<User> getUsers() {
+    public <T, Clazz> List<T> list(Clazz clazz) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<User> criteria = builder.createQuery(User.class);
-        Root<User> userRoot = criteria.from(User.class);
+        CriteriaQuery<T> criteria = builder.createQuery((Class<T>) clazz);
+        Root<T> userRoot = criteria.from((Class<T>) clazz);
         criteria.select(userRoot);
-        criteria.where(builder.notEqual(userRoot.get("username"), "root"));
+        if (clazz.getClass().isInstance(User.class)) {
+            criteria.where(builder.notEqual(userRoot.get("username"), "root"));
+        }
         Query query = em.createQuery(criteria);
         return query.getResultList();
     }
@@ -151,8 +158,6 @@ public class DataBaseRepository implements Repository {
     */
     public User searchUser(String username) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
-
-        
         CriteriaQuery<User> criteria = builder.createQuery(User.class);
         Root<User> userRoot = criteria.from(User.class);
         criteria.select(userRoot);

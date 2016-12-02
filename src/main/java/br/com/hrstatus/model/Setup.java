@@ -43,6 +43,9 @@ public class Setup {
     @Column(name = "mailFrom")
     private String mailFrom;
 
+    @Column(name = "welcomeMessage")
+    private String welcomeMessage;
+
     public String getMailJndi() {
         return mailJndi;
     }
@@ -57,5 +60,13 @@ public class Setup {
 
     public void setMailFrom(String mailFrom) {
         this.mailFrom = mailFrom;
+    }
+
+    public String getWelcomeMessage() {
+        return welcomeMessage;
+    }
+
+    public void setWelcomeMessage(String welcomeMessage) {
+        this.welcomeMessage = welcomeMessage;
     }
 }

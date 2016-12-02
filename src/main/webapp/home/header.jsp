@@ -107,7 +107,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
                 </a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a href="${pageContext.request.contextPath}/rest/user/edit-nonadmin/${pageContext.request.userPrincipal.name}">Editar
+                        <a href="${pageContext.request.contextPath}/user/edit.jsp">Editar
                             informações pessoais</a>
                     </li>
                     <li>

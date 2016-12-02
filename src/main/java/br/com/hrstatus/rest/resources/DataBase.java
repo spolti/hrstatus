@@ -19,6 +19,12 @@
 
 package br.com.hrstatus.rest.resources;
 
+import br.com.hrstatus.model.Database;
+import br.com.hrstatus.repository.Repository;
+import br.com.hrstatus.repository.impl.DataBaseRepository;
+
+import javax.annotation.security.RolesAllowed;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +33,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 /**
@@ -37,12 +45,17 @@ import java.io.IOException;
 @Transactional
 public class DataBase {
 
+    @Inject
+    private DataBaseRepository repository;
+
     /*
-    * Load the databases resources
+    * @return all databases
     */
+    @Path("list")
     @GET
-    @Path("load")
-    public void load(@Context HttpServletRequest request, @Context HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/admin/resource/database.jsp").forward(request, response);
+    @RolesAllowed({"ROLE_ADMIN"})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listUsers(){
+        return Response.ok(repository.list(Database.class)).build();
     }
 }

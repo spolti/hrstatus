@@ -98,8 +98,6 @@
     Falha ao deletar usuário <strong></strong>.
 </div>
 
-
-
 <c:if test="${update == 'success'}">
     <div class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
@@ -109,7 +107,6 @@
         Usuário <strong>${user}</strong> alterado com sucesso.
     </div>
 </c:if>
-
 
 <div class="container-fluid">
     <div class="row">

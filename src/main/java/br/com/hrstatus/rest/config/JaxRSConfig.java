@@ -19,9 +19,6 @@
 
 package br.com.hrstatus.rest.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
-
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
@@ -30,4 +27,5 @@ import javax.ws.rs.core.Application;
  */
 
 @ApplicationPath("/rest")
-public class JaxRSConfig extends Application {}
+public class JaxRSConfig extends Application {
+}

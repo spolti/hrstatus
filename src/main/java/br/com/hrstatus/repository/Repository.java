@@ -31,6 +31,10 @@ public interface Repository {
     */
     String mailFrom();
 
+    /*
+    * Get the welcome message, it will be displayed in the login page
+    */
+    String welcomeMessage();
 
     /*
     * Persists the given Object in the database
@@ -45,10 +49,9 @@ public interface Repository {
     void delete(User user);
 
     /*
-    * List the registered users
-    * @returns list containing all users
+    * List all persisted objects on the database
     */
-    List<User> getUsers();
+    <T, Clazz> List<T> list(Clazz clazz);
 
     /*
     * Search the given user

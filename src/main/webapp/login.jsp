@@ -58,6 +58,24 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <script src="${pageContext.request.contextPath}/patternfly/jquery/jquery.min.js"></script>
     <script src="${pageContext.request.contextPath}/patternfly/bootstrap/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/patternfly/js/patternfly.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                contentType: 'application/json',
+                url: '${pageContext.request.contextPath}/rest/public/welcome-message',
+
+                success: function (response) {
+                    console.log('success ' + response);
+                    $('#welcomeMessage').text(response)
+                },
+                error: function (xhr, textStatus, err) {
+                    $('#welcomeMessage').text(textStatus.valueOf())
+                }
+            });
+        })
+    </script>
 </head>
 <c:if test="${not empty param['failed']}">
     <div class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-warning alert-dismissable">
@@ -112,7 +130,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
             </div><!--/.col-*-->
         <div class="col-sm-5 col-md-6 col-lg-7 details">
             <p><strong>HrStatus</strong> <br>
-                Coloque sua mensagem personalizada aqui.</p>
+                <div id="welcomeMessage"></div></p>
         </div><!--/.col-*-->
     </div><!--/.row-->
 </div><!--/.container-->
