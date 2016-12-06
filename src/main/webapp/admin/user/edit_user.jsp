@@ -3,14 +3,51 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <script src="${pageContext.request.contextPath}/hrstatus-js/common/common-functions.js"></script>
 <script type="text/javascript">
+    var user2update = '';
     $(document).ready(function () {
+        <!-- TODO migrate this to a rest endpoint -->
+        var DEFAULT_ROLES = ['ROLE_ADMIN', 'ROLE_USER', 'ROLE_REST'];
+        var DEFAULT_ROLES_DESCRIPTION = ['Administrador', 'Usuário', 'Permissão para Requisições Rest'];
+
+        var selected = '';
+        $.ajax({
+            type: "GET",
+            contentType: 'application/json',
+            url: '${pageContext.request.contextPath}/rest/user/admin/edit/'+ getParameterByName('username'),
+            dataType: 'json',
+            success: function (user) {
+                user2update = user;
+                console.log('success ' + user.enabled);
+                $('#name').val(user.nome);
+                $('#username').val(user.username);
+                $('#email').val(user.mail);
+                user.enabled == true ? $('#enabled').prop("checked", true) : $('#disabled').prop("checked", true);
+                <!-- populating the selectpicker roles -->
+                jQuery.each(DEFAULT_ROLES, function (default_role_id) {
+                    selected = ''
+                    jQuery.each(user.roles, function (role_id) {
+
+                        if (user.roles[role_id] == DEFAULT_ROLES[default_role_id]) {
+                            selected = 'selected';
+                            console.log("User has " + user.roles[role_id]);
+                        }
+                    });
+                    $("#bootstrapSelect").append('<option value="' + DEFAULT_ROLES[default_role_id] + '" ' + selected + '>' + DEFAULT_ROLES_DESCRIPTION[default_role_id] + '</option>');
+                });
+                $('#bootstrapSelect').selectpicker('refresh');
+            },
+            error: function (xhr, textStatus, err) {
+                console.log('Failed to retrieve information from server');
+            }
+        });
+
         $("button#submit").click(function (e) {
             e.preventDefault();
             if($("form")[0].checkValidity()) {
                 var array = jQuery('#update-user-form').serializeArray();
                 var json = {};
 
-                var rolesArray = $('#roles option:selected');
+                var rolesArray = $('#bootstrapSelect option:selected');
                 var rolesString = '';
                 $(rolesArray).each(function (index, role) {
                     if (index == rolesArray.length - 1) {
@@ -30,12 +67,15 @@
                     }
                 });
 
-                console.log(json);
+                json.password = $('#password').val() == '' || null ? user2update.password : $('#password').val();
+
+                var mergedJsonObject = $.extend(user2update, json);
+                console.log("AAAA " + mergedJsonObject);
                 $.ajax({
                     type: "POST",
                     contentType: 'application/json',
                     url: '${pageContext.request.contextPath}/rest/user/admin/update',
-                    data: JSON.stringify(json),
+                    data: JSON.stringify(mergedJsonObject),
                     dataType: 'json',
                     success: function (response) {
                         console.log('success ' + response.responseMessage);
@@ -97,7 +137,6 @@
                     <label class="col-md-2 control-label" for="name">Nome</label>
                     <div class="col-md-6">
                         <input name="nome" type="text" id="name"
-                               value="${user.nome}"
                                class="form-control" required readonly
                                data-errormessage-value-missing="Campo Obrigatório">
                     </div>
@@ -106,7 +145,6 @@
                     <label class="col-md-2 control-label" for="username">Nome de Usuário</label>
                     <div class="col-md-6">
                         <input name="username" type="text" id="username"
-                               value="${user.username}"
                                class="form-control" required readonly
                                data-errormessage-value-missing="Campo Obrigatório">
                     </div>
@@ -115,10 +153,7 @@
                     <label class="col-md-2 control-label" for="password">Senha</label>
                     <div class="col-md-6">
                         <input name="password" type="password" id="password"
-                               value="${user.password}"
-                               class="form-control" required
-                               data-errormessage-value-missing="Campo Obrigatório"
-                               data-errormessage="Senha não atinge os requisitos necessários: mínimo 8 caracteres sendo no mínimo 1 minúsculo, 1 maiúsculo e um caracter especial."
+                               class="form-control" data-errormessage="Senha não atinge os requisitos necessários: mínimo 8 caracteres sendo no mínimo 1 minúsculo, 1 maiúsculo e um caracter especial."
                                pattern="(?=^.{6,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*">
                     </div>
                 </div>
@@ -126,16 +161,13 @@
                     <label class="col-md-2 control-label" for="verifyPassword">Repita Senha</label>
                     <div class="col-md-6">
                         <input name="verifyPassword" type="password" id="verifyPassword"
-                               value="${user.password}"
-                               class="form-control" required
-                               data-errormessage-value-missing="Campo Obrigatório">
+                               class="form-control">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label" for="mail">E-mail</label>
+                    <label class="col-md-2 control-label" for="email">E-mail</label>
                     <div class="col-md-6">
-                        <input name="mail" type="email" id="mail"
-                               value="${user.mail}"
+                        <input name="mail" type="email" id="email"
                                class="form-control" required
                                data-errormessage-type-mismatch="Email inválido."
                                data-errormessage-value-missing="Campo Obrigatório">
@@ -146,32 +178,23 @@
                     <div class="col-md-6">
                         <div class="radio">
                             <label>
-                                <input name="enabled" type="radio" name="optionsRadios" id="optionsRadios1" value="true"
-                                <c:if test="${user.enabled}"> checked</c:if>>
+                                <input name="enabled" type="radio" name="optionsRadios" id="enabled" value="true">
                                 Sim
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input name="enabled" type="radio" name="optionsRadios" id="optionsRadios2"
-                                       value="false" <c:if test="${not user.enabled}"> checked</c:if>>
+                                <input name="enabled" type="radio" name="optionsRadios" id="disabled" value="false">
                                 Não
                             </label>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label" for="roles">Roles</label>
+                    <label class="col-md-2 control-label" for="bootstrapSelect">Roles</label>
                     <div class="col-md-10">
                         <select name="roles" class="selectpicker" multiple data-selected-text-format="count>3"
-                                id="roles"
-                                required>
-                            <c:forEach items="${user.roles}" var="role" varStatus="stat">
-                                <c:set var="myVar" value="${stat.first ? '' : myVar} ${role}" />
-                            </c:forEach>
-                            <option <c:if test="${myVar.contains('ROLE_ADMIN')}" > selected </c:if> value="ROLE_ADMIN">Administrador</option>
-                            <option <c:if test="${myVar.contains('ROLE_USER')}" > selected </c:if>value="ROLE_USER">Usuário</option>
-                            <option <c:if test="${myVar.contains('ROLE_REST')}" > selected </c:if>value="ROLE_REST">Permissão para Requisições Rest</option>
+                                id="bootstrapSelect" required>
                         </select>
                     </div>
                 </div>

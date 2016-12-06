@@ -138,7 +138,9 @@ public class DataBaseRepository implements Repository {
     }
 
     /*
-    * List all persisted objects on the database
+    * List all persisted objects on the database of the given type
+    * @param clazz
+    * @returns the T list
     */
     public <T, Clazz> List<T> list(Clazz clazz) {
         CriteriaBuilder builder = em.getCriteriaBuilder();

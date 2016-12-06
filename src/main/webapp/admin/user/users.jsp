@@ -51,7 +51,7 @@
             url: '${pageContext.request.contextPath}/rest/user/list',
             dataType: 'json',
             success: function (user) {
-                var editUrl = '${pageContext.request.contextPath}/rest/user/admin/edit/';
+                var editUrl = '${pageContext.request.contextPath}/admin/user/edit_user.jsp';
                 console.log('success ' + user.valueOf());
                 oTable.fnClearTable();
                 $.each(user, function (id, value) {
@@ -65,7 +65,7 @@
                         value.failedLogins,
                         value.firstLogin,
                         value.roles,
-                        '<a href=' + editUrl + value.username + ' titlle="Editar Usuário"><i class="pficon-edit"> </i></a>' +
+                        '<a href=' + editUrl + '?username=' + value.username + ' titlle="Editar Usuário"><i class="pficon-edit"> </i></a>' +
                         '&nbsp;' +
                         '<a href="javascript:setParameterUser(\'' + value.username + '\',\'' + value.nome + '\');" title="Remover Usuário"><i class="pficon-delete"> </i></a>'
                     ])

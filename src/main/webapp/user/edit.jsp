@@ -3,7 +3,6 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <script src="${pageContext.request.contextPath}/hrstatus-js/common/common-functions.js"></script>
 <script>
-    //load the user and populated the tharget fields
     var user2update = '';
     $(document).ready(function () {
         <!-- TODO migrate this to a rest endpoint -->
@@ -18,14 +17,13 @@
             dataType: 'json',
             success: function (user) {
                 user2update = user;
-                console.log('success ' + user.enabled);
                 $('#name').val(user.nome);
                 $('#username').val(user.username);
                 $('#email').val(user.mail);
                 user.enabled == true ? $('#enabled').prop("checked", true) : $('#disabled').prop("checked", true);
-                <!-- populating the roles selectpicker -->
+                <!-- populating the selectpicker roles -->
                 jQuery.each(DEFAULT_ROLES, function (default_role_id) {
-                    console.log("hello role position " + default_role_id + ", value: " + DEFAULT_ROLES[default_role_id]);
+                    selected = ''
                     jQuery.each(user.roles, function (role_id) {
                         if (user.roles[role_id] == DEFAULT_ROLES[default_role_id]) {
                             selected = 'selected';
@@ -141,8 +139,7 @@
                     <label class="col-md-2 control-label" for="password">Senha</label>
                     <div class="col-md-6">
                         <input name="password" type="password" id="password"
-                               class="form-control"
-                               data-errormessage="Senha não atinge os requisitos necessários: mínimo 8 caracteres sendo no mínimo 1 minúsculo, 1 maiúsculo e um caracter especial."
+                               class="form-control" data-errormessage="Senha não atinge os requisitos necessários: mínimo 8 caracteres sendo no mínimo 1 minúsculo, 1 maiúsculo e um caracter especial."
                                pattern="(?=^.{6,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*">
                     </div>
                 </div>

@@ -21,11 +21,13 @@ package br.com.hrstatus.model.support;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
+ *
  */
 public enum VerificationStatus {
 
     NOT_VERIFIED,
     OK,
-    NOT_OK;
+    NOT_OK,
+    CONNECTION_FAILED;
 
 }

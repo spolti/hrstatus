@@ -30,7 +30,6 @@ import br.com.hrstatus.utils.notification.template.NewUserMessageTemplate;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -74,8 +73,8 @@ public class UserResource {
     * Register new user
     * Receives a JSon Object
     */
-    @Path("admin/new")
     @POST
+    @Path("admin/new")
     @RolesAllowed({"ROLE_ADMIN"})
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -113,8 +112,8 @@ public class UserResource {
     * Update User
     * Form request
     */
-    @Path("admin/update")
     @POST
+    @Path("admin/update")
     @RolesAllowed({"ROLE_ADMIN"})
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -128,13 +127,14 @@ public class UserResource {
     * Update User
     * Form request
     */
-    @Path("update-nonadmin")
     @POST
+    @Path("update-nonadmin")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateNonAdmin(User updatedUser) {
         log.fine("User received to update: " + updatedUser.toString());
         //make sure someone does not changed the user roles
+        //this method should not allow update the roles
         User tempUser = repository.searchUser(updatedUser.getUsername());
         updatedUser.addRoles(tempUser.getRoles().stream().toArray(String[]::new));
         updatedUser.setPassword(updatedUser.getPassword().length() == 44 && updatedUser.getPassword().endsWith("=") ? updatedUser.getPassword() : passwordUtils.encryptUserPassword(updatedUser.getPassword()));
@@ -145,10 +145,11 @@ public class UserResource {
     * Update User - admin rights
     * Form request
     */
-    @Path("admin/edit/{username}")
     @GET
+    @Path("admin/edit/{username}")
     @RolesAllowed({"ROLE_ADMIN"})
-    public void edit(@PathParam("username") String username, @Context HttpServletRequest request, @Context HttpServletResponse response) throws Exception {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response edit(@PathParam("username") String username, @Context HttpServletRequest request) {
 
         //preload the user attributes before send it to edition
         br.com.hrstatus.model.User loggedUser = repository.searchUser(request.getUserPrincipal().getName());
@@ -159,12 +160,13 @@ public class UserResource {
             user = repository.searchUser(username);
             log.info("Usuário recebido para edição: " + username);
             user.addRoles(user.getRoles().stream().toArray(String[]::new));
-            request.setAttribute("user", user);
-            request.getRequestDispatcher("/admin/user/edit_user.jsp").forward(request, response);
+            return Response.ok(user).build();
         } else {
             // Non admin users can't edit other users
+            // fazer plugin para envio de email contendo detalhes da tentativa inválida de alteração
             log.fine("Tentativa de alteração de usuário inválida");
-            response.sendError(403);
+            return Response.status(Response.Status.FORBIDDEN).build();
+            //response.sendError(403);
         }
     }
 
@@ -191,8 +193,8 @@ public class UserResource {
     /*
     * @return all users
     */
-    @Path("list")
     @GET
+    @Path("list")
     @RolesAllowed({"ROLE_ADMIN"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response listUsers(){
@@ -202,8 +204,8 @@ public class UserResource {
     /*
     * Delete the given user
     */
-    @Path("admin/delete/{username}")
     @DELETE
+    @Path("admin/delete/{username}")
     @RolesAllowed({"ROLE_ADMIN"})
     public Response deleteUser(@PathParam("username") String username) throws IOException {
         if ("root".equals(username)) {
