@@ -97,17 +97,31 @@
     <span class="pficon pficon-ok"></span>
     Falha ao deletar usuário <strong></strong>.
 </div>
-
-<c:if test="${update == 'success'}">
-    <div class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-success alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-            <span class="pficon pficon-close"></span>
-        </button>
-        <span class="pficon pficon-ok"></span>
-        Usuário <strong>${user}</strong> alterado com sucesso.
+<div class="modal fade" id="delete-user-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <span class="pficon pficon-close"></span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Deletar Usuário</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div id="delete-modalUser" class="modal-body">
+                        <h1 align="center"></h1>
+                        <p align="center"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button id="btDelete" type="button" class="btn btn-primary">Deletar</button>
+                </div>
+            </div>
+        </div>
     </div>
-</c:if>
-
+</div>
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-9 col-md-10 col-sm-push-3 col-md-push-2">
@@ -165,7 +179,7 @@
                     <div id="collapseTwo" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/rest/resource/operating-system/load">Gerenciar
+                                <li><a href="${pageContext.request.contextPath}/admin/resource/operating-system.jsp">Gerenciar
                                     Servidores</a></li>
                             </ul>
                         </div>
@@ -296,30 +310,5 @@
     </div><!-- /row -->
 </div>
 <!-- /container -->
-<div class="modal fade" id="delete-user-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    <span class="pficon pficon-close"></span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">Deletar Usuário</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <div id="delete-modalUser" class="modal-body">
-                        <h1 align="center"></h1>
-                        <p align="center"></p>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <button id="btDelete" type="button" class="btn btn-primary">Deletar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 </body>
 </html>

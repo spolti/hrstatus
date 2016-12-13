@@ -39,25 +39,30 @@ public interface Repository {
     /*
     * Persists the given Object in the database
     */
-    <T, O> T register (O obj);
+    <T, O> T register (O object);
 
 
     /*
-    * Delete the given user object
-    * @param Users
+    * Delete the given object
+    * @param Object
     */
-    void delete(User user);
+    <T, Object> void delete(Object object);
 
     /*
     * List all persisted objects on the database
     */
     <T, Clazz> List<T> list(Clazz clazz);
 
+//    /*
+//    * Search the given user
+//    * @returns the User object if found
+//    */
+//    User searchUser (String username);
+
     /*
-    * Search the given user
-    * @returns the User object if found
+    * Search objects based on a query parameter
     */
-    User searchUser (String username);
+    <T, Clazz> T search(Clazz clazz, String parameterName, Object parameterValue);
 
     /*
     * Update the given user
@@ -69,16 +74,4 @@ public interface Repository {
     */
     List<User> getLockedUsers();
 
-    /***************************************************************
-    * Resources repository - Operating Systems
-    ****************************************************************/
-    /*
-    * Save the give Resource (Operating System)
-    */
-    void save(OperatingSystem operatingSystem);
-
-    /*
-    * Save the give Resource (Operating System)
-    */
-    List<OperatingSystem> load();
 }

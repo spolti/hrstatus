@@ -49,13 +49,13 @@ public class SessionAuthListener implements Serializable {
 
     public void onAuthenticated(@Observes AuthenticatedEvent event) {
         log.fine("Successfull login for " + event.getUserPrincipal().getName() + " at " + dateUtils.now());
-        user = repository.searchUser(event.getUserPrincipal().getName());
+        user = repository.search(User.class, "username", event.getUserPrincipal().getName());
         user.setLastLogin(dateUtils.now().toString());
         repository.update(user);
     }
 
     public void onAuthenticationFailure(@Observes FailedAuthenticatedEvent event) {
-        user = repository.searchUser(event.getUsername());
+        user = repository.search(User.class, "username",event.getUsername());
         user.setFailedLogins(user.getFailedLogins() + 1);
         log.fine("Falha de autenticação usuário " +  event.getUsername() + ", número de tentativas: [" + user.getFailedLogins() + "]");
         if (user.getFailedLogins() >= 3) {

@@ -29,7 +29,7 @@
             <div id="collapseTwo" class="panel-collapse collapse">
                 <div class="panel-body">
                     <ul class="nav nav-pills nav-stacked">
-                        <li><a href="${pageContext.request.contextPath}/rest/resource/operating-system/load">Gerenciar Servidores</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/resource/operating-system.jsp">Gerenciar Servidores</a></li>
                     </ul>
                 </div>
             </div>

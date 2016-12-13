@@ -70,7 +70,7 @@
                         //var response = JSON.parse(xhr.responseText);
                         alert(xhr.responseText)
                         console.log(xhr.responseText);
-                        $('#update-modalNonAdminUser > h1').text("Falha ao atualizar usuário " + response.failedUser);
+                        $('#update-modalNonAdminUser > h1').text("Falha ao atualizar usuário " + response.failedSubject);
                         $('#update-modalNonAdminUser > p').text("Mensagem de erro: " + response.responseErrorMessage);
                     }
                 });
@@ -207,7 +207,7 @@
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
                                 <li class="active"><a
-                                        href="${pageContext.request.contextPath}/rest/user/admin/list/form">
+                                        href="${pageContext.request.contextPath}/admin/user/users.jsp">
                                     Gerenciar Usuários</a></li>
                             </ul>
                         </div>
@@ -224,10 +224,7 @@
                     <div id="collapseTwo" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/admin/server/edit-server.jsp">Cadastrar
-                                    Servidores</a></li>
-                                <li><a href="#">Editar ou Remover Servidores</a></li>
-                                <li><a href="#">Listar Servidores</a></li>
+                                <li><a href="${pageContext.request.contextPath}/admin/resource/operating-system.jsp">Gerenciar Servidores</a></li>
                             </ul>
                         </div>
                     </div>
@@ -243,10 +240,7 @@
                     <div id="collapseFive" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/admin/server/edit-database.jsp">Cadastrar
-                                    Banco de Dados</a></li>
-                                <li><a href="#">Editar ou Remover Banco de Dados</a></li>
-                                <li><a href="#">Listar Banco de Dados</a></li>
+                                <li><a href="${pageContext.request.contextPath}/rest/resource/database/load">Gerenciar Banco de Dados</a></li>
                             </ul>
                         </div>
                     </div>
@@ -262,7 +256,7 @@
                     <div id="collapseThree" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">Editar Configuração</a></li>
+                                <li><a href="${pageContext.request.contextPath}/rest/setup/load">Editar Configuração</a></li>
                             </ul>
                         </div>
                     </div>

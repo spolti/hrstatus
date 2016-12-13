@@ -57,9 +57,6 @@ import java.util.logging.Logger;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User implements Serializable {
 
-    @Transient
-    private Logger log = Logger.getLogger(User.class.getName());
-
     @Id
     @Column(name = "username", nullable = false, unique = true)
     private String username;

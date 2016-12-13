@@ -44,7 +44,7 @@
                     error: function (xhr,textStatus,err) {
                         var response = JSON.parse(xhr.responseText);
                         console.log(response);
-                        $('#create-modalUser > h1').text("Falha ao criar usuário " + response.failedUser);
+                        $('#create-modalUser > h1').text("Falha ao criar usuário " + response.failedSubject);
                         $('#create-modalUser > p').text("Mensagem de erro: " + response.responseErrorMessage);
                     }
                 });
@@ -200,7 +200,7 @@
                     <div id="collapseTwo" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/rest/resource/operating-system/load">Gerenciar
+                                <li><a href="${pageContext.request.contextPath}/admin/resource/operating-system.jsp">Gerenciar
                                     Servidores</a></li>
                             </ul>
                         </div>

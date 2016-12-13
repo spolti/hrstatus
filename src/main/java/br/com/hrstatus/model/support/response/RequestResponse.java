@@ -28,7 +28,7 @@ public class RequestResponse {
     private String responseMessage;
     private String responseBody;
     private String responseErrorMessage;
-    private String failedUser;
+    private String failedSubject;
     private String createdUser;
 
     public void setCustomMessage(String customMessage) {
@@ -47,8 +47,8 @@ public class RequestResponse {
         this.responseErrorMessage = responseErrorMessage;
     }
 
-    public void setFailedUser(String failedUser) {
-        this.failedUser = failedUser;
+    public void setFailedSubject(String failedUser) {
+        this.failedSubject = failedUser;
     }
 
     public void setCreatedUser(String createdUser) {
@@ -71,8 +71,8 @@ public class RequestResponse {
         return responseErrorMessage;
     }
 
-    public String getFailedUser() {
-        return failedUser;
+    public String getFailedSubject() {
+        return failedSubject;
     }
 
     public String getCreatedUser() {

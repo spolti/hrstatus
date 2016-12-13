@@ -105,9 +105,6 @@ public class DataBaseRepository implements Repository {
         return String.valueOf(q.getSingleResult());
     }
 
-    /***************************************************************
-    * Users management
-    ****************************************************************/
     /*
     * Register the given Object
     * @param Object
@@ -128,26 +125,27 @@ public class DataBaseRepository implements Repository {
     }
 
 
+
     /*
-    * Delete the given user object
+    * Delete the given object <T>
     * @param Users
     */
-    public void delete(User user) {
-        em.remove(user);
+    public <T, Object> void delete(Object object) {
+        em.remove(object);
         em.flush();
     }
 
     /*
     * List all persisted objects on the database of the given type
     * @param clazz
-    * @returns the T list
+    * @returns List<T>
     */
     public <T, Clazz> List<T> list(Clazz clazz) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<T> criteria = builder.createQuery((Class<T>) clazz);
         Root<T> userRoot = criteria.from((Class<T>) clazz);
         criteria.select(userRoot);
-        if (clazz.getClass().isInstance(User.class)) {
+        if (User.class.equals(clazz)){
             criteria.where(builder.notEqual(userRoot.get("username"), "root"));
         }
         Query query = em.createQuery(criteria);
@@ -158,14 +156,27 @@ public class DataBaseRepository implements Repository {
     * Search the given user
     * @returns the User object if found
     */
-    public User searchUser(String username) {
+//    public User searchUser(String username) {
+//        CriteriaBuilder builder = em.getCriteriaBuilder();
+//        CriteriaQuery<User> criteria = builder.createQuery(User.class);
+//        Root<User> userRoot = criteria.from(User.class);
+//        criteria.select(userRoot);
+//        criteria.where(builder.equal(userRoot.get("username"), username));
+//        Query query = em.createQuery(criteria);
+//        return (User) query.getSingleResult();
+//    }
+
+    /*
+    * Search objects based on a query parameter
+    */
+    public <T, Clazz> T search(Clazz clazz, String parameterName, Object parameterValue) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<User> criteria = builder.createQuery(User.class);
-        Root<User> userRoot = criteria.from(User.class);
+        CriteriaQuery<T> criteria = builder.createQuery((Class<T>) clazz);
+        Root<T> userRoot = criteria.from((Class<T>) clazz);
         criteria.select(userRoot);
-        criteria.where(builder.equal(userRoot.get("username"), username));
+        criteria.where(builder.equal(userRoot.get(parameterName), parameterValue));
         Query query = em.createQuery(criteria);
-        return (User) query.getSingleResult();
+        return (T) query.getSingleResult();
     }
 
     /*
@@ -195,27 +206,5 @@ public class DataBaseRepository implements Repository {
         return query.getResultList();
     }
 
-    /***************************************************************
-    * Resources repository - Operating Systems
-    ****************************************************************/
-    /*
-    * Save the give Resource (Operating System)
-    */
-    public void save(OperatingSystem object) {
-        em.persist(object);
-        em.flush();
-    }
-
-    /*
-    * Save the give Resource (Operating System)
-    */
-    public List<OperatingSystem> load() {
-        CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<OperatingSystem> criteria = builder.createQuery(OperatingSystem.class);
-        Root<OperatingSystem> peratingSystemRoot = criteria.from(OperatingSystem.class);
-        criteria.select(peratingSystemRoot);
-        Query query = em.createQuery(criteria)  ;
-        return query.getResultList();
-    }
 
 }

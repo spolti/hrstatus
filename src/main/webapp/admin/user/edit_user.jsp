@@ -82,10 +82,9 @@
                         $('#update-modalUser > h1').text(response.responseMessage);
                     },
                     error: function (xhr,textStatus,err) {
-                        //var response = JSON.parse(xhr.responseText);
                         alert(xhr.responseText)
                         console.log(xhr.responseText);
-                        $('#update-modalUser > h1').text("Falha ao atualizar usuário " + response.failedUser);
+                        $('#update-modalUser > h1').text("Falha ao atualizar usuário " + response.failedSubject);
                         $('#update-modalUser > p').text("Mensagem de erro: " + response.responseErrorMessage);
                     }
                 });
@@ -237,7 +236,7 @@
                     <div id="collapseTwo" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/rest/resource/operating-system/load">Gerenciar Servidores</a></li>
+                                <li><a href="${pageContext.request.contextPath}/admin/resource/operating-system.jsp">Gerenciar Servidores</a></li>
                             </ul>
                         </div>
                     </div>

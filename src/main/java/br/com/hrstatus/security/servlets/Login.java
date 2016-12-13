@@ -52,7 +52,7 @@ public class Login extends HttpServlet {
 
        try {
             try {
-                user = repository.searchUser(request.getParameter("j_username"));
+                user = repository.search(User.class, "username", request.getParameter("j_username"));
             } catch (Exception e) {
                 //user not found
                 log.fine("Usuário " + request.getParameter("j_username") + " não cadastrado.");

@@ -19,8 +19,9 @@
 
 package br.com.hrstatus.model;
 
-import br.com.hrstatus.model.support.deserializer.CustomSupportedOperatingSystemDeserializer;
 import br.com.hrstatus.model.support.VerificationStatus;
+import br.com.hrstatus.model.support.deserializer.CustomOperatingSystemStatusDeserializer;
+import br.com.hrstatus.model.support.deserializer.CustomSupportedOperatingSystemDeserializer;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -84,6 +85,10 @@ public class OperatingSystem {
     @Column(name = "verify", nullable = false)
     private boolean verify;
 
+    public int getId() {
+        return id;
+    }
+
     public int getPort() {
         return port;
     }
@@ -138,7 +143,12 @@ public class OperatingSystem {
         return status;
     }
 
+    @JsonProperty("status")
+    @JsonDeserialize(using = CustomOperatingSystemStatusDeserializer.class)
     public void setStatus(Enum status) {
+        if (status == null) {
+            this.status = VerificationStatus.NOT_VERIFIED;
+        }
         this.status = status;
     }
 
@@ -206,4 +216,24 @@ public class OperatingSystem {
         this.verify = true;
     }
 
+    @Override
+    public String toString() {
+        return "OperatingSystem{" +
+                "id=" + id +
+                ", hostname='" + hostname + '\'' +
+                ", address='" + address + '\'' +
+                ", port=" + port +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", type=" + type +
+                ", status=" + status +
+                ", osTime='" + osTime + '\'' +
+                ", hrstatusTime='" + hrstatusTime + '\'' +
+                ", lastCheck='" + lastCheck + '\'' +
+                ", difference=" + difference +
+                ", logDir='" + logDir + '\'' +
+                ", suCommand='" + suCommand + '\'' +
+                ", verify=" + verify +
+                '}';
+    }
 }

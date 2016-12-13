@@ -98,11 +98,11 @@ public class UserResource {
             reqResponse.setResponseMessage("Usuário " + newUser.getNome() + " foi criado com sucesso.");
             return Response.status(Response.Status.CREATED).entity(reqResponse).build();
         } else if (result.toString().contains("ConstraintViolation")) {
-            reqResponse.setFailedUser(newUser.getNome());
+            reqResponse.setFailedSubject(newUser.getNome());
             reqResponse.setResponseErrorMessage(String.valueOf(result));
             return Response.status(Response.Status.CONFLICT).entity(reqResponse).build();
         } else {
-            reqResponse.setFailedUser(newUser.getNome());
+            reqResponse.setFailedSubject(newUser.getNome());
             reqResponse.setResponseErrorMessage(String.valueOf(result));
             return Response.status(Response.Status.BAD_REQUEST).entity(reqResponse).build();
         }
@@ -135,7 +135,7 @@ public class UserResource {
         log.fine("User received to update: " + updatedUser.toString());
         //make sure someone does not changed the user roles
         //this method should not allow update the roles
-        User tempUser = repository.searchUser(updatedUser.getUsername());
+        User tempUser = repository.search(User.class, "username", updatedUser.getUsername());
         updatedUser.addRoles(tempUser.getRoles().stream().toArray(String[]::new));
         updatedUser.setPassword(updatedUser.getPassword().length() == 44 && updatedUser.getPassword().endsWith("=") ? updatedUser.getPassword() : passwordUtils.encryptUserPassword(updatedUser.getPassword()));
         return response(repository.update(updatedUser), updatedUser);
@@ -152,12 +152,12 @@ public class UserResource {
     public Response edit(@PathParam("username") String username, @Context HttpServletRequest request) {
 
         //preload the user attributes before send it to edition
-        br.com.hrstatus.model.User loggedUser = repository.searchUser(request.getUserPrincipal().getName());
+        br.com.hrstatus.model.User loggedUser = repository.search(User.class, "username", request.getUserPrincipal().getName());
         loggedUser.addRoles(loggedUser.getRoles().stream().toArray(String[]::new));
 
         //double check to make sure user is admin
         if (loggedUser.isAdmin() && !"root".equals(username)) {
-            user = repository.searchUser(username);
+            user = repository.search(User.class, "username", username);
             log.info("Usuário recebido para edição: " + username);
             user.addRoles(user.getRoles().stream().toArray(String[]::new));
             return Response.ok(user).build();
@@ -179,7 +179,7 @@ public class UserResource {
     public Response editLimited(@PathParam("username") String username, @Context HttpServletRequest request) throws Exception {
         if (request.getUserPrincipal().getName().equals(username) && !request.getUserPrincipal().getName().equals("root")) {
             log.info("Usuário recebido para edição: " + user.getUsername());
-            user = repository.searchUser(username);
+            user = repository.search(User.class, "username", username);
             user.addRoles(user.getRoles().stream().toArray(String[]::new));
             return Response.ok(user).build();
         } else {
@@ -207,14 +207,14 @@ public class UserResource {
     @DELETE
     @Path("admin/delete/{username}")
     @RolesAllowed({"ROLE_ADMIN"})
-    public Response deleteUser(@PathParam("username") String username) throws IOException {
+    public Response deleteUser(@PathParam("username") String username) {
         if ("root".equals(username)) {
             log.fine("Usuário root não pode ser removido do sistema");
             reqResponse.setResponseErrorMessage("Usuário root não pode ser removido do sistema\"");
             return Response.status(Response.Status.FORBIDDEN).entity(reqResponse).build();
         } else {
             log.fine("Usuário recebido para remoção [" + username + "]");
-            repository.delete(repository.searchUser(username));
+            repository.delete(repository.search(User.class, "username", username));
             return Response.status(Response.Status.NO_CONTENT).build();
         }
     }
@@ -225,7 +225,7 @@ public class UserResource {
             reqResponse.setResponseMessage("Usuário " + updatedUser.getNome() + " foi atualizado com sucesso.");
             return Response.ok(reqResponse).build();
         } else {
-            reqResponse.setFailedUser(updatedUser.getNome());
+            reqResponse.setFailedSubject(updatedUser.getNome());
             reqResponse.setResponseErrorMessage(result);
             return Response.status(Response.Status.BAD_REQUEST).entity(reqResponse).build();
         }

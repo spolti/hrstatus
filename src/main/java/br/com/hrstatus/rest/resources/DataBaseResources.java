@@ -43,7 +43,7 @@ import java.io.IOException;
 @Path("resource/database")
 @Produces("application/json")
 @Transactional
-public class DataBase {
+public class DataBaseResources {
 
     @Inject
     private DataBaseRepository repository;
