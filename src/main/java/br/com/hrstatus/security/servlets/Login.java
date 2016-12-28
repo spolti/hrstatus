@@ -50,6 +50,8 @@ public class Login extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+
+
        try {
             try {
                 user = repository.search(User.class, "username", request.getParameter("j_username"));
@@ -59,6 +61,7 @@ public class Login extends HttpServlet {
                 request.getRequestDispatcher("login.jsp?failed=true").forward(request,response);
             }
             if (user.isEnabled()) {
+                log.info("PASSWORD: " +  request.getParameter("j_username") + " - " + request.getParameter("j_password"));
                 user.setLastLoginAddressLocation(request.getRemoteAddr());
                 repository.update(user);
                 request.login(request.getParameter("j_username"), request.getParameter("j_password"));

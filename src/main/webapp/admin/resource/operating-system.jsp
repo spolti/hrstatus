@@ -210,7 +210,7 @@
                     <div id="collapseFive" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/rest/resource/database/load">Gerenciar
+                                <li><a href="${pageContext.request.contextPath}/admin/resource/database.jsp">Gerenciar
                                     Banco de Dados</a></li>
                             </ul>
                         </div>

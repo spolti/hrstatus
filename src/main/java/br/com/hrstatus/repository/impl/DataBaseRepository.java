@@ -19,15 +19,12 @@
 
 package br.com.hrstatus.repository.impl;
 
-import br.com.hrstatus.model.OperatingSystem;
 import br.com.hrstatus.model.Setup;
 import br.com.hrstatus.model.User;
 import br.com.hrstatus.repository.Repository;
-import org.hibernate.exception.ConstraintViolationException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -49,22 +46,21 @@ public class DataBaseRepository implements Repository {
     * Import, the initial configuration in the database if it is a fresh database.
     */
     public void initialImport() {
-        String sql1 = "insert into USER (username, enabled, firstLogin, mail, nome, password, failedLogins) VALUES ('root',true,false,'changeme@example.com','Administrador', 'sD3fPKLnFKZUjnSV4qA/XoJOqsmDfNfxWcZ7kPtLc0I=',0);";
+        // Default password is P@ssw0rd
+        String sql1 = "insert into USERS (username, enabled, figtLogin, mail, nome, password, failedLogins) VALUES ('root',true,false,'changeme@example.com','Administrador', 'sD3fPKLnFKZUjnSV4qA/XoJOqsmDfNfxWcZ7kPtLc0I=', 0);";
         String sql2 = "insert into User_roles (user_username, roles) values ('root', 'ROLE_ADMIN');";
         String sql3 = "insert into SETUP (id, mailJndi, mailFrom, welcomeMessage) values (1, 'java:jboss/mail/HrStatus','hrstatus@hrstatus.com.br','Bem vindo ao Servidor HrStatus');";
         log.fine("Initial database data: " + sql1 + "\n" +
                 sql2 + "\n" +
                 sql3);
-        Query q1 = em.createNativeQuery(sql1);
-        Query q2 = em.createNativeQuery(sql2);
-        Query q3 = em.createNativeQuery(sql3);
+
         Query checkQuery = em.createQuery("SELECT e.username from User e where e.username ='root'");
         if (checkQuery.getResultList().size() == 1) {
             log.info("Initial setup already performed, skipping.");
         } else {
-            q1.executeUpdate();
-            q2.executeUpdate();
-            q3.executeUpdate();
+            em.createNativeQuery(sql1).executeUpdate();
+            em.createNativeQuery(sql2).executeUpdate();
+            em.createNativeQuery(sql3).executeUpdate();
         }
     }
 
@@ -124,8 +120,6 @@ public class DataBaseRepository implements Repository {
         }
     }
 
-
-
     /*
     * Delete the given object <T>
     * @param Users
@@ -151,20 +145,6 @@ public class DataBaseRepository implements Repository {
         Query query = em.createQuery(criteria);
         return query.getResultList();
     }
-
-    /*
-    * Search the given user
-    * @returns the User object if found
-    */
-//    public User searchUser(String username) {
-//        CriteriaBuilder builder = em.getCriteriaBuilder();
-//        CriteriaQuery<User> criteria = builder.createQuery(User.class);
-//        Root<User> userRoot = criteria.from(User.class);
-//        criteria.select(userRoot);
-//        criteria.where(builder.equal(userRoot.get("username"), username));
-//        Query query = em.createQuery(criteria);
-//        return (User) query.getSingleResult();
-//    }
 
     /*
     * Search objects based on a query parameter

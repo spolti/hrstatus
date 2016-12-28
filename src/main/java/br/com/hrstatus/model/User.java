@@ -53,7 +53,7 @@ import java.util.logging.Logger;
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
 @Entity
-@Table(name = "USER")
+@Table(name = "USERS")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User implements Serializable {
 

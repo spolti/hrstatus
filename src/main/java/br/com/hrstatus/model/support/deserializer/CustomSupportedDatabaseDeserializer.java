@@ -19,7 +19,7 @@
 
 package br.com.hrstatus.model.support.deserializer;
 
-import br.com.hrstatus.model.support.VerificationStatus;
+import br.com.hrstatus.model.support.SupportedDatabase;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
@@ -29,10 +29,10 @@ import java.io.IOException;
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public class CustomOperatingSystemStatusDeserializer extends JsonDeserializer<VerificationStatus> {
+public class CustomSupportedDatabaseDeserializer extends JsonDeserializer<SupportedDatabase> {
 
     @Override
-    public VerificationStatus deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-        return VerificationStatus.valueOf(jsonParser.getText());
+    public SupportedDatabase deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+        return SupportedDatabase.valueOf(jsonParser.getText());
     }
 }

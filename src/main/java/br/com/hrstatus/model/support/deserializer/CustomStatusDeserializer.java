@@ -19,9 +19,8 @@
 
 package br.com.hrstatus.model.support.deserializer;
 
-import br.com.hrstatus.model.support.SupportedOperatingSystem;
+import br.com.hrstatus.model.support.VerificationStatus;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
@@ -30,10 +29,10 @@ import java.io.IOException;
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public class CustomSupportedOperatingSystemDeserializer extends JsonDeserializer<SupportedOperatingSystem> {
+public class CustomStatusDeserializer extends JsonDeserializer<VerificationStatus> {
 
     @Override
-    public SupportedOperatingSystem deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-        return SupportedOperatingSystem.valueOf(jsonParser.getText());
+    public VerificationStatus deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+        return VerificationStatus.valueOf(jsonParser.getText());
     }
 }

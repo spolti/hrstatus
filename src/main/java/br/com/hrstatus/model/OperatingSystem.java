@@ -20,7 +20,7 @@
 package br.com.hrstatus.model;
 
 import br.com.hrstatus.model.support.VerificationStatus;
-import br.com.hrstatus.model.support.deserializer.CustomOperatingSystemStatusDeserializer;
+import br.com.hrstatus.model.support.deserializer.CustomStatusDeserializer;
 import br.com.hrstatus.model.support.deserializer.CustomSupportedOperatingSystemDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -36,7 +36,7 @@ import javax.persistence.Table;
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
 @Entity
-@Table(name = "OS")
+@Table(name = "RESOURCE_OPERATING_SYSTEMS")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OperatingSystem {
 
@@ -146,7 +146,7 @@ public class OperatingSystem {
     }
 
     @JsonProperty("status")
-    @JsonDeserialize(using = CustomOperatingSystemStatusDeserializer.class)
+    @JsonDeserialize(using = CustomStatusDeserializer.class)
     public void setStatus(Enum status) {
         if (status == null) {
             this.status = VerificationStatus.NOT_VERIFIED;

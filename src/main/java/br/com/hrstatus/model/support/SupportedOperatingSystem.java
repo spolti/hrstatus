@@ -19,23 +19,11 @@
 
 package br.com.hrstatus.model.support;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-//@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+
 public enum SupportedOperatingSystem {
-//    @JsonProperty("type")
     UNIX,
     WINDOWS;
-
-//    @JsonCreator
-//    public static SupportedOperatingSystem fromString(String type) {
-//        System.out.println("ENUM called" + type);
-//        return SupportedOperatingSystem.valueOf(type);
-//    }
-
 }

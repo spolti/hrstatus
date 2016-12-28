@@ -19,7 +19,12 @@
 
 package br.com.hrstatus.model;
 
-import br.com.hrstatus.model.support.SupportedDatabase;
+import br.com.hrstatus.model.support.VerificationStatus;
+import br.com.hrstatus.model.support.deserializer.CustomStatusDeserializer;
+import br.com.hrstatus.model.support.deserializer.CustomSupportedOperatingSystemDeserializer;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,13 +35,184 @@ import javax.persistence.Table;
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-//@Entity
-//@Table(name = "DATABASE")
+@Entity
+@Table(name = "RESOURCE_DATABASES")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Database {
 
-  //  @Id
-//    @Column(name = "id")
- //    @GeneratedValue
+    @Id
+    @Column(name = "id")
+    @GeneratedValue
     private int id;
+
+    @Column(name = "hostname", nullable = false, unique = true)
+    private String hostname;
+
+    @Column(name = "address", nullable = false, unique = true)
+    private String address;
+
+    @Column(name = "username", nullable = false)
+    private String username;
+
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @Column(name = "port", nullable = false)
+    private int port;
+
+    @Column(name = "vendor", nullable = false)
+    private Enum vendor;
+
+    @Column(name = "queryDate", nullable = false)
+    private String queryDate;
+
+    @Column(name = "status", nullable = false)
+    private Enum status;
+
+    @Column(name = "clientTime")
+    private String clientTime;
+
+    @Column(name = "serverTime")
+    private String serverTime;
+
+    @Column(name = "lastCheck")
+    private String lastCheck;
+
+    @Column(name = "Difference")
+    private long Difference;
+
+    @Column(name = "instance", nullable = false)
+    private String instance;
+
+    // Used only by SQL Server
+    @Column(name = "db_name")
+    private String db_name;
+
+    @Column(name = "verify", nullable = false)
+    private boolean verify;
+
+    public int getId() {
+        return id;
+    }
+
+    public String getHostname() {
+        return hostname;
+    }
+
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public Enum getVendor() {
+        return vendor;
+    }
+
+    @JsonProperty("vendor")
+    @JsonDeserialize(using = CustomSupportedOperatingSystemDeserializer.class)
+    public void setVendor(Enum vendor) {
+        this.vendor = vendor;
+    }
+
+    public String getQueryDate() {
+        return queryDate;
+    }
+
+    public void setQueryDate(String queryDate) {
+        this.queryDate = queryDate;
+    }
+
+    public Enum getStatus() {
+        return status;
+    }
+
+    @JsonProperty("status")
+    @JsonDeserialize(using = CustomStatusDeserializer.class)
+    public void setStatus(Enum status) {
+        if (status == null) {
+            this.status = VerificationStatus.NOT_VERIFIED;
+        }
+        this.status = status;
+    }
+
+    public String getClientTime() {
+        return clientTime;
+    }
+
+    public void setClientTime(String clientTime) {
+        this.clientTime = clientTime;
+    }
+
+    public String getServerTime() {
+        return serverTime;
+    }
+
+    public void setServerTime(String serverTime) {
+        this.serverTime = serverTime;
+    }
+
+    public String getLastCheck() {
+        return lastCheck;
+    }
+
+    public void setLastCheck(String lastCheck) {
+        this.lastCheck = lastCheck;
+    }
+
+    public long getDifference() {
+        return Difference;
+    }
+
+    public void setDifference(long difference) {
+        Difference = difference;
+    }
+
+    public String getInstance() {
+        return instance;
+    }
+
+    public void setInstance(String instance) {
+        this.instance = instance;
+    }
+
+    public String getDb_name() {
+        return db_name;
+    }
+
+    public void setDb_name(String db_name) {
+        this.db_name = db_name;
+    }
+
 
 }

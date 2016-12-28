@@ -2,39 +2,19 @@
 <%@ include file="/home/header.jsp" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <script type="text/javascript">
-    window.onload = function () {
-        document.getElementById("password").onchange = validatePassword;
-        document.getElementById("verifyPassword").onchange = validatePassword;
-    }
-    function validatePassword(){
-        var pass2=document.getElementById("verifyPassword").value;
-        var pass1=document.getElementById("password").value;
-        if(pass1!=pass2)
-            document.getElementById("verifyPassword").setCustomValidity("As senhas digitadas não são iguais");
-        else
-            document.getElementById("verifyPassword").setCustomValidity('');
-    }
+
 </script>
-<c:if test="${error == 'true'}">
-    <div class="toast-pf toast-pf-max-width toast-pf-top-right alert alert-danger alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-            <span class="pficon pficon-close"></span>
-        </button>
-        <span class="pficon pficon-error-circle-o"></span>
-        Falha ao criar usuário, verificar logs, Mensagem de erro: ${message}
-    </div>
-</c:if>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-9 col-md-10 col-sm-push-3 col-md-push-2">
             <ol class="breadcrumb">
                 <li><a href="/hs/home/home.jsp">Home</a></li>
-                <li><a href="${pageContext.request.contextPath}/rest/user/admin/list/form">
-                    Gerenciar Usuários</a></li>
-                <li>Novo Usuário</li>
+                <li><a href="${pageContext.request.contextPath}/rest/admin/resource/database.jsp">
+                    Gerenciar Banco de Dados</a></li>
+                <li>Novo Banco de Dados</li>
             </ol>
-            <h1>Cadastrar Usuário</h1>
+            <h1>Cadastrar Banco de Dados</h1>
             <form method="POST" class="form-horizontal" action="${pageContext.request.contextPath}/rest/user/admin/new">
                 <div class="form-group">
                     <label class="col-md-2 control-label" for="name">Nome</label>
@@ -155,7 +135,7 @@
                     <div id="collapseFive" class="panel-collapse collapse in">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li class="active"><a href="${pageContext.request.contextPath}/rest/resource/database/load">Gerenciar Banco de Dados</a></li>
+                                <li class="active"><a href="${pageContext.request.contextPath}/admin/resource/database.jsp">Gerenciar Banco de Dados</a></li>
                             </ul>
                         </div>
                     </div>

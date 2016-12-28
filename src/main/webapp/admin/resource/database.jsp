@@ -171,7 +171,7 @@
                     <div id="collapseFive" class="panel-collapse collapse in">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li class="active"><a href="${pageContext.request.contextPath}/rest/resource/database/load">Gerenciar Banco de Dados</a></li>
+                                <li class="active"><a href="${pageContext.request.contextPath}/admin/resource/database.jsp">Gerenciar Banco de Dados</a></li>
                             </ul>
                         </div>
                     </div>
