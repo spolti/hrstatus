@@ -59,3 +59,18 @@ function getParameterByName( name ){
     }
 }
 
+/*
+* Update the form on updating and creating new OS
+* Hide not supported fields according the selected OS.
+*/
+function setPort() {
+    if (document.getElementById('type').value == 'WINDOWS') {
+        document.getElementById('port').setAttribute('value', '23');
+        document.getElementById('logDir').style.visibility = "hidden";
+        document.getElementById('suCommand').style.visibility = "hidden";
+    } else {
+        document.getElementById('port').setAttribute('value', '22');
+        document.getElementById('logDir').style.visibility = "visible";
+        document.getElementById('suCommand').style.visibility = "visible";
+    }
+}

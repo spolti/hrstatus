@@ -63,8 +63,6 @@ public class UserResource {
     @Inject
     private DataBaseRepository repository;
     @Inject
-    private PasswordUtils passwordUtils;
-    @Inject
     private Email emailChannel;
     @Inject
     private RequestResponse reqResponse;
@@ -119,7 +117,7 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(User updatedUser) {
         log.fine("User received to update: " + updatedUser.toString());
-        updatedUser.setPassword(updatedUser.getPassword().length() == 44 && updatedUser.getPassword().endsWith("=") ? updatedUser.getPassword() : passwordUtils.encryptUserPassword(updatedUser.getPassword()));
+        updatedUser.setPassword(updatedUser.getPassword().length() == 44 && updatedUser.getPassword().endsWith("=") ? updatedUser.getPassword() : PasswordUtils.encryptUserPassword(updatedUser.getPassword()));
         return response(repository.update(updatedUser), updatedUser);
     }
 
@@ -137,7 +135,7 @@ public class UserResource {
         //this method should not allow update the roles
         User tempUser = repository.search(User.class, "username", updatedUser.getUsername());
         updatedUser.addRoles(tempUser.getRoles().stream().toArray(String[]::new));
-        updatedUser.setPassword(updatedUser.getPassword().length() == 44 && updatedUser.getPassword().endsWith("=") ? updatedUser.getPassword() : passwordUtils.encryptUserPassword(updatedUser.getPassword()));
+        updatedUser.setPassword(updatedUser.getPassword().length() == 44 && updatedUser.getPassword().endsWith("=") ? updatedUser.getPassword() : PasswordUtils.encryptUserPassword(updatedUser.getPassword()));
         return response(repository.update(updatedUser), updatedUser);
     }
 

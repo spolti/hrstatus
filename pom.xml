@@ -44,6 +44,14 @@
                 <scope>import</scope>
             </dependency>
 
+            <!--<dependency>-->
+                <!--<groupId>org.jboss.arquillian</groupId>-->
+                <!--<artifactId>arquillian-bom</artifactId>-->
+                <!--<version>#{site.components['arquillian-core'].latest_version}</version>-->
+                <!--<scope>import</scope>-->
+                <!--<type>pom</type>-->
+            <!--</dependency>-->
+
             <!-- Security Dependencies -->
             <dependency>
                 <groupId>org.picketbox</groupId>
@@ -196,14 +204,14 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.1</version>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
-
-
-
-
-
+        <!--<dependency>-->
+            <!--<groupId>org.jboss.arquillian.junit</groupId>-->
+            <!--<artifactId>arquillian-junit-container</artifactId>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
 
     </dependencies>
 

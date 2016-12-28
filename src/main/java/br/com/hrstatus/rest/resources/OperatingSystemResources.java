@@ -23,7 +23,12 @@ import br.com.hrstatus.model.OperatingSystem;
 import br.com.hrstatus.model.support.VerificationStatus;
 import br.com.hrstatus.model.support.response.RequestResponse;
 import br.com.hrstatus.repository.impl.DataBaseRepository;
+import br.com.hrstatus.security.PasswordUtils;
 
+import javax.annotation.security.RolesAllowed;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -35,6 +40,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.PasswordAuthentication;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Logger;
 
 /**
@@ -63,15 +71,17 @@ public class OperatingSystemResources {
 
     /*
     * Register a new Operating System
+    * @param json object
     */
     @POST
     @Path("new")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response newOperationgSystem(OperatingSystem operatingSystem) {
+    public Response newOperationgSystem(OperatingSystem operatingSystem) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
         operatingSystem.setStatus(VerificationStatus.NOT_VERIFIED);
+        operatingSystem.setPassword(PasswordUtils.encode(operatingSystem.getPassword()));
         String result = repository.register(operatingSystem).toString();
-        if ("success".equals(result)){
+        if ("success".equals(result)) {
             log.fine("Resource successfully created.");
             reqResponse.setResponseMessage("Recurso criado com sucesso");
             return Response.ok(reqResponse).build();
@@ -85,6 +95,7 @@ public class OperatingSystemResources {
 
     /*
     * Delete a Operating System
+    * @param int id
     */
     @DELETE
     @Path("delete/{id}")
@@ -94,4 +105,56 @@ public class OperatingSystemResources {
     }
 
 
+    /*
+    * Update User - admin rights
+    * @param int id
+    */
+    @GET
+    @Path("search/{os}")
+    @RolesAllowed({"ROLE_ADMIN"})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response edit(@PathParam("os") int os) {
+        log.fine("OS Id {" + os + "} recebido para pesquisa.");
+        return Response.ok(repository.search(OperatingSystem.class, "id", os)).build();
+    }
+
+    /*
+    * Update Operating System
+    * @param json object
+    */
+    @POST
+    @Path("update")
+    @RolesAllowed({"ROLE_ADMIN"})
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response update(OperatingSystem operatingSystem) {
+        try {
+            PasswordUtils.decode(operatingSystem.getPassword());
+        } catch (Exception e ) {
+            try {
+                operatingSystem.setPassword(PasswordUtils.encode(operatingSystem.getPassword()));
+            } catch (NoSuchPaddingException e1) {
+                e1.printStackTrace();
+            } catch (NoSuchAlgorithmException e1) {
+                e1.printStackTrace();
+            } catch (InvalidKeyException e1) {
+                e1.printStackTrace();
+            } catch (BadPaddingException e1) {
+                e1.printStackTrace();
+            } catch (IllegalBlockSizeException e1) {
+                e1.printStackTrace();
+            }
+        }
+        log.fine("Operating System received to update: " + operatingSystem.toString());
+
+        String result = repository.update(operatingSystem);
+        if (("success").equals(result)) {
+            reqResponse.setResponseMessage(" O Sistema Operacional " + operatingSystem.getHostname() + " foi atualizado com sucesso.");
+            return Response.ok(reqResponse).build();
+        } else {
+            reqResponse.setFailedSubject(operatingSystem.getHostname());
+            reqResponse.setResponseErrorMessage(result);
+            return Response.status(Response.Status.BAD_REQUEST).entity(reqResponse).build();
+        }
+    }
 }

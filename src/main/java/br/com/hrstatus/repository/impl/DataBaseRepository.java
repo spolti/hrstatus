@@ -180,16 +180,15 @@ public class DataBaseRepository implements Repository {
     }
 
     /*
-    * Update the given user
+    * Update the given object
     */
-    public String update(User user) {
+    public String update(Object object) {
         try {
-            em.merge(user);
+            em.merge(object);
             em.flush();
             return "success";
         } catch (Exception e) {
             return e.getMessage();
-
         }
     }
 

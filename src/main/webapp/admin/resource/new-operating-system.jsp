@@ -20,18 +20,6 @@
         });
     }
 
-    function setPort() {
-        if (document.getElementById('type').value == 'WINDOWS') {
-            document.getElementById('port').setAttribute('value', '23');
-            document.getElementById('logDir').style.visibility = "hidden";
-            document.getElementById('suCommand').style.visibility = "hidden";
-        } else {
-            document.getElementById('port').setAttribute('value', '22');
-            document.getElementById('logDir').style.visibility = "visible";
-            document.getElementById('suCommand').style.visibility = "visible";
-        }
-    }
-
     $(document).ready(function () {
         $("button#submit").click(function (e) {
             e.preventDefault();
@@ -58,7 +46,6 @@
                         console.log("response " + response.failedSubject);
                         $('#new-os-modal-body > h1').text("Falha ao criar o servidor " + response.failedSubject);
                         $('#new-os-modal-body > p').text("Mensagem de erro: " + response.responseErrorMessage);
-
                     }
                 });
                 $('#new-os-modal').modal('show');
@@ -105,9 +92,8 @@
                 <li>Novo Sistema Operacional</li>
             </ol>
             <h1>Cadastrar Sistema Operacional</h1>
-            <form id="new-os-form" class="form-horizontal"
-            >
-                <input type="hidden">
+            <form id="new-os-form" class="form-horizontal">
+                <input id="submit_handle" type="submit" style="display: none"/>
                 <div class="form-group">
                     <label class="col-md-2 control-label" for="hostname">Hostname</label>
                     <div class="col-md-6">

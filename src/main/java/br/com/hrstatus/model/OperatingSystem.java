@@ -22,6 +22,7 @@ package br.com.hrstatus.model;
 import br.com.hrstatus.model.support.VerificationStatus;
 import br.com.hrstatus.model.support.deserializer.CustomOperatingSystemStatusDeserializer;
 import br.com.hrstatus.model.support.deserializer.CustomSupportedOperatingSystemDeserializer;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -36,6 +37,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "OS")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OperatingSystem {
 
     @Id

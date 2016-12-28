@@ -41,6 +41,7 @@
             }
         });
 
+
         $("button#submit").click(function (e) {
             e.preventDefault();
             if($("form")[0].checkValidity()) {
@@ -70,7 +71,6 @@
                 json.password = $('#password').val() == '' || null ? user2update.password : $('#password').val();
 
                 var mergedJsonObject = $.extend(user2update, json);
-                console.log("AAAA " + mergedJsonObject);
                 $.ajax({
                     type: "POST",
                     contentType: 'application/json',
@@ -93,6 +93,9 @@
                 submitform();
             }
         });
+
+
+
     })
 
 </script>

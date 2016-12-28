@@ -4,7 +4,9 @@
 <script src="${pageContext.request.contextPath}/hrstatus-js/common/common-functions.js"></script>
 <script type="text/javascript">
 
-    window.onload = function () {
+    var os2update = '';
+
+    $(document).ready(function () {
         var url = '${pageContext.request.contextPath}/rest/utils/resource/suported-os';
         var option = '';
         $.ajax({
@@ -15,24 +17,42 @@
                 $.each(suportedOs, function (i) {
                     $('#type').append('<option value="' + suportedOs[i] + '">' + suportedOs[i] + '</option>');
                 })
-                $('#type').selectpicker('refresh');
             }
         });
-    }
 
-    function setPort() {
-        if (document.getElementById('type').value == 'WINDOWS') {
-            document.getElementById('port').setAttribute('value', '23');
-            document.getElementById('logDir').style.visibility = "hidden";
-            document.getElementById('suCommand').style.visibility = "hidden";
-        } else {
-            document.getElementById('port').setAttribute('value', '22');
-            document.getElementById('logDir').style.visibility = "visible";
-            document.getElementById('suCommand').style.visibility = "visible";
-        }
-    }
+        $.ajax({
+            type: "GET",
+            contentType: 'application/json',
+            url: '${pageContext.request.contextPath}/rest/resource/operating-system/search/' + getParameterByName('os'),
+            dataType: 'json',
+            success: function (os) {
+                os2update = os;
+                $('#hostname').val(os.hostname);
+                $('#address').val(os.address);
 
-    $(document).ready(function () {
+                $('#port').val(os.port);
+                $('#username').val(os.username);
+
+                if (os.type == 'WINDOWS') {
+                    $("#type").val('WINDOWS');
+                    document.getElementById('logDir').style.visibility = "hidden";
+                    document.getElementById('suCommand').style.visibility = "hidden";
+                } else {
+                    $("#type").val('UNIX').change();
+                    $('#logDir').val(os.logDir);
+                    $('#suCommand').val(os.suCommand);
+                }
+                $('#type').selectpicker('refresh');
+
+                //radio button verificação ativa/desativada
+                os.toVerify == true ? $('#toVerifyEnabled').prop("checked", true) : $('#toVerifyDisabled').prop("checked", true);
+
+            },
+            error: function (xhr, textStatus, err) {
+                console.log('Failed to retrieve information from server');
+            }
+        });
+
         $("button#submit").click(function (e) {
             e.preventDefault();
             if ($("form")[0].checkValidity()) {
@@ -40,35 +60,46 @@
                 var json = {};
 
                 jQuery.each(array, function () {
-                    json[this.name] = this.value || '';
+                    if (this.name == 'verify') {
+                        json[this.name] = $("input[name=verify]:checked").val();
+                    } else {
+                        json[this.name] = this.value || '';
+                    }
                 });
-                console.log(json);
+
+                json.password = $('#password-1').val() == '' || null ? os2update.password : $('#password-1').val();
+
+                if (json.type == 'WINDOWS') {
+                    json.logDir = '';
+                    json.suCommand = '';
+                }
+
+                var mergedJsonObject = $.extend(os2update, json);
                 $.ajax({
                     type: "POST",
                     contentType: 'application/json',
-                    url: '${pageContext.request.contextPath}/rest/resource/operating-system/new',
-                    data: JSON.stringify(json),
+                    url: '${pageContext.request.contextPath}/rest/resource/operating-system/update',
+                    data: JSON.stringify(mergedJsonObject),
                     dataType: 'json',
                     success: function (response) {
                         console.log('success ' + response.responseMessage);
-                        $('#new-os-modal-body > h1').text(response.responseMessage);
+                        $('#update-modalOs > h1').text(response.responseMessage);
                     },
                     error: function (xhr, textStatus, err) {
-                        var response = JSON.parse(xhr.responseText);
-                        console.log("response " + response.failedSubject);
-                        $('#new-os-modal-body > h1').text("Falha ao criar o servidor " + response.failedSubject);
-                        $('#new-os-modal-body > p').text("Mensagem de erro: " + response.responseErrorMessage);
-
+                        alert(xhr.responseText)
+                        console.log(xhr.responseText);
+                        $('#update-modalOs > h1').text("Falha ao atualizar usuário " + response.failedSubject);
+                        $('#update-modalOs > p').text("Mensagem de erro: " + response.responseErrorMessage);
                     }
                 });
-                $('#new-os-modal').modal('show');
+                $('#update-os-modal').modal('show');
             } else {
                 submitform();
             }
         });
     });
 </script>
-<div class="modal fade" id="new-os-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<div class="modal fade" id="update-os-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -76,25 +107,22 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <span class="pficon pficon-close"></span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">Criação de Sistema Operacional</h4>
+                <h4 class="modal-title" id="myModalLabel">Atualização de Usuário</h4>
             </div>
             <div id="modal-body" class="modal-body">
                 <div class="form-group">
-                    <div id="new-os-modal-body" class="modal-body">
+                    <div id="update-modalOs" class="modal-body">
                         <h1 align="center"></h1>
                         <p align="center"></p>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="${pageContext.request.contextPath}/admin/resource/operating-system.jsp">
-                        <button type="button" class="btn btn-primary">Prosseguir</button>
-                    </a>
+                    <a href="${pageContext.request.contextPath}/admin/resource/operating-system.jsp"> <button type="button" class="btn btn-primary">Prosseguir</button> </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-9 col-md-10 col-sm-push-3 col-md-push-2">
@@ -105,9 +133,8 @@
                 <li>Novo Sistema Operacional</li>
             </ol>
             <h1>Cadastrar Sistema Operacional</h1>
-            <form id="new-os-form" class="form-horizontal"
-            >
-                <input type="hidden">
+            <form id="new-os-form" class="form-horizontal">
+                <input id="submit_handle" type="submit" style="display: none"/>
                 <div class="form-group">
                     <label class="col-md-2 control-label" for="hostname">Hostname</label>
                     <div class="col-md-6">
@@ -151,10 +178,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-2 control-label" for="password">Senha</label>
+                    <label class="col-md-2 control-label" for="password-1">Senha</label>
                     <div class="col-md-6">
-                        <input name="password" type="password" id="password" class="form-control" required
-                               data-errormessage-value-missing="Campo Obrigatório">
+                        <input name="password-1" type="password" id="password-1" class="form-control">
                     </div>
                 </div>
                 <div class="form-group">
@@ -180,14 +206,15 @@
                     <div class="col-md-6">
                         <div class="radio">
                             <label>
-                                <input name="verify" type="radio" name="optionsRadios" id="optionsRadios1" value="true">
+                                <input name="verify" type="radio" name="optionsRadios" id="toVerifyEnabled"
+                                       value="true">
                                 Sim
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input name="verify" type="radio" name="optionsRadios" id="optionsRadios2" value="false"
-                                       checked>
+                                <input name="verify" type="radio" name="optionsRadios" id="toVerifyDisabled"
+                                       value="false">
                                 Não
                             </label>
                         </div>
@@ -232,7 +259,7 @@
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
                                 <li class="active"><a
-                                        href="${pageContext.request.contextPath}/rest/resource/operating-system/load">Gerenciar
+                                        href="${pageContext.request.contextPath}/admin/resource/operating-system.jsp">Gerenciar
                                     Servidores</a></li>
                             </ul>
                         </div>

@@ -65,9 +65,9 @@ public interface Repository {
     <T, Clazz> T search(Clazz clazz, String parameterName, Object parameterValue);
 
     /*
-    * Update the given user
+    * Update the given Object
     */
-    String update(User user);
+    String update(Object object);
 
     /*
     * Get the locked users

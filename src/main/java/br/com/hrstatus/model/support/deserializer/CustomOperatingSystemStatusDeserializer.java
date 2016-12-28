@@ -21,7 +21,6 @@ package br.com.hrstatus.model.support.deserializer;
 
 import br.com.hrstatus.model.support.VerificationStatus;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
@@ -33,7 +32,7 @@ import java.io.IOException;
 public class CustomOperatingSystemStatusDeserializer extends JsonDeserializer<VerificationStatus> {
 
     @Override
-    public VerificationStatus deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+    public VerificationStatus deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         return VerificationStatus.valueOf(jsonParser.getText());
     }
 }
