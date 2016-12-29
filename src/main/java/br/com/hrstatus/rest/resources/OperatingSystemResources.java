@@ -40,7 +40,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.PasswordAuthentication;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Logger;
@@ -78,6 +77,7 @@ public class OperatingSystemResources {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response newOperationgSystem(OperatingSystem operatingSystem) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
+        log.fine("Sistema Operacional recebido para cadastro: " + operatingSystem.toString());
         operatingSystem.setStatus(VerificationStatus.NOT_VERIFIED);
         operatingSystem.setPassword(PasswordUtils.encode(operatingSystem.getPassword()));
         String result = repository.register(operatingSystem).toString();
@@ -86,7 +86,7 @@ public class OperatingSystemResources {
             reqResponse.setResponseMessage("Recurso criado com sucesso");
             return Response.ok(reqResponse).build();
         } else {
-            log.warning("Failed to persiste object: " + result);
+            log.warning("Failed to persist object: " + result);
             reqResponse.setFailedSubject(operatingSystem.getHostname());
             reqResponse.setResponseErrorMessage(result);
             return Response.status(Response.Status.BAD_REQUEST).entity(reqResponse).build();
@@ -104,16 +104,15 @@ public class OperatingSystemResources {
         return Response.ok().build();
     }
 
-
     /*
-    * Update User - admin rights
+    * Search an Operating System by ID
     * @param int id
     */
     @GET
     @Path("search/{os}")
     @RolesAllowed({"ROLE_ADMIN"})
     @Produces(MediaType.APPLICATION_JSON)
-    public Response edit(@PathParam("os") int os) {
+    public Response search(@PathParam("os") int os) {
         log.fine("OS Id {" + os + "} recebido para pesquisa.");
         return Response.ok(repository.search(OperatingSystem.class, "id", os)).build();
     }

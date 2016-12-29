@@ -21,7 +21,6 @@ package br.com.hrstatus.rest;
 
 import br.com.hrstatus.model.support.SupportedDatabase;
 import br.com.hrstatus.model.support.SupportedOperatingSystem;
-import br.com.hrstatus.repository.Repository;
 import br.com.hrstatus.repository.impl.DataBaseRepository;
 import br.com.hrstatus.utils.notification.Notification;
 import br.com.hrstatus.utils.notification.channel.Email;
@@ -31,7 +30,6 @@ import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -88,7 +86,7 @@ public class Utils {
     * Returns the supported databases
     */
     @GET
-    @Path("resource/suported-databases")
+    @Path("resource/suported-db")
     public String[] supportedDatabases() {
         return getNames(SupportedDatabase.class);
     }

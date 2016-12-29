@@ -21,7 +21,7 @@ package br.com.hrstatus.model;
 
 import br.com.hrstatus.model.support.VerificationStatus;
 import br.com.hrstatus.model.support.deserializer.CustomStatusDeserializer;
-import br.com.hrstatus.model.support.deserializer.CustomSupportedOperatingSystemDeserializer;
+import br.com.hrstatus.model.support.deserializer.CustomSupportedDatabaseDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -69,8 +69,8 @@ public class Database {
     @Column(name = "status", nullable = false)
     private Enum status;
 
-    @Column(name = "clientTime")
-    private String clientTime;
+    @Column(name = "timestamp")
+    private String timestamp;
 
     @Column(name = "serverTime")
     private String serverTime;
@@ -78,8 +78,8 @@ public class Database {
     @Column(name = "lastCheck")
     private String lastCheck;
 
-    @Column(name = "Difference")
-    private long Difference;
+    @Column(name = "difference")
+    private long difference;
 
     @Column(name = "instance", nullable = false)
     private String instance;
@@ -140,7 +140,7 @@ public class Database {
     }
 
     @JsonProperty("vendor")
-    @JsonDeserialize(using = CustomSupportedOperatingSystemDeserializer.class)
+    @JsonDeserialize(using = CustomSupportedDatabaseDeserializer.class)
     public void setVendor(Enum vendor) {
         this.vendor = vendor;
     }
@@ -166,13 +166,14 @@ public class Database {
         this.status = status;
     }
 
-    public String getClientTime() {
-        return clientTime;
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    public void setClientTime(String clientTime) {
-        this.clientTime = clientTime;
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
+
 
     public String getServerTime() {
         return serverTime;
@@ -191,11 +192,11 @@ public class Database {
     }
 
     public long getDifference() {
-        return Difference;
+        return difference;
     }
 
     public void setDifference(long difference) {
-        Difference = difference;
+        this.difference = difference;
     }
 
     public String getInstance() {
@@ -214,5 +215,33 @@ public class Database {
         this.db_name = db_name;
     }
 
+    public boolean isVerify() {
+        return verify;
+    }
 
+    public void setVerify(boolean verify) {
+        this.verify = verify;
+    }
+
+    @Override
+    public String toString() {
+        return "Database{" +
+                "id=" + id +
+                ", hostname='" + hostname + '\'' +
+                ", address='" + address + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", port=" + port +
+                ", vendor=" + vendor +
+                ", queryDate='" + queryDate + '\'' +
+                ", status=" + status +
+                ", timestamp='" + timestamp + '\'' +
+                ", serverTime='" + serverTime + '\'' +
+                ", lastCheck='" + lastCheck + '\'' +
+                ", difference=" + difference +
+                ", instance='" + instance + '\'' +
+                ", db_name='" + db_name + '\'' +
+                ", verify=" + verify +
+                '}';
+    }
 }

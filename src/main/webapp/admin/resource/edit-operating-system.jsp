@@ -88,7 +88,7 @@
                     error: function (xhr, textStatus, err) {
                         alert(xhr.responseText)
                         console.log(xhr.responseText);
-                        $('#update-modalOs > h1').text("Falha ao atualizar usuário " + response.failedSubject);
+                        $('#update-modalOs > h1').text("Falha ao atualizar Sistema Operacional " + response.failedSubject);
                         $('#update-modalOs > p').text("Mensagem de erro: " + response.responseErrorMessage);
                     }
                 });
@@ -107,7 +107,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <span class="pficon pficon-close"></span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">Atualização de Usuário</h4>
+                <h4 class="modal-title" id="myModalLabel">Atualização de Sistema Operacional</h4>
             </div>
             <div id="modal-body" class="modal-body">
                 <div class="form-group">
@@ -130,9 +130,9 @@
                 <li><a href="/hs/home/home.jsp">Home</a></li>
                 <li><a href="${pageContext.request.contextPath}/admin/resource/operating-system.jsp">
                     Gerenciar Sistemas Operacionais</a></li>
-                <li>Novo Sistema Operacional</li>
+                <li>Editar Sistema Operacional</li>
             </ol>
-            <h1>Cadastrar Sistema Operacional</h1>
+            <h1>Editar Sistema Operacional</h1>
             <form id="new-os-form" class="form-horizontal">
                 <input id="submit_handle" type="submit" style="display: none"/>
                 <div class="form-group">
@@ -187,7 +187,7 @@
                     <label class="col-md-2 control-label" for="logDir">Diretório de logs</label>
                     <div class="col-md-6">
                         <input name="logDir" type="text" id="logDir" class="form-control"
-                               data-errormessage-type-mismatch="O diretório digitado não é válido"
+                               data-errormessage="O diretório digitado não é válido"
                                data-errormessage-value-missing="Campo Obrigatório"
                                pattern="^\/.+">
                     </div>
@@ -196,7 +196,7 @@
                     <label class="col-md-2 control-label" for="suCommand">Comando Sudo</label>
                     <div class="col-md-6">
                         <input name="suCommand" type="text" id="suCommand" class="form-control"
-                               data-errormessage-type-mismatch="O comando digitado não é válido"
+                               data-errormessage="O comando digitado não é válido, o comando deve iniciar com sudo"
                                data-errormessage-value-missing="Campo Obrigatório"
                                pattern="^sudo.+">
                     </div>

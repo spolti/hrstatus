@@ -61,7 +61,7 @@ function getParameterByName( name ){
 
 /*
 * Update the form on updating and creating new OS
-* Hide not supported fields according the selected OS.
+* Hide/show not supported fields according the selected OS.
 */
 function setPort() {
     if (document.getElementById('type').value == 'WINDOWS') {
@@ -74,3 +74,42 @@ function setPort() {
         document.getElementById('suCommand').style.visibility = "visible";
     }
 }
+
+/*
+ * Update the form on updating and creating new Database
+ * Hide/show not supported fields according the selected Database.
+ */
+function setDatabaseConfig() {
+
+    if (document.getElementById('vendor').value == 'MYSQL') {
+        document.getElementById('port').setAttribute('value', '3306');
+        document.getElementById('queryDate').setAttribute('value', 'SELECT NOW() AS date;');
+        document.getElementById('db_name').style.visibility = "hidden";
+
+    } else if (document.getElementById('vendor').value == 'ORACLE'){
+        document.getElementById('port').setAttribute('value', '1501');
+        document.getElementById('queryDate').setAttribute('value', 'select sysdate from dual');
+        document.getElementById('db_name').style.visibility = "hidden";
+
+    } else if (document.getElementById('vendor').value == 'POSTGRESQL'){
+        document.getElementById('port').setAttribute('value', '5432');
+        document.getElementById('queryDate').setAttribute('value', 'SELECT now();');
+        document.getElementById('db_name').style.visibility = "hidden";
+
+    } else if (document.getElementById('vendor').value == 'DB2'){
+        document.getElementById('port').setAttribute('value', '50000');
+        document.getElementById('queryDate').setAttribute('value', "select VARCHAR_FORMAT(CURRENT_TIMESTAMP, 'YYYY-MM-DD HH24:MM:SS') FROM SYSIBM.SYSDUMMY1");
+        document.getElementById('db_name').style.visibility = "hidden";
+
+    } else if (document.getElementById('vendor').value == 'SQLSERVER'){
+        document.getElementById('port').setAttribute('value', '1433');
+        document.getElementById('queryDate').setAttribute('value', 'SELECT GETDATE();');
+        document.getElementById('db_name').style.visibility = "visible";
+
+    } else if (document.getElementById('vendor').value == 'MONGODB'){
+        document.getElementById('port').setAttribute('value', '27017');
+        document.getElementById('queryDate').setAttribute('value', '3306');
+        document.getElementById('db_name').style.visibility = "hidden";
+    }
+}
+

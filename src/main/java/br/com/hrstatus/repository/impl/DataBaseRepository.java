@@ -47,7 +47,7 @@ public class DataBaseRepository implements Repository {
     */
     public void initialImport() {
         // Default password is P@ssw0rd
-        String sql1 = "insert into USERS (username, enabled, figtLogin, mail, nome, password, failedLogins) VALUES ('root',true,false,'changeme@example.com','Administrador', 'sD3fPKLnFKZUjnSV4qA/XoJOqsmDfNfxWcZ7kPtLc0I=', 0);";
+        String sql1 = "insert into USERS (username, enabled, firstLogin, mail, nome, password, failedLogins) VALUES ('root',true,false,'changeme@example.com','Administrador', 'sD3fPKLnFKZUjnSV4qA/XoJOqsmDfNfxWcZ7kPtLc0I=', 0);";
         String sql2 = "insert into User_roles (user_username, roles) values ('root', 'ROLE_ADMIN');";
         String sql3 = "insert into SETUP (id, mailJndi, mailFrom, welcomeMessage) values (1, 'java:jboss/mail/HrStatus','hrstatus@hrstatus.com.br','Bem vindo ao Servidor HrStatus');";
         log.fine("Initial database data: " + sql1 + "\n" +

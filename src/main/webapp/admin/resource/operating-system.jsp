@@ -50,7 +50,6 @@
                 dataType: 'json',
                 success: function (os) {
                     var editUrl = '${pageContext.request.contextPath}/admin/resource/edit-operating-system.jsp';
-                    console.log('success ' + os.valueOf());
                     oTable.fnClearTable();
                     $.each(os, function (id, value) {
                         oTable.fnAddData([
@@ -113,7 +112,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <span class="pficon pficon-close"></span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">Deletar Usuário</h4>
+                <h4 class="modal-title" id="myModalLabel">Deletar Sistema Operacional</h4>
             </div>
             <div class="modal-body">
                 <div class="form-group">
@@ -148,7 +147,7 @@
                     <th>Porta</th>
                     <th>Usuário</th>
                     <th>Sistema Operacional</th>
-                    <th>status</th>
+                    <th>Status</th>
                     <th>Horário OS</th>
                     <th>Horário Server</th>
                     <th>Diferença</th>

@@ -11,9 +11,9 @@
             url: url,
             type: "GET",
             dataType: "json",
-            success: function (suportedOs) {
-                $.each(suportedOs, function (i) {
-                    $('#type').append('<option value="' + suportedOs[i] + '">' + suportedOs[i] + '</option>');
+            success: function (supportedOs) {
+                $.each(supportedOs, function (i) {
+                    $('#type').append('<option value="' + supportedOs[i] + '">' + supportedOs[i] + '</option>');
                 })
                 $('#type').selectpicker('refresh');
             }
@@ -63,7 +63,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <span class="pficon pficon-close"></span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">Criação de Sistema Operacional</h4>
+                <h4 class="modal-title" id="myModalLabel">Registro de Sistema Operacional</h4>
             </div>
             <div id="modal-body" class="modal-body">
                 <div class="form-group">
@@ -147,7 +147,7 @@
                     <label class="col-md-2 control-label" for="logDir">Diretório de logs</label>
                     <div class="col-md-6">
                         <input name="logDir" type="text" id="logDir" class="form-control"
-                               data-errormessage-type-mismatch="O diretório digitado não é válido"
+                               data-errormessage="O diretório digitado não é válido"
                                data-errormessage-value-missing="Campo Obrigatório"
                                pattern="^\/.+">
                     </div>
@@ -156,7 +156,7 @@
                     <label class="col-md-2 control-label" for="suCommand">Comando Sudo</label>
                     <div class="col-md-6">
                         <input name="suCommand" type="text" id="suCommand" class="form-control"
-                               data-errormessage-type-mismatch="O comando digitado não é válido"
+                               data-errormessage="O comando digitado não é válido, o comando deve iniciar com sudo"
                                data-errormessage-value-missing="Campo Obrigatório"
                                pattern="^sudo.+">
                     </div>

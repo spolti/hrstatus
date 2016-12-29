@@ -4,7 +4,9 @@
 <script src="${pageContext.request.contextPath}/hrstatus-js/common/common-functions.js"></script>
 <script type="text/javascript">
 
-    window.onload = function () {
+    var db2update = '';
+
+    $(document).ready(function () {
         document.getElementById('db_name').style.visibility = "hidden";
         var url = '${pageContext.request.contextPath}/rest/utils/resource/suported-db';
         var option = '';
@@ -16,12 +18,50 @@
                 $.each(supportedDb, function (i) {
                     $('#vendor').append('<option value="' + supportedDb[i] + '">' + supportedDb[i] + '</option>');
                 })
-                $('#vendor').selectpicker('refresh');
             }
         });
-    }
 
-    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            contentType: 'application/json',
+            url: '${pageContext.request.contextPath}/rest/resource/database/search/' + getParameterByName('db'),
+            dataType: 'json',
+            success: function (db) {
+                db2update = db;
+                $('#hostname').val(db.hostname);
+                $('#address').val(db.address);
+
+                $('#port').val(db.port);
+                $('#username').val(db.username);
+
+                if (db.vendor == 'MYSQL') {
+                    $("#vendor").val('MYSQL');
+                } else if (db.vendor == 'ORACLE'){
+                    $("#vendor").val('ORACLE');
+                } else if (db.vendor == 'POSTGRESQL'){
+                    $("#vendor").val('POSTGRESQL');
+                } else if (db.vendor == 'DB2'){
+                    $("#vendor").val('DB2');
+                } else if (db.vendor == 'SQLSERVER'){
+                    $("#vendor").val('SQLSERVER');
+                    document.getElementById('db_name').style.visibility = "visible";
+                } else if (db.vendor == 'MONGODB'){
+                    $("#vendor").val('MONGODB');
+                }
+                $('#vendor').selectpicker('refresh');
+
+                $('#queryDate').val(db.queryDate);
+                $('#instance').val(db.instance);
+
+                //radio button verificação ativa/desativada
+                db.verify == true ? $('#toVerifyEnabled').prop("checked", true) : $('#toVerifyDisabled').prop("checked", true);
+
+            },
+            error: function (xhr, textStatus, err) {
+                console.log('Failed to retrieve information from server');
+            }
+        });
+
         $("button#submit").click(function (e) {
             e.preventDefault();
             if ($("form")[0].checkValidity()) {
@@ -29,34 +69,45 @@
                 var json = {};
 
                 jQuery.each(array, function () {
-                    json[this.name] = this.value || '';
+                    if (this.name == 'verify') {
+                        json[this.name] = $("input[name=verify]:checked").val();
+                    } else {
+                        json[this.name] = this.value || '';
+                    }
                 });
-                console.log(json);
+
+                json.password = $('#password').val() == '' || null ? db2update.password : $('#password').val();
+
+                if (json.vendor != 'SQLSERVER') {
+                    json.db_name = '';
+                }
+
+                var mergedJsonObject = $.extend(db2update, json);
                 $.ajax({
                     type: "POST",
                     contentType: 'application/json',
-                    url: '${pageContext.request.contextPath}/rest/resource/database/new',
-                    data: JSON.stringify(json),
+                    url: '${pageContext.request.contextPath}/rest/resource/database/update',
+                    data: JSON.stringify(mergedJsonObject),
                     dataType: 'json',
                     success: function (response) {
                         console.log('success ' + response.responseMessage);
-                        $('#new-db-modal-body > h1').text(response.responseMessage);
+                        $('#update-modalOs > h1').text(response.responseMessage);
                     },
                     error: function (xhr, textStatus, err) {
-                        var response = JSON.parse(xhr.responseText);
-                        console.log("response " + response.failedSubject);
-                        $('#new-db-modal-body > h1').text("Falha ao criar o banco de dados " + response.failedSubject);
-                        $('#new-db-modal-body > p').text("Mensagem de erro: " + response.responseErrorMessage);
+                        alert(xhr.responseText)
+                        console.log(xhr.responseText);
+                        $('#update-modalOs > h1').text("Falha ao atualizar Banco de Dados " + response.failedSubject);
+                        $('#update-modalOs > p').text("Mensagem de erro: " + response.responseErrorMessage);
                     }
                 });
-                $('#new-db-modal').modal('show');
+                $('#update-os-modal').modal('show');
             } else {
                 submitform();
             }
         });
     });
 </script>
-<div class="modal fade" id="new-db-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<div class="modal fade" id="update-os-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -64,35 +115,32 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <span class="pficon pficon-close"></span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">Registro Banco de Dados</h4>
+                <h4 class="modal-title" id="myModalLabel">Atualização de Banco de Dados</h4>
             </div>
             <div id="modal-body" class="modal-body">
                 <div class="form-group">
-                    <div id="new-db-modal-body" class="modal-body">
+                    <div id="update-modalOs" class="modal-body">
                         <h1 align="center"></h1>
                         <p align="center"></p>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="${pageContext.request.contextPath}/admin/resource/database.jsp">
-                        <button type="button" class="btn btn-primary">Prosseguir</button>
-                    </a>
+                    <a href="${pageContext.request.contextPath}/admin/resource/database.jsp"> <button type="button" class="btn btn-primary">Prosseguir</button> </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-9 col-md-10 col-sm-push-3 col-md-push-2">
             <ol class="breadcrumb">
                 <li><a href="/hs/home/home.jsp">Home</a></li>
                 <li><a href="${pageContext.request.contextPath}/admin/resource/database.jsp">
-                    Gerenciar Banco de Dados</a></li>
-                <li>Novo Banco de Dados</li>
+                   Gerenciar Banco de Dados</a></li>
+                <li>Editar Banco de Dados</li>
             </ol>
-            <h1>Cadastrar Banco de Dados</h1>
+            <h1>Editar Banco de Dados</h1>
             <form id="new-db-form" class="form-horizontal">
                 <input id="submit_handle" type="submit" style="display: none"/>
                 <div class="form-group">
@@ -138,8 +186,7 @@
                 <div class="form-group">
                     <label class="col-md-2 control-label" for="password">Senha</label>
                     <div class="col-md-6">
-                        <input name="password" type="password" id="password" class="form-control" required
-                               data-errormessage-value-missing="Campo Obrigatório">
+                        <input name="password" type="password" id="password" class="form-control">
                     </div>
                 </div>
                 <div class="form-group">
@@ -168,14 +215,13 @@
                     <div class="col-md-6">
                         <div class="radio">
                             <label>
-                                <input name="verify" type="radio" name="optionsRadios" id="optionsRadios1" value="true">
+                                <input name="verify" type="radio" name="optionsRadios" id="toVerifyEnabled" value="true">
                                 Sim
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input name="verify" type="radio" name="optionsRadios" id="optionsRadios2" value="false"
-                                       checked>
+                                <input name="verify" type="radio" name="optionsRadios" id="toVerifyDisabled" value="false">
                                 Não
                             </label>
                         </div>
@@ -216,10 +262,11 @@
                             </a>
                         </h4>
                     </div>
-                    <div id="collapseTwo" class="panel-collapse collapse">
+                    <div id="collapseTwo" class="panel-collapse collapse in">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/admin/resource/operating-system.jsp">Gerenciar
+                                <li class="active"><a
+                                        href="${pageContext.request.contextPath}/admin/resource/operating-system.jsp">Gerenciar
                                     Servidores</a></li>
                             </ul>
                         </div>
@@ -233,10 +280,10 @@
                             </a>
                         </h4>
                     </div>
-                    <div id="collapseFive" class="panel-collapse collapse in">
+                    <div id="collapseFive" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li class="active"><a href="${pageContext.request.contextPath}/admin/resource/database.jsp">Gerenciar
+                                <li><a href="${pageContext.request.contextPath}/admin/resource/database.jsp">Gerenciar
                                     Banco de Dados</a></li>
                             </ul>
                         </div>
@@ -350,5 +397,6 @@
     </div><!-- /row -->
 </div>
 <!-- /container -->
+
 </body>
 </html>

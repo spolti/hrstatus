@@ -26,10 +26,10 @@ public enum SupportedDatabase {
 
     MYSQL("com.mysql.jdbc.Driver","jdbc:mysql://%s:%d/%s", 3306),
     ORACLE("oracle.jdbc.driver.OracleDriver", "jdbc:oracle:thin:@%s:%d/%s", 1501),
-    POSTGRESQL("org.postgresql.Driver", "jdbc:postgresql://%s:%d/%s", 123),
-    DB2("com.ibm.db2.jcc.DB2Driver", "jdbc:db2://%s:%d/%s", 123),
-    SQLSERVER("net.sourceforge.jtds.jdbc.Driver", "jdbc:jtds:sqlserver://%s:%d/db_name;instance=%s", 123),
-    MONGODB("oi","oi", 123);
+    POSTGRESQL("org.postgresql.Driver", "jdbc:postgresql://%s:%d/%s", 5432),
+    DB2("com.ibm.db2.jcc.DB2Driver", "jdbc:db2://%s:%d/%s", 50000),
+    SQLSERVER("net.sourceforge.jtds.jdbc.Driver", "jdbc:jtds:sqlserver://%s:%d/db_name;instance=%s", 1433),
+    MONGODB("nil","mongodb://%s:%d/%s", 27017);
 
     private final String driver;
     private final String url;
