@@ -30,7 +30,6 @@
                 jQuery.each(array, function () {
                     json[this.name] = this.value || '';
                 });
-                console.log(json);
                 $.ajax({
                     type: "POST",
                     contentType: 'application/json',
@@ -60,8 +59,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    <span class="pficon pficon-close"></span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
                 </button>
                 <h4 class="modal-title" id="myModalLabel">Registro de Sistema Operacional</h4>
             </div>
@@ -181,8 +180,8 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-10 col-md-offset-2">
-                        <button type="submit" class="btn btn-primary" id="submit">Save</button>
-                        <button type="reset" class="btn btn-default">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="submit">Salvar</button>
+                        <button type="reset" class="btn btn-default">Cancelar</button>
                     </div>
                 </div>
             </form>
@@ -252,7 +251,7 @@
                     <div id="collapseThree" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/rest/setup/load">Editar Configuração</a>
+                                <li><a href="${pageContext.request.contextPath}/admin/setup.jsp">Editar Configuração</a>
                                 </li>
                             </ul>
                         </div>

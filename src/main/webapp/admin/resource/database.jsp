@@ -112,8 +112,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    <span class="pficon pficon-close"></span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
                 </button>
                 <h4 class="modal-title" id="myModalLabel">Deletar Banco de Dados</h4>
             </div>
@@ -229,7 +229,7 @@
                     <div id="collapseThree" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/rest/setup/load">Editar Configuração</a>
+                                <li><a href="${pageContext.request.contextPath}/admin/setup.jsp">Editar Configuração</a>
                                 </li>
                             </ul>
                         </div>

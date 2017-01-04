@@ -1,9 +1,10 @@
 package br.com.hrstatus.repository;
 
-import br.com.hrstatus.model.OperatingSystem;
 import br.com.hrstatus.model.Setup;
 import br.com.hrstatus.model.User;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,10 +38,14 @@ public interface Repository {
     String welcomeMessage();
 
     /*
+    * Get the installation date
+    */
+    LocalDateTime installationDate();
+
+    /*
     * Persists the given Object in the database
     */
     <T, O> T register (O object);
-
 
     /*
     * Delete the given object
@@ -53,12 +58,6 @@ public interface Repository {
     */
     <T, Clazz> List<T> list(Clazz clazz);
 
-//    /*
-//    * Search the given user
-//    * @returns the User object if found
-//    */
-//    User searchUser (String username);
-
     /*
     * Search objects based on a query parameter
     */
@@ -67,7 +66,7 @@ public interface Repository {
     /*
     * Update the given Object
     */
-    String update(Object object);
+    Object update(Object object);
 
     /*
     * Get the locked users

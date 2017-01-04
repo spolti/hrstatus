@@ -146,7 +146,7 @@ public class OperatingSystemResources {
         }
         log.fine("Operating System received to update: " + operatingSystem.toString());
 
-        String result = repository.update(operatingSystem);
+        String result = String.valueOf(repository.update(operatingSystem));
         if (("success").equals(result)) {
             reqResponse.setResponseMessage(" O Sistema Operacional " + operatingSystem.getHostname() + " foi atualizado com sucesso.");
             return Response.ok(reqResponse).build();

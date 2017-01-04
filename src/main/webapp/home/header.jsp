@@ -56,8 +56,10 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
     <script src="${pageContext.request.contextPath}/patternfly/jquery/jquery.data-table.js"></script>
     <script src="${pageContext.request.contextPath}/patternfly/bootstrap/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/patternfly/bootstrap/bootstrap-select.min.js"></script>
+    <script src="${pageContext.request.contextPath}/patternfly/bootstrap/bootstrap-switch.min.js"></script>
     <script src="${pageContext.request.contextPath}/patternfly/js/patternfly.min.js"></script>
     <script src="${pageContext.request.contextPath}/patternfly/js/civem.js"></script>
+    <script src="${pageContext.request.contextPath}/hrstatus-js/common/common-functions.js"></script>
 </head>
 
 <body onload="Hora()">

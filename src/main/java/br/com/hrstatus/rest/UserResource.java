@@ -108,7 +108,6 @@ public class UserResource {
 
     /*
     * Update User
-    * Form request
     */
     @POST
     @Path("admin/update")
@@ -118,7 +117,7 @@ public class UserResource {
     public Response update(User updatedUser) {
         log.fine("User received to update: " + updatedUser.toString());
         updatedUser.setPassword(updatedUser.getPassword().length() == 44 && updatedUser.getPassword().endsWith("=") ? updatedUser.getPassword() : PasswordUtils.encryptUserPassword(updatedUser.getPassword()));
-        return response(repository.update(updatedUser), updatedUser);
+        return response(String.valueOf(repository.update(updatedUser)), updatedUser);
     }
 
     /*
@@ -136,7 +135,7 @@ public class UserResource {
         User tempUser = repository.search(User.class, "username", updatedUser.getUsername());
         updatedUser.addRoles(tempUser.getRoles().stream().toArray(String[]::new));
         updatedUser.setPassword(updatedUser.getPassword().length() == 44 && updatedUser.getPassword().endsWith("=") ? updatedUser.getPassword() : PasswordUtils.encryptUserPassword(updatedUser.getPassword()));
-        return response(repository.update(updatedUser), updatedUser);
+        return response(String.valueOf(repository.update(updatedUser)), updatedUser);
     }
 
     /*

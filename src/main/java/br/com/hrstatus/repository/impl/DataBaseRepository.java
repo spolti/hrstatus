@@ -22,13 +22,18 @@ package br.com.hrstatus.repository.impl;
 import br.com.hrstatus.model.Setup;
 import br.com.hrstatus.model.User;
 import br.com.hrstatus.repository.Repository;
+import br.com.hrstatus.utils.date.DateUtils;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -42,14 +47,17 @@ public class DataBaseRepository implements Repository {
     @PersistenceContext(unitName = "hrstatus")
     protected EntityManager em;
 
+    @Inject
+    private DateUtils dt;
+
     /*
     * Import, the initial configuration in the database if it is a fresh database.
     */
     public void initialImport() {
         // Default password is P@ssw0rd
-        String sql1 = "insert into USERS (username, enabled, firstLogin, mail, nome, password, failedLogins) VALUES ('root',true,false,'changeme@example.com','Administrador', 'sD3fPKLnFKZUjnSV4qA/XoJOqsmDfNfxWcZ7kPtLc0I=', 0);";
+        String sql1 = "insert into USERS (username, enabled, firstLogin, mail, nome, password, failedLogins) VALUES ('root', true, false,'changeme@example.com','Administrador', 'sD3fPKLnFKZUjnSV4qA/XoJOqsmDfNfxWcZ7kPtLc0I=', 0);";
         String sql2 = "insert into User_roles (user_username, roles) values ('root', 'ROLE_ADMIN');";
-        String sql3 = "insert into SETUP (id, mailJndi, mailFrom, welcomeMessage) values (1, 'java:jboss/mail/HrStatus','hrstatus@hrstatus.com.br','Bem vindo ao Servidor HrStatus');";
+        String sql3 = "insert into SETUP (id, mailJndi, mailFrom, welcomeMessage, difference, ntpServer, sendNotification, subject, updateNtpIsActive, installationDate) values (1, 'java:jboss/mail/HrStatus','hrstatus@hrstatus.com.br','Bem vindo ao Servidor HrStatus',30, 'a.ntp.br', false, 'NO REPLY - Status Horario de Verao', false,  '" + dt.now() + "');";
         log.fine("Initial database data: " + sql1 + "\n" +
                 sql2 + "\n" +
                 sql3);
@@ -99,6 +107,12 @@ public class DataBaseRepository implements Repository {
     public String welcomeMessage() {
         Query q = em.createQuery("SELECT e.welcomeMessage from Setup e");
         return String.valueOf(q.getSingleResult());
+    }
+
+    @Override
+    public LocalDateTime installationDate() {
+        Query q = em.createQuery("SELECT e.installationDate from Setup e");
+        return LocalDateTime.parse(String.valueOf(q.getSingleResult()));
     }
 
     /*
@@ -162,13 +176,16 @@ public class DataBaseRepository implements Repository {
     /*
     * Update the given object
     */
-    public String update(Object object) {
+    public Object update(Object object) {
         try {
             em.merge(object);
             em.flush();
             return "success";
         } catch (Exception e) {
-            return e.getMessage();
+            if (e.getCause().getCause().toString().contains("ConstraintViolation")) {
+                return e.getCause().getCause();
+            }
+            return e.getCause();
         }
     }
 

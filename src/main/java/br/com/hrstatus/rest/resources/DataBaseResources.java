@@ -149,7 +149,7 @@ public class DataBaseResources {
         }
         log.fine("Operating System received to update: " + database.toString());
 
-        String result = repository.update(database);
+        String result = String.valueOf(repository.update(database));
         if (("success").equals(result)) {
             reqResponse.setResponseMessage(" O Banco de Dados " + database.getHostname() + " foi atualizado com sucesso.");
             return Response.ok(reqResponse).build();

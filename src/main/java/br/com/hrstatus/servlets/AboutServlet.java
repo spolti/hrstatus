@@ -19,6 +19,7 @@
 
 package br.com.hrstatus.servlets;
 
+import br.com.hrstatus.repository.Repository;
 import br.com.hrstatus.utils.PropertiesLoader;
 import br.com.hrstatus.utils.system.HrstatusSystem;
 
@@ -48,6 +49,8 @@ public class AboutServlet extends HttpServlet {
     private PropertiesLoader loader;
     @Inject
     private HrstatusSystem sys;
+    @Inject
+    private Repository repository;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.info("Coletando informações sobre o servidor e colocando na sessão...");
@@ -56,7 +59,7 @@ public class AboutServlet extends HttpServlet {
         request.setAttribute("java", System.getProperty("java.vm.name"));
         request.setAttribute("javaVendor", System.getProperty("java.vendor"));
         request.setAttribute("osVersion", System.getProperty("os.version"));
-        request.setAttribute("installDate" , "In progress");
+        request.setAttribute("installationDate", repository.installationDate());
         request.setAttribute("uptime", sys.uptime());
         request.getRequestDispatcher("/home/about.jsp").forward(request, response);
     }

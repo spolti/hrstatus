@@ -23,7 +23,7 @@
                             <dt>Versão</dt>
                             <dd>${version}</dd>
                             <dt>Data de Instalação: </dt>
-                            <dd>${installDate}</dd>
+                            <dd>${installationDate}</dd>
                             <dt>Para Suporte</dt>
                             <dd><a href="mailto:spolti@hrstatus.com.br?Subject=Suporte%20Hrstatus">Contato</a></dd>
                             <dt>Para reportar bugs</dt>
@@ -111,7 +111,7 @@
                     <div id="collapseThree" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">Editar Configuração</a></li>
+                                <li><a href="${pageContext.request.contextPath}/admin/setup.jsp">Editar Configuração</a></li>
                             </ul>
                         </div>
                     </div>

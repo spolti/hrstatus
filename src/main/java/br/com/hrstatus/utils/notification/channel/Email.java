@@ -19,7 +19,8 @@
 
 package br.com.hrstatus.utils.notification.channel;
 
-import br.com.hrstatus.repository.Repository;
+import br.com.hrstatus.model.Setup;
+import br.com.hrstatus.repository.impl.DataBaseRepository;
 import br.com.hrstatus.utils.notification.Channel;
 
 import javax.inject.Inject;
@@ -40,22 +41,24 @@ public class Email implements Channel {
     private Logger log = Logger.getLogger(Email.class.getName());
 
     @Inject
-    private Repository repository;
+    private DataBaseRepository repository;
+    @Inject
+    private Setup setup;
 
     private InitialContext INITIAL_CONTEXT;
     private Session MAIL_SESSION;
     private MimeMessage MAIL_MESSAGE;
     private String MAIL_SESSION_JNDI;
-    private String MAIL_FROM = "hrstatus@hrstatus.com.br";
+    private String MAIL_FROM;
 
     @Override
     public String send(String message, String receiver, String subject, String jndi) {
 
-        MAIL_SESSION_JNDI = jndi != null ? jndi : repository.mailJndi();
+        MAIL_SESSION_JNDI = jndi != null ? jndi : MAIL_SESSION_JNDI;
 
         //setup the session
         setupEmailSession(receiver);
-        log.fine("Enviando email: " + message + " para o usuário " + receiver+ " com o subject: " + subject);
+        log.fine("Enviando email: " + message + " para o usuário " + receiver + " com o subject: " + subject);
         try {
             MAIL_MESSAGE.setSubject(subject);
             MAIL_MESSAGE.setContent(message, "text/html; charset=UTF-8");
@@ -66,7 +69,6 @@ public class Email implements Channel {
             return "Falha ao enviar email: " + e.getCause();
         }
     }
-
 
     /*
     * Configure the email Session
@@ -79,7 +81,7 @@ public class Email implements Channel {
             MAIL_SESSION.setDebug(false);
             MAIL_MESSAGE = new MimeMessage(MAIL_SESSION);
             MAIL_MESSAGE.setFrom(MAIL_FROM);
-            MAIL_MESSAGE.setRecipient(Message.RecipientType.TO,new InternetAddress(receiver));
+            MAIL_MESSAGE.setRecipient(Message.RecipientType.TO, new InternetAddress(receiver));
             MAIL_MESSAGE.setSentDate(new java.util.Date());
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,10 +92,8 @@ public class Email implements Channel {
     * Retrieve the mail configuration fromn database
     */
     private void configureMailBasics() {
-//
-//        MAIL_SESSION_JNDI = ;
-//        MAIL_FROM = ;
-
+        setup = repository.loadConfiguration();
+        MAIL_SESSION_JNDI = setup.getMailJndi();
+        MAIL_FROM = setup.getMailFrom();
     }
-
 }

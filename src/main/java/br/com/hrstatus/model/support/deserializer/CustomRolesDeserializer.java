@@ -20,7 +20,6 @@
 package br.com.hrstatus.model.support.deserializer;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
@@ -34,7 +33,7 @@ import java.util.List;
 public class CustomRolesDeserializer extends JsonDeserializer<List<String>> {
 
     @Override
-    public List<String> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+    public List<String> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
 
         List<String> roles = new ArrayList<>();
         String[] temp_roles = jsonParser.getText().split(",");

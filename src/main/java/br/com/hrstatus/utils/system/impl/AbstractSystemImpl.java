@@ -32,9 +32,7 @@ import java.lang.management.ManagementFactory;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
@@ -98,7 +96,6 @@ public class AbstractSystemImpl implements HrstatusSystem {
 
         return mailSessions;
     }
-
 
 
     /*

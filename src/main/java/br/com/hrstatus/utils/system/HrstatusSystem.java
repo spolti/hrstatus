@@ -19,11 +19,6 @@
 
 package br.com.hrstatus.utils.system;
 
-import javax.management.AttributeNotFoundException;
-import javax.management.InstanceNotFoundException;
-import javax.management.MBeanException;
-import javax.management.MalformedObjectNameException;
-import javax.management.ReflectionException;
 import java.util.List;
 
 /**
