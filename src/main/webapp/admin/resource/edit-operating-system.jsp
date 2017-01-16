@@ -7,6 +7,9 @@
     var os2update = '';
 
     $(document).ready(function () {
+        //initialize the switch button
+        initializeSwitchButton();
+
         var url = '${pageContext.request.contextPath}/rest/utils/resource/suported-os';
         var option = '';
         $.ajax({
@@ -44,8 +47,7 @@
                 }
                 $('#type').selectpicker('refresh');
 
-                //radio button verificação ativa/desativada
-                os.toVerify == true ? $('#toVerifyEnabled').prop("checked", true) : $('#toVerifyDisabled').prop("checked", true);
+                $('#verify').bootstrapSwitch('state', os.toVerify);
 
             },
             error: function (xhr, textStatus, err) {
@@ -73,7 +75,7 @@
                     json.logDir = '';
                     json.suCommand = '';
                 }
-
+                json.verify = $('#verify').bootstrapSwitch('state');
                 var mergedJsonObject = $.extend(os2update, json);
                 $.ajax({
                     type: "POST",
@@ -117,7 +119,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="${pageContext.request.contextPath}/admin/resource/operating-system.jsp"> <button type="button" class="btn btn-primary">Prosseguir</button> </a>
+                    <a href="${pageContext.request.contextPath}/admin/resource/operating-system.jsp">
+                        <button type="button" class="btn btn-primary">Prosseguir</button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -205,18 +209,7 @@
                     <label class="col-md-2 control-label">Ativar verificação deste Sistema Operacional?</label>
                     <div class="col-md-6">
                         <div class="radio">
-                            <label>
-                                <input name="verify" type="radio" name="optionsRadios" id="toVerifyEnabled"
-                                       value="true">
-                                Sim
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input name="verify" type="radio" name="optionsRadios" id="toVerifyDisabled"
-                                       value="false">
-                                Não
-                            </label>
+                            <input name="verify" class="bootstrap-switch" id="verify" type="checkbox">
                         </div>
                     </div>
                 </div>

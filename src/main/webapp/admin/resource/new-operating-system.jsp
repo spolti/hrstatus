@@ -21,6 +21,9 @@
     }
 
     $(document).ready(function () {
+        //initialize the switch button
+        initializeSwitchButton();
+
         $("button#submit").click(function (e) {
             e.preventDefault();
             if ($("form")[0].checkValidity()) {
@@ -30,6 +33,7 @@
                 jQuery.each(array, function () {
                     json[this.name] = this.value || '';
                 });
+                json.verify = $('#verify').bootstrapSwitch('state');
                 $.ajax({
                     type: "POST",
                     contentType: 'application/json',
@@ -164,17 +168,7 @@
                     <label class="col-md-2 control-label">Ativar verificação deste Sistema Operacional?</label>
                     <div class="col-md-6">
                         <div class="radio">
-                            <label>
-                                <input name="verify" type="radio" name="optionsRadios" id="optionsRadios1" value="true">
-                                Sim
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input name="verify" type="radio" name="optionsRadios" id="optionsRadios2" value="false"
-                                       checked>
-                                Não
-                            </label>
+                            <input name="verify" class="bootstrap-switch" id="verify" type="checkbox">
                         </div>
                     </div>
                 </div>

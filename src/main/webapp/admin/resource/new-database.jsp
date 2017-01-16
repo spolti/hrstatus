@@ -22,6 +22,9 @@
     }
 
     $(document).ready(function () {
+        //initialize the switch button
+        initializeSwitchButton();
+
         $("button#submit").click(function (e) {
             e.preventDefault();
             if ($("form")[0].checkValidity()) {
@@ -31,6 +34,7 @@
                 jQuery.each(array, function () {
                     json[this.name] = this.value || '';
                 });
+                json.verify = $('#verify').bootstrapSwitch('state');
                 console.log(json);
                 $.ajax({
                     type: "POST",
@@ -167,17 +171,7 @@
                     <label class="col-md-2 control-label">Ativar verificação deste Banco de Dados?</label>
                     <div class="col-md-6">
                         <div class="radio">
-                            <label>
-                                <input name="verify" type="radio" name="optionsRadios" id="optionsRadios1" value="true">
-                                Sim
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input name="verify" type="radio" name="optionsRadios" id="optionsRadios2" value="false"
-                                       checked>
-                                Não
-                            </label>
+                            <input name="verify" class="bootstrap-switch" id="verify" type="checkbox">
                         </div>
                     </div>
                 </div>
@@ -236,7 +230,8 @@
                     <div id="collapseFive" class="panel-collapse collapse in">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li class="active"><a href="${pageContext.request.contextPath}/admin/resource/database.jsp">Gerenciar
+                                <li class="active"><a
+                                        href="${pageContext.request.contextPath}/admin/resource/database.jsp">Gerenciar
                                     Banco de Dados</a></li>
                             </ul>
                         </div>

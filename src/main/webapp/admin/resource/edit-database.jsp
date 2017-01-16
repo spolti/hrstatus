@@ -6,6 +6,9 @@
 
     var db2update = '';
     $(document).ready(function () {
+        //initialize the switch button
+        initializeSwitchButton();
+
         document.getElementById('db_name').style.visibility = "hidden";
         var url = '${pageContext.request.contextPath}/rest/utils/resource/suported-db';
         var option = '';
@@ -21,7 +24,7 @@
             }
         });
 
-        $('#vendor').on('change', function() {
+        $('#vendor').on('change', function () {
             setDatabaseConfig();
         });
 
@@ -40,16 +43,16 @@
 
                 if (db.vendor == 'MYSQL') {
                     $("#vendor").val('MYSQL');
-                } else if (db.vendor == 'ORACLE'){
+                } else if (db.vendor == 'ORACLE') {
                     $("#vendor").val('ORACLE');
-                } else if (db.vendor == 'POSTGRESQL'){
+                } else if (db.vendor == 'POSTGRESQL') {
                     $("#vendor").val('POSTGRESQL');
-                } else if (db.vendor == 'DB2'){
+                } else if (db.vendor == 'DB2') {
                     $("#vendor").val('DB2');
-                } else if (db.vendor == 'SQLSERVER'){
+                } else if (db.vendor == 'SQLSERVER') {
                     $("#vendor").val('SQLSERVER');
                     document.getElementById('db_name').style.visibility = "visible";
-                } else if (db.vendor == 'MONGODB'){
+                } else if (db.vendor == 'MONGODB') {
                     $("#vendor").val('MONGODB');
                 }
                 $('#vendor').selectpicker('refresh');
@@ -60,7 +63,8 @@
                 $('#instance').val(db.instance);
 
                 //radio button verificação ativa/desativada
-                db.verify == true ? $('#toVerifyEnabled').prop("checked", true) : $('#toVerifyDisabled').prop("checked", true);
+                //db.verify == true ? $('#toVerifyEnabled').prop("checked", true) : $('#toVerifyDisabled').prop("checked", true);
+                $('#verify').bootstrapSwitch('state', db.verify);
             },
             error: function (xhr, textStatus, err) {
                 console.log('Failed to retrieve information from server');
@@ -130,7 +134,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="${pageContext.request.contextPath}/admin/resource/database.jsp"> <button type="button" class="btn btn-primary">Prosseguir</button> </a>
+                    <a href="${pageContext.request.contextPath}/admin/resource/database.jsp">
+                        <button type="button" class="btn btn-primary">Prosseguir</button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -142,7 +148,7 @@
             <ol class="breadcrumb">
                 <li><a href="/hs/home/home.jsp">Home</a></li>
                 <li><a href="${pageContext.request.contextPath}/admin/resource/database.jsp">
-                   Gerenciar Banco de Dados</a></li>
+                    Gerenciar Banco de Dados</a></li>
                 <li>Editar Banco de Dados</li>
             </ol>
             <h1>Editar Banco de Dados</h1>
@@ -219,16 +225,7 @@
                     <label class="col-md-2 control-label">Ativar verificação deste Banco de Dados?</label>
                     <div class="col-md-6">
                         <div class="radio">
-                            <label>
-                                <input name="verify" type="radio" name="optionsRadios" id="toVerifyEnabled" value="true">
-                                Sim
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input name="verify" type="radio" name="optionsRadios" id="toVerifyDisabled" value="false">
-                                Não
-                            </label>
+                            <input name="verify" class="bootstrap-switch" id="verify" type="checkbox">
                         </div>
                     </div>
                 </div>
@@ -267,10 +264,10 @@
                             </a>
                         </h4>
                     </div>
-                    <div id="collapseTwo" class="panel-collapse collapse in">
+                    <div id="collapseTwo" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li class="active"><a
+                                <li><a
                                         href="${pageContext.request.contextPath}/admin/resource/operating-system.jsp">Gerenciar
                                     Servidores</a></li>
                             </ul>
@@ -285,10 +282,10 @@
                             </a>
                         </h4>
                     </div>
-                    <div id="collapseFive" class="panel-collapse collapse">
+                    <div id="collapseFive" class="panel-collapse collapse in">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/admin/resource/database.jsp">Gerenciar
+                                <li class="active"><a href="${pageContext.request.contextPath}/admin/resource/database.jsp">Gerenciar
                                     Banco de Dados</a></li>
                             </ul>
                         </div>

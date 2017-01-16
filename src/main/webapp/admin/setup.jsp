@@ -47,7 +47,6 @@
                 $('#ntpServer').val(configuration.ntpServer);
                 $('#updateNtpIsActive').bootstrapSwitch('state', configuration.updateNtpIsActive);
                 $('#welcomeMessage').val(configuration.welcomeMessage);
-
             },
             error: function (response) {
                 console.warn("Failed to retrieve information from server");

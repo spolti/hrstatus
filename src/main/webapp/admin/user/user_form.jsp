@@ -155,7 +155,7 @@
                     <label class="col-md-2 control-label" for="roles">Roles</label>
                     <div class="col-md-10">
                         <select name="roles" class="selectpicker" multiple data-selected-text-format="count>3"
-                                id="roles"
+                                id="roles" title="Nenhuma Role selecionada"
                                 required>
                             <option value="ROLE_ADMIN">Administrador</option>
                             <option value="ROLE_USER">Usuário</option>
