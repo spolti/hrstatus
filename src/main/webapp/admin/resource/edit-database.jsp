@@ -5,7 +5,6 @@
 <script type="text/javascript">
 
     var db2update = '';
-
     $(document).ready(function () {
         document.getElementById('db_name').style.visibility = "hidden";
         var url = '${pageContext.request.contextPath}/rest/utils/resource/suported-db';
@@ -18,7 +17,12 @@
                 $.each(supportedDb, function (i) {
                     $('#vendor').append('<option value="' + supportedDb[i] + '">' + supportedDb[i] + '</option>');
                 })
+                $('#vendor').selectpicker('refresh');
             }
+        });
+
+        $('#vendor').on('change', function() {
+            setDatabaseConfig();
         });
 
         $.ajax({
@@ -51,11 +55,12 @@
                 $('#vendor').selectpicker('refresh');
 
                 $('#queryDate').val(db.queryDate);
+                document.getElementById('queryDate').readOnly = true;
+
                 $('#instance').val(db.instance);
 
                 //radio button verificação ativa/desativada
                 db.verify == true ? $('#toVerifyEnabled').prop("checked", true) : $('#toVerifyDisabled').prop("checked", true);
-
             },
             error: function (xhr, textStatus, err) {
                 console.log('Failed to retrieve information from server');
@@ -162,7 +167,7 @@
                 <div class="form-group">
                     <label class="col-md-2 control-label" for="vendor">Vendor</label>
                     <div class="col-md-10">
-                        <select name="vendor" class="selectpicker" id="vendor" onchange="setDatabaseConfig();" required>
+                        <select name="vendor" class="selectpicker" id="vendor" required>
                             <option>Escolha uma opção</option>
                             <!-- Auto populated through ajax request -->
                         </select>

@@ -3,17 +3,26 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <script src="${pageContext.request.contextPath}/hrstatus-js/common/common-functions.js"></script>
 <script type="text/javascript">
+    window.onload = function () {
+        document.getElementById("password").onchange = validatePassword;
+        document.getElementById("verifyPassword").onchange = validatePassword;
+    }
+
     $(document).ready(function () {
+
+        //initialize the switch button
+        initializeSwitchButton();
+
         $("button#submit").click(function (e) {
             e.preventDefault();
-            if($("form")[0].checkValidity()) {
+            if ($("form")[0].checkValidity()) {
                 var array = jQuery('#new-user-form').serializeArray();
                 var json = {};
 
                 var rolesArray = $('#roles option:selected');
                 var rolesString = '';
-                $(rolesArray).each(function(index, role){
-                    if (index == rolesArray.length-1) {
+                $(rolesArray).each(function (index, role) {
+                    if (index == rolesArray.length - 1) {
                         rolesString += $(this).val()
                     } else {
                         rolesString += $(this).val() + ','
@@ -29,7 +38,7 @@
                         json[this.name] = this.value || '';
                     }
                 });
-
+                json.enabled = $('#enabled').bootstrapSwitch('state');
                 console.log(json);
                 $.ajax({
                     type: "POST",
@@ -41,7 +50,7 @@
                         console.log('success ' + response.responseMessage);
                         $('#create-modalUser > h1').text("Usuário " + response.createdUser + " criado com sucesso.");
                     },
-                    error: function (xhr,textStatus,err) {
+                    error: function (xhr, textStatus, err) {
                         var response = JSON.parse(xhr.responseText);
                         console.log(response);
                         $('#create-modalUser > h1').text("Falha ao criar usuário " + response.failedSubject);
@@ -75,7 +84,9 @@
                 <p1 style="font-size:20px" align="left">O que deseja fazer?</p1>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Criar outro Usuário</button>
-                    <a href="${pageContext.request.contextPath}/admin/user/users.jsp"> <button type="button" class="btn btn-primary">Ir para página de usuários</button> </a>
+                    <a href="${pageContext.request.contextPath}/admin/user/users.jsp">
+                        <button type="button" class="btn btn-primary">Ir para página de usuários</button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -136,16 +147,7 @@
                     <label class="col-md-2 control-label">Ativo</label>
                     <div class="col-md-6">
                         <div class="radio">
-                            <label>
-                                <input name="enabled" type="radio" id="enabled" value="true">
-                                Sim
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input name="enabled" type="radio" id="enabled1" value="false" checked>
-                                Não
-                            </label>
+                            <input name="enabled" class="bootstrap-switch" id="enabled" type="checkbox">
                         </div>
                     </div>
                 </div>

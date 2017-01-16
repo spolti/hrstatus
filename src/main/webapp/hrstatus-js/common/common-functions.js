@@ -21,21 +21,24 @@
  */
 
 /*function to handle the html5 required inputs to show its alert
-* Note that each form which uses html5 validations should have this line:
-* <input id="submit_handle" type="submit" style="display: none"/>
-*/
+ * Note that each form which uses html5 validations should have this line:
+ * <input id="submit_handle" type="submit" style="display: none"/>
+ */
 function submitform() {
     $('#submit_handle').click();
     return false;
 }
 
 /*
-* This function validate if the password provided in the forms are equals
-*/
-window.onload = function () {
-    document.getElementById("password").onchange = validatePassword;
-    document.getElementById("verifyPassword").onchange = validatePassword;
+ * call this function where the switch buttons are being in use.
+ */
+function initializeSwitchButton() {
+    jQuery(".bootstrap-switch").bootstrapSwitch();
 }
+
+/*
+ * This function validate if the password provided in the forms are equals
+ */
 function validatePassword() {
     var pass2 = document.getElementById("verifyPassword").value;
     var pass1 = document.getElementById("password").value;
@@ -46,23 +49,23 @@ function validatePassword() {
 }
 
 /*
-* Retrieve parameter from url, original code retrieved from stackoverflow
-*/
-function getParameterByName( name ){
-    var regexS = "[\\?&]"+name+"=([^&#]*)",
-        regex = new RegExp( regexS ),
-        results = regex.exec( window.location.search );
-    if( results == null ){
+ * Retrieve parameter from url, original code retrieved from stackoverflow.com
+ */
+function getParameterByName(name) {
+    var regexS = "[\\?&]" + name + "=([^&#]*)",
+        regex = new RegExp(regexS),
+        results = regex.exec(window.location.search);
+    if (results == null) {
         return "";
-    } else{
+    } else {
         return decodeURIComponent(results[1].replace(/\+/g, " "));
     }
 }
 
 /*
-* Update the form on updating and creating new OS
-* Hide/show not supported fields according the selected OS.
-*/
+ * Update the form on updating and creating new OS
+ * Hide/show not supported fields according the selected OS.
+ */
 function setPort() {
     if (document.getElementById('type').value == 'WINDOWS') {
         document.getElementById('port').setAttribute('value', '23');
@@ -80,36 +83,65 @@ function setPort() {
  * Hide/show not supported fields according the selected Database.
  */
 function setDatabaseConfig() {
-
     if (document.getElementById('vendor').value == 'MYSQL') {
-        document.getElementById('port').setAttribute('value', '3306');
-        document.getElementById('queryDate').setAttribute('value', 'SELECT NOW() AS date;');
+        document.getElementById('port').value = '3306';
+        document.getElementById('queryDate').value = 'SELECT NOW() AS date;';
         document.getElementById('db_name').style.visibility = "hidden";
 
-    } else if (document.getElementById('vendor').value == 'ORACLE'){
-        document.getElementById('port').setAttribute('value', '1501');
-        document.getElementById('queryDate').setAttribute('value', 'select sysdate from dual');
+    } else if (document.getElementById('vendor').value == 'ORACLE') {
+        document.getElementById('port').value = '1501';
+        document.getElementById('queryDate').value = 'select sysdate from dual';
         document.getElementById('db_name').style.visibility = "hidden";
 
-    } else if (document.getElementById('vendor').value == 'POSTGRESQL'){
-        document.getElementById('port').setAttribute('value', '5432');
-        document.getElementById('queryDate').setAttribute('value', 'SELECT now();');
+    } else if (document.getElementById('vendor').value == 'POSTGRESQL') {
+        document.getElementById('port').value = '5432';
+        document.getElementById('queryDate').value = 'SELECT now();';
         document.getElementById('db_name').style.visibility = "hidden";
 
-    } else if (document.getElementById('vendor').value == 'DB2'){
-        document.getElementById('port').setAttribute('value', '50000');
-        document.getElementById('queryDate').setAttribute('value', "select VARCHAR_FORMAT(CURRENT_TIMESTAMP, 'YYYY-MM-DD HH24:MM:SS') FROM SYSIBM.SYSDUMMY1");
+    } else if (document.getElementById('vendor').value == 'DB2') {
+        document.getElementById('port').value = '50000';
+        document.getElementById('queryDate').value = "select VARCHAR_FORMAT(CURRENT_TIMESTAMP, 'YYYY-MM-DD HH24:MM:SS') FROM SYSIBM.SYSDUMMY1";
         document.getElementById('db_name').style.visibility = "hidden";
 
-    } else if (document.getElementById('vendor').value == 'SQLSERVER'){
-        document.getElementById('port').setAttribute('value', '1433');
-        document.getElementById('queryDate').setAttribute('value', 'SELECT GETDATE();');
+    } else if (document.getElementById('vendor').value == 'SQLSERVER') {
+        document.getElementById('port').value = '1433';
+        document.getElementById('queryDate').value = 'SELECT GETDATE();';
         document.getElementById('db_name').style.visibility = "visible";
 
-    } else if (document.getElementById('vendor').value == 'MONGODB'){
-        document.getElementById('port').setAttribute('value', '27017');
-        document.getElementById('queryDate').setAttribute('value', '3306');
+    } else if (document.getElementById('vendor').value == 'MONGODB') {
+        document.getElementById('port').value = '27017';
+        document.getElementById('queryDate').value = '3306';
         document.getElementById('db_name').style.visibility = "hidden";
+    }
+    document.getElementById('queryDate').readOnly = true;
+}
+
+/*
+ * Functions responsible for the setup.jsp page.
+ */
+function sendEmailTest() {
+    var x = document.getElementById('testMailJndi');
+    x.setAttribute('value', document.getElementById('mailJndi').value);
+    $('#sendTestEmail').modal('show');
+}
+
+function addDest() {
+    if ($('#configuration')[0].checkValidity()) {
+        text = document.getElementById("addDestinatario").value;
+        $('#destinatarios').append('<option value="' + text + '" selected>' + text + '</option>');
+        $('#destinatarios').attr("size", (parseInt($("#destinatarios").attr("size")) + 1));
+        $('#destinatarios').selectpicker('refresh');
+    } else {
+        submitform();
     }
 }
 
+function removeMail() {
+    var x = document.getElementById("destinatarios");
+    x.remove(x.selectedIndex);
+    $('#destinatarios').attr("size", (parseInt($("#destinatarios").attr("size")) + 1));
+    $('#destinatarios').selectpicker('refresh');
+}
+/*
+ * End of setup.jsp funcitons
+ */

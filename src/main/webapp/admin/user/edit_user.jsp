@@ -3,11 +3,19 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <script src="${pageContext.request.contextPath}/hrstatus-js/common/common-functions.js"></script>
 <script type="text/javascript">
+    window.onload = function () {
+        document.getElementById("password").onchange = validatePassword;
+        document.getElementById("verifyPassword").onchange = validatePassword;
+    }
+
     var user2update = '';
     $(document).ready(function () {
         <!-- TODO migrate this to a rest endpoint -->
         var DEFAULT_ROLES = ['ROLE_ADMIN', 'ROLE_USER', 'ROLE_REST'];
         var DEFAULT_ROLES_DESCRIPTION = ['Administrador', 'Usuário', 'Permissão para Requisições Rest'];
+
+        //initialize the switch button
+        initializeSwitchButton();
 
         var selected = '';
         $.ajax({
@@ -21,7 +29,9 @@
                 $('#name').val(user.nome);
                 $('#username').val(user.username);
                 $('#email').val(user.mail);
-                user.enabled == true ? $('#enabled').prop("checked", true) : $('#disabled').prop("checked", true);
+
+                //user.enabled == true ? $('#enabled').prop("checked", true) : $('#disabled').prop("checked", true);
+                $('#enabled').bootstrapSwitch('state', user.enabled);
                 <!-- populating the selectpicker roles -->
                 jQuery.each(DEFAULT_ROLES, function (default_role_id) {
                     selected = ''
@@ -68,7 +78,7 @@
                 });
 
                 json.password = $('#password').val() == '' || null ? user2update.password : $('#password').val();
-
+                json.enabled = $('#enabled').bootstrapSwitch('state');
                 var mergedJsonObject = $.extend(user2update, json);
                 $.ajax({
                     type: "POST",
@@ -123,7 +133,7 @@
         <div class="col-sm-9 col-md-10 col-sm-push-3 col-md-push-2">
             <ol class="breadcrumb">
                 <li><a href="/hs/home/home.jsp">Home</a></li>
-                <li><a href="${pageContext.request.contextPath}/rest/user/admin/list/form">
+                <li><a href="${pageContext.request.contextPath}/admin/user/users.jsp">
                     Gerenciar Usuários</a></li>
                 <li>Editar Usuário</li>
             </ol>
@@ -174,16 +184,17 @@
                     <label class="col-md-2 control-label">Ativo</label>
                     <div class="col-md-6">
                         <div class="radio">
-                            <label>
-                                <input name="enabled" type="radio" name="optionsRadios" id="enabled" value="true">
-                                Sim
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input name="enabled" type="radio" name="optionsRadios" id="disabled" value="false">
-                                Não
-                            </label>
+                            <%--<label>--%>
+                                <%--<input name="enabled" type="radio" name="optionsRadios" id="enabled" value="true">--%>
+                                <%--Sim--%>
+                            <%--</label>--%>
+                        <%--</div>--%>
+                        <%--<div class="radio">--%>
+                            <%--<label>--%>
+                                <%--<input name="enabled" type="radio" name="optionsRadios" id="disabled" value="false">--%>
+                                <%--Não--%>
+                            <%--</label>--%>
+                                <input name="enabled" class="bootstrap-switch" id="enabled" type="checkbox">
                         </div>
                     </div>
                 </div>

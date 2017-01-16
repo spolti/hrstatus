@@ -49,7 +49,7 @@ public class DefaultTimers {
     */
     @Schedule(hour = "*", minute = "*/15", persistent = false)
     private void unlockUser() {
-        repository.getLockedUsers().stream().filter(user -> !user.getUserLockTime().equals(null) && LocalDateTime.parse(user.getUserLockTime())
+        repository.getLockedUsers().stream().filter(user -> !user.getUserLockTime().equals("00") && LocalDateTime.parse(user.getUserLockTime())
                 .plusMinutes(30).isBefore(dateUtils.now()))
             .forEach(user ->{
                 log.info("Desbloqueando usuário " + user.getUsername());

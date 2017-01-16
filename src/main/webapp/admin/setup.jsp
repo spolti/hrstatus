@@ -5,13 +5,14 @@
 
     var actualConfiguration = ''
 
-    //hiding alerts
     $(document).ready(function () {
+        $('#mailJndi').selectpicker('refresh');
+        //hiding alerts
         $('#emailTestSuccess').hide();
         $('#emailTestFailure').hide();
 
         //initialize the switch button
-        jQuery(".bootstrap-switch").bootstrapSwitch();
+        initializeSwitchButton();
 
         $.ajax({
             url: '${pageContext.request.contextPath}/rest/setup/available-mail-sessions',
@@ -32,12 +33,13 @@
             success: function (configuration) {
                 actualConfiguration = configuration;
                 $('#mailJndi').val(configuration.mailJndi);
+                $('#mailJndi').selectpicker('refresh');
                 $('#difference').val(configuration.difference);
                 $('#mailFrom').val(configuration.mailFrom);
                 $('#sendNotification').bootstrapSwitch('state', configuration.sendNotification);
                 $('#subject').val(configuration.subject);
 
-                jQuery.each( configuration.destinatarios, function( index, value ) {
+                jQuery.each(configuration.destinatarios, function (index, value) {
                     $('#destinatarios').append('<option value="' + value + '">' + value + '</option>');
                 });
                 $('#destinatarios').selectpicker('refresh');
@@ -45,14 +47,13 @@
                 $('#ntpServer').val(configuration.ntpServer);
                 $('#updateNtpIsActive').bootstrapSwitch('state', configuration.updateNtpIsActive);
                 $('#welcomeMessage').val(configuration.welcomeMessage);
-                $('#mailJndi').selectpicker('refresh');
+
             },
             error: function (response) {
                 console.warn("Failed to retrieve information from server");
             }
         });
-
-        $('#submitForm').click(function (e) {
+        $('#setupSubmitForm').click(function (e) {
             e.preventDefault();
             if ($('#configuration')[0].checkValidity()) {
                 var array = jQuery('#configuration').serializeArray();
@@ -62,9 +63,10 @@
                     json[this.name] = this.value || '';
                 });
                 var options = $('#destinatarios option');
-                var rcptsArray = $.map(options ,function(option) {
+                var rcptsArray = $.map(options, function (option) {
                     return option.value;
                 });
+
                 json.destinatarios = rcptsArray;
                 json.sendNotification = $('#sendNotification').bootstrapSwitch('state');
                 json.updateNtpIsActive = $('#updateNtpIsActive').bootstrapSwitch('state');
@@ -92,12 +94,6 @@
         });
     });
 
-    function sendEmailTest() {
-        var x = document.getElementById('testMailJndi');
-        x.setAttribute('value', document.getElementById('mailJndi').value);
-        $('#sendTestEmail').modal('show');
-    }
-
     function send() {
         $.ajax({
             url: '${pageContext.request.contextPath}/rest/utils/mail/test?jndi=' + $('#testMailJndi').val() + '&dest=' + $('#dest').val(),
@@ -114,24 +110,6 @@
                 $('#emailTestFailure').show();
             }
         });
-    }
-
-    function addDest() {
-        if ($('#configuration')[0].checkValidity()) {
-           text = document.getElementById("addDestinatario").value;
-            $('#destinatarios').append('<option value="' + text + '" selected>' + text + '</option>');
-            $('#destinatarios').attr("size", (parseInt($("#destinatarios").attr("size")) + 1));
-            $('#destinatarios').selectpicker('refresh');
-        } else {
-            submitform();
-        }
-    }
-
-    function removeMail() {
-        var x = document.getElementById("destinatarios");
-        x.remove(x.selectedIndex);
-        $('#destinatarios').attr("size", (parseInt($("#destinatarios").attr("size")) + 1));
-        $('#destinatarios').selectpicker('refresh');
     }
 </script>
 <div class="modal fade" id="config-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -269,7 +247,8 @@
                         <input name="addDestinatario" type="email" id="addDestinatario"
                                class="form-control"
                                data-errormessage="O endereço de email invlálido">
-                    </div>- &nbsp; <a href="javascript:addDest();" class="btn btn-info">Adicionar</a>
+                    </div>
+                    - &nbsp; <a href="javascript:addDest();" class="btn btn-info">Adicionar</a>
                 </div>
                 <div class="form-group">
                     <label class="col-md-2 control-label" for="destinatarios">Destinatários</label>
@@ -304,7 +283,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-10 col-md-offset-2">
-                        <button class="btn btn-primary" id="submitForm">Atualizar Configurações</button>
+                        <button class="btn btn-primary" id="setupSubmitForm">Atualizar Configurações</button>
                     </div>
                 </div>
             </form>
@@ -322,7 +301,7 @@
                     <div id="collapseOne" class="panel-collapse collapse">
                         <div class="panel-body">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/rest/user/admin/list/form">
+                                <li><a href="${pageContext.request.contextPath}/admin/user/users.jsp">
                                     Gerenciar Usuários</a></li>
                             </ul>
                         </div>

@@ -21,6 +21,7 @@ package br.com.hrstatus.rest.resources;
 
 import br.com.hrstatus.model.Database;
 import br.com.hrstatus.model.OperatingSystem;
+import br.com.hrstatus.model.support.SupportedDatabase;
 import br.com.hrstatus.model.support.VerificationStatus;
 import br.com.hrstatus.model.support.response.RequestResponse;
 import br.com.hrstatus.repository.impl.DataBaseRepository;
@@ -41,6 +42,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.lang.reflect.InvocationTargetException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Logger;
@@ -148,6 +150,18 @@ public class DataBaseResources {
             }
         }
         log.fine("Operating System received to update: " + database.toString());
+//
+//        try {
+//
+//            System.out.println("asdsadsadasdas " + database.getVendor().getClass().getDeclaredMethod("QUERY").invoke(database.getVendor()));
+//        } catch (NoSuchMethodException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        } catch (InvocationTargetException e) {
+//            e.printStackTrace();
+//        }
+
 
         String result = String.valueOf(repository.update(database));
         if (("success").equals(result)) {
@@ -159,6 +173,5 @@ public class DataBaseResources {
             return Response.status(Response.Status.BAD_REQUEST).entity(reqResponse).build();
         }
     }
-
 
 }

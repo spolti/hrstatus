@@ -23,22 +23,27 @@ package br.com.hrstatus.model.support;
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
 public enum SupportedDatabase {
-
-    MYSQL("com.mysql.jdbc.Driver","jdbc:mysql://%s:%d/%s", 3306),
-    ORACLE("oracle.jdbc.driver.OracleDriver", "jdbc:oracle:thin:@%s:%d/%s", 1501),
-    POSTGRESQL("org.postgresql.Driver", "jdbc:postgresql://%s:%d/%s", 5432),
-    DB2("com.ibm.db2.jcc.DB2Driver", "jdbc:db2://%s:%d/%s", 50000),
-    SQLSERVER("net.sourceforge.jtds.jdbc.Driver", "jdbc:jtds:sqlserver://%s:%d/db_name;instance=%s", 1433),
-    MONGODB("nil","mongodb://%s:%d/%s", 27017);
+    /*
+    * All the queries should not be editable to avoid users to use this functionality to get
+    * unauthorized information from database using custom queries.
+    */
+    MYSQL("com.mysql.jdbc.Driver","jdbc:mysql://%s:%d/%s", 3306, "SELECT NOW() AS date;"),
+    ORACLE("oracle.jdbc.driver.OracleDriver", "jdbc:oracle:thin:@%s:%d/%s", 1501, "select sysdate from dual"),
+    POSTGRESQL("org.postgresql.Driver", "jdbc:postgresql://%s:%d/%s", 5432, "SELECT now();"),
+    DB2("com.ibm.db2.jcc.DB2Driver", "jdbc:db2://%s:%d/%s", 50000, "select VARCHAR_FORMAT(CURRENT_TIMESTAMP, 'YYYY-MM-DD HH24:MM:SS') FROM SYSIBM.SYSDUMMY1"),
+    SQLSERVER("net.sourceforge.jtds.jdbc.Driver", "jdbc:jtds:sqlserver://%s:%d/db_name;instance=%s", 1433, "SELECT GETDATE();"),
+    MONGODB("nil","mongodb://%s:%d/%s", 27017, "under development");
 
     private final String driver;
     private final String url;
     private int port;
+    private final String query;
 
-    SupportedDatabase(String driver, String url, int port) {
+    SupportedDatabase(String driver, String url, int port, String query) {
         this.driver = driver;
         this.url = url;
         this.port = port;
+        this.query = query;
     }
 
     public String DRIVER() {
@@ -51,5 +56,9 @@ public enum SupportedDatabase {
 
     public void definePort(int port) {
         this.port = port > 0 ? port : this.port;
+    }
+
+    public String QUERY () {
+        return query;
     }
 }

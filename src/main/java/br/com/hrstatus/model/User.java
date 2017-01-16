@@ -43,6 +43,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -118,6 +119,9 @@ public class User implements Serializable {
     }
 
     public String getUserLockTime() {
+        if (userLockTime == null ) {
+            userLockTime = "00";
+        }
         return userLockTime;
     }
 

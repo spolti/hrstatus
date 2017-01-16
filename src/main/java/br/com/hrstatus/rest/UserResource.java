@@ -163,7 +163,6 @@ public class UserResource {
             // fazer plugin para envio de email contendo detalhes da tentativa inválida de alteração
             log.fine("Tentativa de alteração de usuário inválida");
             return Response.status(Response.Status.FORBIDDEN).build();
-            //response.sendError(403);
         }
     }
 
