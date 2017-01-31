@@ -30,10 +30,18 @@ public class Notification {
 
     private Repository repository = new DataBaseRepository();
 
+    /**
+     * @param message String
+     * @return {@link DestinationSelector}
+     */
     public DestinationSelector send(String message) {
         return new DestinationSelector(message);
     }
 
+    /**
+     * @param jndi Stirng
+     * @return {@link MailJndiSelector}
+     */
     public MailJndiSelector usingJndi(String jndi) {
         return new MailJndiSelector(jndi);
     }

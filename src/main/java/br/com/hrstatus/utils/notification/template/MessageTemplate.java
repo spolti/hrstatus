@@ -25,14 +25,22 @@ import br.com.hrstatus.utils.system.impl.AbstractSystemImpl;
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-public class NewUserMessageTemplate {
-
-    public static String SUBJECT = "HrStatus - Informações de acesso";
+public class MessageTemplate {
 
     private static HrstatusSystem sys = new AbstractSystemImpl();
 
-    public static String get(String username, String password) {
-       final String url = sys.getServerHttpAddress();
+    public static String NEW_USER_SUBJECT = "HrStatus - Informações de acesso";
+
+
+    /**
+     * Returns a html format Message containing the new user information
+     *
+     * @param username String
+     * @param password String
+     * @return message formatted in html
+     */
+    public static String newUserMessage(String username, String password) {
+        final String url = sys.getServerHttpAddress();
         return "<html>"
                 + "<body>"
                 + "<div style='text-align:center; width: 100%;'>"
@@ -44,7 +52,7 @@ public class NewUserMessageTemplate {
                 + "</a><br> Sua nova é senha: <a style='color: blue;'>"
                 + password
                 + "</a><br>"
-                + " Para acesso utilize a url: <br><a href='http://"+ url + "/hs/'> HrStatus </p></h2>"
+                + " Para acesso utilize a url: <br><a href='http://" + url + "/hs/'> HrStatus </p></h2>"
                 + "<br><a href='http://" + url + "/hs/home'>"
                 + "<img src='http://" + url + "/hs/image/down.jpg' height='125' width='700'/></a>"
                 + "</div>" + "</div>" + "</body>" + "</html>";

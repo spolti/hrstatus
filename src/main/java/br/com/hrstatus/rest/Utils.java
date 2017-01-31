@@ -31,7 +31,6 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -55,9 +54,14 @@ public class Utils {
     @Inject
     private RequestResponse reqResponse;
 
-    /*
-    * Send an Email test.
-    */
+    /**
+     * Sends a test email to test the mail session configuration in the WildFly Server
+     *
+     * @param jndi String - mail-jndi
+     * @param dest String - Receipt
+     * @return {@link Response} with the operation's result
+     * @throws IOException for IO problems
+     */
     @POST
     @Path("mail/test")
     @Produces(MediaType.APPLICATION_JSON)
@@ -71,9 +75,11 @@ public class Utils {
         return Response.ok(reqResponse).build();
     }
 
-    /*
-    * Returns the supported operating systems
-    */
+    /**
+     * list all available and supported OSs
+     *
+     * @return a String[] with all Enum constants
+     */
     @GET
     @Path("resource/suported-os")
     @Produces("application/json")
@@ -81,20 +87,24 @@ public class Utils {
         return getNames(SupportedOperatingSystem.class);
     }
 
-    /*
-    * Returns the supported databases
-    */
+    /**
+     * list all available and supported databases
+     *
+     * @return a String[] with all Enum constants
+     */
     @GET
     @Path("resource/suported-db")
     public String[] supportedDatabases() {
         return getNames(SupportedDatabase.class);
     }
 
-    /*
-    * Returns a String[] with all Enum connstants.
-    */
+    /**
+     * Auxiliary method to get all enum names from a Enum
+     *
+     * @param e Enum Class
+     * @return a String[] with all Enum constants
+     */
     private String[] getNames(Class<? extends Enum<?>> e) {
         return Arrays.stream(e.getEnumConstants()).map(Enum::name).toArray(String[]::new);
     }
-
 }

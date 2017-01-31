@@ -41,7 +41,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
@@ -67,10 +66,12 @@ public class UserResource {
     @Inject
     private RequestResponse reqResponse;
 
-    /*
-    * Register new user
-    * Receives a JSon Object
-    */
+    /**
+     * Persists the given json object in the database
+     *
+     * @param newUser {@link User}
+     * @return {@link Response} with the operation result, success or failure
+     */
     @POST
     @Path("admin/new")
     @RolesAllowed({"ROLE_ADMIN"})
@@ -79,7 +80,6 @@ public class UserResource {
     public Response newUser(User newUser) {
 
         String password = newUser.getPassword();
-        // ok, now encrypt it and persist the user
         newUser.setPassword(PasswordUtils.encryptUserPassword(password));
         Object result = repository.register(newUser);
 
@@ -106,9 +106,12 @@ public class UserResource {
         }
     }
 
-    /*
-    * Update User
-    */
+    /**
+     * Update the given {@link User}
+     *
+     * @param updatedUser json object
+     * @return {@link Response} with the operation result, success or failure
+     */
     @POST
     @Path("admin/update")
     @RolesAllowed({"ROLE_ADMIN"})
@@ -120,17 +123,19 @@ public class UserResource {
         return response(String.valueOf(repository.update(updatedUser)), updatedUser);
     }
 
-    /*
-    * Update User
-    * Form request
-    */
+    /**
+     * Update a user which is noy admin. Non admin user can only modify email e password
+     *
+     * @param updatedUser
+     * @return {@link Response} with the operation result, success or failure
+     */
     @POST
     @Path("update-nonadmin")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateNonAdmin(User updatedUser) {
         log.fine("User received to update: " + updatedUser.toString());
-        //make sure someone does not changed the user roles
+        //make sure someone does not changed user roles
         //this method should not allow update the roles
         User tempUser = repository.search(User.class, "username", updatedUser.getUsername());
         updatedUser.addRoles(tempUser.getRoles().stream().toArray(String[]::new));
@@ -138,10 +143,13 @@ public class UserResource {
         return response(String.valueOf(repository.update(updatedUser)), updatedUser);
     }
 
-    /*
-    * Update User - admin rights
-    * Form request
-    */
+    /**
+     * Search the user that will be edited
+     *
+     * @param username String
+     * @param request  {@link HttpServletRequest} used to get the user in the current session
+     * @return {@link User} to be edited
+     */
     @GET
     @Path("admin/edit/{username}")
     @RolesAllowed({"ROLE_ADMIN"})
@@ -166,9 +174,14 @@ public class UserResource {
         }
     }
 
-    /*
-    * Update myself, its not allowed user A modify user B, A can only modify itself
-    */
+    /**
+     * Fills the form used for normal users edit personal information
+     *
+     * @param username String
+     * @param request  {@link HttpServletRequest} used to get the user in the current session
+     * @return {@link Response} with the operation result, success or failure
+     * @throws Exception for any issue
+     */
     @GET
     @Path("/edit-nonadmin/{username}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -180,26 +193,30 @@ public class UserResource {
             return Response.ok(user).build();
         } else {
             // Non admin users can't edit other users
-            // fazer plugin para envio de email contendo detalhes da tentativa inválida de alteração
             log.fine("Tentativa de alteração de usuário inválida");
             return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
 
-    /*
-    * @return all users
-    */
+    /**
+     * list all available users
+     *
+     * @return {@link Response} with all registred users
+     */
     @GET
     @Path("list")
     @RolesAllowed({"ROLE_ADMIN"})
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listUsers(){
+    public Response listUsers() {
         return Response.ok(repository.list(User.class)).build();
     }
 
-    /*
-    * Delete the given user
-    */
+    /**
+     * Delete a user
+     *
+     * @param username String
+     * @return {@link Response} with no content if the user were successfully removed.
+     */
     @DELETE
     @Path("admin/delete/{username}")
     @RolesAllowed({"ROLE_ADMIN"})
@@ -215,8 +232,13 @@ public class UserResource {
         }
     }
 
-
-    private Response response (String result, User updatedUser) {
+    /**
+     * Common method which retrieve the result of a user operation and handle it.
+     * @param result String
+     * @param updatedUser {@link User}
+     * @return {@link Response} with the operation result, success or failure
+     */
+    private Response response(String result, User updatedUser) {
         if ("success".equals(result)) {
             reqResponse.setResponseMessage("Usuário " + updatedUser.getNome() + " foi atualizado com sucesso.");
             return Response.ok(reqResponse).build();

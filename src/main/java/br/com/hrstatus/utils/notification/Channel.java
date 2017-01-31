@@ -24,6 +24,15 @@ package br.com.hrstatus.utils.notification;
  */
 public interface Channel {
 
+    /**
+     * Send a message through email
+     *
+     * @param message  String
+     * @param receiver String
+     * @param subject  String
+     * @param jndi     String
+     * @return the operation's result
+     */
     String send(String message, String receiver, String subject, String jndi);
 
 }

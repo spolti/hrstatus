@@ -31,6 +31,14 @@ import java.io.IOException;
  */
 public class CustomStatusDeserializer extends JsonDeserializer<VerificationStatus> {
 
+    /**
+     * Deserialize VerificationStatus from json Request
+     *
+     * @param jsonParser             Parser
+     * @param deserializationContext DeserializationContext
+     * @return Enum VerificationStatus
+     * @throws IOException for IO exceptions
+     */
     @Override
     public VerificationStatus deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         return VerificationStatus.valueOf(jsonParser.getText());

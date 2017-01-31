@@ -30,6 +30,12 @@ import javax.servlet.ServletContext;
  */
 public class UndertowHandlerExtension implements ServletExtension {
 
+    /**
+     * Register a new deployment handler with a custon handler
+     *
+     * @param deploymentInfo DeploymentInfo
+     * @param servletContext ServletContext
+     */
     public void handleDeployment(final DeploymentInfo deploymentInfo, final ServletContext servletContext) {
         deploymentInfo
                 .addInnerHandlerChainWrapper(handler -> new HrStatusAuthHandler(handler));

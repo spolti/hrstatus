@@ -59,24 +59,26 @@ public class OperatingSystemResources {
     @Inject
     private RequestResponse reqResponse;
 
-    /*
-    * Load the Operating Systems resources
-    */
+    /**
+     * @return {@link Response} with tlist of {@link OperatingSystem}
+     */
     @GET
     @Path("list")
     public Response list() {
         return Response.ok(repository.list(OperatingSystem.class)).build();
     }
 
-    /*
-    * Register a new Operating System
-    * @param json object
-    */
+    /**
+     * Register a new {@link OperatingSystem}
+     *
+     * @param operatingSystem json object
+     * @return {@link Response} with the operation result, success or failure
+     */
     @POST
     @Path("new")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response newOperationgSystem(OperatingSystem operatingSystem) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
+    public Response newOperationgSystem(OperatingSystem operatingSystem) {
         log.fine("Sistema Operacional recebido para cadastro: " + operatingSystem.toString());
         operatingSystem.setStatus(VerificationStatus.NOT_VERIFIED);
         operatingSystem.setPassword(PasswordUtils.encode(operatingSystem.getPassword()));
@@ -93,10 +95,12 @@ public class OperatingSystemResources {
         }
     }
 
-    /*
-    * Delete a Operating System
-    * @param int id
-    */
+    /**
+     * Delete the given Object by id
+     *
+     * @param id int
+     * @return {@link Response} with the operation result, success or failure
+     */
     @DELETE
     @Path("delete/{id}")
     public Response deleteOs(@PathParam("id") int id) {
@@ -104,10 +108,12 @@ public class OperatingSystemResources {
         return Response.ok().build();
     }
 
-    /*
-    * Search an Operating System by ID
-    * @param int id
-    */
+    /**
+     * Search a {@link OperatingSystem} by id
+     *
+     * @param os int
+     * @return {@link Response} with {@link OperatingSystem} object
+     */
     @GET
     @Path("search/{os}")
     @RolesAllowed({"ROLE_ADMIN"})
@@ -117,10 +123,14 @@ public class OperatingSystemResources {
         return Response.ok(repository.search(OperatingSystem.class, "id", os)).build();
     }
 
-    /*
-    * Update Operating System
-    * @param json object
-    */
+    /**
+     * Update the given {@link OperatingSystem}
+     *  Note that, to make sure that the password of the given password was updated it first try to decode.
+     *  If the decode operation fails it will go to the catch instruction and then encrypt the password.
+     *
+     * @param operatingSystem json object
+     * @return {@link Response} with the operation result, success or failure
+     */
     @POST
     @Path("update")
     @RolesAllowed({"ROLE_ADMIN"})
@@ -129,19 +139,11 @@ public class OperatingSystemResources {
     public Response update(OperatingSystem operatingSystem) {
         try {
             PasswordUtils.decode(operatingSystem.getPassword());
-        } catch (Exception e ) {
+        } catch (Exception e) {
             try {
                 operatingSystem.setPassword(PasswordUtils.encode(operatingSystem.getPassword()));
-            } catch (NoSuchPaddingException e1) {
-                e1.printStackTrace();
-            } catch (NoSuchAlgorithmException e1) {
-                e1.printStackTrace();
-            } catch (InvalidKeyException e1) {
-                e1.printStackTrace();
-            } catch (BadPaddingException e1) {
-                e1.printStackTrace();
-            } catch (IllegalBlockSizeException e1) {
-                e1.printStackTrace();
+            } catch (Exception e1) {
+                e.printStackTrace();
             }
         }
         log.fine("Operating System received to update: " + operatingSystem.toString());

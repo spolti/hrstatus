@@ -24,6 +24,12 @@ package br.com.hrstatus.security.interceptor.event;
  */
 public class FailedAuthenticatedEvent extends SecurityEvent {
 
+    /**
+     * Event to handle Authentications failures
+     *
+     * @param source   {@link Object}
+     * @param username {@link String} username
+     */
     public FailedAuthenticatedEvent(Object source, String username) {
         super(source, username);
     }

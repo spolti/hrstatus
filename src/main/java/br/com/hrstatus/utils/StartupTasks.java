@@ -43,16 +43,6 @@ public class StartupTasks {
     @Inject
     private DataBaseRepository repository;
 
-    /*
-    * Contains all needed binaries
-    */
-    private enum binary {
-        //ntpdate: used to update the date/time from Unix like servers, local and remote
-        //net (samba-common package): used to obtain date/time from Windows server
-        //for fedora 24 or higher: samba-commom-tools
-        ntpdate, net
-    }
-
     @PostConstruct
     public void Startup() {
         log.info("Iniciando verificações de startup...");
@@ -64,10 +54,10 @@ public class StartupTasks {
         log.info("HrStatus em processo de Shutdown...");
     }
 
-    /*
-    * Check if the needed binaries are installed on the server
-    * just print in the logs if the if the target binary is installed or not
-    */
+    /**
+     * Check if the needed binaries are installed on the server
+     * just print in the logs if the if the target binary is installed or not
+     */
     private void verifyBinaries() {
         String result = "1";
         for (binary bin : binary.values()) {
@@ -82,5 +72,15 @@ public class StartupTasks {
         log.info("Importing initial database data...");
         repository.initialImport();
         log.info("Done.");
+    }
+
+    /**
+     * Contains all needed binaries
+     */
+    private enum binary {
+        //ntpdate: used to update the date/time from Unix like servers, local and remote
+        //net (samba-common package): used to obtain date/time from Windows server
+        //for fedora 24 or higher: samba-commom-tools
+        ntpdate, net
     }
 }

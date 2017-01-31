@@ -19,9 +19,6 @@
 
 package br.com.hrstatus.utils.notification;
 
-import br.com.hrstatus.repository.Repository;
-import br.com.hrstatus.repository.impl.DataBaseRepository;
-
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
@@ -33,6 +30,10 @@ public class MailJndiSelector {
         this.jndi = jndi;
     }
 
+    /**
+     * @param message String
+     * @return {@link DestinationSelector}
+     */
     public DestinationSelector send(String message) {
         return new DestinationSelector(message, "", this.jndi);
     }

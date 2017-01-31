@@ -50,9 +50,6 @@ public class DataBaseRepository implements Repository {
     @Inject
     private DateUtils dt;
 
-    /*
-    * Import, the initial configuration in the database if it is a fresh database.
-    */
     public void initialImport() {
         // Default password is P@ssw0rd
         String sql1 = "insert into USERS (username, enabled, firstLogin, mail, nome, password, failedLogins) VALUES ('root', true, false,'changeme@example.com','Administrador', 'sD3fPKLnFKZUjnSV4qA/XoJOqsmDfNfxWcZ7kPtLc0I=', 0);";
@@ -72,9 +69,6 @@ public class DataBaseRepository implements Repository {
         }
     }
 
-    /*
-    * load all configurations
-    */
     @Override
     public Setup loadConfiguration() {
         final CriteriaBuilder builder = em.getCriteriaBuilder();
@@ -85,18 +79,12 @@ public class DataBaseRepository implements Repository {
         return (Setup) query.getSingleResult();
     }
 
-    /*
-    * Return the mail session
-    */
     @Override
     public String mailJndi() {
         Query q = em.createQuery("SELECT e.mailJndi from Setup e");
         return String.valueOf(q.getSingleResult());
     }
 
-    /*
-    * Return the mail from
-    */
     @Override
     public String mailFrom() {
         Query q = em.createQuery("SELECT e.mailFrom from Setup e");
@@ -115,10 +103,6 @@ public class DataBaseRepository implements Repository {
         return LocalDateTime.parse(String.valueOf(q.getSingleResult()));
     }
 
-    /*
-    * Register the given Object
-    * @param Object
-    */
     public Object register(Object obj) {
         try {
             log.fine("Persistindo objeto: " + obj.toString());
@@ -134,20 +118,11 @@ public class DataBaseRepository implements Repository {
         }
     }
 
-    /*
-    * Delete the given object <T>
-    * @param Users
-    */
     public <T, Object> void delete(Object object) {
         em.remove(object);
         em.flush();
     }
 
-    /*
-    * List all persisted objects on the database of the given type
-    * @param clazz
-    * @returns List<T>
-    */
     public <T, Clazz> List<T> list(Clazz clazz) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<T> criteria = builder.createQuery((Class<T>) clazz);
@@ -160,9 +135,6 @@ public class DataBaseRepository implements Repository {
         return query.getResultList();
     }
 
-    /*
-    * Search objects based on a query parameter
-    */
     public <T, Clazz> T search(Clazz clazz, String parameterName, Object parameterValue) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<T> criteria = builder.createQuery((Class<T>) clazz);
@@ -173,9 +145,6 @@ public class DataBaseRepository implements Repository {
         return (T) query.getSingleResult();
     }
 
-    /*
-    * Update the given object
-    */
     public Object update(Object object) {
         try {
             em.merge(object);
@@ -189,9 +158,6 @@ public class DataBaseRepository implements Repository {
         }
     }
 
-    /*
-    * Get the locked users
-    */
     public List<User> getLockedUsers() {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<User> criteria = builder.createQuery(User.class);

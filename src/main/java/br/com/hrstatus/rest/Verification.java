@@ -17,16 +17,30 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.rest.config;
+package br.com.hrstatus.rest;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
+import java.util.logging.Logger;
 
 /**
- * This Class configures the rest endpoint.
- *
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-@ApplicationPath("/rest")
-public class JaxRSConfig extends Application {
+@Path("do")
+public class Verification {
+
+    private Logger log = Logger.getLogger(Verification.class.getName());
+
+    //AFTER the tests move it POST
+    //@POST
+    @GET
+    @Path("verification")
+    @Produces("application/json")
+    public Response verification() {
+        log.info("Verification CALLED");
+        return Response.ok().build();
+    }
 }

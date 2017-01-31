@@ -26,8 +26,6 @@ import io.undertow.security.api.NotificationReceiver;
 import io.undertow.security.api.SecurityNotification;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.util.HeaderMap;
-import io.undertow.util.HeaderValues;
 
 import javax.enterprise.inject.spi.CDI;
 
@@ -44,6 +42,12 @@ public final class HrStatusAuthHandler implements HttpHandler {
         this.next = next;
     }
 
+    /**
+     * Handle a http request to filter logout failures to manually trigger a {@link FailedAuthenticatedEvent} event
+     *
+     * @param exchange {@link HttpServerExchange}
+     * @throws Exception for any issue
+     */
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
 
@@ -60,9 +64,9 @@ public final class HrStatusAuthHandler implements HttpHandler {
 
     }
 
-    /*
-    * CDI based event trigger
-    */
+    /**
+     * CDI based event trigger
+     */
     private class SecurityNotificationReceiver implements NotificationReceiver {
 
         @Override

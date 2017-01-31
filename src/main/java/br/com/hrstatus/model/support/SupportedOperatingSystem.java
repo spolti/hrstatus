@@ -22,7 +22,6 @@ package br.com.hrstatus.model.support;
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-
 public enum SupportedOperatingSystem {
     UNIX,
     WINDOWS;

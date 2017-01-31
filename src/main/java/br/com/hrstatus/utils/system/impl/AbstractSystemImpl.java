@@ -41,10 +41,6 @@ public class AbstractSystemImpl implements HrstatusSystem {
 
     private final Logger log = Logger.getLogger(AbstractSystemImpl.class.getName());
 
-    /*
-    * Return the Hrstatus address
-    */
-    @Override
     public String getServerHttpAddress() {
         try {
             final ObjectName http = new ObjectName("jboss.as:socket-binding-group=standard-sockets,socket-binding=http");
@@ -55,11 +51,6 @@ public class AbstractSystemImpl implements HrstatusSystem {
         }
     }
 
-    /*
-    * Returns the uptime in the following pattern:
-    * 0 Hora(s), 1 minuto(s) e 1 segundo(s)
-    */
-    @Override
     public String uptime() {
         Duration duration = Duration.ofMillis(ManagementFactory.getRuntimeMXBean().getUptime());
         long hours = duration.toHours();
@@ -68,10 +59,6 @@ public class AbstractSystemImpl implements HrstatusSystem {
         return hours + " Hora(s), " + minutes + " Minuto(s) e " + seconds + " Segundo(s)";
     }
 
-
-    /*
-    * Return the available mainSessions
-    */
     public List<String> mailSessios() {
 
         final ArrayList<String> mailSessions = new ArrayList<String>();
@@ -98,9 +85,9 @@ public class AbstractSystemImpl implements HrstatusSystem {
     }
 
 
-    /*
-    * return the MBeanServer
-    */
+    /**
+     * @return {@link MBeanServer}
+     */
     private MBeanServer mBeanServer() {
         return ManagementFactory.getPlatformMBeanServer();
     }

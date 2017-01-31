@@ -48,6 +48,14 @@ public class Login extends HttpServlet {
     @Inject
     private Repository repository;
 
+    /**
+     * Handle the Login requests
+     *
+     * @param request  {@link HttpServletRequest}
+     * @param response {@link HttpServletResponse}
+     * @throws ServletException for servlet issues
+     * @throws IOException      for IO issues
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         try {

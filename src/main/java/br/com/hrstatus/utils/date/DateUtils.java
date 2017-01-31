@@ -26,8 +26,10 @@ import java.time.LocalDateTime;
  */
 public interface DateUtils {
 
+    /**
+     * @return the current {@link LocalDateTime}
+     */
     LocalDateTime now();
-
 
 
 }

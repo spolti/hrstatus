@@ -22,6 +22,7 @@
             <url-pattern>/rest/user/*</url-pattern>
             <url-pattern>/user/*</url-pattern>
             <url-pattern>/rest/utils/resource/*</url-pattern>
+            <url-pattern>/rest/verification/*</url-pattern>
 
             <!-- OperatinSystem Resource -->
             <url-pattern>/rest/resource/operating-system/list</url-pattern>
@@ -48,6 +49,7 @@
             <url-pattern>/rest/setup/*</url-pattern>
             <url-pattern>/rest/utils/mail/test</url-pattern>
             <url-pattern>/rest/resource/*</url-pattern>
+            <url-pattern>/rest/verification/*</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>
@@ -66,9 +68,11 @@
         <role-name>ROLE_USER</role-name>
     </security-role>
     <security-role>
+        <!-- Need to define what this role can use -->
         <role-name>ROLE_REST</role-name>
     </security-role>
     <security-role>
+        <!-- NOT IMPLEMENTED YET -->
         <role-name>ROLE_LOGREADER</role-name>
     </security-role>
 

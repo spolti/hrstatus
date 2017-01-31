@@ -32,9 +32,16 @@ import java.util.List;
  */
 public class CustomRolesDeserializer extends JsonDeserializer<List<String>> {
 
+    /**
+     * Deserialize the Roles from json object
+     *
+     * @param jsonParser             Parser
+     * @param deserializationContext DeserializationContext
+     * @return List containing the deserialized roles
+     * @throws IOException for IO exceptions
+     */
     @Override
     public List<String> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-
         List<String> roles = new ArrayList<>();
         String[] temp_roles = jsonParser.getText().split(",");
 

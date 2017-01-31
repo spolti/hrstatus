@@ -28,6 +28,12 @@ public class LoggedOutEvent extends SecurityEvent {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Event that handle Logout events
+     *
+     * @param source    {@link Object}
+     * @param principal {@link Principal}
+     */
     public LoggedOutEvent(Object source, Principal principal) {
         super(source, principal);
     }

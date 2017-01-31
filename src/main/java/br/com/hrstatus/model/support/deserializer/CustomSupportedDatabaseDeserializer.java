@@ -31,6 +31,14 @@ import java.io.IOException;
  */
 public class CustomSupportedDatabaseDeserializer extends JsonDeserializer<SupportedDatabase> {
 
+    /**
+     * Deserialize SupportedDatabase json request
+     *
+     * @param jsonParser             Parser
+     * @param deserializationContext DeserializationContext
+     * @return Enum SupportedDatabase
+     * @throws IOException for IO exceptions
+     */
     @Override
     public SupportedDatabase deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         return SupportedDatabase.valueOf(jsonParser.getText());

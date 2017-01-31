@@ -28,6 +28,12 @@ public class AuthenticatedEvent extends SecurityEvent {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Event that handle authenticated Event
+     *
+     * @param source    {@link Object}
+     * @param principal {@link Principal}
+     */
     public AuthenticatedEvent(Object source, Principal principal) {
         super(source, principal);
     }

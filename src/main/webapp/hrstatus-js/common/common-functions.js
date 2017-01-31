@@ -81,6 +81,7 @@ function setPort() {
 /*
  * Update the form on updating and creating new Database
  * Hide/show not supported fields according the selected Database.
+ * The queries configured here are only for information purposes, user can not update it.
  */
 function setDatabaseConfig() {
     if (document.getElementById('vendor').value == 'MYSQL') {

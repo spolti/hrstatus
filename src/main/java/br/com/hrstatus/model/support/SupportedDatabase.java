@@ -23,10 +23,11 @@ package br.com.hrstatus.model.support;
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
 public enum SupportedDatabase {
-    /*
-    * All the queries should not be editable to avoid users to use this functionality to get
-    * unauthorized information from database using custom queries.
-    */
+
+    /**
+     * All the queries should not be editable to avoid users to use this functionality to get
+     * unauthorized information from database using custom queries.
+     */
     MYSQL("com.mysql.jdbc.Driver","jdbc:mysql://%s:%d/%s", 3306, "SELECT NOW() AS date;"),
     ORACLE("oracle.jdbc.driver.OracleDriver", "jdbc:oracle:thin:@%s:%d/%s", 1501, "select sysdate from dual"),
     POSTGRESQL("org.postgresql.Driver", "jdbc:postgresql://%s:%d/%s", 5432, "SELECT now();"),
@@ -46,19 +47,41 @@ public enum SupportedDatabase {
         this.query = query;
     }
 
+    /**
+     * @return the JDBC Driver
+     */
     public String DRIVER() {
         return driver;
     }
 
+    /**
+     * @return the Database connection url
+     */
     public String URL() {
         return url;
     }
 
+    /**
+     * @param port Define a custom port
+     */
     public void definePort(int port) {
         this.port = port > 0 ? port : this.port;
     }
 
+    /**
+     * @return the query to retrieve the timestamp from database. This query cannot be modified by the user.
+     */
     public String QUERY () {
         return query;
+    }
+
+    @Override
+    public String toString() {
+        return "SupportedDatabase{" +
+                "driver='" + driver + '\'' +
+                ", url='" + url + '\'' +
+                ", port=" + port +
+                ", query='" + query + '\'' +
+                '}';
     }
 }

@@ -56,9 +56,11 @@ public class SetupResource {
     @Inject
     private RequestResponse reqResponse;
 
-    /*
-    * Load the HrStatus configurations from database.
-    */
+    /**
+     * Return all mail sessions configured in the WildFly Server
+     *
+     * @return {@link Response} with the available mail-sessions
+     */
     @GET
     @Path("available-mail-sessions")
     @RolesAllowed({"ROLE_ADMIN"})
@@ -67,9 +69,11 @@ public class SetupResource {
         return Response.ok(sys.mailSessios()).build();
     }
 
-    /*
-    * Load the HrStatus configurations from database.
-    */
+    /**
+     * Load all the configurable options
+     *
+     * @return {@link Response} with HrStatus Server configuration
+     */
     @GET
     @Path("load")
     @RolesAllowed({"ROLE_ADMIN"})
@@ -78,9 +82,12 @@ public class SetupResource {
         return Response.ok(repository.loadConfiguration()).build();
     }
 
-    /*
-    * Update the hrstatus's configurations
-    */
+    /**
+     * Update the HrStatus Server configurations
+     *
+     * @param setup json object
+     * @return {@link Response} with the operation result, success or failure
+     */
     @POST
     @Path("update")
     @RolesAllowed({"ROLE_ADMIN"})

@@ -19,7 +19,6 @@
 
 package br.com.hrstatus.utils.timer;
 
-import br.com.hrstatus.model.User;
 import br.com.hrstatus.repository.Repository;
 import br.com.hrstatus.utils.date.DateUtils;
 
@@ -42,19 +41,19 @@ public class DefaultTimers {
     @Inject
     private DateUtils dateUtils;
 
-    /*
-    * Este timer será executado a cada 30 minutos.
-    * Se houver algum usuário bloqueado por tentativas excendentes de login,
-    * O mesmo será desbloqueado.
-    */
+    /**
+     * Este timer será executado a cada 30 minutos.
+     * Se houver algum usuário bloqueado por tentativas excendentes de login,
+     * O mesmo será desbloqueado.
+     */
     @Schedule(hour = "*", minute = "*/15", persistent = false)
     private void unlockUser() {
         repository.getLockedUsers().stream().filter(user -> !user.getUserLockTime().equals("00") && LocalDateTime.parse(user.getUserLockTime())
                 .plusMinutes(30).isBefore(dateUtils.now()))
-            .forEach(user ->{
-                log.info("Desbloqueando usuário " + user.getUsername());
-                user.enable();
-                repository.update(user);
-            });
+                .forEach(user -> {
+                    log.info("Desbloqueando usuário " + user.getUsername());
+                    user.enable();
+                    repository.update(user);
+                });
     }
 }

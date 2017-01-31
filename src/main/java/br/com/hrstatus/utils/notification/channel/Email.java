@@ -51,7 +51,6 @@ public class Email implements Channel {
     private String MAIL_SESSION_JNDI;
     private String MAIL_FROM;
 
-    @Override
     public String send(String message, String receiver, String subject, String jndi) {
 
         MAIL_SESSION_JNDI = jndi != null ? jndi : MAIL_SESSION_JNDI;
@@ -70,9 +69,11 @@ public class Email implements Channel {
         }
     }
 
-    /*
-    * Configure the email Session
-    */
+    /**
+     * Configure the email Session
+     *
+     * @param receiver String
+     */
     private void setupEmailSession(String receiver) {
         configureMailBasics();
         try {
@@ -88,9 +89,9 @@ public class Email implements Channel {
         }
     }
 
-    /*
-    * Retrieve the mail configuration fromn database
-    */
+    /**
+     * Retrieve the mail configuration from database
+     */
     private void configureMailBasics() {
         setup = repository.loadConfiguration();
         MAIL_SESSION_JNDI = setup.getMailJndi();

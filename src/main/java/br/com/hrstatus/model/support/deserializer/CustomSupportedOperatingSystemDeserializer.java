@@ -32,6 +32,14 @@ import java.io.IOException;
  */
 public class CustomSupportedOperatingSystemDeserializer extends JsonDeserializer<SupportedOperatingSystem> {
 
+    /**
+     * Deserialize SupportedOperatingSystem from json request
+     *
+     * @param jsonParser             Parser
+     * @param deserializationContext DeserializationContext
+     * @return Enum SupportedOperatingSystem
+     * @throws IOException for IO exceptions
+     */
     @Override
     public SupportedOperatingSystem deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         return SupportedOperatingSystem.valueOf(jsonParser.getText());

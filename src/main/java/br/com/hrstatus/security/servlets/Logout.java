@@ -34,20 +34,28 @@ import java.util.logging.Logger;
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
 @WebServlet(name = "logoutServlet", urlPatterns = {"/logout"})
-@ServletSecurity(@HttpConstraint(rolesAllowed={"ROLE_USER", "ROLE_ADMIN", "ROLE_REST"}))
+@ServletSecurity(@HttpConstraint(rolesAllowed = {"ROLE_USER", "ROLE_ADMIN", "ROLE_REST"}))
 public class Logout extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
     private final Logger log = Logger.getLogger(Logout.class.getName());
 
+    /**
+     * Log the user out
+     *
+     * @param request  {@link HttpServletRequest}
+     * @param response {@link HttpServletResponse}
+     * @throws ServletException for servlet issues
+     * @throws IOException      for IO issues
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //Invalidate the current session
         final HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
             request.logout();
-            request.getRequestDispatcher("/login.jsp").forward(request,response);
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
         } else {
             log.info("Não há sessão ativa para o usuário corrente.");
         }

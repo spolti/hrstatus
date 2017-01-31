@@ -24,6 +24,20 @@ package br.com.hrstatus.utils.commands;
  */
 public interface Commands {
 
-    String UnixLikeCommand (String cmd);
+    /**
+     * Execute the given command on localhost
+     *
+     * @param cmd Command to be executed
+     * @return the command result
+     */
+    String UnixLikeCommand(String cmd);
+
+    /**
+     * Check if the provided host is localhost or not.
+     *
+     * @param host it can be a IP address or a hostname
+     * @return true or false
+     */
+    boolean isLocalhost(String host);
 
 }

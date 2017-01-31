@@ -47,6 +47,11 @@ public class SessionAuthListener implements Serializable {
     @Inject
     private DateUtils dateUtils;
 
+    /**
+     * Observes {@link AuthenticatedEvent} events
+     *
+     * @param event {@link AuthenticatedEvent}
+     */
     public void onAuthenticated(@Observes AuthenticatedEvent event) {
         log.fine("Successfull login for " + event.getUserPrincipal().getName() + " at " + dateUtils.now());
         user = repository.search(User.class, "username", event.getUserPrincipal().getName());
@@ -54,10 +59,15 @@ public class SessionAuthListener implements Serializable {
         repository.update(user);
     }
 
+    /**
+     * Observes {@link FailedAuthenticatedEvent} events
+     *
+     * @param event {@link FailedAuthenticatedEvent}
+     */
     public void onAuthenticationFailure(@Observes FailedAuthenticatedEvent event) {
-        user = repository.search(User.class, "username",event.getUsername());
+        user = repository.search(User.class, "username", event.getUsername());
         user.setFailedLogins(user.getFailedLogins() + 1);
-        log.fine("Falha de autenticação usuário " +  event.getUsername() + ", número de tentativas: [" + user.getFailedLogins() + "]");
+        log.fine("Falha de autenticação usuário " + event.getUsername() + ", número de tentativas: [" + user.getFailedLogins() + "]");
         if (user.getFailedLogins() >= 3) {
             log.fine("Tentativas de login excedidas, bloqueando usuário " + user.getUsername());
             user.disable();
@@ -66,7 +76,12 @@ public class SessionAuthListener implements Serializable {
         repository.update(user);
     }
 
+    /**
+     * Observes {@link LoggedOutEvent} events
+     *
+     * @param event {@link LoggedOutEvent}
+     */
     public void onLoggedOut(@Observes LoggedOutEvent event) {
-        log.fine("Usuário " +  event.getUserPrincipal().getName() + " efetuou logout.");
+        log.fine("Usuário " + event.getUserPrincipal().getName() + " efetuou logout.");
     }
 }

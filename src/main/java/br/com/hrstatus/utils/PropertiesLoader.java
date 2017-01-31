@@ -31,7 +31,7 @@ public class PropertiesLoader {
     private Properties props;
     private String version = "/version.properties";
 
-     PropertiesLoader() {
+    PropertiesLoader() {
 
         props = new Properties();
         final InputStream in = this.getClass().getResourceAsStream(version);
@@ -43,6 +43,12 @@ public class PropertiesLoader {
         }
     }
 
+    /**
+     * Returns the properties defined in the file version.properties
+     *
+     * @param chave String
+     * @return the key value if it exists
+     */
     public String getValor(String chave) {
         return (String) props.getProperty(chave);
     }

@@ -21,14 +21,13 @@ package br.com.hrstatus.utils.notification;
 
 /**
  * Created by ataxexe on 9/1/16.
- *            fspolti
+ * fspolti
  */
 public class DestinationSelector {
 
     private String message;
     private String subject = "HrStatus";
     private String jndi;
-
 
     public DestinationSelector(String message) {
         this.message = message;
@@ -40,12 +39,20 @@ public class DestinationSelector {
         this.jndi = jndi;
     }
 
+    /**
+     * @param receiver String
+     * @return {@link ChannelSelector}
+     */
     public ChannelSelector to(String receiver) {
         return new ChannelSelector(this.message, receiver, this.subject, this.jndi);
     }
 
+    /**
+     * @param subject String
+     * @return {@link SubjectSelector}
+     */
     public SubjectSelector subject(String subject) {
-        return new SubjectSelector(this.message,subject, this.jndi);
+        return new SubjectSelector(this.message, subject, this.jndi);
     }
 
 }

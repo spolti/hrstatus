@@ -18,9 +18,11 @@ public class PublicResources {
     @Inject
     private DataBaseRepository repository;
 
-    /*
-    * Returns the supported operating systems
-    */
+    /**
+     * This message is displayed in the login page
+     *
+     * @return {@link Response} with welcome message
+     */
     @GET
     @Path("welcome-message")
     public Response welcomeMessage() {

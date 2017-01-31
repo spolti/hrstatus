@@ -20,17 +20,12 @@
 package br.com.hrstatus.rest.resources;
 
 import br.com.hrstatus.model.Database;
-import br.com.hrstatus.model.OperatingSystem;
-import br.com.hrstatus.model.support.SupportedDatabase;
 import br.com.hrstatus.model.support.VerificationStatus;
 import br.com.hrstatus.model.support.response.RequestResponse;
 import br.com.hrstatus.repository.impl.DataBaseRepository;
 import br.com.hrstatus.security.PasswordUtils;
 
 import javax.annotation.security.RolesAllowed;
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -42,9 +37,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.lang.reflect.InvocationTargetException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.logging.Logger;
 
 /**
@@ -62,26 +54,28 @@ public class DataBaseResources {
     @Inject
     private RequestResponse reqResponse;
 
-    /*
-    * @return all databases
-    */
+    /**
+     * @return {@link Response} List&#60;@{@link Database}&#62; as json
+     */
     @Path("list")
     @GET
     @RolesAllowed({"ROLE_ADMIN"})
     @Produces(MediaType.APPLICATION_JSON)
-    public Response list(){
+    public Response list() {
         return Response.ok(repository.list(Database.class)).build();
     }
 
-    /*
-    * Register a new Database
-    * @param json object
-    */
+    /**
+     * Persists the given json object in the database
+     *
+     * @param database {@link Database}
+     * @return {@link Response} with the operation result, success or failure
+     */
     @POST
     @Path("new")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response newDatabase (Database database) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
+    public Response newDatabase(Database database) {
         log.fine("Banco de Dados recebido para cadastro: " + database.toString());
         database.setStatus(VerificationStatus.NOT_VERIFIED);
         database.setPassword(PasswordUtils.encode(database.getPassword()));
@@ -98,10 +92,12 @@ public class DataBaseResources {
         }
     }
 
-    /*
-    * Delete a Operating System
-    * @param int id
-    */
+    /**
+     * Delete the given {@link Database} by id
+     *
+     * @param id int
+     * @return {@link Response} with the operation result, success or failure
+     */
     @DELETE
     @Path("delete/{id}")
     public Response deleteOs(@PathParam("id") int id) {
@@ -109,10 +105,12 @@ public class DataBaseResources {
         return Response.ok().build();
     }
 
-    /*
-    * Search an Operating System by ID
-    * @param int id
-    */
+    /**
+     * Search a {@link Database} by id
+     *
+     * @param db int
+     * @return {@link Response} with {@link Database} object
+     */
     @GET
     @Path("search/{db}")
     @RolesAllowed({"ROLE_ADMIN"})
@@ -122,10 +120,14 @@ public class DataBaseResources {
         return Response.ok(repository.search(Database.class, "id", db)).build();
     }
 
-    /*
-    * Update Operating System
-    * @param json object
-    */
+    /**
+     * Update the given {@link Database}
+     *  Note that, to make sure that the password of the given password was updated it first try to decode.
+     *  If the decode operation fails it will go to the catch instruction and then encrypt the password.
+     *
+     * @param database json object
+     * @return {@link Response} with the operation result, success or failure
+     */
     @POST
     @Path("update")
     @RolesAllowed({"ROLE_ADMIN"})
@@ -134,35 +136,14 @@ public class DataBaseResources {
     public Response update(Database database) {
         try {
             PasswordUtils.decode(database.getPassword());
-        } catch (Exception e ) {
+        } catch (Exception e) {
             try {
                 database.setPassword(PasswordUtils.encode(database.getPassword()));
-            } catch (NoSuchPaddingException e1) {
-                e1.printStackTrace();
-            } catch (NoSuchAlgorithmException e1) {
-                e1.printStackTrace();
-            } catch (InvalidKeyException e1) {
-                e1.printStackTrace();
-            } catch (BadPaddingException e1) {
-                e1.printStackTrace();
-            } catch (IllegalBlockSizeException e1) {
+            } catch (Exception e1) {
                 e1.printStackTrace();
             }
         }
         log.fine("Operating System received to update: " + database.toString());
-//
-//        try {
-//
-//            System.out.println("asdsadsadasdas " + database.getVendor().getClass().getDeclaredMethod("QUERY").invoke(database.getVendor()));
-//        } catch (NoSuchMethodException e) {
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        } catch (InvocationTargetException e) {
-//            e.printStackTrace();
-//        }
-
-
         String result = String.valueOf(repository.update(database));
         if (("success").equals(result)) {
             reqResponse.setResponseMessage(" O Banco de Dados " + database.getHostname() + " foi atualizado com sucesso.");

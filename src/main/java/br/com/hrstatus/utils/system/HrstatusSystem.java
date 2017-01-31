@@ -26,19 +26,20 @@ import java.util.List;
  */
 public interface HrstatusSystem {
 
-    /*
-    * Return the Hrstatus address
-    */
+    /**
+     * @return Return the HrStatus servre address based in the WildFly configurations
+     */
     String getServerHttpAddress();
 
-    /*
-    * Returns the uptime in the following pattern:
-    * 0 Hora(s), 1 minuto(s) e 1 segundo(s)
-    */
+    /**
+     * @return Returns the uptime in the following pattern:
+     * 0 Hora(s), 1 minuto(s) e 1 segundo(s)
+     */
     String uptime();
 
-    /*
-    * Return the available mainSessions
-    */
+    /**
+     * Returns all available mail-sessions in the WildFly Server
+     * @return the available mainSessions
+     */
     List<String> mailSessios();
 }

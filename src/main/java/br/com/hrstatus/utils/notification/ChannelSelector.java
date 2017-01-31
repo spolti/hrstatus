@@ -40,6 +40,11 @@ public class ChannelSelector {
         this.jndi = jndi;
     }
 
+    /**
+     * Selects the channel that will be used to deliver a message
+     * @param channel {@link Channel}
+     * @return the message plus the {@link Channel} selected
+     */
     public String by(Channel channel) {
         return channel.send(this.message, this.receiver, this.subject, this.jndi);
     }

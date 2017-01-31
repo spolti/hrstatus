@@ -32,10 +32,8 @@ public class AbstractCommandExecutor implements Commands {
 
     private final Logger log = Logger.getLogger(AbstractCommandExecutor.class.getName());
 
-    /*
-    * Perform shell commands in the localhost
-    */
-    public String UnixLikeCommand (String cmd) {
+
+    public String UnixLikeCommand(String cmd) {
 
         String retorno = "";
         BufferedReader br = null;
@@ -48,7 +46,7 @@ public class AbstractCommandExecutor implements Commands {
             br = new BufferedReader(isr);
 
             String line;
-            while((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
                 retorno = line;
             }
 
@@ -60,12 +58,17 @@ public class AbstractCommandExecutor implements Commands {
         return retorno;
     }
 
-    /*
-    * Build the command to be executed
-    * @params cmd
-    * @returns formated command
-    */
-    private ArrayList<String> buildCommand (String cmd) {
+    public boolean isLocalhost(String host) {
+        return true ? "localhost".equals(host) || "127.0.0.1".equals(host) : false;
+    }
+
+    /**
+     * Build the command to be executed
+     *
+     * @param cmd command
+     * @return the full command line
+     */
+    private ArrayList<String> buildCommand(String cmd) {
         final ArrayList<String> command = new ArrayList<String>();
         command.add("/bin/bash");
         command.add("-c");
@@ -73,9 +76,11 @@ public class AbstractCommandExecutor implements Commands {
         return command;
     }
 
-    /*
-    * Safely close the given closeable resource
-    */
+    /**
+     * Safely close the given closeable resource
+     *
+     * @param resource that will be closed - Closeable
+     */
     private void secureClose(final Closeable resource) {
         try {
             if (resource != null) {
@@ -83,6 +88,30 @@ public class AbstractCommandExecutor implements Commands {
             }
         } catch (IOException ex) {
             log.severe("Error: " + ex.getMessage());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static class MyLogger implements com.jcraft.jsch.Logger {
+        private static Logger log = Logger.getLogger(MyLogger.class.getName());
+        @SuppressWarnings("rawtypes")
+        static java.util.Hashtable name = new java.util.Hashtable();
+
+        static {
+            name.put(new Integer(DEBUG), "DEBUG: ");
+            name.put(new Integer(INFO), "INFO: ");
+            name.put(new Integer(WARN), "WARN: ");
+            name.put(new Integer(ERROR), "ERROR: ");
+            name.put(new Integer(FATAL), "FATAL: ");
+        }
+
+        public boolean isEnabled(int level) {
+            return true;
+        }
+
+        public void log(int level, String message) {
+            System.out.print(name.get(new Integer(level)));
+            log.fine(message);
         }
     }
 

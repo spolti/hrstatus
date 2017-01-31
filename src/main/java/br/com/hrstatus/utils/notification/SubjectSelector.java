@@ -34,6 +34,10 @@ public class SubjectSelector {
         this.jndi = jndi;
     }
 
+    /**
+     * @param receiver String
+     * @return {@link ChannelSelector}
+     */
     public ChannelSelector to(String receiver) {
         return new ChannelSelector(this.message, receiver, this.subject, this.jndi);
     }
