@@ -25,10 +25,11 @@ import br.com.hrstatus.repository.impl.DataBaseRepository;
 import br.com.hrstatus.security.PasswordUtils;
 import br.com.hrstatus.utils.notification.Notification;
 import br.com.hrstatus.utils.notification.channel.Email;
-import br.com.hrstatus.utils.notification.template.NewUserMessageTemplate;
+import br.com.hrstatus.utils.notification.template.MessageTemplate;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.mail.Message;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -87,8 +88,8 @@ public class UserResource {
             // Send the notification email in a different thread
             CompletableFuture.runAsync(() -> {
                 log.info(new Notification()
-                        .send(NewUserMessageTemplate.get(newUser.getUsername(), password))
-                        .subject(NewUserMessageTemplate.SUBJECT)
+                        .send(MessageTemplate.newUserMessage(newUser.getUsername(), password))
+                        .subject(MessageTemplate.NEW_USER_SUBJECT)
                         .to(newUser.getMail())
                         .by(emailChannel));
             }).toCompletableFuture();
@@ -234,7 +235,8 @@ public class UserResource {
 
     /**
      * Common method which retrieve the result of a user operation and handle it.
-     * @param result String
+     *
+     * @param result      String
      * @param updatedUser {@link User}
      * @return {@link Response} with the operation result, success or failure
      */

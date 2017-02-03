@@ -21,7 +21,7 @@
         $.ajax({
             type: "GET",
             contentType: 'application/json',
-            url: '${pageContext.request.contextPath}/rest/user/admin/edit/'+ getParameterByName('username'),
+            url: '${pageContext.request.contextPath}/rest/user/admin/edit/' + getParameterByName('username'),
             dataType: 'json',
             success: function (user) {
                 user2update = user;
@@ -53,7 +53,7 @@
 
         $("button#submit").click(function (e) {
             e.preventDefault();
-            if($("form")[0].checkValidity()) {
+            if ($("form")[0].checkValidity()) {
                 var array = jQuery('#update-user-form').serializeArray();
                 var json = {};
 
@@ -90,7 +90,7 @@
                         console.log('success ' + response.responseMessage);
                         $('#update-modalUser > h1').text(response.responseMessage);
                     },
-                    error: function (xhr,textStatus,err) {
+                    error: function (xhr, textStatus, err) {
                         alert(xhr.responseText)
                         console.log(xhr.responseText);
                         $('#update-modalUser > h1').text("Falha ao atualizar usuário " + response.failedSubject);
@@ -122,7 +122,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="${pageContext.request.contextPath}/admin/user/users.jsp"> <button type="button" class="btn btn-primary">Prosseguir</button> </a>
+                    <a href="${pageContext.request.contextPath}/admin/user/users.jsp">
+                        <button type="button" class="btn btn-primary">Prosseguir</button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -160,7 +162,8 @@
                     <label class="col-md-2 control-label" for="password">Senha</label>
                     <div class="col-md-6">
                         <input name="password" type="password" id="password"
-                               class="form-control" data-errormessage="Senha não atinge os requisitos necessários: mínimo 8 caracteres sendo no mínimo 1 minúsculo, 1 maiúsculo e um caracter especial."
+                               class="form-control"
+                               data-errormessage="Senha não atinge os requisitos necessários: mínimo 8 caracteres sendo no mínimo 1 minúsculo, 1 maiúsculo e um caracter especial."
                                pattern="(?=^.{6,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*">
                     </div>
                 </div>
@@ -184,17 +187,7 @@
                     <label class="col-md-2 control-label">Ativo</label>
                     <div class="col-md-6">
                         <div class="radio">
-                            <%--<label>--%>
-                                <%--<input name="enabled" type="radio" name="optionsRadios" id="enabled" value="true">--%>
-                                <%--Sim--%>
-                            <%--</label>--%>
-                        <%--</div>--%>
-                        <%--<div class="radio">--%>
-                            <%--<label>--%>
-                                <%--<input name="enabled" type="radio" name="optionsRadios" id="disabled" value="false">--%>
-                                <%--Não--%>
-                            <%--</label>--%>
-                                <input name="enabled" class="bootstrap-switch" id="enabled" type="checkbox">
+                            <input name="enabled" class="bootstrap-switch" id="enabled" type="checkbox">
                         </div>
                     </div>
                 </div>
@@ -214,163 +207,11 @@
                 </div>
             </form>
         </div><!-- /col -->
-        <div class="col-sm-3 col-md-2 col-sm-pull-9 col-md-pull-10 sidebar-pf sidebar-pf-left">
-            <div class="panel-group" id="accordion">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="collapsed">
-                                Usuários
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseOne" class="panel-collapse collapse in">
-                        <div class="panel-body">
-                            <ul class="nav nav-pills nav-stacked">
-                                <li class="active"><a
-                                        href="${pageContext.request.contextPath}/admin/user/users.jsp">
-                                    Gerenciar Usuários</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="collapsed">
-                                Servidores
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseTwo" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/admin/resource/operating-system.jsp">Gerenciar Servidores</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" class="collapsed">
-                                Banco de Dados
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseFive" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/admin/resource/database.jsp">Gerenciar Banco de Dados</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" class="collapsed">
-                                Configuração
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseThree" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/admin/setup.jsp">Editar Configuração</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" class="collapsed">
-                                Logs
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseFour" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">Extrair Logs</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix" class="collapsed">
-                                Relatórios
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseSix" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">Sed est</a></li>
-                                <li><a href="#">Curabitur</a></li>
-                                <li><a href="#">Eu dignissim</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" class="collapsed">
-                                Gráficos
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseSeven" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">Sed est</a></li>
-                                <li><a href="#">Curabitur</a></li>
-                                <li><a href="#">Eu dignissim</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseEigth" class="collapsed">
-                                Agendamentos
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseEigth" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">Sed est</a></li>
-                                <li><a href="#">Curabitur</a></li>
-                                <li><a href="#">Eu dignissim</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseNine" class="collapsed">
-                                Sobre o Hrstatus
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseNine" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="${pageContext.request.contextPath}/home/about">Sobre</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div><!-- /row -->
+        <%@ include file="/home/right-side-menu.jsp" %>
+    </div>
+</div>
+</div>
+<!-- /row -->
 </div>
 <!-- /container -->
 
