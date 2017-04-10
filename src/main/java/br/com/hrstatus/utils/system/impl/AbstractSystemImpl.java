@@ -80,7 +80,6 @@ public class AbstractSystemImpl implements HrstatusSystem {
         } catch (MalformedObjectNameException e) {
             e.printStackTrace();
         }
-
         return mailSessions;
     }
 

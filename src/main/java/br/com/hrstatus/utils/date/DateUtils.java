@@ -31,5 +31,12 @@ public interface DateUtils {
      */
     LocalDateTime now();
 
+    /**
+     * Try to parsed the given string to {@link LocalDateTime}
+     *
+     * @param date
+     * @return {@link LocalDateTime}
+     */
+    LocalDateTime parse(String date);
 
 }

@@ -1,5 +1,29 @@
 <%@ include file="/home/header.jsp" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            contentType: 'application/json',
+            url: '${pageContext.request.contextPath}/rest/utils/resource/server-info',
+            dataType: 'json',
+            success: function (response) {
+                $('#version').text(response.version);
+                $('#installationDate').text(response.installationDate);
+                $('#java').text(response.java);
+                $('#javaVersion').text(response.javaVersion);
+                $('#javaVendor').text(response.javaVendor);
+                $('#osVersion').text(response.osVersion);
+                $('#uptime').text(response.uptime);
+            },
+            error: function (xhr, textStatus, err) {
+                var response = JSON.parse(xhr.responseText);
+                console.log(response);
+            }
+        });
+
+    });
+</script>
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-9 col-md-10 col-sm-push-3 col-md-push-2">
@@ -21,9 +45,9 @@
                     <div class="col-sm-5 col-md-5 border-right">
                         <dl>
                             <dt>Versão</dt>
-                            <dd>${version}</dd>
+                            <dd id="version"></dd>
                             <dt>Data de Instalação:</dt>
-                            <dd>${installationDate}</dd>
+                            <dd id="installationDate"></dd>
                             <dt>Para Suporte</dt>
                             <dd><a href="mailto:spolti@hrstatus.com.br?Subject=Suporte%20Hrstatus">Contato</a></dd>
                             <dt>Para reportar bugs</dt>
@@ -37,22 +61,22 @@
                     <div class="col-sm-4 col-md-4">
                         <dl>
                             <dt>Java</dt>
-                            <dd>${java}</dd>
+                            <dd id="java"></dd>
                             <dt>Versão</dt>
-                            <dd>${javaVersion}</dd>
+                            <dd id="javaVersion"></dd>
                             <dt>Vendor</dt>
-                            <dd>${javaVendor}</dd>
+                            <dd id="javaVendor"></dd>
                             <dt>Versão do Sistema Operacional</dt>
-                            <dd>${osVersion}</dd>
+                            <dd id="osVersion"></dd>
                             <dt>Uptime</dt>
-                            <dd>${uptime}</dd>
+                            <dd id="uptime"></dd>
                         </dl>
                     </div><!-- /col -->
                 </div><!-- /row -->
             </section>
         </div><!-- /col -->
 
-        <%@ include file="/home/right-side-menu.jsp" %>
+        <%@ include file="/home/left-side-menu.jsp" %>
     </div>
 </div>
 <!-- /row -->

@@ -20,9 +20,21 @@
 package br.com.hrstatus.utils.commands.impl;
 
 import br.com.hrstatus.utils.commands.Commands;
+import br.com.hrstatus.utils.commands.security.AllowedCommands;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 /**
@@ -32,14 +44,102 @@ public class AbstractCommandExecutor implements Commands {
 
     private final Logger log = Logger.getLogger(AbstractCommandExecutor.class.getName());
 
+    private JSch jsch;
+    private Channel channel;
+    private Session session;
 
-    public String UnixLikeCommand(String cmd) {
+    public String run(AllowedCommands command, InetAddress address, int port, HashMap<String, String> credentials) {
+        // net time command is executed locally.
+        if (address.isLoopbackAddress() || command.equals(AllowedCommands.NET_TIME_I)) {
+            return runLocal(command, address);
+        } else {
+            return runRemote(command, address, port, credentials);
+        }
+    }
 
+    /**
+     * Perform a remote command on target host
+     *
+     * @param command
+     * @param address
+     * @param credentials
+     * @return the command result
+     */
+    private String runRemote(AllowedCommands command, InetAddress address, int port, HashMap<String, String> credentials) {
+
+        java.util.Properties config = new java.util.Properties();
+        config.put("StrictHostKeyChecking", "no");
+        String s = "";
+
+        try {
+            // Creating the server session and connecting
+            jsch = new JSch();
+            session = jsch.getSession(credentials.get("username"), address.getHostAddress(), port);
+            session.setConfig(config);
+            session.setPassword(credentials.get("password"));
+            session.connect(10000);
+
+            // Executing the command
+            channel = session.openChannel("exec");
+            ((ChannelExec) channel).setCommand(command.get());
+            ((ChannelExec) channel).setErrStream(System.err);
+            InputStream in = channel.getInputStream();
+
+            channel.connect();
+
+            byte[] tmp = new byte[1024];
+            boolean test = true;
+            while (test == true) {
+                while (in.available() > 0) {
+                    int i = in.read(tmp, 0, 1024);
+                    if (i < 0) {
+                        break;
+                    }
+                    s += (new String(tmp, 0, i));
+                }
+                if (channel.isClosed()) {
+                    break;
+                }
+            }
+
+            return s.replaceAll("\n", "");
+
+        } catch (JSchException e) {
+            e.printStackTrace();
+            return e.getMessage();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return e.getMessage();
+        } finally {
+            try {
+                channel.disconnect();
+                session.disconnect();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Perform a local command
+     *
+     * @param command
+     * @param address
+     * @return the command result
+     */
+    private String runLocal(AllowedCommands command, InetAddress address) {
         String retorno = "";
         BufferedReader br = null;
 
+        log.fine("Tentando executar o comando [" + command.get() + " " + address.getHostAddress() + "]");
+
         try {
-            final ProcessBuilder p = new ProcessBuilder(buildCommand(cmd));
+            ProcessBuilder p;
+            if (command.equals(AllowedCommands.NET_TIME_I)) {
+                p = new ProcessBuilder(buildCommand(command.get() + " " + address.getHostAddress()));
+            } else {
+                p = new ProcessBuilder(buildCommand(command.get()));
+            }
             final Process process = p.start();
             final InputStream is = process.getInputStream();
             final InputStreamReader isr = new InputStreamReader(is);
@@ -51,15 +151,11 @@ public class AbstractCommandExecutor implements Commands {
             }
 
         } catch (IOException ioe) {
-            log.severe("Error executing shell command: " + ioe.getMessage());
+            log.severe("Error while executing command: " + ioe.getMessage());
         } finally {
             secureClose(br);
         }
         return retorno;
-    }
-
-    public boolean isLocalhost(String host) {
-        return true ? "localhost".equals(host) || "127.0.0.1".equals(host) : false;
     }
 
     /**
@@ -93,9 +189,9 @@ public class AbstractCommandExecutor implements Commands {
 
     @SuppressWarnings("unchecked")
     public static class MyLogger implements com.jcraft.jsch.Logger {
-        private static Logger log = Logger.getLogger(MyLogger.class.getName());
         @SuppressWarnings("rawtypes")
         static java.util.Hashtable name = new java.util.Hashtable();
+        private static Logger log = Logger.getLogger(MyLogger.class.getName());
 
         static {
             name.put(new Integer(DEBUG), "DEBUG: ");
@@ -114,5 +210,4 @@ public class AbstractCommandExecutor implements Commands {
             log.fine(message);
         }
     }
-
 }

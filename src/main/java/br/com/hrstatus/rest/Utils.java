@@ -23,6 +23,7 @@ import br.com.hrstatus.model.support.SupportedDatabase;
 import br.com.hrstatus.model.support.SupportedOperatingSystem;
 import br.com.hrstatus.model.support.response.RequestResponse;
 import br.com.hrstatus.repository.impl.DataBaseRepository;
+import br.com.hrstatus.utils.PropertiesLoader;
 import br.com.hrstatus.utils.notification.Notification;
 import br.com.hrstatus.utils.notification.channel.Email;
 import br.com.hrstatus.utils.system.HrstatusSystem;
@@ -53,6 +54,8 @@ public class Utils {
     private HrstatusSystem sys;
     @Inject
     private RequestResponse reqResponse;
+    @Inject
+    private PropertiesLoader loader;
 
     /**
      * Sends a test email to test the mail session configuration in the WildFly Server
@@ -99,6 +102,67 @@ public class Utils {
     }
 
     /**
+     * list all available and supported databases
+     *
+     * @return a String[] with all Enum constants
+     */
+    @GET
+    @Path("resource/server-info")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response AboutServerInformation() {
+
+        class ServerInfo {
+
+            String version;
+            String javaVersion;
+            String java;
+            String javaVendor;
+            String osVersion;
+            String installationDate;
+            String uptime;
+
+            ServerInfo() {
+                version = loader.getValor("version");
+                javaVersion = System.getProperty("java.runtime.version");
+                java = System.getProperty("java.vm.name");
+                javaVendor = System.getProperty("java.vendor");
+                osVersion = System.getProperty("os.version");
+                installationDate = repository.installationDate().toString();
+                uptime = sys.uptime();
+            }
+
+            public String getVersion() {
+                return version;
+            }
+
+            public String getJavaVersion() {
+                return javaVersion;
+            }
+
+            public String getJava() {
+                return java;
+            }
+
+            public String getJavaVendor() {
+                return javaVendor;
+            }
+
+            public String getOsVersion() {
+                return osVersion;
+            }
+
+            public String getInstallationDate() {
+                return installationDate;
+            }
+
+            public String getUptime() {
+                return uptime;
+            }
+        }
+        return Response.ok(new ServerInfo()).build();
+    }
+
+    /**
      * Auxiliary method to get all enum names from a Enum
      *
      * @param e Enum Class
@@ -107,4 +171,5 @@ public class Utils {
     private String[] getNames(Class<? extends Enum<?>> e) {
         return Arrays.stream(e.getEnumConstants()).map(Enum::name).toArray(String[]::new);
     }
+
 }

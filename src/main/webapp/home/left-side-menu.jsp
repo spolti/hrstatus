@@ -1,6 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <script>
-
     var USERS_LOCATION = "/hs/admin/user/users.jsp";
     var EDIT_USER_LOCATION = "/hs/admin/user/edit_user.jsp";
     var NEW_USER_LOCATION = "/hs/admin/user/user_form.jsp";
@@ -19,8 +18,7 @@
     var RELATORIOS_LOCATION = "/hs/#";
     var GRAFICOS_LOCATION = "/hs/#";
     var AGENTAMENTOS_LOCATION = "/hs/#";
-    var ABOUT_LOCATION = "/hs/home/about";
-
+    var ABOUT_LOCATION = "/hs/home/about.jsp";
 
     $(document).ready(function () {
         var pathname = window.location.pathname;
@@ -74,8 +72,6 @@
         }
     });
 </script>
-
-
 <div class="col-sm-3 col-md-2 col-sm-pull-9 col-md-pull-10 sidebar-pf sidebar-pf-left">
     <div class="panel-group" id="accordion">
         <div class="panel panel-default">
@@ -244,7 +240,7 @@
             <div id="collapseTen" class="panel-collapse collapse">
                 <div class="panel-body">
                     <ul class="nav nav-pills nav-stacked">
-                        <li id="liAbout"><a href="${pageContext.request.contextPath}/home/about">Sobre</a></li>
+                        <li id="liAbout"><a href="${pageContext.request.contextPath}/home/about.jsp">Sobre</a></li>
                     </ul>
                 </div>
             </div>

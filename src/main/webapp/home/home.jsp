@@ -10,7 +10,7 @@
             <h1>Bem vindo ao HrStatus, para navegar utilize o menu ao lado.</h1>
 
         </div><!-- /col -->
-        <%@ include file="/home/right-side-menu.jsp"%>
+        <%@ include file="/home/left-side-menu.jsp"%>
     </div><!-- /row -->
 </div><!-- /container -->
 </body>

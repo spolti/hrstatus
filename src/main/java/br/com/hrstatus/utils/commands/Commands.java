@@ -19,25 +19,22 @@
 
 package br.com.hrstatus.utils.commands;
 
+import br.com.hrstatus.utils.commands.security.AllowedCommands;
+
+import java.net.InetAddress;
+import java.util.HashMap;
+
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
 public interface Commands {
 
     /**
-     * Execute the given command on localhost
+     * Execute the given command on target host
      *
-     * @param cmd Command to be executed
+     * @param command Command to be executed
      * @return the command result
      */
-    String UnixLikeCommand(String cmd);
-
-    /**
-     * Check if the provided host is localhost or not.
-     *
-     * @param host it can be a IP address or a hostname
-     * @return true or false
-     */
-    boolean isLocalhost(String host);
+     String run(AllowedCommands command, InetAddress address, int port, HashMap<String, String> credentials);
 
 }

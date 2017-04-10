@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.tests.security;
+package br.com.hrstatus.tests.notifications;
 
 import br.com.hrstatus.utils.notification.ChannelSelector;
 import br.com.hrstatus.utils.notification.DestinationSelector;
@@ -35,7 +35,6 @@ public class EmailChannelNotificationTest {
     private final String RECEIVER = "spolti@hrstatus.com.br";
     private final String SUBJECT = "this is a test subject";
     private final String JNDI = "java:jboss/mail/HrStatus";
-
 
     @Test
     public void testAllParameters() throws NoSuchFieldException, IllegalAccessException {

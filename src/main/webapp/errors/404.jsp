@@ -12,7 +12,7 @@
             <h1>Página não Encontrada</h1>
 
         </div><!-- /col -->
-        <%@ include file="/home/right-side-menu.jsp"%>
+        <%@ include file="/home/left-side-menu.jsp"%>
     </div><!-- /row -->
 </div><!-- /container -->
 </body>

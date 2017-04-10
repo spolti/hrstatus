@@ -23,9 +23,10 @@
             <url-pattern>/user/*</url-pattern>
             <url-pattern>/rest/utils/resource/*</url-pattern>
             <url-pattern>/rest/verification/*</url-pattern>
-
             <!-- OperatinSystem Resource -->
             <url-pattern>/rest/resource/operating-system/list</url-pattern>
+            <!-- Databases Resource -->
+            <url-pattern>/rest/resource/database/list</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>

@@ -26,7 +26,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.math.BigInteger;
 
 /**
- * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
+ * <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
 public class PasswordUtils {
 

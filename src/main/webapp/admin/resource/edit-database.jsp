@@ -232,12 +232,12 @@
                 <div class="form-group">
                     <div class="col-md-10 col-md-offset-2">
                         <button type="submit" class="btn btn-primary" id="submit">Salvar</button>
-                        <button type="reset" class="btn btn-default">Cancelar</button>
+                        <button type="reset" class="btn btn-default"  onclick="javascript:window.history.back();">Cancelar</button>
                     </div>
                 </div>
             </form>
         </div><!-- /col -->
-        <%@ include file="/home/right-side-menu.jsp" %>
+        <%@ include file="/home/left-side-menu.jsp" %>
     </div>
 </div>
 </div><!-- /row -->

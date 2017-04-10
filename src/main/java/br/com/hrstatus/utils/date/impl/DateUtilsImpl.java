@@ -21,100 +21,66 @@ package br.com.hrstatus.utils.date.impl;
 
 import br.com.hrstatus.utils.date.DateUtils;
 
-import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
-import java.util.function.BinaryOperator;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
 public class DateUtilsImpl implements DateUtils {
 
-    // todo, o tratamento de data tem que ser feito quando extraída do servidor, assim evitamos código extra para validar datas de diferentes tipos
-
-    /*
-    * Supported formats:
-    *   Mon Mar 04 16:09:05 BRT 2013
-    *   Seg Mar 04 16:09:05 BRT 2013
-    *   Mon Mar 04 16:08:49 2013
-    *   Seg Mar 04 16:08:49 2013
-    *   segunda-feira, 4 de março de 2013 16h13min27s BRT
-    *   Wed Mar 01 00:00:00 GMT-03:00 1950
-    *   2015-05-25 12:23:02
-    */
-    private static final List<String> patterns = Arrays.asList(
-            "EEE MMM dd HH:mm:ss z yyyy",
-            "EEE MMM dd HH:mm:ss yyyy",
-            "dd HH:mm:ss yyyy",
-            "EEE dd HH:mm:ss z yyyy",
-            "E MMM dd HH:mm:ss yyyy",
-            "EEE MMM dd HH:mm:ss z yyyy",
-            "yyyy-MM-dd HH:mm:ss"
+    /**
+     * Examples of supported formats:
+     * Mon Mar 04 16:09:05 BRT 2013
+     * Mon Mar 04 16:08:49 2013
+     * Wed Mar 01 00:00:00 GMT-03:00 1950
+     * 2015-05-25 12:23:02
+     */
+    private final DateTimeFormatter globalFormatter = DateTimeFormatter.ofPattern(""
+            + "[EEE MMM dd HH:mm:ss z yyyy]"
+            + "[E MMM dd HH:mm:ss yyyy]"
+            + "[dd HH:mm:ss yyyy]"
+            + "[EEE dd HH:mm:ss z yyyy]"
+            + "[E MMM dd HH:mm:ss yyyy]"
+            + "[yyyy-MM-dd HH:mm:ss]"
+            + "[eeee, d 'de' MMMM 'de' yyyy HH'h'mm'min'ss's' z]"
     );
 
-    public static String format(String date) {
+    /**
+     * Allow to parse dates in portuguese (The month should be in lower case)
+     * Seg mar 04 16:08:49 2013
+     * Seg Mar 04 16:09:05 BRT 2013
+     * segunda-feira, 4 de março de 2013 16h13min27s BRT
+     */
+    private final DateTimeFormatter formatterPtBR = new DateTimeFormatterBuilder()
+            .parseCaseInsensitive()
+            .append(globalFormatter)
+            .toFormatter(new Locale("pt", "BR"));
 
-        String result = "not parsed";
-
-        for (String pattern : patterns) {
-            //System.out.println("testando pattern " +  pattern + " em " + date);
-            try {
-                ok(date);
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-                return LocalDateTime.parse(date, formatter).toString();
-
-            } catch (DateTimeParseException e) {
-
-                result = e.getMessage();
-            }
-        }
-        return result;
-
-    }
-
-    private static String ok(String date) {
-
-        final String ptBr = "(Dom|Seg|Ter|Qua|Qui|Sex|Sáb)\\s(Jan|Fev|Mar|Abr|Mai|Jun|Jul|Ago|Set|Out|Nov|Dez)\\s\\d{1,}\\s\\d{2}:\\d{2}:\\d{2}\\s([A-Z]{3,})\\s\\d{4}";
-
-        if (date.matches(ptBr)) {
-            System.out.println(" date " + date + " bateu");
-
-        }
-        return date;
-    }
-
-    public static void main(String args[]) {
-        System.out.println(format("04 16:09:05 BRT 2013"));
-        System.out.println(format("Mon Mar 04 16:09:05 BRT 2013"));
-        System.out.println(format("Seg Mar 04 16:09:05 BRT 2013"));
-        System.out.println(format("Mon Mar 04 16:08:49 2013"));
-        System.out.println(format("Seg Mar 04 16:08:49 2013"));
-        System.out.println(format("segunda-feira, 4 de março de 2013 16h13min27s BRT"));
-        System.out.println(format("Wed Mar 01 00:00:00 GMT-03:00 1950"));
-        System.out.println(format("2015-05-25 12:23:02"));
-
-//        Locale pt = new Locale("pt", "BR");
-//
-//        DateTimeFormatter formate = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss z yyyy");
-//        LocalDateTime test = LocalDateTime.parse("Mon Mar 04 16:09:05 BRT 2013", formate);
-//
-//        System.out.println("teste " +test.toString());
-
-
-    }
-
-    @Override
     public LocalDateTime now() {
         return LocalDateTime.now();
     }
 
+    public LocalDateTime parse(String date) {
+        try {
+            return LocalDateTime.parse(date, isPtBr(date) ? formatterPtBR : globalFormatter);
+        } catch (DateTimeParseException e) {
+            throw new DateTimeParseException("Falha ao converter data " + date, e.getMessage(), e.getErrorIndex());
+        }
+    }
+
+    /**
+     * Test if the string date contains pt-BR names
+     *
+     * @param date is a string containing the date that will be parsed
+     * @return True or False
+     */
+    private boolean isPtBr(String date) {
+        final String ptBr = "(?i)(Dom|Dom\\w.+|Seg|Seg\\w.+|Ter|Ter\\w.+|Qua|Qua\\w.+|Qui|Qui\\w.+|Sex|Sex\\w.+|S?b|S?b\\w.+)(\\s\\w.+|,\\s\\w.+)";
+        return true ? date.matches(ptBr) : false;
+    }
 
 }

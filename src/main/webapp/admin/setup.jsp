@@ -287,7 +287,7 @@
                 </div>
             </form>
         </div><!-- /col -->
-        <%@ include file="/home/right-side-menu.jsp" %>
+        <%@ include file="/home/left-side-menu.jsp" %>
     </div>
 </div>
 <!-- /container -->

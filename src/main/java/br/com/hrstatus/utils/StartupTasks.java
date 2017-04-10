@@ -21,12 +21,19 @@ package br.com.hrstatus.utils;
 
 import br.com.hrstatus.repository.impl.DataBaseRepository;
 import br.com.hrstatus.utils.commands.Commands;
+import br.com.hrstatus.utils.commands.security.AllowedCommands;
+import br.com.hrstatus.verification.executor.VerificationExecutor;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
+import javax.persistence.criteria.CriteriaBuilder;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -37,50 +44,52 @@ import java.util.logging.Logger;
 public class StartupTasks {
 
     private final Logger log = Logger.getLogger(StartupTasks.class.getName());
+    private final InetAddress LOCALHOST = InetAddress.getByName("127.0.0.1");
 
     @Inject
     private Commands command;
     @Inject
     private DataBaseRepository repository;
+    @Inject
+    private VerificationExecutor executor;
+
+    public StartupTasks() throws UnknownHostException {
+    }
 
     @PostConstruct
     public void Startup() {
         log.info("Iniciando verificações de startup...");
         verifyBinaries();
+        log.info("Importing initial database data...");
+        repository.initialImport();
+        log.info("Done.");
+
+        executor.startExecutorService();
     }
 
     @PreDestroy
     public void Shutdown() {
         log.info("HrStatus em processo de Shutdown...");
+        executor.shutdownExecutorService();
     }
 
     /**
      * Check if the needed binaries are installed on the server
      * just print in the logs if the if the target binary is installed or not
+     * This was changed to use ENUMs to avoid the {@link br.com.hrstatus.utils.commands.impl.AbstractCommandExecutor} accped any kind of commands
      */
     private void verifyBinaries() {
-        String result = "1";
-        for (binary bin : binary.values()) {
-            result = command.UnixLikeCommand("type " + bin.name() + ";  echo $?");
-            if (result.equals("0")) {
-                log.info("Binário " + bin.name() + ": OK");
-            } else {
-                log.warning("Binário " + bin.name() + ": Não encontrado, isto pode causar alguns comportamentos inesperados no HrStatus.");
-            }
+        log.info("Verificando os binários necessários...");
+        if (command.run(AllowedCommands.VERIFY_NTPDATE_BINARY, LOCALHOST, 0, null).equals("0")) {
+            log.info("Binário ntpdate OK");
+        } else {
+            log.warning("Binário ntpdate: Não encontrado, isto pode causar alguns comportamentos inesperados no HrStatus.");
         }
 
-        log.info("Importing initial database data...");
-        repository.initialImport();
-        log.info("Done.");
-    }
-
-    /**
-     * Contains all needed binaries
-     */
-    private enum binary {
-        //ntpdate: used to update the date/time from Unix like servers, local and remote
-        //net (samba-common package): used to obtain date/time from Windows server
-        //for fedora 24 or higher: samba-commom-tools
-        ntpdate, net
+        if (command.run(AllowedCommands.VERIFY_NET_BYNARY, LOCALHOST, 0,null).equals("0")) {
+            log.info("Binário net: OK");
+        } else {
+            log.warning("Binário net: Não encontrado, isto pode causar alguns comportamentos inesperados no HrStatus.");
+        }
     }
 }
