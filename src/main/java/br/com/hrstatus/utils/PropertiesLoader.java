@@ -23,16 +23,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-/*
- * @author spolti
+/**
+ * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-
 public class PropertiesLoader {
 
     private Properties props;
     private String version = "/version.properties";
 
-    protected PropertiesLoader() {
+    PropertiesLoader() {
 
         props = new Properties();
         final InputStream in = this.getClass().getResourceAsStream(version);
@@ -44,7 +43,13 @@ public class PropertiesLoader {
         }
     }
 
-    protected String getValor(String chave) {
+    /**
+     * Returns the properties defined in the file version.properties
+     *
+     * @param chave String
+     * @return the key value if it exists
+     */
+    public String getValor(String chave) {
         return (String) props.getProperty(chave);
     }
 }

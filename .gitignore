@@ -5,6 +5,8 @@ Dumps
 .classpath
 .settings
 .metadata
+.tern-project
+hrstatus-full-ee.iml
 # Package Files #
 *.jar
 *.war
