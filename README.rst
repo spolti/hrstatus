@@ -10,6 +10,14 @@ Mysql e DB2 de seu ambiente, contando também com a funcionalidade de atualizar 
 automaticamente (função somente para servidores Linux), tornando a migração rápida e
 confiável. 
 
+.. class:: no-web
+
+    .. image:: https://github.com/hrstatus/hrstatus/blob/master/hr.png
+        :alt: HTTPie compared to cURL
+        :width: 100%
+        :align: center
+
+
 Requisitos:
 ###########
 
