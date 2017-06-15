@@ -58,7 +58,7 @@ public class CommandsTest {
         Assert.assertEquals("Hello World.", abstractCommandExecutor.run(AllowedCommands.ECHO_TEST, GetLocalAddress.getHostAddress(), 22, credentials));
     }
 
-    @Test
+    //@Test
     public void testBinaries() {
         Assert.assertEquals("Binário ntpdate é necessário.","0", abstractCommandExecutor.run(AllowedCommands.VERIFY_NTPDATE_BINARY, LOCALHOST, 0, null));
         Assert.assertEquals("Binário net é necessário.","0", abstractCommandExecutor.run(AllowedCommands.VERIFY_NET_BYNARY, LOCALHOST, 0, null));
