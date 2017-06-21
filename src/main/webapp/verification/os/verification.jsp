@@ -9,13 +9,14 @@
                 <li><a href="/hs/home/home.jsp">Home</a></li>
                 <li>Verificações - Sistemas Operacionais</li>
             </ol>
-
             <ul class="nav nav-tabs">
-                <li><a href="/hs/verification/os/verification.jsp" name="verification">Verificações</a></li>
+                <li class="active"><a href="/hs/verification/os/verification.jsp" name="verification">Verificações</a></li>
                 <li><a href="/hs/verification/os/servernok.jsp" name="server_nok">Servidores Desatualizados</a></li>
                 <li><a href="/hs/verification/os/serverok.jsp" name="server_ok">Servidores OK</a></li>
             </ul>
+            verificação
         </div><!-- /col -->
+
         <%@ include file="/home/left-side-menu.jsp" %>
     </div>
 </div>

@@ -10,8 +10,9 @@
         $('#deleteOSFailure').hide();
     });
 
-    // Initialize Datatables
+
     $(document).ready(function () {
+        // Initialize Datatables
         $('.datatable').dataTable({
             "fnDrawCallback": function (oSettings) {
                 // if .sidebar-pf exists, call sidebar() after the data table is drawn
@@ -40,7 +41,7 @@
             $('#delete-os-modal').modal('hide');
         });
 
-        //populate the users datatable from json
+        //populate the os datatable from json
         $(document).ready(function () {
             var oTable = $('#OsTable').dataTable();
             $.ajax({

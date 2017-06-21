@@ -21,6 +21,7 @@ package br.com.hrstatus.repository;
 
 import br.com.hrstatus.model.Setup;
 import br.com.hrstatus.model.User;
+import br.com.hrstatus.model.support.VerificationStatus;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -101,6 +102,16 @@ public interface Repository {
      * @return List&#60;T&#62;
      */
     <T, Clazz> List<T> list(Clazz clazz);
+
+    /**
+     * List all resources by {@link VerificationStatus}
+     *
+     * @param status
+     * @param <T>
+     * @param <Clazz>
+     * @return all resources with {@link VerificationStatus}.OK
+     */
+    <T, Clazz> List<T> getResourcesByStatus (Clazz clazz, VerificationStatus status);
 
     /**
      * Search an object based in the Class filtered by the parameterName

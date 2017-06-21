@@ -7,19 +7,14 @@
         <div class="col-sm-9 col-md-10 col-sm-push-3 col-md-push-2">
             <ol class="breadcrumb">
                 <li><a href="/hs/home/home.jsp">Home</a></li>
-                <li>Usuários Cadastrados</li>
-                <li><a href="${pageContext.request.contextPath}/admin/user/user_form.jsp">
-                    Novo Usuário</a></li>
+                <li>Verificações - Banco de Dados</li>
             </ol>
-
             <ul class="nav nav-tabs">
-                <li class="active"><a href="#">Tab One</a></li>
-                <li><a href="#">Tab Two</a></li>
-                <li><a href="#">Tab Three</a></li>
-                <li><a href="#">Tab Four</a></li>
-                <li><a href="#">Tab Five</a></li>
+                <li class="active"><a href="/hs/verification/db/verification.jsp" name="verification">Verificações</a></li>
+                <li><a href="/hs/verification/db/databasenok.jsp" name="database_nok">Banco de Dados Desatualizados</a></li>
+                <li><a href="/hs/verification/db/databaseok.jsp" name="database_ok">Banco de Dados OK</a></li>
             </ul>
-
+            verificação
         </div><!-- /col -->
 
         <%@ include file="/home/left-side-menu.jsp" %>

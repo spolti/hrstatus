@@ -21,7 +21,9 @@ package br.com.hrstatus.repository.impl;
 
 import br.com.hrstatus.model.Setup;
 import br.com.hrstatus.model.User;
+import br.com.hrstatus.model.support.VerificationStatus;
 import br.com.hrstatus.repository.Repository;
+import br.com.hrstatus.rest.Verification;
 import br.com.hrstatus.utils.date.DateUtils;
 
 import javax.inject.Inject;
@@ -130,6 +132,22 @@ public class DataBaseRepository implements Repository {
         criteria.select(userRoot);
         if (User.class.equals(clazz)){
             criteria.where(builder.notEqual(userRoot.get("username"), "root"));
+        }
+        Query query = em.createQuery(criteria);
+        return query.getResultList();
+    }
+
+    public <T, Clazz> List<T> getResourcesByStatus(Clazz clazz, VerificationStatus status) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<T> criteria = builder.createQuery((Class<T>) clazz);
+        Root<T> userRoot = criteria.from((Class<T>) clazz);
+        criteria.select(userRoot);
+        if(status == VerificationStatus.OK){
+            criteria.where(builder.equal(userRoot.get("status"), status));
+        } else if (status == VerificationStatus.NOT_OK) {
+            criteria.where(builder.notEqual(userRoot.get("status"), VerificationStatus.OK));
+        } else {
+            criteria.where(builder.equal(userRoot.get("status"), status));
         }
         Query query = em.createQuery(criteria);
         return query.getResultList();
