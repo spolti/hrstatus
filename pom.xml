@@ -1,5 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>br.com.hrstatus</groupId>
     <artifactId>hrstatus</artifactId>
@@ -17,104 +18,39 @@
         <version.maven.compiler>3.5.1</version.maven.compiler>
         <version.maven.surefire.plugin>2.19.1</version.maven.surefire.plugin>
         <version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
-        <jackson.version>2.8.3</jackson.version>
-        <mysql.connector.version>5.1.40</mysql.connector.version>
-        <jboss.javaee7.version>1.0.3.Final</jboss.javaee7.version>
-        <picketbox.version>4.9.4.Final</picketbox.version>
-        <undertow.core.version>1.3.23.Final</undertow.core.version>
-        <com.jcraft.jsch.version>0.1.54</com.jcraft.jsch.version>
-
-        <version.jboss.bom>10.0.0.Final</version.jboss.bom>
+        <version.com.fasterxml.jackson>2.8.3</version.com.fasterxml.jackson>
+        <version.mysql.connector>5.1.40</version.mysql.connector>
+        <version.org.picketbox>5.0.2.Final</version.org.picketbox>
+        <version.io.undertow>1.4.12.Final</version.io.undertow>
+        <version.com.jcraft.jsch>0.1.54</version.com.jcraft.jsch>
+        <version.wildfly.bom>10.1.0.Final</version.wildfly.bom>
+        <version.arquillian.bom>1.1.13.Final</version.arquillian.bom>
+        <version.junit>4.12</version.junit>
+        <version.com.sun.javamail>1.5.5</version.com.sun.javamail>
+        <version.javax.interceptor.api>1.2</version.javax.interceptor.api>
+        <version.org.sonatype.sisu>0.9.9</version.org.sonatype.sisu>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!--j2ee spec -->
-            <!--<dependency>-->
-            <!--<groupId>org.jboss.spec</groupId>-->
-            <!--<artifactId>jboss-javaee-7.0</artifactId>-->
-            <!--<version>${jboss.javaee7.version}</version>-->
-            <!--<type>pom</type>-->
-            <!--<scope>import</scope>-->
-            <!--</dependency>-->
             <dependency>
                 <groupId>org.wildfly.bom</groupId>
                 <artifactId>wildfly-javaee7-with-tools</artifactId>
-                <version>${version.jboss.bom}</version>
-                <type>pom</type>
+                <version>${version.wildfly.bom}</version>
                 <scope>import</scope>
+                <type>pom</type>
             </dependency>
 
-            <!--<dependency>-->
-                <!--<groupId>org.jboss.arquillian</groupId>-->
-                <!--<artifactId>arquillian-bom</artifactId>-->
-                <!--<version>#{site.components['arquillian-core'].latest_version}</version>-->
-                <!--<scope>import</scope>-->
-                <!--<type>pom</type>-->
-            <!--</dependency>-->
-
-            <!-- Security Dependencies -->
             <dependency>
-                <groupId>org.picketbox</groupId>
-                <artifactId>picketbox</artifactId>
-                <version>${picketbox.version}</version>
-            </dependency>
-
-            <!-- jackson dependencies -->
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-annotations</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.datatype</groupId>
-                <artifactId>jackson-datatype-jsr310</artifactId>
-                <version>${jackson.version}</version>
-                <scope>compile</scope>
-            </dependency>
-
-            <!-- JDBC Connectors -->
-            <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>${mysql.connector.version}</version>
-            </dependency>
-
-            <!-- Undertow -->
-            <dependency>
-                <groupId>io.undertow</groupId>
-                <artifactId>undertow-core</artifactId>
-                <version>${undertow.core.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.undertow</groupId>
-                <artifactId>undertow-servlet</artifactId>
-                <version>${undertow.core.version}</version>
-            </dependency>
-
-            <!-- Mail -->
-            <dependency>
-                <groupId>com.sun.mail</groupId>
-                <artifactId>javax.mail</artifactId>
-                <version>1.5.5</version>
-                <scope>provided</scope>
-            </dependency>
-
-            <!-- jcraft -->
-            <dependency>
-                <groupId>com.jcraft</groupId>
-                <artifactId>jsch</artifactId>
-                <version>${com.jcraft.jsch.version}</version>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>${version.arquillian.bom}</version>
+                <scope>import</scope>
+                <type>pom</type>
             </dependency>
 
         </dependencies>
     </dependencyManagement>
-
 
     <dependencies>
         <!-- EJB -->
@@ -137,6 +73,7 @@
             <artifactId>jboss-servlet-api_3.1_spec</artifactId>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>org.jboss.spec.javax.servlet.jstl</groupId>
             <artifactId>jboss-jstl-api_1.2_spec</artifactId>
@@ -147,16 +84,20 @@
         <dependency>
             <groupId>org.picketbox</groupId>
             <artifactId>picketbox</artifactId>
+            <version>${version.org.picketbox}</version>
         </dependency>
 
         <!-- Undertow -->
         <dependency>
             <groupId>io.undertow</groupId>
             <artifactId>undertow-core</artifactId>
+            <version>${version.io.undertow}</version>
         </dependency>
+
         <dependency>
             <groupId>io.undertow</groupId>
             <artifactId>undertow-servlet</artifactId>
+            <version>${version.io.undertow}</version>
         </dependency>
 
         <!-- JaxRS -->
@@ -177,7 +118,14 @@
         <dependency>
             <groupId>javax.interceptor</groupId>
             <artifactId>javax.interceptor-api</artifactId>
-            <version>1.2</version>
+            <version>${version.javax.interceptor.api}</version>
+        </dependency>
+
+        <!-- sisu guava dependency -->
+        <dependency>
+            <groupId>org.sonatype.sisu</groupId>
+            <artifactId>sisu-guava</artifactId>
+            <version>${version.org.sonatype.sisu}</version>
         </dependency>
 
         <!-- Persistence and Hibernate dependencies -->
@@ -186,6 +134,7 @@
             <artifactId>hibernate-jpa-2.1-api</artifactId>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>org.jboss.spec.javax.transaction</groupId>
             <artifactId>jboss-transaction-api_1.2_spec</artifactId>
@@ -203,57 +152,73 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
+            <version>${version.com.fasterxml.jackson}</version>
         </dependency>
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <version>${version.com.fasterxml.jackson}</version>
         </dependency>
+
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${version.com.fasterxml.jackson}</version>
         </dependency>
 
         <!--  JDBC connectors -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+            <version>${version.mysql.connector}</version>
         </dependency>
 
         <!-- Mail -->
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
+            <version>${version.com.sun.javamail}</version>
         </dependency>
 
         <!-- jcraft -->
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
+            <version>${version.com.jcraft.jsch}</version>
         </dependency>
 
-
-        <!-- Unit Tests dependencies -->
+        <!-- Unit/Arquillian Tests dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>${version.junit}</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.jboss.arquillian.junit</groupId>
             <artifactId>arquillian-junit-container</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
-            <groupId>org.sonatype.sisu</groupId>
-            <artifactId>sisu-guava</artifactId>
-            <version>0.9.9</version>
+            <groupId>org.arquillian.container</groupId>
+            <artifactId>arquillian-container-chameleon</artifactId>
+            <version>1.0.0.Beta2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-client</artifactId>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
 
     <build>
-        <finalName>hrstatus</finalName>
+        <finalName>hrstatus-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.wildfly.plugins</groupId>

@@ -12,8 +12,14 @@
     var NEW_DATABASE_LOCATION = "/hs/admin/resource/new-database.jsp";
     var CONFIGURACOES_LOCATION = "/hs/admin/setup.jsp";
     var VERIFICACOES_LOCATION = "/hs/verification/";
-    var VERIFICACAO_DB_LOCATION = "/hs/verification/database.jsp";
-    var VERIFICACAO_OS_LOCATION = "/hs/verification/os.jsp";
+    var V_DB_LOCATION = "/hs/verification/database.jsp";
+    var V_DB_OK_LOCATION = "/hs/verification/db/databaseok.jsp";
+    var V_DB_NOK_LOCATION = "/hs/verification/db/databasenok.jsp";
+    var V_DB_VERIFICATION_LOCATION = "/hs/verification/db/verification.jsp";
+    var V_OS_LOCATION = "/hs/verification/os.jsp";
+    var V_OS_SERVEROK_LOCATION = "/hs/verification/os/databaseok.jsp";
+    var V_OS_SERVERNOK_LOCATION = "/hs/verification/os/databasenok.jsp";
+    var V_OS_VERIFICATION_LOCATION = "/hs/verification/os/verification.jsp";
     var LOGS_LOCATION = "/hs/#";
     var RELATORIOS_LOCATION = "/hs/#";
     var GRAFICOS_LOCATION = "/hs/#";
@@ -42,11 +48,11 @@
         if (pathname.indexOf(VERIFICACOES_LOCATION) != -1) {
             $('#collapseFive').addClass("in");
         }
-        if (pathname == VERIFICACAO_DB_LOCATION) {
+        if (pathname == V_DB_LOCATION || pathname ==  V_DB_OK_LOCATION || pathname == V_DB_NOK_LOCATION || pathname == V_DB_VERIFICATION_LOCATION) {
             $('#collapseFive').addClass("in");
             $('#liVerDB').addClass("active");
         }
-        if (pathname == VERIFICACAO_OS_LOCATION) {
+        if (pathname == V_OS_LOCATION || pathname ==  V_OS_SERVEROK_LOCATION || pathname == V_OS_SERVERNOK_LOCATION || pathname == V_OS_VERIFICATION_LOCATION) {
             $('#collapseFive').addClass("in");
             $('#liVerOS').addClass("active");
         }

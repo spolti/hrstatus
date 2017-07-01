@@ -17,30 +17,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.hrstatus.rest;
+package br.com.hrstatus.verification;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
-import java.util.logging.Logger;
+import javax.enterprise.inject.Default;
 
 /**
  * @author <a href="mailto:spoltin@hrstatus.com.br">Filippe Spolti</a>
  */
-@Path("do")
-public class Verification {
+public interface Verification {
 
-    private Logger log = Logger.getLogger(Verification.class.getName());
+    <T, Clazz> T verifyAll(Clazz clazz);
 
-    //AFTER the tests move it POST
-    //@POST
-    @GET
-    @Path("verification")
-    @Produces("application/json")
-    public Response verification() {
-        log.info("Verification CALLED");
-        return Response.ok().build();
-    }
+    <T, Clazz> T verifySingleResource(Clazz clazz, int resourceId);
+
 }

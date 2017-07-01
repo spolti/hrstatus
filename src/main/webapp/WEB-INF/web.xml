@@ -27,6 +27,10 @@
             <url-pattern>/rest/resource/operating-system/list</url-pattern>
             <!-- Databases Resource -->
             <url-pattern>/rest/resource/database/list</url-pattern>
+            <!-- verifications -->
+            <url-pattern>/verification/*</url-pattern>
+            <!-- common endpoints -->
+            <url-pattern>/rest/common/*</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>
