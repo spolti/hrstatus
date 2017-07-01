@@ -45,7 +45,6 @@ import java.util.Arrays;
 @Path("utils")
 public class Utils {
 
-
     @Inject
     private Email emailChannel;
     @Inject
@@ -110,7 +109,6 @@ public class Utils {
     @Path("resource/server-info")
     @Produces(MediaType.APPLICATION_JSON)
     public Response AboutServerInformation() {
-
         class ServerInfo {
 
             String version;

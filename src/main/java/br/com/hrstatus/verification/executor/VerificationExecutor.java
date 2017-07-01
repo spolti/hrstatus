@@ -19,7 +19,7 @@
 
 package br.com.hrstatus.verification.executor;
 
-import br.com.hrstatus.rest.Verification;
+import br.com.hrstatus.rest.VerificationEndpoint;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import java.util.concurrent.ArrayBlockingQueue;
@@ -33,7 +33,7 @@ import java.util.logging.Logger;
  */
 public class VerificationExecutor {
 
-    private Logger log = Logger.getLogger(Verification.class.getName());
+    private Logger log = Logger.getLogger(VerificationEndpoint.class.getName());
 
     //threads that will be always alive until the Executor is running
     private int corePoolSize = 2;

@@ -23,7 +23,6 @@ import br.com.hrstatus.model.Setup;
 import br.com.hrstatus.model.User;
 import br.com.hrstatus.model.support.VerificationStatus;
 import br.com.hrstatus.repository.Repository;
-import br.com.hrstatus.rest.Verification;
 import br.com.hrstatus.utils.date.DateUtils;
 
 import javax.inject.Inject;
@@ -33,9 +32,7 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.time.DateTimeException;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
